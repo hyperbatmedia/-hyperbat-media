@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HyperBat Media Site - Bob Morane Edition</title>
+    <script type="module" crossorigin src="/hyperbat-media/assets/index-tjgxpVVV.js"></script>
+    <link rel="stylesheet" crossorigin href="/hyperbat-media/assets/index-BRs9vPpW.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    
+    <!-- JSZip pour extraction ZIP uniquement -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
+    <script>
+      // Initialiser JSZip
+      window.addEventListener('load', () => {
+        if (window.JSZip) {
+          console.log('✅ JSZip chargé et prêt (support ZIP)');
+        } else {
+          console.error('❌ JSZip non disponible');
+        }
+        
+        console.info('ℹ️ Format supporté: ZIP ✅ uniquement');
+      });
+    </script>
+     
+  </body>
+</html>
