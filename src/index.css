@@ -1,0 +1,28 @@
+/* Fichier: src/index.css */
+
+/*
+  CE FICHIER DOIT ÊTRE TRAITÉ PAR VOS OUTILS DE BUILD 
+  (comme PostCSS/Tailwind) pour générer le CSS final.
+*/
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Styles personnalisés (optionnel, mais recommandé pour le look and feel) */
+
+/* Scrollbar styling for custom-scrollbar class (Cross-browser) */
+/* La version Webkit est déjà dans le composant principal */
+
+body {
+    /* Assure que la couleur de fond couvre tout l'écran */
+    background-color: #0f0519; 
+    /* Définit une police de base */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+}
+
+/* Base pour les titres (optionnel) */
+h1, h2, h3, h4 {
+    letter-spacing: 0.05em;
+}

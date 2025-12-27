@@ -1,0 +1,37 @@
+[
+  {
+    "id": "discord",
+    "name": "Discord",
+    "url": " https://discord.com/invite/msnaz7Kev7",
+    "location": "header",
+    "position": 1
+  },
+  {
+    "id": "arrm",
+    "name": "ARRM",
+    "url": "http://www.jujuvincebros.fr/wiki/arrm/doku.php?id=arrm_relooked_fr:download-fr_relooked",
+    "location": "header",
+    "position": 2
+  },
+  {
+    "id": "tutoriels",
+    "name": "Tutoriels",
+    "url": "https://example.com/tutoriel",
+    "location": "list",
+    "position": 1
+  },
+  {
+    "id": "outils",
+    "name": "Outils",
+    "url": "https://drive.google.com/drive/folders/1Wbv0OszKq2h6F2QHY1nNW-p64cvBHEpR?usp=sharing",
+    "location": "list",
+    "position": 2
+  },
+  {
+    "id": "themes-hyperbat",
+    "name": "THÈMES HYPERBAT",
+    "url": "https://github.com/BobMoraneRetro/one4all4one-hyperbat-bobmorane",
+    "location": "list",
+    "position": 3
+  }
+]
