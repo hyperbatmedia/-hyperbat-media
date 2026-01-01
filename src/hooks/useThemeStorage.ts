@@ -10,16 +10,33 @@ interface UseThemeStorageResult {
   saveThemes: (newThemes: ThemeItem[]) => Promise<void>;
 }
 
+// 🔴 FONCTION HELPER : CLONAGE PROFOND
+const deepCloneThemes = (themes: ThemeItem[]): ThemeItem[] => {
+  return themes.map(theme => ({
+    id: theme.id,
+    name: theme.name,
+    creator: theme.creator,
+    system: theme.system,
+    category: theme.category,
+    imageUrl: theme.imageUrl,
+    downloadUrl: theme.downloadUrl,
+    size: theme.size
+  }));
+};
+
 export function useThemeStorage(): UseThemeStorageResult {
   const [themes, setThemes] = useState<ThemeItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Fonction de sauvegarde: localStorage uniquement (pour édition temporaire)
+  // 🔴 CORRECTION : Fonction de sauvegarde avec clonage profond
   const saveThemes = async (newThemes: ThemeItem[]) => {
     try {
-      // ✅ SÉCURISÉ : Sauvegarde uniquement dans localStorage
-      // Pour mettre à jour le site, utilisez le bouton "Télécharger JSON" dans l'admin
-      localStorage.setItem('hyperbat_themes', JSON.stringify(newThemes));
+      // ✅ CLONER PROFONDÉMENT pour éviter les références partagées
+      const clonedThemes = deepCloneThemes(newThemes);
+      
+      // Sauvegarde dans localStorage
+      localStorage.setItem('hyperbat_themes', JSON.stringify(clonedThemes));
+      
       console.log('✅ Thèmes sauvegardés dans localStorage');
       console.log('💡 Pour mettre à jour le site, téléchargez le JSON et remplacez src/data/themes.json');
     } catch (error) {
@@ -37,8 +54,10 @@ export function useThemeStorage(): UseThemeStorageResult {
         const storedThemes = localStorage.getItem('hyperbat_themes');
         if (storedThemes) {
           const parsedThemes: ThemeItem[] = JSON.parse(storedThemes);
-          setThemes(parsedThemes);
-          console.log(`📦 ${parsedThemes.length} thème(s) chargé(s) depuis localStorage (édition admin)`);
+          // 🔴 CLONER pour éviter les mutations
+          const clonedThemes = deepCloneThemes(parsedThemes);
+          setThemes(clonedThemes);
+          console.log(`📦 ${clonedThemes.length} thème(s) chargé(s) depuis localStorage (édition admin)`);
           setIsLoading(false);
           return;
         }
@@ -47,8 +66,10 @@ export function useThemeStorage(): UseThemeStorageResult {
         if (themesData && Array.isArray(themesData)) {
           // Cast explicite pour TypeScript
           const typedThemes = themesData as ThemeItem[];
-          setThemes(typedThemes);
-          console.log(`⚡ ${typedThemes.length} thème(s) chargé(s) depuis themes.json (instantané)`);
+          // 🔴 CLONER pour éviter les mutations du JSON importé
+          const clonedThemes = deepCloneThemes(typedThemes);
+          setThemes(clonedThemes);
+          console.log(`⚡ ${clonedThemes.length} thème(s) chargé(s) depuis themes.json (instantané)`);
         } else {
           // Fichier vide ou invalide
           setThemes([]);

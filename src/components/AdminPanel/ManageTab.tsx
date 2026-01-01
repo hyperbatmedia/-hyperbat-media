@@ -52,6 +52,30 @@ const isMissingCreator = (creator: string): boolean => {
   return !creator?.trim() || ['inconnu', 'unknown'].includes(creator.toLowerCase().trim());
 };
 
+/**
+ * ✅ NOUVELLE FONCTION: Reconvertir les URLs en format brut pour l'export
+ * Permet à ImportTab de les reconvertir proprement
+ */
+const reverseConvertUrl = (url: string): string => {
+  if (!url?.trim()) return url;
+  
+  // Extraire l'ID Google Drive de n'importe quel format
+  const thumbnailMatch = url.match(/\/thumbnail\?[^&]*id=([a-zA-Z0-9_-]{25,})/);
+  const ucMatch = url.match(/\/uc\?[^&]*id=([a-zA-Z0-9_-]{25,})/);
+  const fileMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]{25,})/);
+  const openMatch = url.match(/\/open\?[^&]*id=([a-zA-Z0-9_-]{25,})/);
+  const idMatch = url.match(/[?&]id=([a-zA-Z0-9_-]{25,})/);
+  
+  const driveId = thumbnailMatch?.[1] || ucMatch?.[1] || fileMatch?.[1] || openMatch?.[1] || idMatch?.[1];
+  
+  if (driveId) {
+    // Retourner format "propre" que ImportTab/DriveTab convertira
+    return `https://drive.google.com/file/d/${driveId}/view?usp=sharing`;
+  }
+  
+  return url;
+};
+
 const downloadJson = (data: any, filename: string) => {
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -60,7 +84,6 @@ const downloadJson = (data: any, filename: string) => {
   link.download = filename;
   document.body.appendChild(link);
   link.click();
-  
   setTimeout(() => {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
@@ -108,7 +131,7 @@ const ThemeCard = ({
   isSelected: boolean;
   onToggleSelect: () => void;
 }) => {
-  const [imageError, setImageError] = useState(false);
+  const [imageError, setImageError] = React.useState(false);
   const missingCreator = isMissingCreator(theme.creator);
   const invalidUrl = isInvalidUrl(theme.imageUrl);
   const hasProblem = missingCreator || invalidUrl || imageError;
@@ -265,20 +288,45 @@ const EditModal = ({ theme, onSave, onClose, systems, categories }: {
   systems: SystemRow[];
   categories: Category[];
 }) => {
-  const [editData, setEditData] = useState(theme);
+  const [editData, setEditData] = useState<ThemeItem>({
+    id: theme.id,
+    name: theme.name,
+    creator: theme.creator,
+    system: theme.system,
+    category: theme.category,
+    imageUrl: theme.imageUrl,
+    downloadUrl: theme.downloadUrl,
+    size: theme.size
+  });
+  
   const availableSystems = systems.filter(s => !s.isHeader && !s.isSubHeader);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanedTheme: ThemeItem = {
+      id: editData.id,
+      name: editData.name.trim(),
+      creator: editData.creator.trim(),
+      system: editData.system,
+      category: editData.category,
+      imageUrl: editData.imageUrl.trim(),
+      downloadUrl: editData.downloadUrl.trim(),
+      size: editData.size.trim()
+    };
+    onSave(cleanedTheme);
+  };
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-orange-500 max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
-        <div className="sticky top-0 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-4 flex items-center justify-between">
+        <div className="sticky top-0 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-4 flex items-center justify-between z-10">
           <h2 className="text-2xl font-black text-white">✏️ Modifier le thème</h2>
           <button onClick={onClose} className="text-white hover:text-gray-200">
             <X className="w-6 h-6" />
           </button>
         </div>
         
-        <form onSubmit={e => { e.preventDefault(); onSave(editData); }} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-bold text-gray-300 mb-2">Nom du thème *</label>
@@ -378,7 +426,7 @@ const ImportModal = ({ onImport, onClose }: {
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-orange-500 max-w-3xl w-full shadow-2xl" onClick={e => e.stopPropagation()}>
         <div className="bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-4 flex items-center justify-between">
-          <h2 className="text-2xl font-black text-white">📥 Importer des thèmes</h2>
+          <h2 className="text-2xl font-black text-white">🔥 Importer des thèmes</h2>
           <button onClick={onClose} className="text-white"><X className="w-6 h-6" /></button>
         </div>
         
@@ -419,10 +467,9 @@ const ImportModal = ({ onImport, onClose }: {
 };
 
 // ============================================================================
-// COMPOSANT PRINCIPAL - CONNECTÉ AUX VRAIES PROPS
+// COMPOSANT PRINCIPAL - ✅ AVEC EXPORT INCLUANT LES IDS
 // ============================================================================
 export default function ManageTab({ themes, setThemes, saveThemes, systems, categories }: ManageTabProps) {
-  // États
   const [filters, setFilters] = useState({
     search: '',
     category: '',
@@ -447,14 +494,12 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     setTimeout(() => setToast(null), 3000);
   };
 
-  // Stats
   const stats = useMemo(() => ({
     total: themes.length,
     invalidUrls: themes.filter(t => isInvalidUrl(t.imageUrl)).length,
     missingCreators: themes.filter(t => isMissingCreator(t.creator)).length
   }), [themes]);
 
-  // Filtrage
   const filtered = useMemo(() => {
     return themes.filter(theme => {
       if (filters.search && !theme.name.toLowerCase().includes(filters.search.toLowerCase())) return false;
@@ -466,7 +511,6 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     });
   }, [themes, filters]);
 
-  // Tri
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
       let comparison = 0;
@@ -483,16 +527,13 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     });
   }, [filtered, sortBy, sortAsc, availableSystems]);
 
-  // Pagination
   const totalPages = Math.ceil(sorted.length / itemsPerPage);
   const paginated = sorted.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  // Reset page on filter change
   React.useEffect(() => {
     setCurrentPage(1);
   }, [filters, sortBy, sortAsc]);
 
-  // Handlers
   const handleToggleSelect = (id: number) => {
     setSelectedIds(prev => 
       prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
@@ -502,7 +543,6 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const handleSelectAll = () => {
     const pageIds = paginated.map(t => t.id);
     const allPageSelected = pageIds.every(id => selectedIds.includes(id));
-    
     if (allPageSelected) {
       setSelectedIds(prev => prev.filter(id => !pageIds.includes(id)));
     } else {
@@ -532,23 +572,55 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     }
   };
 
-  const handleSaveEdit = (edited: ThemeItem) => {
-    const updated = themes.map(t => t.id === edited.id ? edited : t);
+  const handleSaveEdit = async (edited: ThemeItem) => {
+    const updated: ThemeItem[] = JSON.parse(JSON.stringify(themes));
+    const indexToUpdate = updated.findIndex(t => t.id === edited.id);
+    
+    if (indexToUpdate === -1) {
+      console.error('❌ Thème non trouvé avec ID:', edited.id);
+      showToast('❌ Erreur: thème non trouvé', 'error');
+      return;
+    }
+    
+    updated[indexToUpdate] = {
+      id: edited.id,
+      name: edited.name,
+      creator: edited.creator,
+      system: edited.system,
+      category: edited.category,
+      imageUrl: edited.imageUrl,
+      downloadUrl: edited.downloadUrl,
+      size: edited.size
+    };
+    
     setThemes(updated);
-    saveThemes(updated);
+    await saveThemes(updated);
     setEditingTheme(null);
     showToast('✅ Thème modifié', 'success');
   };
 
+  /**
+   * ✅ FONCTION MODIFIÉE: Export AVEC IDs et URLs reconverties
+   * Permet à ImportTab/DriveTab de détecter les modifications manuelles
+   */
   const handleExport = () => {
-    const toExport = selectedIds.length > 0 
-      ? sorted.filter(t => selectedIds.includes(t.id))
-      : sorted;
+    const toExport = selectedIds.length > 0 ? sorted.filter(t => selectedIds.includes(t.id)) : sorted;
     
-    const data = toExport.map(({ id, ...rest }) => rest);
+    // ✅ GARDER les IDs + reconvertir les URLs en format "propre"
+    const data = toExport.map(theme => ({
+      id: theme.id,  // ✅ GARDE l'ID pour traçabilité
+      name: theme.name,
+      creator: theme.creator,
+      system: theme.system,
+      category: theme.category,
+      imageUrl: reverseConvertUrl(theme.imageUrl),  // ✅ Reconvertit en format brut
+      downloadUrl: reverseConvertUrl(theme.downloadUrl),  // ✅ Reconvertit en format brut
+      size: theme.size
+    }));
+    
     const filename = `themes_${selectedIds.length > 0 ? 'selection' : 'filtered'}_${new Date().toISOString().split('T')[0]}.json`;
     downloadJson(data, filename);
-    showToast(`✅ ${data.length} thème(s) exporté(s)`, 'success');
+    showToast(`✅ ${data.length} thème(s) exporté(s) avec IDs`, 'success');
   };
 
   const handleImport = (imported: Omit<ThemeItem, 'id'>[]) => {
@@ -586,10 +658,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black p-6">
-      {/* Toast */}
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
-      {/* HEADER */}
       <div className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-1">
         <div className="bg-gray-900 rounded-[22px] p-6">
           <div className="flex items-center justify-between gap-4 flex-wrap">
@@ -613,7 +683,6 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
         </div>
       </div>
 
-      {/* FILTRES ET ACTIONS */}
       <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 shadow-xl mb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div className="relative">
@@ -735,7 +804,6 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
         )}
       </div>
 
-      {/* GRILLE DE THÈMES */}
       {filtered.length === 0 ? (
         <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-12 border border-gray-700/50 text-center">
           <Search className="w-16 h-16 text-gray-600 mx-auto mb-4" />
@@ -788,7 +856,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
           {totalPages > 1 && (
             <div className="flex items-center justify-between pt-4 border-t border-gray-700">
               <div className="text-sm text-gray-400">
-                Affichage <span className="text-white font-semibold">{((currentPage - 1) * itemsPerPage) + 1}</span> à{' '}
+                Affichage <span className="text-white font-semibold">{((currentPage - 1) * itemsPerPage) + 1}</span> à {' '}
                 <span className="text-white font-semibold">{Math.min(currentPage * itemsPerPage, sorted.length)}</span> sur{' '}
                 <span className="text-white font-semibold">{sorted.length}</span>
               </div>
@@ -807,7 +875,6 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
         </div>
       )}
 
-      {/* MODALS */}
       {viewTheme && (
         <PreviewModal
           theme={viewTheme}

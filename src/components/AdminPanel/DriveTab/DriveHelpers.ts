@@ -1,4 +1,4 @@
-// DriveHelpers.ts - VERSION AVEC RECONNAISSANCE 7Z/RAR
+// DriveHelpers.ts - VERSION AVEC RECONNAISSANCE 7Z/RAR + EXTRACTION CRÉATEUR AMÉLIORÉE
 
 import { systemsData } from '../../../constants';
 
@@ -35,7 +35,7 @@ export interface DriveTheme {
   creator: string;
   size: string;
   selected?: boolean;
-  archiveFormat?: 'ZIP' | '7Z' | 'RAR' | 'UNKNOWN'; // 🆕 Format détecté
+  archiveFormat?: 'ZIP' | '7Z' | 'RAR' | 'UNKNOWN';
 }
 
 export interface Log {
@@ -56,7 +56,8 @@ export const REQUEST_TIMEOUT = 60000;
 export const MAX_RETRIES = 3;
 export const ITEMS_PER_PAGE = 20;
 export const DRIVE_API_KEY_STORAGE = 'hyperbat_drive_api_key';
-export const QUEUE_DELAY = 6000;
+export const QUEUE_DELAY = 2000; // 🔧 Augmenté à 10 secondes
+export const MAX_DOWNLOADS_PER_SESSION = 450; // 🆕 Limite de téléchargements avant pause
 
 // ===== DÉTECTION FORMAT ARCHIVE =====
 export const detectArchiveFormat = (signature: string): 'ZIP' | '7Z' | 'RAR' | 'UNKNOWN' => {
@@ -196,7 +197,7 @@ export const findMatchingSystem = (
   };
 };
 
-// ===== EXTRACTION CRÉATEUR (ZIP UNIQUEMENT) =====
+// ===== EXTRACTION CRÉATEUR (ZIP UNIQUEMENT) - VERSION AMÉLIORÉE =====
 export const extractCreatorFromArchive = async (
   fileId: string,
   apiKey: string,
@@ -223,7 +224,7 @@ export const extractCreatorFromArchive = async (
     if (addLog) addLog(`  ✔ ${formatSize(arrayBuffer.byteLength)} téléchargés`, 'success');
     
     // Détecter le format via signature
-    const header = new Uint8Array(arrayBuffer.slice(0, 8)); // 🆕 8 octets au lieu de 6
+    const header = new Uint8Array(arrayBuffer.slice(0, 8));
     const signature = Array.from(header).map(b => b.toString(16).padStart(2, '0')).join('');
     
     const format = detectArchiveFormat(signature);
@@ -286,20 +287,49 @@ export const extractCreatorFromArchive = async (
       return { creator: 'Unknown', format: 'ZIP' };
     }
     
-    // Extraire créateur
+    // ===== EXTRACTION CRÉATEUR - VERSION AMÉLIORÉE =====
     const authorTags = [
       xmlDoc.querySelector('text[name="gamethemeauthor"]'),
-      xmlDoc.querySelector('text[name="systhemeauthor"]')
+      xmlDoc.querySelector('text[name="systhemeauthor"]'),
+      xmlDoc.querySelector('creator'),
+      xmlDoc.querySelector('author')
     ];
     
     let creatorText = '';
     
+    // Stratégie 1 : Chercher dans les balises <text name="...">
     for (const tag of authorTags) {
       if (tag) {
+        // Cas 1 : <text name="gamethemeauthor"><text>Theme by : Roni</text></text>
         const textElement = tag.querySelector('text');
-        if (textElement && textElement.textContent) {
-          creatorText = textElement.textContent;
+        if (textElement?.textContent?.trim()) {
+          creatorText = textElement.textContent.trim();
           break;
+        }
+        
+        // Cas 2 : <text name="gamethemeauthor">Theme by : Roni</text>
+        if (tag.textContent?.trim()) {
+          creatorText = tag.textContent.trim();
+          break;
+        }
+      }
+    }
+    
+    // Stratégie 2 : Si rien trouvé, chercher dans TOUS les <text> avec attribut name
+    if (!creatorText) {
+      const allTextElements = xmlDoc.querySelectorAll('text[name]');
+      for (const element of Array.from(allTextElements)) {
+        const name = element.getAttribute('name')?.toLowerCase() || '';
+        if (name.includes('author') || name.includes('creator') || name.includes('theme')) {
+          const innerText = element.querySelector('text');
+          if (innerText?.textContent?.trim()) {
+            creatorText = innerText.textContent.trim();
+            break;
+          }
+          if (element.textContent?.trim()) {
+            creatorText = element.textContent.trim();
+            break;
+          }
         }
       }
     }
@@ -310,13 +340,20 @@ export const extractCreatorFromArchive = async (
       return { creator: 'Unknown', format: 'ZIP' };
     }
     
+    // Nettoyer le texte du créateur
     let creator = creatorText
       .replace(/^Theme by\s*:\s*/i, '')
       .replace(/^System Theme By\s*:\s*/i, '')
+      .replace(/^By\s*:\s*/i, '')
+      .replace(/^Author\s*:\s*/i, '')
+      .replace(/^Creator\s*:\s*/i, '')
       .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
       .trim();
     
-    if (!creator) {
+    if (!creator || creator.toLowerCase() === 'unknown' || creator.toLowerCase() === 'inconnu') {
       clearTimeout(timeoutId);
       return { creator: 'Unknown', format: 'ZIP' };
     }

@@ -20,7 +20,20 @@ export const systemsData: SystemsDataStructure = {
     arcade: {
         mame: { label: 'MAME ARCADE', systems: ['MAME', 'HBMAME' ] },
         snk: { label: 'SNK', systems: ['SNK 68k', 'Alpha Denshi', 'Neo Geo MVS', 'Hyper Neo Geo 64'] },
-        capcom: { label: 'CAPCOM', systems: ['Capcom Classique', 'CP System Dash', 'CPS1', 'CPS2', 'CPS3'] },
+        capcom: { 
+            label: 'CAPCOM', 
+            systems: [
+                'Capcom Classique',
+                'Capcom Z80',           
+                'Capcom 68000',
+                'CP System Dash',
+                'CPS1',
+                'CPS2',
+                'CPS3',
+                'Capcom ZN-1',
+                'Capcom ZN-2'
+            ] 
+        },
         'sega-arcade': {
           label: 'SEGA',
           systems: ['Sega G80', 'System 1', 'System 2', 'System E', 'System C', 'System C-2', 'System 16', 'System 18', 'System 24', 'System 32', 'System Multi 32', 'X Board', 'Y Board', 'ST-V', 'Europa-R', 'System SP', 'Model 1', 'Model 2', 'Model 3', 'Hikaru', 'Naomi', 'Naomi 2', 'Chihiro', 'Lindbergh', 'RingEdge', 'RingEdge 2', 'RingWide']
@@ -167,7 +180,7 @@ export const sectionIcons: SectionIconsStructure = {
     home: '🏠 CONSOLES DE SALON',
     portable: '🎮 CONSOLES PORTABLES',
     ports: '🔧 PORTS',
-    fantasy: '💾 FANTASY CONSOLES',
+    fantasy: '👾 FANTASY CONSOLES',
     ordinosaure: '💻 ORDINOSAURE',
     flipper: '🎯 FLIPPER'
 };

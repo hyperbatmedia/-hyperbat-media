@@ -1,22 +1,13 @@
-// src/components/AdminPanel/DriveTab/index.tsx
+// src/components/AdminPanel/DriveTab/index.tsx - VERSION CORRIGÉE COMPLÈTE
 import React, { useState, useRef, useEffect } from 'react';
-import { FolderOpen, Zap, Activity, CheckCircle, Play, StopCircle, Download, FileArchive, Clock, Layers, Filter, ArrowUpDown, Pause, PlayCircle } from 'lucide-react';
-
 import { 
-  DriveTheme, 
-  generateSystemMapping,
-  findMatchingSystem,
-  formatSize,
-  extractFolderId,
-  convertToDirectLink,
-  findMatchingImage,
-  fetchWithRetry,
-  saveUrls,
-  loadUrls,
-  saveDriveApiKey,
-  loadDriveApiKey,
-  extractCreatorFromArchive,
-  QUEUE_DELAY
+  FolderOpen, Zap, Activity, CheckCircle, Play, StopCircle, Download, 
+  FileArchive, Clock, Layers, Filter, ArrowUpDown, Pause, PlayCircle, AlertTriangle 
+} from 'lucide-react';
+import { 
+  DriveTheme, generateSystemMapping, findMatchingSystem, formatSize, 
+  extractFolderId, convertToDirectLink, findMatchingImage, fetchWithRetry, 
+  saveUrls, loadUrls, saveDriveApiKey, loadDriveApiKey, extractCreatorFromArchive 
 } from './DriveHelpers';
 
 interface ThemeItem {
@@ -30,23 +21,6 @@ interface ThemeItem {
   size: string;
 }
 
-interface SystemProgress {
-  name: string;
-  count: number;
-  lastAdded: string;
-}
-
-interface AnalysisStats {
-  totalFolders: number;
-  processedFolders: number;
-  totalThemes: number;
-  activeRequests: number;
-  speed: number;
-  startTime: number;
-  errors: number;
-  creatorsExtracted: number;
-}
-
 interface DriveTabProps {
   onImportThemes?: (themes: ThemeItem[]) => Promise<void>;
   existingThemes?: ThemeItem[];
@@ -56,6 +30,7 @@ interface DriveTabProps {
 type SortOption = 'name' | 'system' | 'size';
 type CreatorExtractionMode = 'never' | 'smart' | 'always';
 
+// Utilitaires
 const getSystemColor = (systemName: string): string => {
   if (systemName.includes('MAME') || systemName.includes('CPS')) return 'from-purple-600 to-pink-600';
   if (systemName.includes('Neo Geo')) return 'from-yellow-600 to-red-600';
@@ -69,47 +44,132 @@ const getSystemColor = (systemName: string): string => {
 const parseSize = (sizeStr: string): number => {
   const match = sizeStr.match(/^([\d.]+)\s*([KMGT]?B)$/i);
   if (!match) return 0;
-  
   const value = parseFloat(match[1]);
   const unit = match[2].toUpperCase();
-  
   const multipliers: Record<string, number> = {
-    'B': 1,
-    'KB': 1024,
-    'MB': 1024 * 1024,
-    'GB': 1024 * 1024 * 1024,
-    'TB': 1024 * 1024 * 1024 * 1024
+    'B': 1, 'KB': 1024, 'MB': 1024 * 1024, 'GB': 1024 * 1024 * 1024, 'TB': 1024 * 1024 * 1024 * 1024
   };
-  
   return value * (multipliers[unit] || 1);
 };
 
+// Composants internes
+const ThemeCard = ({ theme, isSelected, onToggleSelect }: any) => {
+  const [imageError, setImageError] = useState(false);
+  return (
+    <div
+      onClick={onToggleSelect}
+      className={`bg-gray-900 rounded-xl overflow-hidden border-2 cursor-pointer transition-all group relative ${
+        isSelected ? 'border-orange-500 shadow-lg shadow-orange-500/20' : 'border-gray-700 hover:border-orange-500'
+      }`}
+    >
+      <div className="relative h-40 bg-gray-950 overflow-hidden">
+        {theme.imageUrl && !imageError ? (
+          <>
+            <img 
+              src={theme.imageUrl} 
+              alt={theme.name}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              onError={() => setImageError(true)}
+              referrerPolicy="no-referrer"
+            />
+            {isSelected && (
+              <div className="absolute inset-0 bg-orange-500/30 flex items-center justify-center">
+                <CheckCircle className="w-12 h-12 text-white" />
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
+            <svg className="w-16 h-16 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+            </svg>
+          </div>
+        )}
+      </div>
+      <div className="p-3 space-y-2">
+        <h4 className="text-white font-bold text-sm truncate">{theme.name}</h4>
+        <div className="flex gap-2 flex-wrap">
+          <span className={`px-2 py-1 rounded-full text-[10px] font-bold ${
+            isSelected ? 'bg-orange-600 text-white' : 'bg-blue-600/80 text-white'
+          }`}>
+            {theme.systemDisplayName}
+          </span>
+          {theme.archiveFormat && (
+            <span className={`px-2 py-1 rounded-full text-[10px] font-bold ${
+              theme.archiveFormat === 'ZIP' ? 'bg-green-600/80 text-white' :
+              theme.archiveFormat === '7Z' ? 'bg-purple-600/80 text-white' :
+              theme.archiveFormat === 'RAR' ? 'bg-orange-600/80 text-white' :
+              'bg-gray-600/80 text-white'
+            }`}>
+              {theme.archiveFormat}
+            </span>
+          )}
+          <span className="px-2 py-1 bg-gray-700 text-gray-300 rounded-full text-[10px] font-semibold">
+            {theme.size}
+          </span>
+        </div>
+        <div className={`text-xs ${theme.creator !== 'Unknown' ? 'text-green-400 font-semibold' : 'text-gray-500'}`}>
+          Par {theme.creator}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const MetricCard = ({ icon: Icon, label, value, unit, gradient }: any) => (
+  <div className={`relative overflow-hidden bg-gradient-to-br ${gradient} rounded-2xl p-5 shadow-xl`}>
+    <div className="absolute top-0 right-0 opacity-10">
+      <Icon className="w-32 h-32" />
+    </div>
+    <div className="relative">
+      <Icon className="w-7 h-7 text-white mb-3" />
+      <div className="text-5xl font-black text-white mb-1">{value}</div>
+      <div className="text-white/80 text-sm font-bold uppercase tracking-wider">{label}</div>
+      {unit && <div className="text-white/60 text-xs mt-1">{unit}</div>}
+    </div>
+  </div>
+);
+
+const SystemProgressCard = ({ system }: any) => {
+  const color = getSystemColor(system.name);
+  return (
+    <div className={`bg-gradient-to-br ${color} rounded-xl p-4 shadow-lg transform hover:scale-105 transition-all duration-200`}>
+      <div className="flex items-start justify-between mb-2">
+        <div className="text-white font-black text-lg">{system.name}</div>
+        <div className="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1">
+          <div className="text-white font-black text-2xl">{system.count}</div>
+        </div>
+      </div>
+      <div className="text-white/70 text-xs truncate">{system.lastAdded}</div>
+      <div className="mt-2 h-1.5 bg-white/20 rounded-full overflow-hidden">
+        <div className="h-full bg-white/40 rounded-full animate-pulse" style={{ width: '100%' }} />
+      </div>
+    </div>
+  );
+};
+
 const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = [], setAdminTab }) => {
+  // États
   const [apiKey, setApiKey] = useState(() => loadDriveApiKey());
   const [driveUrls, setDriveUrls] = useState<string[]>(() => loadUrls());
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [themes, setThemes] = useState<DriveTheme[]>([]);
-  const [systemsProgress, setSystemsProgress] = useState<Record<string, SystemProgress>>({});
-  const [stats, setStats] = useState<AnalysisStats>({
-    totalFolders: 0,
-    processedFolders: 0,
-    totalThemes: 0,
-    activeRequests: 0,
-    speed: 0,
-    startTime: 0,
-    errors: 0,
-    creatorsExtracted: 0
+  const [systemsProgress, setSystemsProgress] = useState<Record<string, any>>({});
+  const [stats, setStats] = useState({
+    totalFolders: 0, processedFolders: 0, totalThemes: 0, activeRequests: 0,
+    speed: 0, startTime: 0, errors: 0, creatorsExtracted: 0, quotaErrors: 0, totalRequests: 0
   });
-  const [logs, setLogs] = useState<Array<{ time: string; message: string; type: 'info' | 'success' | 'error' }>>([]);
+  const [logs, setLogs] = useState<Array<{ time: string; message: string; type: string }>>([]);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [selectedThemes, setSelectedThemes] = useState<Set<string>>(new Set());
   const [autoScroll, setAutoScroll] = useState(true);
-  const [selectedSystemFilter, setSelectedSystemFilter] = useState<string>('all');
+  const [selectedSystemFilter, setSelectedSystemFilter] = useState('all');
   const [sortBy, setSortBy] = useState<SortOption>('name');
   const [sortAsc, setSortAsc] = useState(true);
   const [creatorExtractionMode, setCreatorExtractionMode] = useState<CreatorExtractionMode>('never');
   
+  // Refs
   const abortControllerRef = useRef<AbortController | null>(null);
   const isPausedRef = useRef(false);
   const pauseResolversRef = useRef<Set<() => void>>(new Set());
@@ -119,11 +179,21 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
   const creatorCacheRef = useRef<Map<string, string>>(new Map());
   const downloadQueueRef = useRef<Array<() => Promise<any>>>([]);
   const isProcessingQueueRef = useRef(false);
+  const quotaManagerRef = useRef({
+    requestCount: 0,
+    startTime: Date.now(),
+    quotaResetTime: Date.now() + 60000,
+    maxRequestsPerMinute: 30,
+    isThrottled: false,
+    consecutiveErrors: 0,
+    lastErrorTime: 0
+  });
 
+  // Effects
   useEffect(() => { isPausedRef.current = isPaused; }, [isPaused]);
   useEffect(() => { saveUrls(driveUrls); }, [driveUrls]);
-  useEffect(() => { if (apiKey && apiKey.length >= 39) { saveDriveApiKey(apiKey); } }, [apiKey]);
-  useEffect(() => { if (autoScroll) { logsEndRef.current?.scrollIntoView({ behavior: 'smooth' }); } }, [logs, autoScroll]);
+  useEffect(() => { if (apiKey?.length >= 39) saveDriveApiKey(apiKey); }, [apiKey]);
+  useEffect(() => { if (autoScroll) logsEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [logs, autoScroll]);
   useEffect(() => {
     if (!isAnalyzing || stats.startTime === 0) return;
     const interval = setInterval(() => {
@@ -132,7 +202,8 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     return () => clearInterval(interval);
   }, [isAnalyzing, stats.startTime]);
 
-  const addLog = (message: string, type: 'info' | 'success' | 'error' = 'info') => {
+  // Fonctions utilitaires
+  const addLog = (message: string, type: 'info' | 'success' | 'error' | 'warning' = 'info') => {
     setLogs(prev => [...prev, {
       time: new Date().toLocaleTimeString('fr-FR'),
       message,
@@ -146,25 +217,138 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
   };
 
   const getFilteredAndSortedThemes = (): DriveTheme[] => {
-    let filtered = themes;
-    if (selectedSystemFilter !== 'all') {
-      filtered = filtered.filter(t => t.systemDisplayName === selectedSystemFilter);
-    }
-    const sorted = [...filtered].sort((a, b) => {
+    let filtered = selectedSystemFilter !== 'all' 
+      ? themes.filter(t => t.systemDisplayName === selectedSystemFilter) 
+      : themes;
+    
+    return [...filtered].sort((a, b) => {
       let comparison = 0;
       switch (sortBy) {
-        case 'name': comparison = a.name.localeCompare(b.name); break;
-        case 'system': comparison = a.systemDisplayName.localeCompare(b.systemDisplayName); break;
-        case 'size': comparison = parseSize(a.size) - parseSize(b.size); break;
+        case 'name':
+          comparison = a.name.localeCompare(b.name);
+          break;
+        case 'system':
+          comparison = a.systemDisplayName.localeCompare(b.systemDisplayName);
+          break;
+        case 'size':
+          comparison = parseSize(a.size) - parseSize(b.size);
+          break;
       }
       return sortAsc ? comparison : -comparison;
     });
-    return sorted;
   };
 
   const waitIfPaused = async (): Promise<void> => {
     if (!isPausedRef.current) return;
-    return new Promise(resolve => { pauseResolversRef.current.add(resolve); });
+    return new Promise(resolve => {
+      pauseResolversRef.current.add(resolve);
+    });
+  };
+
+  const checkQuota = async (): Promise<void> => {
+    const quota = quotaManagerRef.current;
+    const now = Date.now();
+    
+    if (quota.consecutiveErrors > 0) {
+      const timeSinceLastError = now - quota.lastErrorTime;
+      const minWaitTime = Math.min(quota.consecutiveErrors * 300000, 1800000);
+      
+      if (timeSinceLastError < minWaitTime) {
+        const remainingWait = Math.ceil((minWaitTime - timeSinceLastError) / 1000);
+        const remainingMin = Math.floor(remainingWait / 60);
+        const remainingSec = remainingWait % 60;
+        addLog(`⏳ Cooldown: ${remainingMin}min ${remainingSec}s (erreur #${quota.consecutiveErrors})`, 'warning');
+        await new Promise(resolve => setTimeout(resolve, minWaitTime - timeSinceLastError));
+        addLog(`✅ Cooldown terminé, reprise`, 'success');
+      }
+    }
+    
+    if (now >= quota.quotaResetTime) {
+      quota.requestCount = 0;
+      quota.quotaResetTime = now + 60000;
+      quota.isThrottled = false;
+      if (quota.consecutiveErrors === 0) addLog('🔄 Quota réinitialisé', 'success');
+    }
+    
+    if (quota.requestCount >= quota.maxRequestsPerMinute * 0.7) {
+      if (!quota.isThrottled) {
+        quota.isThrottled = true;
+        const waitTime = Math.ceil((quota.quotaResetTime - now) / 1000);
+        addLog(`⚠️ Quota atteint (${quota.requestCount}/${quota.maxRequestsPerMinute})`, 'warning');
+        addLog(`⏳ Attente sécurité ${waitTime}s...`, 'warning');
+      }
+      
+      const waitTime = quota.quotaResetTime - now + 10000;
+      if (waitTime > 0) {
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+      }
+    }
+    
+    if (quota.requestCount > 0) {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+    
+    quota.requestCount++;
+    setStats(prev => ({ ...prev, totalRequests: prev.totalRequests + 1 }));
+  };
+
+  const fetchWithQuota = async (url: string, signal: AbortSignal): Promise<any> => {
+    await checkQuota();
+    await waitIfPaused();
+    
+    try {
+      const response = await fetchWithRetry(url, signal, addLog);
+      
+      if (quotaManagerRef.current.consecutiveErrors > 0) {
+        addLog('✅ Connexion Google Drive rétablie', 'success');
+        quotaManagerRef.current.consecutiveErrors = 0;
+      }
+      
+      return response;
+    } catch (error: any) {
+      const errorMsg = error.message?.toLowerCase() || '';
+      const isQuotaError = errorMsg.includes('429') || 
+                          errorMsg.includes('quota') || 
+                          errorMsg.includes('rate limit') ||
+                          errorMsg.includes('too many requests') ||
+                          errorMsg.includes('failed to fetch');
+      
+      if (isQuotaError) {
+        quotaManagerRef.current.consecutiveErrors++;
+        quotaManagerRef.current.lastErrorTime = Date.now();
+        
+        const waitTime = Math.min(quotaManagerRef.current.consecutiveErrors * 300, 1800);
+        const waitMin = Math.floor(waitTime / 60);
+        const waitSec = waitTime % 60;
+        
+        setStats(prev => ({ ...prev, quotaErrors: prev.quotaErrors + 1 }));
+        addLog(`🚫 Erreur Google Drive #${quotaManagerRef.current.consecutiveErrors}`, 'error');
+        addLog(`⏰ Attente ${waitMin}min ${waitSec}s...`, 'error');
+        
+        setIsPaused(true);
+        isPausedRef.current = true;
+        
+        await new Promise(resolve => setTimeout(resolve, waitTime * 1000));
+        
+        quotaManagerRef.current.requestCount = 0;
+        quotaManagerRef.current.quotaResetTime = Date.now() + 60000;
+        
+        setIsPaused(false);
+        isPausedRef.current = false;
+        pauseResolversRef.current.forEach(resolve => resolve());
+        pauseResolversRef.current.clear();
+        
+        addLog(`🔄 Reprise automatique`, 'info');
+        
+        try {
+          return await fetchWithRetry(url, signal, addLog);
+        } catch (retryError: any) {
+          addLog(`❌ Échec après retry: ${retryError.message}`, 'error');
+          throw retryError;
+        }
+      }
+      throw error;
+    }
   };
 
   const togglePause = () => {
@@ -175,37 +359,51 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       pauseResolversRef.current.clear();
     } else {
       setIsPaused(true);
-      addLog('⏸️ Analyse mise en pause', 'info');
+      addLog('⏸️ Analyse en pause', 'info');
     }
   };
 
   const listFiles = async (folderId: string, key: string, signal: AbortSignal) => {
     let allFiles: any[] = [];
     let pageToken: string | null = null;
+    
     do {
       if (signal.aborted) throw new Error('Annulé');
       await waitIfPaused();
+      
       const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&key=${key}&fields=files(id,name,mimeType,size),nextPageToken&pageSize=1000${pageToken ? `&pageToken=${pageToken}` : ''}`;
-      const data = await fetchWithRetry(url, signal, addLog);
+      const data = await fetchWithQuota(url, signal);
       allFiles = [...allFiles, ...(data.files || [])];
       pageToken = data.nextPageToken || null;
     } while (pageToken);
+    
     return allFiles;
   };
 
   const processDownloadQueue = async () => {
     if (isProcessingQueueRef.current || downloadQueueRef.current.length === 0) return;
     isProcessingQueueRef.current = true;
+    
     while (downloadQueueRef.current.length > 0) {
       await waitIfPaused();
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      
       const task = downloadQueueRef.current.shift();
       if (task) {
         try {
           await task();
-          await new Promise(resolve => setTimeout(resolve, QUEUE_DELAY));
-        } catch (error) {}
+        } catch (error: any) {
+          const errorMsg = error.message?.toLowerCase() || '';
+          if (errorMsg.includes('429') || errorMsg.includes('quota')) {
+            addLog(`⚠️ Erreur quota sur téléchargement`, 'error');
+            await new Promise(resolve => setTimeout(resolve, 180000));
+            quotaManagerRef.current.requestCount = 0;
+            quotaManagerRef.current.consecutiveErrors++;
+          }
+        }
       }
     }
+    
     isProcessingQueueRef.current = false;
   };
 
@@ -221,11 +419,14 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
 
   const getCreatorOptimized = async (
     archive: any,
-    matchedSystem: { systemId: string; systemName: string },
+    matchedSystem: any,
     key: string,
     signal: AbortSignal
   ): Promise<{ creator: string; format: string }> => {
-    if (creatorExtractionMode === 'never') return { creator: 'Unknown', format: 'UNKNOWN' };
+    if (creatorExtractionMode === 'never') {
+      return { creator: 'Unknown', format: 'UNKNOWN' };
+    }
+    
     const cacheKey = `${archive.id}_${archive.name}`;
     
     if (creatorCacheRef.current.has(cacheKey)) {
@@ -240,7 +441,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       existing.system === matchedSystem.systemId
     );
     
-    if (existingTheme?.creator) {
+    if (existingTheme?.creator && existingTheme.creator !== 'Unknown' && existingTheme.creator !== 'Inconnu') {
       const creator = existingTheme.creator;
       creatorCacheRef.current.set(cacheKey, creator);
       addLog(`♻️ Existant: ${name} → ${creator}`, 'success');
@@ -254,23 +455,35 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     
     if (signal.aborted) return { creator: 'Unknown', format: 'ABORTED' };
     
-    addLog(`⏳ File: ${name} (${downloadQueueRef.current.length + 1})`, 'info');
+    addLog(`⏳ Queue: ${name} (${downloadQueueRef.current.length + 1})`, 'warning');
     
     const result = await queueDownload(async () => {
       try {
         await waitIfPaused();
-        addLog(`📦 DL: ${name}`, 'info');
+        await checkQuota();
+        addLog(`📦 DL: ${name}`, 'warning');
+        
         const { creator, format } = await extractCreatorFromArchive(archive.id, key, addLog);
         creatorCacheRef.current.set(cacheKey, creator);
+        
         if (creator !== 'Unknown') {
           setStats(prev => ({ ...prev, creatorsExtracted: prev.creatorsExtracted + 1 }));
+          addLog(`✅ Créateur: ${name} → ${creator}`, 'success');
         }
+        
         return { creator, format };
       } catch (error: any) {
-        addLog(`⚠️ Err ${name}: ${error.message}`, 'error');
+        const errorMsg = error.message?.toLowerCase() || '';
+        if (errorMsg.includes('429') || errorMsg.includes('quota')) {
+          addLog(`🚫 QUOTA sur ${name}`, 'error');
+          setStats(prev => ({ ...prev, quotaErrors: prev.quotaErrors + 1 }));
+        } else {
+          addLog(`⚠️ Err ${name}: ${error.message}`, 'error');
+        }
         return { creator: 'Unknown', format: 'ERROR' };
       }
     });
+    
     return result;
   };
 
@@ -282,20 +495,26 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     depth = 0
   ): Promise<{ themes: DriveTheme[]; folderCount: number }> => {
     if (depth > 15 || signal.aborted) return { themes: [], folderCount: 0 };
+    
     await waitIfPaused();
     setStats(prev => ({ ...prev, activeRequests: prev.activeRequests + 1 }));
+    
     try {
-      addLog(`🔍 ${path || 'Root'}...`, 'info');
+      addLog(`📂 ${path || 'Root'}...`, 'info');
       const files = await listFiles(folderId, key, signal);
       addLog(`   ✔ ${files.length} fichiers`, 'success');
+      
       const localThemes: DriveTheme[] = [];
       let folderCount = 1;
+      
       const folders = files.filter(f => f.mimeType === 'application/vnd.google-apps.folder');
       const archives = files.filter(f => /\.(zip|7z|7zip|rar)$/i.test(f.name));
       const images = files.filter(f => /\.(jpg|jpeg|png)$/i.test(f.name));
+      
       if (archives.length > 0) {
         const pathParts = path.split('/').filter(p => p);
         let systemName = 'unknown';
+        
         for (let i = pathParts.length - 1; i >= 0; i--) {
           const segment = pathParts[i];
           if (!segment.toLowerCase().includes('theme') && !segment.toLowerCase().includes('artwork')) {
@@ -306,14 +525,18 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
             }
           }
         }
+        
         const matchedSystem = findMatchingSystem(systemName, systemMapping, addLog);
         addLog(`🎮 ${archives.length} → ${matchedSystem.systemName}`, 'info');
+        
         for (const archive of archives) {
           if (signal.aborted) break;
           await waitIfPaused();
+          
           const name = archive.name.replace(/\.(zip|7z|7zip|rar)$/i, '');
           const { creator, format } = await getCreatorOptimized(archive, matchedSystem, key, signal);
           const image = findMatchingImage(archive.name, images);
+          
           const newTheme: DriveTheme = {
             id: `theme_${++themeIdCounter.current}`,
             name,
@@ -327,7 +550,9 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
             selected: false,
             archiveFormat: format as 'ZIP' | '7Z' | 'RAR' | 'UNKNOWN'
           };
+          
           localThemes.push(newTheme);
+          
           setSystemsProgress(prev => ({
             ...prev,
             [matchedSystem.systemName]: {
@@ -337,6 +562,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
             }
           }));
         }
+        
         if (localThemes.length > 0) {
           setThemes(prev => [...prev, ...localThemes]);
           setStats(prev => {
@@ -347,28 +573,29 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
           });
         }
       }
+      
       if (folders.length > 0) {
-        const MAX_CONCURRENT = 5;
         const results: Array<{ themes: DriveTheme[]; folderCount: number }> = [];
-        for (let i = 0; i < folders.length; i += MAX_CONCURRENT) {
+        
+        for (let i = 0; i < folders.length; i++) {
           if (signal.aborted) break;
           await waitIfPaused();
-          const batch = folders.slice(i, i + MAX_CONCURRENT);
-          const batchResults = await Promise.all(
-            batch.map(folder => {
-              const subPath = path ? `${path}/${folder.name}` : folder.name;
-              return analyzeFolder(folder.id, key, signal, subPath, depth + 1);
-            })
-          );
-          results.push(...batchResults);
+          
+          const folder = folders[i];
+          const subPath = path ? `${path}/${folder.name}` : folder.name;
+          const result = await analyzeFolder(folder.id, key, signal, subPath, depth + 1);
+          results.push(result);
         }
+        
         results.forEach(result => {
           localThemes.push(...result.themes);
           folderCount += result.folderCount;
         });
       }
+      
       setStats(prev => ({ ...prev, processedFolders: prev.processedFolders + 1 }));
       return { themes: localThemes, folderCount };
+      
     } catch (error: any) {
       addLog(`❌ Erreur: ${error.message}`, 'error');
       setStats(prev => ({ ...prev, errors: prev.errors + 1 }));
@@ -383,13 +610,16 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       alert('⚠️ Clé API invalide (minimum 39 caractères)');
       return;
     }
+    
     const urls = driveUrls.filter(u => u.trim());
     if (urls.length === 0) {
       alert('⚠️ Au moins une URL Drive requise');
       return;
     }
+    
     const controller = new AbortController();
     abortControllerRef.current = controller;
+    
     setIsAnalyzing(true);
     setIsPaused(false);
     isPausedRef.current = false;
@@ -405,44 +635,57 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       speed: 0,
       startTime: Date.now(),
       errors: 0,
-      creatorsExtracted: 0
+      creatorsExtracted: 0,
+      quotaErrors: 0,
+      totalRequests: 0
     });
     setElapsedTime(0);
     setSelectedSystemFilter('all');
     creatorCacheRef.current.clear();
     downloadQueueRef.current = [];
     isProcessingQueueRef.current = false;
+    
+    quotaManagerRef.current = {
+      requestCount: 0,
+      startTime: Date.now(),
+      quotaResetTime: Date.now() + 60000,
+      maxRequestsPerMinute: 90,
+      isThrottled: false,
+      consecutiveErrors: 0,
+      lastErrorTime: 0
+    };
+    
     addLog('🚀 Démarrage analyse', 'info');
+    addLog('📊 Quota: 30 req/min + backoff exponentiel', 'info');
+    
     const modeLabels = {
       never: '⚡ Mode rapide',
       smart: '🧠 Mode intelligent',
-      always: '🐌 Mode complet'
+      always: '🌐 Mode complet'
     };
     addLog(`📋 ${modeLabels[creatorExtractionMode]}`, 'info');
-    if (creatorExtractionMode !== 'never') {
-      addLog('💾 Cache intelligent actif', 'info');
-      addLog(`📊 ${existingThemes.length} thèmes existants`, 'info');
-      const withCreator = existingThemes.filter(t => t.creator && t.creator !== 'Unknown').length;
-      if (withCreator > 0) {
-        addLog(`♻️ ${withCreator} créateurs connus`, 'success');
-      }
-    }
+    
     try {
       for (const url of urls) {
         if (controller.signal.aborted) break;
+        
         const folderId = extractFolderId(url);
         if (!folderId) {
           addLog(`❌ URL invalide: ${url}`, 'error');
           continue;
         }
+        
         addLog(`\n📂 Analyse: ${url}`, 'info');
         const result = await analyzeFolder(folderId, apiKey, controller.signal);
+        
         if (!controller.signal.aborted) {
           addLog(`✅ ${result.themes.length} thèmes trouvés`, 'success');
         }
       }
+      
       if (!controller.signal.aborted) {
         addLog(`\n🎉 Terminé: ${themes.length} thèmes`, 'success');
+        addLog(`📊 Total requêtes: ${stats.totalRequests} • Erreurs: ${stats.quotaErrors}`, 'info');
         if (creatorExtractionMode !== 'never') {
           addLog(`👤 ${stats.creatorsExtracted} créateurs extraits`, 'success');
         }
@@ -467,6 +710,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     addLog('⚠️ Analyse annulée', 'error');
   };
 
+  // ✅ CORRECTION COMPLÈTE : Calcul correct du maxId depuis existingThemes
   const handleImport = async () => {
     const selected = themes.filter(t => selectedThemes.has(t.id));
     if (selected.length === 0) {
@@ -477,8 +721,21 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       alert('❌ Fonction d\'import non disponible');
       return;
     }
-    const themesToImport: ThemeItem[] = selected.map((t, i) => ({
-      id: Date.now() + i,
+    
+    // ✅ CORRECTION : Calculer le maxId depuis les thèmes existants de manière optimisée
+    let maxId = 0;
+    if (existingThemes.length > 0) {
+      for (let i = 0; i < existingThemes.length; i++) {
+        if (existingThemes[i].id > maxId) {
+          maxId = existingThemes[i].id;
+        }
+      }
+    }
+    
+    // ✅ Créer les thèmes avec des IDs séquentiels après le maxId
+    let nextId = maxId + 1;
+    const themesToImport: ThemeItem[] = selected.map(t => ({
+      id: nextId++, // ✅ ID séquentiel garanti unique
       name: t.name,
       creator: t.creator,
       system: t.system,
@@ -487,9 +744,10 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       downloadUrl: t.downloadUrl,
       size: t.size
     }));
+    
     try {
       await onImportThemes(themesToImport);
-      addLog(`✅ ${themesToImport.length} thème(s) importés`, 'success');
+      addLog(`✅ ${themesToImport.length} thème(s) importé(s) avec IDs ${maxId + 1} à ${nextId - 1}`, 'success');
       setSelectedThemes(new Set());
       setTimeout(() => {
         if (setAdminTab) {
@@ -505,7 +763,9 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
   const toggleSelectAll = () => {
     const filtered = getFilteredAndSortedThemes();
     const filteredIds = new Set(filtered.map(t => t.id));
-    if (Array.from(selectedThemes).every(id => filteredIds.has(id)) && selectedThemes.size === filtered.length) {
+    const allSelected = filtered.every(t => selectedThemes.has(t.id)) && selectedThemes.size === filtered.length;
+    
+    if (allSelected) {
       const newSelection = new Set(Array.from(selectedThemes).filter(id => !filteredIds.has(id)));
       setSelectedThemes(newSelection);
     } else {
@@ -520,105 +780,13 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const getQuotaPercentage = (): number => {
+    return (quotaManagerRef.current.requestCount / quotaManagerRef.current.maxRequestsPerMinute) * 100;
+  };
+
   const filteredThemes = getFilteredAndSortedThemes();
   const detectedSystems = getDetectedSystems();
 
-  const ThemeCard = ({ theme, isSelected, onToggleSelect }: { theme: DriveTheme; isSelected: boolean; onToggleSelect: () => void }) => {
-    const [imageError, setImageError] = useState(false);
-    return (
-      <div
-        onClick={onToggleSelect}
-        className={`bg-gray-900 rounded-xl overflow-hidden border-2 cursor-pointer transition-all group relative ${
-          isSelected ? 'border-orange-500 shadow-lg shadow-orange-500/20' : 'border-gray-700 hover:border-orange-500'
-        }`}
-      >
-        <div className="relative h-40 bg-gray-950 overflow-hidden">
-          {theme.imageUrl && !imageError ? (
-            <>
-              <img 
-                src={theme.imageUrl} 
-                alt={theme.name}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                onError={() => setImageError(true)}
-                referrerPolicy="no-referrer"
-              />
-              {isSelected && (
-                <div className="absolute inset-0 bg-orange-500/30 flex items-center justify-center">
-                  <CheckCircle className="w-12 h-12 text-white" />
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
-              <svg className="w-16 h-16 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
-              </svg>
-            </div>
-          )}
-        </div>
-        <div className="p-3 space-y-2">
-          <h4 className="text-white font-bold text-sm truncate">{theme.name}</h4>
-          <div className="flex gap-2 flex-wrap">
-            <span className={`px-2 py-1 rounded-full text-[10px] font-bold ${
-              isSelected ? 'bg-orange-600 text-white' : 'bg-blue-600/80 text-white'
-            }`}>
-              {theme.systemDisplayName}
-            </span>
-            {theme.archiveFormat && (
-              <span className={`px-2 py-1 rounded-full text-[10px] font-bold ${
-                theme.archiveFormat === 'ZIP' ? 'bg-green-600/80 text-white' :
-                theme.archiveFormat === '7Z' ? 'bg-purple-600/80 text-white' :
-                theme.archiveFormat === 'RAR' ? 'bg-orange-600/80 text-white' :
-                'bg-gray-600/80 text-white'
-              }`}>
-                {theme.archiveFormat}
-              </span>
-            )}
-            <span className="px-2 py-1 bg-gray-700 text-gray-300 rounded-full text-[10px] font-semibold">
-              {theme.size}
-            </span>
-          </div>
-          <div className={`text-xs ${theme.creator !== 'Unknown' ? 'text-green-400 font-semibold' : 'text-gray-500'}`}>
-            Par {theme.creator}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const MetricCard = ({ icon: Icon, label, value, unit, gradient }: any) => (
-    <div className={`relative overflow-hidden bg-gradient-to-br ${gradient} rounded-2xl p-5 shadow-xl`}>
-      <div className="absolute top-0 right-0 opacity-10">
-        <Icon className="w-32 h-32" />
-      </div>
-      <div className="relative">
-        <Icon className="w-7 h-7 text-white mb-3" />
-        <div className="text-5xl font-black text-white mb-1">{value}</div>
-        <div className="text-white/80 text-sm font-bold uppercase tracking-wider">{label}</div>
-        {unit && <div className="text-white/60 text-xs mt-1">{unit}</div>}
-      </div>
-    </div>
-  );
-
-  const SystemProgressCard = ({ system }: { system: SystemProgress }) => {
-    const color = getSystemColor(system.name);
-    return (
-      <div className={`bg-gradient-to-br ${color} rounded-xl p-4 shadow-lg transform hover:scale-105 transition-all duration-200`}>
-        <div className="flex items-start justify-between mb-2">
-          <div className="text-white font-black text-lg">{system.name}</div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1">
-            <div className="text-white font-black text-2xl">{system.count}</div>
-          </div>
-        </div>
-        <div className="text-white/70 text-xs truncate">{system.lastAdded}</div>
-        <div className="mt-2 h-1.5 bg-white/20 rounded-full overflow-hidden">
-          <div className="h-full bg-white/40 rounded-full animate-pulse" style={{ width: '100%' }} />
-        </div>
-      </div>
-    );
-  };
-
-  // ===== RENDER PRINCIPAL =====
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black p-6">
       {/* HEADER */}
@@ -633,7 +801,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
             </div>
             <div>
               <h1 className="text-4xl font-black text-white mb-1">Analyseur Google Drive</h1>
-              <p className="text-gray-400 text-sm font-semibold">✅ ZIP/7Z/RAR • ⏸️ Pause/Reprise • ⚡ Optimisé</p>
+              <p className="text-gray-400 text-sm font-semibold">✅ ZIP/7Z/RAR • ⏸️ Pause/Reprise • ⚡ Optimisé • 📊 Gestion Quota • 🆔 IDs Fixes</p>
             </div>
           </div>
         </div>
@@ -675,10 +843,18 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
             </div>
           </div>
 
-          <div className="bg-blue-900/20 border border-blue-700/50 rounded-lg p-3">
-            <p className="text-blue-300 text-sm font-semibold">
-              ✨ <strong>Formats supportés :</strong> ZIP ✅ (extraction créateur) • 7Z/RAR ✅ (reconnaissance uniquement) • Timeout 60s • Backoff exponentiel • Pause/Reprise
-            </p>
+          <div>
+            <label className="block text-xs font-bold text-gray-400 mb-2">🎯 MODE D'EXTRACTION DES CRÉATEURS</label>
+            <select
+              value={creatorExtractionMode}
+              onChange={(e) => setCreatorExtractionMode(e.target.value as CreatorExtractionMode)}
+              className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:border-orange-500 transition-all font-semibold"
+              disabled={isAnalyzing}
+            >
+              <option value="never">⚡ Mode Rapide - Pas d'extraction (le plus rapide)</option>
+              <option value="smart">🧠 Mode Intelligent - Cache + Thèmes existants (recommandé)</option>
+              <option value="always">🌐 Mode Complet - Télécharger tous les ZIP (TRÈS LENT)</option>
+            </select>
           </div>
 
           <div className="flex items-center gap-4">
@@ -726,11 +902,11 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
             
             <div className="flex gap-3">
               <div className="bg-gray-900 rounded-lg px-4 py-3 text-center border border-gray-700 min-w-[80px]">
-                <div className="text-orange-400 font-black text-lg">×5</div>
-                <div className="text-gray-500 text-[10px] font-semibold uppercase">Parallèle</div>
+                <div className="text-orange-400 font-black text-lg">×1</div>
+                <div className="text-gray-500 text-[10px] font-semibold uppercase">Séquentiel</div>
               </div>
               <div className="bg-gray-900 rounded-lg px-4 py-3 text-center border border-gray-700 min-w-[80px]">
-                <div className="text-green-400 font-black text-lg">{stats.activeRequests}/5</div>
+                <div className="text-green-400 font-black text-lg">{stats.activeRequests}/1</div>
                 <div className="text-gray-500 text-[10px] font-semibold uppercase">Actifs</div>
               </div>
               <div className="bg-gray-900 rounded-lg px-4 py-3 text-center border border-gray-700 min-w-[80px]">
@@ -746,19 +922,45 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
         </div>
       </div>
 
+      {/* QUOTA INDICATOR */}
+      {isAnalyzing && (
+        <div className="bg-gray-800 rounded-2xl p-4 border border-gray-700 shadow-xl mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className={`w-5 h-5 ${getQuotaPercentage() > 90 ? 'text-red-400 animate-pulse' : getQuotaPercentage() > 70 ? 'text-yellow-400' : 'text-green-400'}`} />
+              <span className="text-white font-bold text-sm">Quota API</span>
+              {quotaManagerRef.current.consecutiveErrors > 0 && (
+                <span className="ml-2 px-2 py-1 bg-red-600 text-white text-xs rounded-full font-bold animate-pulse">
+                  {quotaManagerRef.current.consecutiveErrors} erreur(s)
+                </span>
+              )}
+            </div>
+            <div className="text-right">
+              <div className="text-white font-black text-lg">{quotaManagerRef.current.requestCount}/30</div>
+              <div className="text-gray-400 text-xs">Requêtes totales: {stats.totalRequests}</div>
+            </div>
+          </div>
+          <div className="h-3 bg-gray-900 rounded-full overflow-hidden">
+            <div 
+              className={`h-full transition-all duration-300 ${
+                getQuotaPercentage() > 90 ? 'bg-gradient-to-r from-red-500 to-red-600' :
+                getQuotaPercentage() > 70 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
+                'bg-gradient-to-r from-green-500 to-emerald-500'
+              }`}
+              style={{ width: `${Math.min(getQuotaPercentage(), 100)}%` }}
+            />
+          </div>
+          {stats.quotaErrors > 0 && (
+            <div className="mt-2 text-xs text-red-400 font-semibold">
+              ⚠️ {stats.quotaErrors} erreur(s) de quota détectée(s)
+            </div>
+          )}
+        </div>
+      )}
+
       {/* MÉTRIQUES */}
       {isAnalyzing && (
         <>
-          {isPaused && (
-            <div className="bg-yellow-900/20 border-2 border-yellow-600 rounded-2xl p-4 mb-6 flex items-center gap-3 animate-pulse">
-              <Pause className="w-8 h-8 text-yellow-400" />
-              <div>
-                <div className="text-yellow-300 font-bold text-lg">⏸️ Analyse en pause</div>
-                <div className="text-yellow-400 text-sm">Cliquez sur "Reprendre" pour continuer • {pauseResolversRef.current.size} tâche(s) en attente</div>
-              </div>
-            </div>
-          )}
-
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <MetricCard icon={FileArchive} label="Thèmes" value={stats.totalThemes} gradient="from-green-600 to-emerald-600" />
             <MetricCard icon={Zap} label="Vitesse" value={stats.speed.toFixed(1)} unit="thèmes/sec" gradient="from-orange-600 to-pink-600" />
@@ -801,7 +1003,8 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
               {logs.map((log, i) => (
                 <div key={i} className={`flex gap-2 ${
                   log.type === 'error' ? 'text-red-400' :
-                  log.type === 'success' ? 'text-green-400' : 'text-gray-400'
+                  log.type === 'success' ? 'text-green-400' : 
+                  log.type === 'warning' ? 'text-yellow-400' : 'text-gray-400'
                 }`}>
                   <span className="text-gray-600">[{log.time}]</span>
                   <span>{log.message}</span>
@@ -881,21 +1084,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
             </div>
           </div>
 
-          {selectedSystemFilter !== 'all' && (
-            <div className="mb-4 p-3 bg-blue-900/20 border border-blue-700/50 rounded-lg">
-              <div className="flex items-center gap-2 text-blue-300 text-sm font-semibold">
-                <Filter className="w-4 h-4" />
-                Filtre actif : {selectedSystemFilter} ({filteredThemes.length} thème{filteredThemes.length > 1 ? 's' : ''})
-                <button
-                  onClick={() => setSelectedSystemFilter('all')}
-                  className="ml-auto text-xs bg-blue-700 hover:bg-blue-600 px-2 py-1 rounded transition-all"
-                >
-                  Réinitialiser
-                </button>
-              </div>
-            </div>
-          )}
-          
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 max-h-[600px] overflow-y-auto pr-2">
             {filteredThemes.map((theme) => (
               <ThemeCard

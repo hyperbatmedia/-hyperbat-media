@@ -20,6 +20,7 @@ export default function Lightbox({
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
   const [previousFocus, setPreviousFocus] = useState<HTMLElement | null>(null);
+  const [imageLoaded, setImageLoaded] = useState(false); // 🆕 État pour le chargement
 
   // ✅ Calcul de l'index avec useMemo pour éviter les recalculs
   const currentIndex = useMemo(() => {
@@ -61,6 +62,11 @@ export default function Lightbox({
       firstElement?.focus();
     }
   };
+
+  // 🆕 Réinitialiser l'état de chargement quand le thème change
+  useEffect(() => {
+    setImageLoaded(false);
+  }, [theme?.imageUrl]);
 
   useEffect(() => {
     if (theme) {
@@ -125,6 +131,9 @@ export default function Lightbox({
             transform: scale(1);
           }
         }
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
       `}</style>
       <div 
         className="flex-1 flex items-center justify-center p-6"
@@ -134,22 +143,54 @@ export default function Lightbox({
         onClick={(e) => e.stopPropagation()}
       >
         {theme.imageUrl ? (
-          <img
-            src={theme.imageUrl.replace('sz=w400', 'sz=w1000')} 
-		    alt={theme.name}
-		    className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
-            style={{
-              maxWidth: '100%',
-              maxHeight: '100%',
-              width: 'auto',
-              height: 'auto',
-              objectFit: 'contain',
-              borderRadius: '8px',
-              boxShadow: '0 20px 60px rgba(255, 140, 0, 0.3), 0 0 100px rgba(255, 215, 0, 0.1)',
-              transition: 'opacity 0.25s ease-out'
-            }}
-            loading="eager"
-          />
+          <div className="relative max-w-full max-h-[80vh]">
+            {/* 🆕 Loader pendant le chargement */}
+            {!imageLoaded && (
+              <div 
+                className="absolute inset-0 flex items-center justify-center"
+                style={{
+                  background: 'rgba(0, 0, 0, 0.5)',
+                  borderRadius: '8px',
+                }}
+              >
+                <div 
+                  style={{
+                    width: '48px',
+                    height: '48px',
+                    border: '4px solid rgba(255, 140, 0, 0.3)',
+                    borderTop: '4px solid #FF8C00',
+                    borderRadius: '50%',
+                    animation: 'spin 1s linear infinite'
+                  }}
+                />
+              </div>
+            )}
+            
+            {/* 🆕 Image avec gestion du chargement */}
+            <img
+              key={theme.imageUrl} // 🆕 Force le re-render quand l'URL change
+              src={theme.imageUrl.replace('sz=w400', 'sz=w1000')} 
+              alt={theme.name}
+              className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+              style={{
+                maxWidth: '100%',
+                maxHeight: '80vh',
+                width: 'auto',
+                height: 'auto',
+                objectFit: 'contain',
+                borderRadius: '8px',
+                boxShadow: '0 20px 60px rgba(255, 140, 0, 0.3), 0 0 100px rgba(255, 215, 0, 0.1)',
+                opacity: imageLoaded ? 1 : 0,
+                transition: 'opacity 0.3s ease-out'
+              }}
+              referrerPolicy="no-referrer"
+              onLoad={() => setImageLoaded(true)} // 🆕 Marque comme chargée
+              onError={(e) => {
+                setImageLoaded(true);
+                console.error('Erreur chargement image Lightbox:', theme.imageUrl);
+              }}
+            />
+          </div>
         ) : (
           <div 
             className="flex items-center justify-center rounded-lg" 

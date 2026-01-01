@@ -35,7 +35,8 @@ interface ImportTabProps {
   systems: SystemRow[];
   categories: Category[];
   setAdminTab: React.Dispatch<React.SetStateAction<AdminTab>>;
-  convertGoogleDriveUrl: (url: string, isImage?: boolean) => string; 
+  convertGoogleDriveUrl: (url: string, isImage?: boolean) => string;
+  onImportThemes: (themes: ThemeItem[]) => Promise<void>;
 }
 
 interface IndexedTheme extends ThemeItem {
@@ -43,6 +44,7 @@ interface IndexedTheme extends ThemeItem {
 }
 
 interface ParsedJsonItem {
+  id?: number;
   name?: string;
   creator?: string;
   system?: string;
@@ -51,6 +53,80 @@ interface ParsedJsonItem {
   downloadUrl?: string;
   size?: string;
 }
+
+// ============================================================================
+// ✅ FONCTION INTELLIGENTE: Gestion URLs tous formats
+// ============================================================================
+
+/**
+ * Détecte le format de l'URL et la normalise intelligemment
+ * 
+ * Formats supportés:
+ * 1. URLs déjà converties (export ManageTab): /thumbnail ou /uc
+ * 2. URLs brutes: /file/d/ID/view
+ * 3. URLs raccourcies: /open?id=
+ * 4. URLs non-Google Drive (Imgur, etc.)
+ */
+const smartConvertUrl = (
+  url: string, 
+  convertGoogleDriveUrl: (url: string, isImage?: boolean) => string, 
+  isImage: boolean = false
+): string => {
+  if (!url?.trim()) return '';
+  
+  // Extraire l'ID Google Drive (tous formats)
+  const extractDriveId = (urlString: string): string | null => {
+    // Format thumbnail: /thumbnail?id=XXX
+    const thumbnailMatch = urlString.match(/\/thumbnail\?[^&]*id=([a-zA-Z0-9_-]{25,})/);
+    if (thumbnailMatch) return thumbnailMatch[1];
+    
+    // Format uc: /uc?id=XXX
+    const ucMatch = urlString.match(/\/uc\?[^&]*id=([a-zA-Z0-9_-]{25,})/);
+    if (ucMatch) return ucMatch[1];
+    
+    // Format file: /file/d/XXX/view
+    const fileMatch = urlString.match(/\/file\/d\/([a-zA-Z0-9_-]{25,})/);
+    if (fileMatch) return fileMatch[1];
+    
+    // Format open: /open?id=XXX
+    const openMatch = urlString.match(/\/open\?[^&]*id=([a-zA-Z0-9_-]{25,})/);
+    if (openMatch) return openMatch[1];
+    
+    // Format paramètre id seul: ?id=XXX ou &id=XXX
+    const idMatch = urlString.match(/[?&]id=([a-zA-Z0-9_-]{25,})/);
+    if (idMatch) return idMatch[1];
+    
+    return null;
+  };
+  
+  const driveId = extractDriveId(url);
+  
+  // Si c'est une URL Google Drive, normaliser en format "propre"
+  if (driveId) {
+    const cleanUrl = `https://drive.google.com/file/d/${driveId}/view?usp=sharing`;
+    // Puis laisser convertGoogleDriveUrl faire la conversion finale
+    return convertGoogleDriveUrl(cleanUrl, isImage);
+  }
+  
+  // Si ce n'est pas Google Drive, utiliser l'URL telle quelle
+  return url;
+};
+
+/**
+ * Affiche une URL Google Drive sous forme lisible (pour l'UI)
+ */
+const getCleanDisplayUrl = (url: string): string => {
+  if (!url) return '';
+  
+  const idMatch = url.match(/[?&/]id=([a-zA-Z0-9_-]{25,})|\/file\/d\/([a-zA-Z0-9_-]{25,})/);
+  const driveId = idMatch?.[1] || idMatch?.[2];
+  
+  if (driveId) {
+    return `https://drive.google.com/file/d/${driveId}/view?usp=sharing`;
+  }
+  
+  return url;
+};
 
 // ============================================================================
 // HOOKS
@@ -105,8 +181,6 @@ const useDebounce = <T,>(value: T, delay: number): T => {
 
   return debouncedValue;
 };
-
-
 
 // ============================================================================
 // COMPOSANT: Theme Card
@@ -224,9 +298,18 @@ const ThemeCard = React.memo(({
 ThemeCard.displayName = 'ThemeCard';
 
 // ============================================================================
-// COMPOSANT PRINCIPAL: ImportTab avec Pagination
+// COMPOSANT PRINCIPAL: ImportTab avec gestion intelligente
 // ============================================================================
-const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, systems, categories, setAdminTab, convertGoogleDriveUrl }) => { 
+const ImportTab: React.FC<ImportTabProps> = ({ 
+  themes, 
+  setThemes, 
+  saveThemes, 
+  systems, 
+  categories, 
+  setAdminTab, 
+  convertGoogleDriveUrl,
+  onImportThemes 
+}) => { 
   const [jsonInput, setJsonInput] = useState('');
   const [importPreview, setImportPreview] = useState<ThemeItem[] | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
@@ -243,17 +326,6 @@ const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, sy
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 50;
 
-  const toImageUrl = useCallback((url: string) => convertGoogleDriveUrl(url, true), [convertGoogleDriveUrl]);
-  const toDownloadUrl = useCallback((url: string) => convertGoogleDriveUrl(url, false), [convertGoogleDriveUrl]);
-  
-  const getCleanUrl = useCallback((fullUrl: string) => {
-      if (fullUrl.includes('drive.google.com/thumbnail') || fullUrl.includes('drive.google.com/uc')) {
-          const match = fullUrl.match(/[?&]id=([a-zA-Z0-9_-]{25,})/);
-          return match ? `https://drive.google.com/file/d/${match[1]}/view?usp=sharing` : fullUrl;
-      }
-      return fullUrl;
-  }, []);
-
   const availableSystems = useMemo(() => systems?.filter(s => !s.isHeader && !s.isSubHeader) || [], [systems]);
   const lastIdRef = useRef(0);
 
@@ -263,7 +335,7 @@ const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, sy
     return new Set(themes.map(t => `${t.name.toLowerCase()}_${t.system}`));
   }, [themes]);
 
-  // Initialiser lastId de manière optimisée (évite le spread avec 10k+ items)
+  // Initialiser lastId de manière optimisée
   useEffect(() => {
     if (themes?.length > 0) {
       let maxId = themes[0].id;
@@ -310,9 +382,9 @@ const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, sy
     setCurrentPage(1);
   }, [debouncedSearch]);
 
-
-  // Parsing JSON
-  // ✅ Correction de l'ordre de déclaration
+  // ============================================================================
+  // ✅ PARSING JSON AVEC GESTION INTELLIGENTE DES URLs
+  // ============================================================================
   const handleJsonInputChange = useCallback(async (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const rawText = event.target.value;
     setJsonInput(rawText);
@@ -345,18 +417,19 @@ const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, sy
         return;
       }
 
+      // ✅ UTILISATION DE smartConvertUrl pour gérer tous les formats d'URLs
       const preview: ThemeItem[] = parsed.map((item: ParsedJsonItem, index: number) => ({
-        id: lastIdRef.current + index + 1,
+        id: item.id || (lastIdRef.current + index + 1), // Garde l'ID si fourni
         name: item.name || 'Nouveau Thème',
         creator: item.creator || '',
         system: item.system || 'mame',
         category: item.category || 'game-themes',
-        imageUrl: toImageUrl(item.imageUrl || ''),
-        downloadUrl: toDownloadUrl(item.downloadUrl || ''),
+        imageUrl: smartConvertUrl(item.imageUrl || '', convertGoogleDriveUrl, true),
+        downloadUrl: smartConvertUrl(item.downloadUrl || '', convertGoogleDriveUrl, false),
         size: item.size || '0 MB'
       }));
 
-      // Détection doublons optimisée avec Set (utilise l'index mémorisé)
+      // Détection doublons optimisée avec Set
       const duplicateKeys = new Set<string>();
       preview.forEach(newTheme => {
         const key = `${newTheme.name.toLowerCase()}_${newTheme.system}`;
@@ -373,7 +446,7 @@ const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, sy
     } finally {
       setIsParsing(false);
     }
-  }, [existingThemesIndex, toImageUrl, toDownloadUrl]); // Utilise l'index mémorisé au lieu de themes
+  }, [existingThemesIndex, convertGoogleDriveUrl, lastIdRef]);
 
   // Drag & Drop
   const handleFileDrop = useCallback((e: React.DragEvent) => {
@@ -384,7 +457,6 @@ const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, sy
       reader.onload = (event) => {
         const content = event.target?.result as string;
         setJsonInput(content);
-        // Créer un événement de changement valide
         const syntheticEvent = {
           target: { value: content }
         } as React.ChangeEvent<HTMLTextAreaElement>;
@@ -419,7 +491,6 @@ const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, sy
       const updatedPreview = importPreview.filter(t => t.id !== themeId);
       setImportPreview(updatedPreview);
       
-      // Recalculer doublons (utilise l'index mémorisé)
       const newDuplicates = new Set<string>();
       updatedPreview.forEach(theme => {
         const key = `${theme.name.toLowerCase()}_${theme.system}`;
@@ -441,9 +512,17 @@ const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, sy
       alert("Le nom et le système sont requis.");
       return;
     }
-    setImportPreview(importPreview.map(t => t.id === editingTheme.id ? editingTheme : t));
+    
+    // ✅ Reconvertir les URLs si elles ont été modifiées
+    const updatedTheme = {
+      ...editingTheme,
+      imageUrl: smartConvertUrl(editingTheme.imageUrl, convertGoogleDriveUrl, true),
+      downloadUrl: smartConvertUrl(editingTheme.downloadUrl, convertGoogleDriveUrl, false)
+    };
+    
+    setImportPreview(importPreview.map(t => t.id === updatedTheme.id ? updatedTheme : t));
     setEditingTheme(null);
-  }, [editingTheme, importPreview]);
+  }, [editingTheme, importPreview, convertGoogleDriveUrl]);
 
   const handleBulkEdit = useCallback(() => {
     if (selectedIds.size === 0) return;
@@ -475,22 +554,15 @@ const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, sy
     ).length;
   }, [importPreview, duplicates]);
 
+  // ============================================================================
+  // ✅ IMPORT FINAL: Utilise onImportThemes qui gère l'enrichissement intelligent
+  // ============================================================================
   const confirmImport = async () => {
-    if (!importPreview || importPreview.length === 0 || !themes) return;
-
-    // Utilise l'index mémorisé au lieu de recréer le Set
-    const toImport = importPreview.filter(newTheme => 
-      !existingThemesIndex.has(`${newTheme.name.toLowerCase()}_${newTheme.system}`)
-    );
-
-    if (toImport.length === 0) {
-      alert('⚠️ Tous les thèmes sont des doublons !');
-      return;
-    }
+    if (!importPreview || importPreview.length === 0) return;
 
     let confirmMessage = `📊 Résumé de l'importation:\n\n`;
-    confirmMessage += `✅ ${toImport.length} nouveau(x) thème(s)\n`;
-    if (duplicatesCount > 0) confirmMessage += `⚠️ ${duplicatesCount} doublon(s) ignoré(s)\n`;
+    confirmMessage += `📦 ${importPreview.length} thème(s) à importer\n`;
+    if (duplicatesCount > 0) confirmMessage += `⚠️ ${duplicatesCount} doublon(s) détecté(s) (seront enrichis si nécessaire)\n`;
     if (missingCreatorsCount > 0) confirmMessage += `⚠️ ${missingCreatorsCount} créateur(s) manquant(s)\n`;
     confirmMessage += `\nContinuer ?`;
 
@@ -498,37 +570,17 @@ const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, sy
 
     setIsImporting(true);
     try {
-      // Assigner des IDs séquentiels après la dernière ID existante
-      let nextId = lastIdRef.current + 1;
-      const finalToImport = toImport.map(theme => ({
-        ...theme,
-        id: nextId++,
-      }));
-
-      const updatedThemes = [...themes, ...finalToImport];
-      await saveThemes(updatedThemes);
-      setThemes(updatedThemes);
+      // ✅ Utilise la fonction intelligente d'AdminPanel
+      await onImportThemes(importPreview);
       
       // Réinitialisation après succès
       setJsonInput('');
       setImportPreview(null);
-      // Mettre à jour lastId de manière optimisée (évite le spread avec 10k+ items)
-      if (updatedThemes.length > 0) {
-        let maxId = updatedThemes[0].id;
-        for (let i = 1; i < updatedThemes.length; i++) {
-          if (updatedThemes[i].id > maxId) {
-            maxId = updatedThemes[i].id;
-          }
-        }
-        lastIdRef.current = maxId;
-      } else {
-        lastIdRef.current = 0;
-      }
-      alert(`✅ ${finalToImport.length} thème(s) importé(s) avec succès !`);
-      setAdminTab('manage'); // Revenir à l'onglet de gestion
+      alert(`✅ Import terminé avec succès !`);
+      setAdminTab('manage');
     } catch (error) {
-      console.error("Erreur lors de la sauvegarde des thèmes:", error);
-      alert("Une erreur est survenue lors de l'importation et de la sauvegarde.");
+      console.error("Erreur lors de l'importation:", error);
+      alert("Une erreur est survenue lors de l'importation.");
     } finally {
       setIsImporting(false);
     }
@@ -578,7 +630,7 @@ const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, sy
       <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
         <Upload className="w-6 h-6 mr-3 text-orange-400" /> Importer des thèmes via JSON 
         <span className="ml-auto text-sm font-normal text-gray-400"> 
-          Optimisé pour 10 000+ thèmes 
+          ✅ Gestion intelligente URLs + IDs
         </span> 
       </h2>
       
@@ -623,7 +675,7 @@ const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, sy
         </div>
       )}
 
-      {/* Aperçu de l'importation */}
+      {/* Suite du composant avec aperçu, pagination, etc. - identique à avant */}
       {importPreview && filteredPreview && (
         <div className="space-y-4">
           <div className="flex gap-4 p-4 rounded-xl bg-gray-700/50">
@@ -632,7 +684,7 @@ const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, sy
               <span className="text-2xl font-bold text-white">{importPreview.length}</span>
             </div>
             <div className="flex-1 p-3 bg-gray-900 rounded-lg shadow-md">
-              <span className="block text-sm font-semibold text-yellow-400">Doublons (Ignorés)</span>
+              <span className="block text-sm font-semibold text-yellow-400">Doublons (Enrichis)</span>
               <span className="text-2xl font-bold text-yellow-400">{duplicatesCount}</span>
             </div>
             <div className="flex-1 p-3 bg-gray-900 rounded-lg shadow-md">
@@ -738,7 +790,7 @@ const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, sy
               ) : (
                 <>
                   <Upload className="w-5 h-5" />
-                  Confirmer l'importation ({importPreview.length - duplicatesCount})
+                  Confirmer l'importation ({importPreview.length})
                 </>
               )}
             </button>
@@ -760,16 +812,20 @@ const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, sy
         <pre className="text-xs text-blue-200 bg-gray-900 p-3 rounded overflow-x-auto">
           {`[
   { 
+    "id": 1,              // Optionnel (préserve les corrections manuelles)
     "name": "Nom du thème", 
     "creator": "Bob Morane", 
     "system": "mame", 
     "category": "game-themes", 
-    "imageUrl": "https://...", 
+    "imageUrl": "https://...",  // Format Google Drive accepté (tous formats)
     "downloadUrl": "https://...", 
     "size": "5.2 MB" 
   }
 ]`}
         </pre>
+        <p className="text-xs text-blue-300 mt-2">
+          ℹ️ Les URLs Google Drive sont automatiquement détectées et converties (formats /thumbnail, /uc, /file/d/ supportés)
+        </p>
       </div>
 
       {/* Lightbox Modal */}
@@ -789,8 +845,8 @@ const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, sy
                 <p><strong>Système:</strong> {systems.find(s => s.id === lightboxTheme.system)?.name || lightboxTheme.system}</p>
                 <p><strong>Catégorie:</strong> {categories.find(c => c.id === lightboxTheme.category)?.name || lightboxTheme.category}</p>
                 <p><strong>Taille:</strong> {lightboxTheme.size}</p>
-                <p className="break-all text-sm"><strong>Image URL:</strong> <a href={lightboxTheme.imageUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 transition">{getCleanUrl(lightboxTheme.imageUrl)}</a></p>
-                <p className="break-all text-sm"><strong>Download URL:</strong> <a href={lightboxTheme.downloadUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 transition">{getCleanUrl(lightboxTheme.downloadUrl)}</a></p>
+                <p className="break-all text-sm"><strong>Image URL:</strong> <a href={lightboxTheme.imageUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 transition">{getCleanDisplayUrl(lightboxTheme.imageUrl)}</a></p>
+                <p className="break-all text-sm"><strong>Download URL:</strong> <a href={lightboxTheme.downloadUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 transition">{getCleanDisplayUrl(lightboxTheme.downloadUrl)}</a></p>
               </div>
             </div>
             <div className="flex gap-3 pt-4 border-t border-gray-700 mt-4">
@@ -860,21 +916,21 @@ const ImportTab: React.FC<ImportTabProps> = ({ themes, setThemes, saveThemes, sy
               <hr className="border-gray-700"/>
 
               <div>
-                <label className="block text-sm font-bold text-gray-300 mb-2">URL Image (Brute ou Drive)</label>
+                <label className="block text-sm font-bold text-gray-300 mb-2">URL Image (Tous formats supportés)</label>
                 <input 
                   type="url" 
-                  value={getCleanUrl(editingTheme.imageUrl)}
-                  onChange={(e) => setEditingTheme({...editingTheme, imageUrl: toImageUrl(e.target.value)})}
+                  value={getCleanDisplayUrl(editingTheme.imageUrl)}
+                  onChange={(e) => setEditingTheme({...editingTheme, imageUrl: e.target.value})}
                   placeholder="https://drive.google.com/file/d/..."
                   className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-sm font-bold text-gray-300 mb-2">URL Téléchargement (Brute ou Drive)</label>
+                <label className="block text-sm font-bold text-gray-300 mb-2">URL Téléchargement (Tous formats supportés)</label>
                 <input 
                   type="url" 
-                  value={getCleanUrl(editingTheme.downloadUrl)}
-                  onChange={(e) => setEditingTheme({...editingTheme, downloadUrl: toDownloadUrl(e.target.value)})}
+                  value={getCleanDisplayUrl(editingTheme.downloadUrl)}
+                  onChange={(e) => setEditingTheme({...editingTheme, downloadUrl: e.target.value})}
                   placeholder="https://drive.google.com/file/d/..."
                   className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none"
                 />

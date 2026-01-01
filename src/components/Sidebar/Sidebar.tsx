@@ -84,6 +84,7 @@ const Sidebar: React.FC<SidebarProps> = ({
            Object.values(expandedSubsections).some(v => v);
   }, [expandedSections, expandedSubsections]);
 
+  // 🆕 Compteur de thèmes par système
   const themeCountBySystem = useMemo(() => {
     if (!allThemes || allThemes.length === 0) {
       return {};
@@ -99,6 +100,35 @@ const Sidebar: React.FC<SidebarProps> = ({
     
     return counts;
   }, [allThemes]);
+
+  // 🆕 Compteur de thèmes par section (header) et subsection
+  const themeCountBySection = useMemo(() => {
+    const sectionCounts: Record<string, number> = {};
+    const subsectionCounts: Record<string, number> = {};
+    
+    systems.forEach(system => {
+      // Ignorer les headers/subheaders eux-mêmes et les boutons du haut
+      if (system.isHeader || system.isSubHeader || TOP_BUTTON_IDS.includes(system.id as any)) {
+        return;
+      }
+      
+      const systemIdParts = system.id.split('-');
+      const normalizedSystemId = systemIdParts[systemIdParts.length - 1].toLowerCase().replace(/[^a-z0-9]+/g, '');
+      const themeCount = themeCountBySystem[normalizedSystemId] || 0;
+      
+      // Ajouter au compteur de la section
+      if (system.section) {
+        sectionCounts[system.section] = (sectionCounts[system.section] || 0) + themeCount;
+      }
+      
+      // Ajouter au compteur de la subsection
+      if (system.subsection && system.subsection !== 'collections') {
+        subsectionCounts[system.subsection] = (subsectionCounts[system.subsection] || 0) + themeCount;
+      }
+    });
+    
+    return { sectionCounts, subsectionCounts };
+  }, [systems, themeCountBySystem]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -160,6 +190,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     if (isSearchActive) return null;
     
     const isExpanded = expandedSections[system.section || ''];
+    const sectionCount = themeCountBySection.sectionCounts[system.section || ''] || 0;
     
     return (
       <button 
@@ -172,10 +203,23 @@ const Sidebar: React.FC<SidebarProps> = ({
         }}
         className="w-full text-left pt-3 pb-1 px-2 rounded transition flex items-center justify-between hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
         aria-expanded={isExpanded}
-        aria-label={`${system.name} section`}
+        aria-label={`${system.name} section${sectionCount > 0 ? `, ${sectionCount} thèmes` : ''}`}
       >
-        <h4 className="font-bold text-sm tracking-wider" style={{ color: '#FFD700' }}>{system.name}</h4>
-        <ChevronDown className={`w-4 h-4 chevron-icon ${isExpanded ? 'open' : 'closed'}`} style={{ color: '#FFA500' }} />
+        <h4 className="font-bold text-sm tracking-wider flex items-center gap-2 whitespace-nowrap overflow-hidden" style={{ color: '#FFD700' }}>
+          <span className="truncate">{system.name}</span>
+          {sectionCount > 0 && (
+            <span 
+              className="text-xs opacity-80 font-normal flex-shrink-0"
+              style={{ 
+                color: 'rgba(255,215,0,0.85)',
+                textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+              }}
+            >
+              ({sectionCount})
+            </span>
+          )}
+        </h4>
+        <ChevronDown className={`w-4 h-4 chevron-icon flex-shrink-0 ${isExpanded ? 'open' : 'closed'}`} style={{ color: '#FFA500' }} />
       </button>
     );
   };
@@ -185,6 +229,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     if (system.section && !expandedSections[system.section]) return null;
     
     const isExpanded = expandedSubsections[system.subsection || ''];
+    const subsectionCount = themeCountBySection.subsectionCounts[system.subsection || ''] || 0;
     
     return (
       <button 
@@ -197,10 +242,23 @@ const Sidebar: React.FC<SidebarProps> = ({
         }}
         className="w-full text-left pt-2 pb-1 px-3 ml-2 rounded transition flex items-center justify-between hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
         aria-expanded={isExpanded}
-        aria-label={`${system.name} subsection`}
+        aria-label={`${system.name} subsection${subsectionCount > 0 ? `, ${subsectionCount} thèmes` : ''}`}
       >
-        <h5 className="font-bold text-xs tracking-wider" style={{ color: '#FF8C00' }}>{system.name}</h5>
-        <ChevronDown className={`w-3 h-3 chevron-icon ${isExpanded ? 'open' : 'closed'}`} style={{ color: '#FFA500' }} />
+        <h5 className="font-bold text-sm tracking-normal flex items-center gap-1 whitespace-nowrap overflow-hidden" style={{ color: '#FF8C00' }}>
+          <span className="truncate">{system.name}</span>
+          {subsectionCount > 0 && (
+            <span 
+              className="text-xs opacity-80 font-normal flex-shrink-0"
+              style={{ 
+                color: 'rgba(255,140,0,0.85)',
+                textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+              }}
+            >
+              ({subsectionCount})
+            </span>
+          )}
+        </h5>
+        <ChevronDown className={`w-3 h-3 chevron-icon flex-shrink-0 ${isExpanded ? 'open' : 'closed'}`} style={{ color: '#FFA500' }} />
       </button>
     );
   };
@@ -376,7 +434,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <aside className="w-72 flex-shrink-0">
+    <aside className="w-80 flex-shrink-0">
       <style>{SIDEBAR_INLINE_STYLES}</style>
 
       <div className="bg-gray-900 rounded-lg p-4 border-4 sticky top-4 overflow-visible" style={{ borderColor: '#FF8C00', maxHeight: 'calc(100vh - 2rem)' }}>

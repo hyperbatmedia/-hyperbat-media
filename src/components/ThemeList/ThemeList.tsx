@@ -1,4 +1,4 @@
-// Fichier: src/components/ThemeList/ThemeList.tsx - VERSION SIMPLIFIÉE
+// Fichier: src/components/ThemeList/ThemeList.tsx - VERSION CORRIGÉE
 import React, { useState, useRef, useEffect } from 'react';
 import { Download, X } from 'lucide-react';
 import { ThemeItem, SystemRow } from '../../types';
@@ -36,13 +36,13 @@ const ThemeList: React.FC<ThemeListProps> = ({
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // Réinitialise les images chargées et remonte en haut quand on change de page
+  // 🆕 CORRECTION : Réinitialise les images quand la liste de thèmes change
   useEffect(() => {
     setLoadedImages(new Set());
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [currentPage]);
+  }, [currentPage, themes.length]); // 🆕 Ajout de themes.length
 
-  // ⚡ Intersection Observer SIMPLE : charge uniquement ce qui est visible
+  // ⚡ Intersection Observer pour lazy loading
   useEffect(() => {
     if (observerRef.current) {
       observerRef.current.disconnect();
@@ -55,7 +55,8 @@ const ThemeList: React.FC<ThemeListProps> = ({
             const img = entry.target as HTMLImageElement;
             const src = img.dataset.src;
             
-            if (src && !img.src) {
+            if (src) {
+              // 🆕 Force le rechargement même si src existe déjà
               img.src = src;
               observerRef.current?.unobserve(img);
             }
@@ -63,10 +64,18 @@ const ThemeList: React.FC<ThemeListProps> = ({
         });
       },
       {
-        rootMargin: '200px', // Charge 200px avant d'être visible
+        rootMargin: '200px',
         threshold: 0.01
       }
     );
+
+    // 🆕 Observer toutes les images dès le montage
+    const images = document.querySelectorAll('img[data-src]');
+    images.forEach(img => {
+      if (observerRef.current) {
+        observerRef.current.observe(img);
+      }
+    });
 
     return () => {
       observerRef.current?.disconnect();
@@ -153,15 +162,16 @@ const ThemeList: React.FC<ThemeListProps> = ({
               >
                 {theme.imageUrl ? (
                   <>
-                    {/* Skeleton loader - visible tant que l'image n'est pas chargée */}
+                    {/* Skeleton loader */}
                     {!loadedImages.has(key) && (
                       <div className="absolute inset-0 skeleton" />
                     )}
                     
-                    {/* Image avec lazy loading */}
+                    {/* 🆕 Image avec key unique pour forcer le re-render */}
                     <img
+                      key={`${key}-${themes.length}-${currentPage}`}
                       ref={(el) => {
-                        if (el && observerRef.current && !el.src) {
+                        if (el && observerRef.current) {
                           observerRef.current.observe(el);
                         }
                       }}
@@ -169,7 +179,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
                       alt={theme.name}
                       className="w-full h-full object-cover"
                       referrerPolicy="no-referrer"
-                      loading="lazy"
                       onLoad={() => {
                         setLoadedImages(prev => new Set(prev).add(key));
                       }}
@@ -183,7 +192,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                       }}
                     />
                     
-                    {/* Fallback si l'image ne charge pas */}
+                    {/* Fallback */}
                     <div 
                       className="absolute inset-0 flex flex-col items-center justify-center gap-2"
                       style={{ 
@@ -254,7 +263,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
           </button>
 
           <div className="flex gap-1">
-            {/* Première page */}
             {currentPage > 3 && (
               <>
                 <button
@@ -268,7 +276,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
               </>
             )}
 
-            {/* Pages autour de la page courante */}
             {[-2, -1, 0, 1, 2].map(offset => {
               const page = currentPage + offset;
               if (page < 1 || page > totalPages) return null;
@@ -287,7 +294,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
               );
             })}
 
-            {/* Dernière page */}
             {currentPage < totalPages - 2 && (
               <>
                 {currentPage < totalPages - 3 && <span className="px-2 py-2 text-gray-500">...</span>}
@@ -315,7 +321,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
 
       {filteredThemesLength > 0 && (
         <div className="mt-4 text-center text-gray-400 text-sm">
-          Affichage de {((currentPage - 1) * themesPerPage) + 1} à{' '}
+          Affichage de {((currentPage - 1) * themesPerPage) + 1} à {' '}
           {Math.min(currentPage * themesPerPage, filteredThemesLength)} sur{' '}
           <span className="font-bold text-orange-400">{filteredThemesLength.toLocaleString()}</span> thème(s)
         </div>
