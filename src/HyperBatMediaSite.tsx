@@ -7,7 +7,7 @@ import { NewThemeForm, ThemeItem } from './types';
 import { categories } from './constants';
 import { useThemeStorage } from './hooks/useThemeStorage';
 import { useSystemsLogic } from './hooks/useSystemsLogic';
-import { getThemeKey } from './utils/themeUtils'; // ✅ IMPORT
+import { getThemeKey } from './utils/themeUtils';
 import Sidebar from './components/Sidebar/Sidebar';
 import AdminPanel, { AdminTab } from './components/AdminPanel/AdminPanel'; 
 import ThemeList from './components/ThemeList/ThemeList';
@@ -17,16 +17,20 @@ const THEMES_PER_PAGE = 20;
 
 // --- Utilitaires ---
 /**
- * ✅ Convertit une URL Google Drive en lien direct utilisable
+ * ✅ VERSION CORRIGÉE - Compatible tous environnements
+ * Format qui fonctionne en local et en déploiement GitHub Pages
  */
 const convertGoogleDriveUrl = (url: string, isImage: boolean = false): string => {
   if (!url || typeof url !== 'string') return url;
   
-  if (url.includes('uc?id=') || url.includes('thumbnail?id=')) {
+  // Si déjà converti en format thumbnail ou uc, on garde tel quel
+  if (url.includes('/thumbnail?') || url.includes('/uc?')) {
     return url;
   }
   
   let fileId = '';
+  
+  // Extraction de l'ID Google Drive - Tous formats supportés
   let match = url.match(/\/file\/d\/([a-zA-Z0-9_-]{25,})/);
   if (match) fileId = match[1];
   
@@ -50,12 +54,16 @@ const convertGoogleDriveUrl = (url: string, isImage: boolean = false): string =>
   }
   
   if (!fileId) {
+    console.warn('❌ Impossible d\'extraire l\'ID Google Drive de:', url);
     return url;
   }
   
+  // ✅ FORMAT QUI FONCTIONNE PARTOUT
   if (isImage) {
-    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000&authuser=0`;
+    // Pour les images: format thumbnail (pas de CORS)
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w400`;
   } else {
+    // Pour les téléchargements: format uc classique
     return `https://drive.google.com/uc?id=${fileId}&export=download`;
   }
 };
@@ -112,13 +120,19 @@ export default function HyperBatMediaSite(): JSX.Element {
 
   const colors = useMemo(() => getThemeColors(isDarkMode), [isDarkMode]);
 
-  // ✅ Les URLs sont déjà converties dans themes.json
+  // ✅ Les URLs sont converties automatiquement (seulement si nécessaire)
   const themes = useMemo(() => {
-    return rawThemes.map(theme => ({
-      ...theme,
-      imageUrl: theme.imageUrl || '',
-      downloadUrl: theme.downloadUrl || ''
-    }));
+    return rawThemes.map(theme => {
+      // Ne convertir que si l'URL n'est pas déjà au bon format
+      const needsImageConversion = theme.imageUrl && !theme.imageUrl.includes('/thumbnail?');
+      const needsDownloadConversion = theme.downloadUrl && !theme.downloadUrl.includes('/uc?');
+      
+      return {
+        ...theme,
+        imageUrl: needsImageConversion ? convertGoogleDriveUrl(theme.imageUrl, true) : theme.imageUrl,
+        downloadUrl: needsDownloadConversion ? convertGoogleDriveUrl(theme.downloadUrl, false) : theme.downloadUrl
+      };
+    });
   }, [rawThemes]);
 
   // --- Handler spécial pour la recherche (détection "canafloche") ---

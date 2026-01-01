@@ -55,17 +55,11 @@ interface ParsedJsonItem {
 }
 
 // ============================================================================
-// ✅ FONCTION INTELLIGENTE: Gestion URLs tous formats
+// ✅ FONCTION INTELLIGENTE: Gestion URLs tous formats - OPTIMISÉE
 // ============================================================================
 
 /**
  * Détecte le format de l'URL et la normalise intelligemment
- * 
- * Formats supportés:
- * 1. URLs déjà converties (export ManageTab): /thumbnail ou /uc
- * 2. URLs brutes: /file/d/ID/view
- * 3. URLs raccourcies: /open?id=
- * 4. URLs non-Google Drive (Imgur, etc.)
  */
 const smartConvertUrl = (
   url: string, 
@@ -74,25 +68,25 @@ const smartConvertUrl = (
 ): string => {
   if (!url?.trim()) return '';
   
-  // Extraire l'ID Google Drive (tous formats)
+  // Si déjà au bon format, retourner tel quel
+  if (url.includes('/thumbnail?') || url.includes('/uc?')) {
+    return url;
+  }
+  
+  // Extraire l'ID Google Drive
   const extractDriveId = (urlString: string): string | null => {
-    // Format thumbnail: /thumbnail?id=XXX
     const thumbnailMatch = urlString.match(/\/thumbnail\?[^&]*id=([a-zA-Z0-9_-]{25,})/);
     if (thumbnailMatch) return thumbnailMatch[1];
     
-    // Format uc: /uc?id=XXX
     const ucMatch = urlString.match(/\/uc\?[^&]*id=([a-zA-Z0-9_-]{25,})/);
     if (ucMatch) return ucMatch[1];
     
-    // Format file: /file/d/XXX/view
     const fileMatch = urlString.match(/\/file\/d\/([a-zA-Z0-9_-]{25,})/);
     if (fileMatch) return fileMatch[1];
     
-    // Format open: /open?id=XXX
     const openMatch = urlString.match(/\/open\?[^&]*id=([a-zA-Z0-9_-]{25,})/);
     if (openMatch) return openMatch[1];
     
-    // Format paramètre id seul: ?id=XXX ou &id=XXX
     const idMatch = urlString.match(/[?&]id=([a-zA-Z0-9_-]{25,})/);
     if (idMatch) return idMatch[1];
     
@@ -101,14 +95,15 @@ const smartConvertUrl = (
   
   const driveId = extractDriveId(url);
   
-  // Si c'est une URL Google Drive, normaliser en format "propre"
+  // Si Google Drive, convertir avec format optimisé
   if (driveId) {
-    const cleanUrl = `https://drive.google.com/file/d/${driveId}/view?usp=sharing`;
-    // Puis laisser convertGoogleDriveUrl faire la conversion finale
-    return convertGoogleDriveUrl(cleanUrl, isImage);
+    if (isImage) {
+      return `https://drive.google.com/thumbnail?id=${driveId}&sz=w300`;
+    } else {
+      return `https://drive.google.com/uc?id=${driveId}&export=download`;
+    }
   }
   
-  // Si ce n'est pas Google Drive, utiliser l'URL telle quelle
   return url;
 };
 

@@ -1,4 +1,4 @@
-// DriveHelpers.ts - VERSION AVEC RECONNAISSANCE 7Z/RAR + EXTRACTION CRÉATEUR AMÉLIORÉE
+// DriveHelpers.ts - VERSION OPTIMISÉE COMPLÈTE
 
 import { systemsData } from '../../../constants';
 
@@ -56,23 +56,15 @@ export const REQUEST_TIMEOUT = 60000;
 export const MAX_RETRIES = 3;
 export const ITEMS_PER_PAGE = 20;
 export const DRIVE_API_KEY_STORAGE = 'hyperbat_drive_api_key';
-export const QUEUE_DELAY = 2000; // 🔧 Augmenté à 10 secondes
-export const MAX_DOWNLOADS_PER_SESSION = 450; // 🆕 Limite de téléchargements avant pause
+export const QUEUE_DELAY = 2000;
+export const MAX_DOWNLOADS_PER_SESSION = 450;
 
 // ===== DÉTECTION FORMAT ARCHIVE =====
 export const detectArchiveFormat = (signature: string): 'ZIP' | '7Z' | 'RAR' | 'UNKNOWN' => {
-  // ZIP: PK (50 4B)
   if (signature.startsWith('504b')) return 'ZIP';
-  
-  // 7Z: 7z¼¯' (37 7A BC AF 27 1C)
   if (signature.startsWith('377abcaf271c')) return '7Z';
-  
-  // RAR v4: Rar!\x1A\x07 (52 61 72 21 1A 07)
   if (signature.startsWith('526172211a07')) return 'RAR';
-  
-  // RAR v5: Rar!\x1A\x07\x01\x00 (52 61 72 21 1A 07 01 00)
   if (signature.startsWith('526172211a070100')) return 'RAR';
-  
   return 'UNKNOWN';
 };
 
@@ -197,7 +189,7 @@ export const findMatchingSystem = (
   };
 };
 
-// ===== EXTRACTION CRÉATEUR (ZIP UNIQUEMENT) - VERSION AMÉLIORÉE =====
+// ===== EXTRACTION CRÉATEUR (ZIP UNIQUEMENT) =====
 export const extractCreatorFromArchive = async (
   fileId: string,
   apiKey: string,
@@ -223,7 +215,6 @@ export const extractCreatorFromArchive = async (
     const arrayBuffer = await response.arrayBuffer();
     if (addLog) addLog(`  ✔ ${formatSize(arrayBuffer.byteLength)} téléchargés`, 'success');
     
-    // Détecter le format via signature
     const header = new Uint8Array(arrayBuffer.slice(0, 8));
     const signature = Array.from(header).map(b => b.toString(16).padStart(2, '0')).join('');
     
@@ -231,15 +222,13 @@ export const extractCreatorFromArchive = async (
     
     if (addLog) addLog(`  📦 Format détecté: ${format}`, 'info');
     
-    // ⚠️ Ne décompresser QUE les ZIP
     if (format !== 'ZIP') {
-      if (addLog) addLog(`  ⚠️ Format ${format} non décompressable (extraction créateur impossible)`, 'error');
+      if (addLog) addLog(`  ⚠️ Format ${format} non décompressable`, 'error');
       clearTimeout(timeoutId);
       return { creator: 'Unknown', format };
     }
     
-    // Utiliser JSZip pour les ZIP
-    if (addLog) addLog(`  🗜️ Décompression ZIP avec JSZip...`, 'info');
+    if (addLog) addLog(`  🗜️ Décompression ZIP...`, 'info');
     
     let xmlContent: string | null = null;
     
@@ -247,7 +236,7 @@ export const extractCreatorFromArchive = async (
       const JSZip = await getJSZip();
       const zip = await JSZip.loadAsync(arrayBuffer);
       
-      if (addLog) addLog(`  📂 ${Object.keys(zip.files).length} fichiers trouvés`, 'info');
+      if (addLog) addLog(`  📂 ${Object.keys(zip.files).length} fichiers`, 'info');
       
       const xmlNames = ['theme.xml', 'systeme.xml', 'system.xml'];
       
@@ -259,7 +248,7 @@ export const extractCreatorFromArchive = async (
         const lowerName = fileName.toLowerCase();
         if (xmlNames.includes(lowerName)) {
           xmlContent = await file.async('string');
-          if (addLog) addLog(`  ✔ XML trouvé: ${fileName}`, 'success');
+          if (addLog) addLog(`  ✔ XML: ${fileName}`, 'success');
           break;
         }
       }
@@ -276,7 +265,6 @@ export const extractCreatorFromArchive = async (
       return { creator: 'Unknown', format: 'ZIP' };
     }
     
-    // Parser XML
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
     
@@ -287,7 +275,6 @@ export const extractCreatorFromArchive = async (
       return { creator: 'Unknown', format: 'ZIP' };
     }
     
-    // ===== EXTRACTION CRÉATEUR - VERSION AMÉLIORÉE =====
     const authorTags = [
       xmlDoc.querySelector('text[name="gamethemeauthor"]'),
       xmlDoc.querySelector('text[name="systhemeauthor"]'),
@@ -297,17 +284,14 @@ export const extractCreatorFromArchive = async (
     
     let creatorText = '';
     
-    // Stratégie 1 : Chercher dans les balises <text name="...">
     for (const tag of authorTags) {
       if (tag) {
-        // Cas 1 : <text name="gamethemeauthor"><text>Theme by : Roni</text></text>
         const textElement = tag.querySelector('text');
         if (textElement?.textContent?.trim()) {
           creatorText = textElement.textContent.trim();
           break;
         }
         
-        // Cas 2 : <text name="gamethemeauthor">Theme by : Roni</text>
         if (tag.textContent?.trim()) {
           creatorText = tag.textContent.trim();
           break;
@@ -315,7 +299,6 @@ export const extractCreatorFromArchive = async (
       }
     }
     
-    // Stratégie 2 : Si rien trouvé, chercher dans TOUS les <text> avec attribut name
     if (!creatorText) {
       const allTextElements = xmlDoc.querySelectorAll('text[name]');
       for (const element of Array.from(allTextElements)) {
@@ -335,12 +318,11 @@ export const extractCreatorFromArchive = async (
     }
     
     if (!creatorText) {
-      if (addLog) addLog(`  ⚠️ Balise créateur non trouvée`, 'error');
+      if (addLog) addLog(`  ⚠️ Créateur non trouvé`, 'error');
       clearTimeout(timeoutId);
       return { creator: 'Unknown', format: 'ZIP' };
     }
     
-    // Nettoyer le texte du créateur
     let creator = creatorText
       .replace(/^Theme by\s*:\s*/i, '')
       .replace(/^System Theme By\s*:\s*/i, '')
@@ -375,7 +357,7 @@ export const extractCreatorFromArchive = async (
   }
 };
 
-// ===== FETCH AVEC BACKOFF EXPONENTIEL =====
+// ===== FETCH AVEC BACKOFF =====
 const fetchWithBackoff = async (
   url: string,
   signal: AbortSignal,
@@ -391,20 +373,20 @@ const fetchWithBackoff = async (
         ? parseInt(retryAfter) * 1000 
         : Math.min(2000 * Math.pow(2, retries), 60000);
       
-      if (addLog) addLog(`  ⏸️ Rate limit Google Drive (429), pause ${(delay / 1000).toFixed(0)}s...`, 'error');
+      if (addLog) addLog(`  ⏸️ Rate limit (429), pause ${(delay / 1000).toFixed(0)}s...`, 'error');
       
       await new Promise(resolve => setTimeout(resolve, delay));
       
       if (retries < MAX_RETRIES) {
         return fetchWithBackoff(url, signal, addLog, retries + 1);
       } else {
-        throw new Error('Quota Google Drive dépassé. Attendez quelques minutes.');
+        throw new Error('Quota Google Drive dépassé');
       }
     }
     
     if (!response.ok) {
       const errorBody = await response.text().catch(() => '');
-      if (addLog) addLog(`  ❌ HTTP ${response.status}: ${errorBody.substring(0, 100)}`, 'error');
+      if (addLog) addLog(`  ❌ HTTP ${response.status}`, 'error');
       throw new Error(`HTTP ${response.status}`);
     }
     
@@ -415,7 +397,7 @@ const fetchWithBackoff = async (
     
     if (retries < MAX_RETRIES) {
       const delay = Math.min(2000 * Math.pow(2, retries), 30000);
-      if (addLog) addLog(`  🔄 Erreur ${error.message}, retry dans ${(delay / 1000).toFixed(0)}s... (${retries + 1}/${MAX_RETRIES})`, 'error');
+      if (addLog) addLog(`  🔄 Retry ${retries + 1}/${MAX_RETRIES}...`, 'error');
       
       await new Promise(resolve => setTimeout(resolve, delay));
       return fetchWithBackoff(url, signal, addLog, retries + 1);
@@ -439,25 +421,26 @@ export const formatSize = (bytes: any): string => {
   return `${(size / (1024 * 1024 * 1024)).toFixed(2)} GB`;
 };
 
-// ===== EXTRACTION ID DOSSIER GOOGLE DRIVE =====
+// ===== EXTRACTION ID DOSSIER =====
 export const extractFolderId = (url: string): string | null => {
   const match = url.match(/folders\/([a-zA-Z0-9_-]+)/);
   return match ? match[1] : null;
 };
 
-// ===== CONVERSION LIEN DIRECT =====
+// ===== CONVERSION LIEN DIRECT - ✅ OPTIMISÉ =====
 export const convertToDirectLink = (
   fileId: string,
   key: string,
   isImage = false
 ): string => {
   if (isImage) {
-    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w400&authuser=0`;
+    // Format thumbnail optimisé (w300 pour performance)
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w300`;
   }
   return `https://drive.google.com/uc?id=${fileId}&export=download`;
 };
 
-// ===== TROUVER IMAGE CORRESPONDANTE =====
+// ===== TROUVER IMAGE =====
 export const findMatchingImage = (
   archiveName: string,
   imageFiles: any[],
@@ -494,14 +477,11 @@ export const findMatchingImage = (
     return false;
   });
   
-  if (partialMatch) {
-    if (addLog) {
-      addLog(`ℹ️ Match partiel: "${archiveName}" → "${partialMatch.name}"`);
-    }
-    return partialMatch;
+  if (partialMatch && addLog) {
+    addLog(`ℹ️ Match partiel: "${archiveName}" → "${partialMatch.name}"`);
   }
   
-  return null;
+  return partialMatch || null;
 };
 
 // ===== FETCH AVEC TIMEOUT =====
@@ -556,14 +536,14 @@ export const fetchWithRetry = async (
         throw error;
       }
       
-      addLog(`⚠️ Tentative ${i + 1}/${retries} échouée, nouvelle tentative...`);
+      addLog(`⚠️ Tentative ${i + 1}/${retries} échouée`);
       
       const delay = Math.min(1000 * Math.pow(2, i), 5000);
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
   
-  throw new Error('Toutes les tentatives ont échoué');
+  throw new Error('Échec');
 };
 
 // ===== SAUVEGARDE/CHARGEMENT URLs =====
@@ -576,7 +556,7 @@ export const loadUrls = (): string[] => {
   return saved ? JSON.parse(saved) : ['', '', '', '', ''];
 };
 
-// ===== VALIDATION PROBLÈMES =====
+// ===== VALIDATION =====
 export const getValidationIssues = (themes: DriveTheme[]) => {
   return {
     noImage: themes.filter(t => !t.imageUrl).length,

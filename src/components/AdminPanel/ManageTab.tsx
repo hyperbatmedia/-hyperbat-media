@@ -53,13 +53,12 @@ const isMissingCreator = (creator: string): boolean => {
 };
 
 /**
- * ✅ NOUVELLE FONCTION: Reconvertir les URLs en format brut pour l'export
  * Permet à ImportTab de les reconvertir proprement
  */
 const reverseConvertUrl = (url: string): string => {
   if (!url?.trim()) return url;
   
-  // Extraire l'ID Google Drive de n'importe quel format
+  // Extraire l'ID de tous les formats
   const thumbnailMatch = url.match(/\/thumbnail\?[^&]*id=([a-zA-Z0-9_-]{25,})/);
   const ucMatch = url.match(/\/uc\?[^&]*id=([a-zA-Z0-9_-]{25,})/);
   const fileMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]{25,})/);
@@ -69,7 +68,6 @@ const reverseConvertUrl = (url: string): string => {
   const driveId = thumbnailMatch?.[1] || ucMatch?.[1] || fileMatch?.[1] || openMatch?.[1] || idMatch?.[1];
   
   if (driveId) {
-    // Retourner format "propre" que ImportTab/DriveTab convertira
     return `https://drive.google.com/file/d/${driveId}/view?usp=sharing`;
   }
   
