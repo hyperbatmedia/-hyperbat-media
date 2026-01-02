@@ -1,9 +1,7 @@
-import React, { useState, useMemo } from 'react';
-import { Search, Download, Edit2, Trash2, Eye, X, AlertCircle, ImageOff, User, CheckSquare, Square, Upload, Filter, ArrowUpDown, Zap } from 'lucide-react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { Search, Download, Edit2, Trash2, Eye, X, AlertCircle, ImageOff, User, CheckSquare, Square, Upload, Filter, ArrowUpDown, Zap, ChevronDown, Users } from 'lucide-react';
+import { ensureDisplayableUrl, reverseConvertUrl, isUnknownCreator } from './DriveTab/DriveHelpers';
 
-// ============================================================================
-// TYPES
-// ============================================================================
 interface ThemeItem {
   id: number;
   name: string;
@@ -35,9 +33,6 @@ interface ManageTabProps {
   categories: Category[];
 }
 
-// ============================================================================
-// HELPERS
-// ============================================================================
 const isInvalidUrl = (url: string): boolean => {
   if (!url?.trim()) return true;
   try {
@@ -48,30 +43,20 @@ const isInvalidUrl = (url: string): boolean => {
   }
 };
 
-const isMissingCreator = (creator: string): boolean => {
-  return !creator?.trim() || ['inconnu', 'unknown'].includes(creator.toLowerCase().trim());
-};
-
-/**
- * Permet à ImportTab de les reconvertir proprement
- */
-const reverseConvertUrl = (url: string): string => {
-  if (!url?.trim()) return url;
+const matchSystemId = (themeSystem: string, selectedSystemId: string): boolean => {
+  if (selectedSystemId === 'all' || selectedSystemId === '') return true;
   
-  // Extraire l'ID de tous les formats
-  const thumbnailMatch = url.match(/\/thumbnail\?[^&]*id=([a-zA-Z0-9_-]{25,})/);
-  const ucMatch = url.match(/\/uc\?[^&]*id=([a-zA-Z0-9_-]{25,})/);
-  const fileMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]{25,})/);
-  const openMatch = url.match(/\/open\?[^&]*id=([a-zA-Z0-9_-]{25,})/);
-  const idMatch = url.match(/[?&]id=([a-zA-Z0-9_-]{25,})/);
-  
-  const driveId = thumbnailMatch?.[1] || ucMatch?.[1] || fileMatch?.[1] || openMatch?.[1] || idMatch?.[1];
-  
-  if (driveId) {
-    return `https://drive.google.com/file/d/${driveId}/view?usp=sharing`;
+  if (['tools', 'tutorials', 'main-themes'].includes(selectedSystemId)) {
+    return false;
   }
   
-  return url;
+  const parts = selectedSystemId.split('-');
+  const systemIdPart = parts[parts.length - 1];
+  
+  const normalizedSelected = systemIdPart.toLowerCase().replace(/[^a-z0-9]+/g, '');
+  const normalizedTheme = themeSystem.toLowerCase().replace(/[^a-z0-9]+/g, '');
+  
+  return normalizedTheme === normalizedSelected;
 };
 
 const downloadJson = (data: any, filename: string) => {
@@ -88,9 +73,188 @@ const downloadJson = (data: any, filename: string) => {
   }, 100);
 };
 
-// ============================================================================
-// TOAST
-// ============================================================================
+const AutocompleteSelect = ({ 
+  options, 
+  value, 
+  onChange, 
+  placeholder = "Rechercher...",
+  emptyLabel = "Tous"
+}: {
+  options: SystemRow[];
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  emptyLabel?: string;
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [highlightedIndex, setHighlightedIndex] = useState(0);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const filteredOptions = useMemo(() => {
+    if (!searchTerm.trim()) return options;
+    const search = searchTerm.toLowerCase();
+    return options.filter(opt => 
+      opt.name.toLowerCase().includes(search) ||
+      opt.id.toLowerCase().includes(search)
+    );
+  }, [options, searchTerm]);
+
+  useEffect(() => {
+    setHighlightedIndex(0);
+  }, [searchTerm]);
+
+  const selectedName = useMemo(() => {
+    if (!value) return emptyLabel;
+    const found = options.find(opt => opt.id === value);
+    return found?.name || value;
+  }, [value, options, emptyLabel]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isOpen) {
+      if (e.key === 'Enter' || e.key === 'ArrowDown') {
+        setIsOpen(true);
+        e.preventDefault();
+      }
+      return;
+    }
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setHighlightedIndex(prev => 
+          prev < filteredOptions.length - 1 ? prev + 1 : prev
+        );
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setHighlightedIndex(prev => prev > 0 ? prev - 1 : 0);
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (filteredOptions[highlightedIndex]) {
+          handleSelect(filteredOptions[highlightedIndex].id);
+        }
+        break;
+      case 'Escape':
+        e.preventDefault();
+        setIsOpen(false);
+        setSearchTerm('');
+        break;
+    }
+  };
+
+  const handleSelect = (optionId: string) => {
+    onChange(optionId);
+    setIsOpen(false);
+    setSearchTerm('');
+    inputRef.current?.blur();
+  };
+
+  const handleClear = () => {
+    onChange('');
+    setSearchTerm('');
+    setIsOpen(false);
+  };
+
+  return (
+    <div ref={wrapperRef} className="relative">
+      <div className="relative">
+        <input
+          ref={inputRef}
+          type="text"
+          value={isOpen ? searchTerm : selectedName}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            if (!isOpen) setIsOpen(true);
+          }}
+          onFocus={() => {
+            setIsOpen(true);
+            setSearchTerm('');
+          }}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder}
+          className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none cursor-pointer transition-all pr-20"
+        />
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+          {value && (
+            <button
+              onClick={handleClear}
+              className="p-1.5 hover:bg-gray-700 rounded-lg transition-colors"
+              title="Réinitialiser"
+            >
+              <X className="w-4 h-4 text-gray-400" />
+            </button>
+          )}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-1.5 hover:bg-gray-700 rounded-lg transition-colors"
+          >
+            <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+          </button>
+        </div>
+      </div>
+
+      {isOpen && (
+        <div className="absolute z-50 w-full mt-2 bg-gray-900 border-2 border-orange-500 rounded-xl shadow-2xl max-h-80 overflow-y-auto">
+          <div
+            onClick={() => handleSelect('')}
+            onMouseEnter={() => setHighlightedIndex(-1)}
+            className={`px-4 py-3 cursor-pointer transition-colors flex items-center gap-2 border-b border-gray-700 ${
+              highlightedIndex === -1 ? 'bg-orange-500/20' : 'hover:bg-gray-800'
+            }`}
+          >
+            <span className="text-white font-semibold">🎮 {emptyLabel}</span>
+          </div>
+
+          {filteredOptions.length === 0 ? (
+            <div className="px-4 py-6 text-center text-gray-400">
+              <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <p>Aucun système trouvé</p>
+            </div>
+          ) : (
+            <>
+              {filteredOptions.map((option, index) => (
+                <div
+                  key={option.id}
+                  onClick={() => handleSelect(option.id)}
+                  onMouseEnter={() => setHighlightedIndex(index)}
+                  className={`px-4 py-3 cursor-pointer transition-colors ${
+                    highlightedIndex === index 
+                      ? 'bg-orange-500/20 border-l-4 border-orange-500' 
+                      : 'hover:bg-gray-800'
+                  } ${value === option.id ? 'bg-orange-500/10' : ''}`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-white font-medium">{option.name}</span>
+                    {value === option.id && (
+                      <span className="text-orange-400 text-xs font-bold">✓ Sélectionné</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+              <div className="px-4 py-2 bg-gray-800 border-t border-gray-700 text-xs text-gray-400 text-center">
+                {filteredOptions.length} système{filteredOptions.length > 1 ? 's' : ''} disponible{filteredOptions.length > 1 ? 's' : ''}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const Toast = ({ message, type, onClose }: { 
   message: string; 
   type: 'success' | 'error'; 
@@ -111,9 +275,124 @@ const Toast = ({ message, type, onClose }: {
   </div>
 );
 
-// ============================================================================
-// THEME CARD
-// ============================================================================
+const BulkCreatorEditModal = ({ 
+  selectedThemes, 
+  onSave, 
+  onClose 
+}: {
+  selectedThemes: ThemeItem[];
+  onSave: (newCreator: string) => void;
+  onClose: () => void;
+}) => {
+  const [newCreator, setNewCreator] = useState('');
+  
+  const uniqueCreators = useMemo(() => {
+    const creators = new Set(selectedThemes.map(t => t.creator));
+    return Array.from(creators);
+  }, [selectedThemes]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newCreator.trim()) {
+      onSave(newCreator.trim());
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onClose}>
+      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-purple-500 max-w-2xl w-full shadow-2xl" onClick={e => e.stopPropagation()}>
+        <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 p-4 flex items-center justify-between">
+          <h2 className="text-2xl font-black text-white flex items-center gap-2">
+            <Users className="w-7 h-7" />
+            Édition en masse des créateurs
+          </h2>
+          <button onClick={onClose} className="text-white hover:text-gray-200">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          <div className="bg-gray-950/50 rounded-xl p-4 border border-gray-700">
+            <div className="flex items-center gap-2 mb-3">
+              <AlertCircle className="w-5 h-5 text-blue-400" />
+              <span className="text-blue-400 font-bold">Thèmes sélectionnés</span>
+            </div>
+            <div className="text-white font-semibold mb-2">
+              {selectedThemes.length} thème{selectedThemes.length > 1 ? 's' : ''} sélectionné{selectedThemes.length > 1 ? 's' : ''}
+            </div>
+            
+            {uniqueCreators.length > 0 && (
+              <div className="mt-3">
+                <div className="text-sm text-gray-400 mb-2">Créateurs actuels :</div>
+                <div className="flex flex-wrap gap-2">
+                  {uniqueCreators.map((creator, idx) => (
+                    <span 
+                      key={idx}
+                      className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                        isUnknownCreator(creator) 
+                          ? 'bg-red-600/30 text-red-400 border border-red-500/50'
+                          : 'bg-gray-700 text-gray-300'
+                      }`}
+                    >
+                      {creator || 'Vide'}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold text-gray-300 mb-2">
+              Nouveau créateur *
+            </label>
+            <input 
+              type="text" 
+              required 
+              value={newCreator} 
+              onChange={e => setNewCreator(e.target.value)}
+              placeholder="Ex: John Doe"
+              className="w-full p-4 bg-gray-950 border border-gray-700 rounded-xl text-white text-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 focus:outline-none transition-all"
+              autoFocus
+            />
+            <p className="text-sm text-gray-400 mt-2">
+              Ce nom sera appliqué à tous les {selectedThemes.length} thèmes sélectionnés
+            </p>
+          </div>
+
+          <div className="bg-orange-600/10 border border-orange-500/30 rounded-xl p-4">
+            <div className="flex items-start gap-2">
+              <AlertCircle className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
+              <div className="text-sm text-orange-300">
+                <span className="font-bold">Attention :</span> Cette action remplacera le créateur de tous les thèmes sélectionnés. Cette modification est irréversible.
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex gap-3 pt-4 border-t border-gray-700">
+            <button 
+              type="button" 
+              onClick={onClose} 
+              className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold transition-all"
+            >
+              Annuler
+            </button>
+            <button 
+              type="submit" 
+              className="flex-1 py-3 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 hover:from-purple-700 hover:via-pink-700 hover:to-orange-700 text-white rounded-lg font-bold shadow-lg transition-all flex items-center justify-center gap-2"
+            >
+              <Users className="w-5 h-5" />
+              Appliquer à {selectedThemes.length} thème{selectedThemes.length > 1 ? 's' : ''}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// Suite de ManageTab.tsx - Composants de cartes et modales
+
 const ThemeCard = ({ 
   theme, 
   systemName,
@@ -130,9 +409,13 @@ const ThemeCard = ({
   onToggleSelect: () => void;
 }) => {
   const [imageError, setImageError] = React.useState(false);
-  const missingCreator = isMissingCreator(theme.creator);
+  const missingCreator = isUnknownCreator(theme.creator);
   const invalidUrl = isInvalidUrl(theme.imageUrl);
   const hasProblem = missingCreator || invalidUrl || imageError;
+
+  React.useEffect(() => {
+    setImageError(false);
+  }, [theme.imageUrl]);
 
   return (
     <div className={`group relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl overflow-hidden border-2 transition-all hover:scale-[1.02] ${
@@ -154,7 +437,15 @@ const ThemeCard = ({
         {invalidUrl || imageError ? (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-gray-900 to-gray-950">
             <ImageOff className="w-12 h-12 text-red-400" />
-            <span className="text-red-400 text-xs font-bold">{invalidUrl ? 'URL invalide' : 'Erreur'}</span>
+            <span className="text-red-400 text-xs font-bold">{invalidUrl ? 'URL invalide' : 'Erreur chargement'}</span>
+            {imageError && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); setImageError(false); }}
+                className="text-xs text-blue-400 hover:text-blue-300 underline"
+              >
+                Réessayer
+              </button>
+            )}
           </div>
         ) : (
           <>
@@ -196,9 +487,6 @@ const ThemeCard = ({
   );
 };
 
-// ============================================================================
-// PREVIEW MODAL
-// ============================================================================
 const PreviewModal = ({ theme, onClose, onEdit, onDelete, systems, categories }: {
   theme: ThemeItem;
   onClose: () => void;
@@ -276,9 +564,6 @@ const PreviewModal = ({ theme, onClose, onEdit, onDelete, systems, categories }:
   );
 };
 
-// ============================================================================
-// EDIT MODAL
-// ============================================================================
 const EditModal = ({ theme, onSave, onClose, systems, categories }: {
   theme: ThemeItem;
   onSave: (theme: ThemeItem) => void;
@@ -286,32 +571,19 @@ const EditModal = ({ theme, onSave, onClose, systems, categories }: {
   systems: SystemRow[];
   categories: Category[];
 }) => {
-  const [editData, setEditData] = useState<ThemeItem>({
-    id: theme.id,
-    name: theme.name,
-    creator: theme.creator,
-    system: theme.system,
-    category: theme.category,
-    imageUrl: theme.imageUrl,
-    downloadUrl: theme.downloadUrl,
-    size: theme.size
-  });
-  
+  const [editData, setEditData] = useState<ThemeItem>({ ...theme });
   const availableSystems = systems.filter(s => !s.isHeader && !s.isSubHeader);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanedTheme: ThemeItem = {
-      id: editData.id,
+    onSave({
+      ...editData,
       name: editData.name.trim(),
       creator: editData.creator.trim(),
-      system: editData.system,
-      category: editData.category,
       imageUrl: editData.imageUrl.trim(),
       downloadUrl: editData.downloadUrl.trim(),
       size: editData.size.trim()
-    };
-    onSave(cleanedTheme);
+    });
   };
 
   return (
@@ -385,9 +657,6 @@ const EditModal = ({ theme, onSave, onClose, systems, categories }: {
   );
 };
 
-// ============================================================================
-// IMPORT MODAL
-// ============================================================================
 const ImportModal = ({ onImport, onClose }: {
   onImport: (themes: Omit<ThemeItem, 'id'>[]) => void;
   onClose: () => void;
@@ -424,7 +693,7 @@ const ImportModal = ({ onImport, onClose }: {
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-orange-500 max-w-3xl w-full shadow-2xl" onClick={e => e.stopPropagation()}>
         <div className="bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-4 flex items-center justify-between">
-          <h2 className="text-2xl font-black text-white">🔥 Importer des thèmes</h2>
+          <h2 className="text-2xl font-black text-white">📥 Importer des thèmes</h2>
           <button onClick={onClose} className="text-white"><X className="w-6 h-6" /></button>
         </div>
         
@@ -464,9 +733,8 @@ const ImportModal = ({ onImport, onClose }: {
   );
 };
 
-// ============================================================================
-// COMPOSANT PRINCIPAL - ✅ AVEC EXPORT INCLUANT LES IDS
-// ============================================================================
+// ManageTab.tsx - COMPOSANT PRINCIPAL
+
 export default function ManageTab({ themes, setThemes, saveThemes, systems, categories }: ManageTabProps) {
   const [filters, setFilters] = useState({
     search: '',
@@ -482,6 +750,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const [editingTheme, setEditingTheme] = useState<ThemeItem | null>(null);
   const [viewTheme, setViewTheme] = useState<ThemeItem | null>(null);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [showBulkCreatorModal, setShowBulkCreatorModal] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   const itemsPerPage = 12;
@@ -495,19 +764,32 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const stats = useMemo(() => ({
     total: themes.length,
     invalidUrls: themes.filter(t => isInvalidUrl(t.imageUrl)).length,
-    missingCreators: themes.filter(t => isMissingCreator(t.creator)).length
+    missingCreators: themes.filter(t => isUnknownCreator(t.creator)).length
   }), [themes]);
 
+  const themesWithConvertedUrls = useMemo(() => {
+    return themes.map(theme => {
+      const needsImageConversion = theme.imageUrl && !theme.imageUrl.includes('/thumbnail?');
+      const needsDownloadConversion = theme.downloadUrl && !theme.downloadUrl.includes('/uc?');
+      
+      return {
+        ...theme,
+        imageUrl: needsImageConversion ? ensureDisplayableUrl(theme.imageUrl, true) : theme.imageUrl,
+        downloadUrl: needsDownloadConversion ? ensureDisplayableUrl(theme.downloadUrl, false) : theme.downloadUrl
+      };
+    });
+  }, [themes]);
+
   const filtered = useMemo(() => {
-    return themes.filter(theme => {
+    return themesWithConvertedUrls.filter(theme => {
       if (filters.search && !theme.name.toLowerCase().includes(filters.search.toLowerCase())) return false;
+      if (!matchSystemId(theme.system, filters.system)) return false;
       if (filters.category && theme.category !== filters.category) return false;
-      if (filters.system && theme.system !== filters.system) return false;
       if (filters.onlyInvalidUrls && !isInvalidUrl(theme.imageUrl)) return false;
-      if (filters.onlyMissingCreators && !isMissingCreator(theme.creator)) return false;
+      if (filters.onlyMissingCreators && !isUnknownCreator(theme.creator)) return false;
       return true;
     });
-  }, [themes, filters]);
+  }, [themesWithConvertedUrls, filters]);
 
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
@@ -570,49 +852,39 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     }
   };
 
+  const handleBulkCreatorEdit = (newCreator: string) => {
+    const updated = themes.map(theme => 
+      selectedIds.includes(theme.id) 
+        ? { ...theme, creator: newCreator }
+        : theme
+    );
+    
+    setThemes(updated);
+    saveThemes(updated);
+    setSelectedIds([]);
+    setShowBulkCreatorModal(false);
+    showToast(`✅ Créateur modifié pour ${selectedIds.length} thème(s)`, 'success');
+  };
+
   const handleSaveEdit = async (edited: ThemeItem) => {
-    const updated: ThemeItem[] = JSON.parse(JSON.stringify(themes));
-    const indexToUpdate = updated.findIndex(t => t.id === edited.id);
-    
-    if (indexToUpdate === -1) {
-      console.error('❌ Thème non trouvé avec ID:', edited.id);
-      showToast('❌ Erreur: thème non trouvé', 'error');
-      return;
-    }
-    
-    updated[indexToUpdate] = {
-      id: edited.id,
-      name: edited.name,
-      creator: edited.creator,
-      system: edited.system,
-      category: edited.category,
-      imageUrl: edited.imageUrl,
-      downloadUrl: edited.downloadUrl,
-      size: edited.size
-    };
-    
+    const updated = themes.map(t => t.id === edited.id ? edited : t);
     setThemes(updated);
     await saveThemes(updated);
     setEditingTheme(null);
     showToast('✅ Thème modifié', 'success');
   };
 
-  /**
-   * ✅ FONCTION MODIFIÉE: Export AVEC IDs et URLs reconverties
-   * Permet à ImportTab/DriveTab de détecter les modifications manuelles
-   */
   const handleExport = () => {
     const toExport = selectedIds.length > 0 ? sorted.filter(t => selectedIds.includes(t.id)) : sorted;
     
-    // ✅ GARDER les IDs + reconvertir les URLs en format "propre"
     const data = toExport.map(theme => ({
-      id: theme.id,  // ✅ GARDE l'ID pour traçabilité
+      id: theme.id,
       name: theme.name,
       creator: theme.creator,
       system: theme.system,
       category: theme.category,
-      imageUrl: reverseConvertUrl(theme.imageUrl),  // ✅ Reconvertit en format brut
-      downloadUrl: reverseConvertUrl(theme.downloadUrl),  // ✅ Reconvertit en format brut
+      imageUrl: reverseConvertUrl(theme.imageUrl),
+      downloadUrl: reverseConvertUrl(theme.downloadUrl),
       size: theme.size
     }));
     
@@ -641,6 +913,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   };
 
   const hasActiveFilters = filters.search || filters.category || filters.system || filters.onlyInvalidUrls || filters.onlyMissingCreators;
+  const selectedThemes = themes.filter(t => selectedIds.includes(t.id));
 
   if (themes.length === 0) {
     return (
@@ -694,11 +967,13 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
             />
           </div>
 
-          <select value={filters.system} onChange={e => setFilters({...filters, system: e.target.value})}
-            className="px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none cursor-pointer transition-all">
-            <option value="">🎮 Tous systèmes</option>
-            {availableSystems.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-          </select>
+          <AutocompleteSelect
+            options={availableSystems}
+            value={filters.system}
+            onChange={(value) => setFilters({...filters, system: value})}
+            placeholder="🎮 Rechercher un système..."
+            emptyLabel="Tous systèmes"
+          />
 
           <select value={filters.category} onChange={e => setFilters({...filters, category: e.target.value})}
             className="px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none cursor-pointer transition-all">
@@ -776,7 +1051,13 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
               <CheckSquare className="w-5 h-5" />
               <span>{selectedIds.length} thème(s) sélectionné(s)</span>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
+              <button 
+                onClick={() => setShowBulkCreatorModal(true)}
+                className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-semibold flex items-center gap-2 transition-all shadow-lg">
+                <Users className="w-4 h-4" />
+                Modifier créateurs
+              </button>
               <button onClick={handleBulkDelete}
                 className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold flex items-center gap-2 transition-all">
                 <Trash2 className="w-4 h-4" />
@@ -854,7 +1135,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
           {totalPages > 1 && (
             <div className="flex items-center justify-between pt-4 border-t border-gray-700">
               <div className="text-sm text-gray-400">
-                Affichage <span className="text-white font-semibold">{((currentPage - 1) * itemsPerPage) + 1}</span> à {' '}
+                Affichage <span className="text-white font-semibold">{((currentPage - 1) * itemsPerPage) + 1}</span> à{' '}
                 <span className="text-white font-semibold">{Math.min(currentPage * itemsPerPage, sorted.length)}</span> sur{' '}
                 <span className="text-white font-semibold">{sorted.length}</span>
               </div>
@@ -898,6 +1179,14 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
         <ImportModal
           onImport={handleImport}
           onClose={() => setShowImportModal(false)}
+        />
+      )}
+
+      {showBulkCreatorModal && selectedThemes.length > 0 && (
+        <BulkCreatorEditModal
+          selectedThemes={selectedThemes}
+          onSave={handleBulkCreatorEdit}
+          onClose={() => setShowBulkCreatorModal(false)}
         />
       )}
     </div>

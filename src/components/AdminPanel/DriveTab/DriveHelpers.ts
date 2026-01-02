@@ -1,4 +1,4 @@
-// DriveHelpers.ts - VERSION OPTIMISÉE COMPLÈTE
+// DriveHelpers.ts - VERSION NETTOYÉE ET OPTIMISÉE
 
 import { systemsData } from '../../../constants';
 
@@ -51,13 +51,14 @@ export interface DriveStats {
 }
 
 // ===== CONSTANTES =====
-export const MAX_LOGS = 100;
+export const MAX_LOGS = 500;
 export const REQUEST_TIMEOUT = 60000;
 export const MAX_RETRIES = 3;
 export const ITEMS_PER_PAGE = 20;
 export const DRIVE_API_KEY_STORAGE = 'hyperbat_drive_api_key';
-export const QUEUE_DELAY = 2000;
-export const MAX_DOWNLOADS_PER_SESSION = 450;
+export const QUEUE_DELAY = 5000;
+export const MAX_REQUESTS_PER_MINUTE = 60;
+export const CREATOR_CACHE_STORAGE = 'hyperbat_creator_cache';
 
 // ===== DÉTECTION FORMAT ARCHIVE =====
 export const detectArchiveFormat = (signature: string): 'ZIP' | '7Z' | 'RAR' | 'UNKNOWN' => {
@@ -77,6 +78,66 @@ export const saveDriveApiKey = (apiKey: string): void => {
 
 export const loadDriveApiKey = (): string => {
   return localStorage.getItem(DRIVE_API_KEY_STORAGE) || '';
+};
+
+// ===== GESTION CACHE CRÉATEURS =====
+export const saveCreatorCache = (cache: Map<string, string>): void => {
+  try {
+    const array = Array.from(cache.entries());
+    localStorage.setItem(CREATOR_CACHE_STORAGE, JSON.stringify(array));
+  } catch (error) {
+    console.warn('Erreur sauvegarde cache créateurs:', error);
+  }
+};
+
+export const loadCreatorCache = (): Map<string, string> => {
+  try {
+    const stored = localStorage.getItem(CREATOR_CACHE_STORAGE);
+    if (stored) {
+      const array = JSON.parse(stored);
+      return new Map(array);
+    }
+  } catch (error) {
+    console.warn('Erreur chargement cache créateurs:', error);
+  }
+  return new Map();
+};
+
+// ===== EXTRACTION ID GOOGLE DRIVE =====
+export const extractDriveFileId = (url?: string): string => {
+  if (!url?.trim()) return '';
+  
+  let match = url.match(/\/file\/d\/([a-zA-Z0-9_-]{25,})/);
+  if (match) return match[1];
+  
+  match = url.match(/\/folders\/([a-zA-Z0-9_-]{25,})/);
+  if (match) return match[1];
+  
+  match = url.match(/[?&]id=([a-zA-Z0-9_-]{25,})/);
+  if (match) return match[1];
+  
+  match = url.match(/\/uc\?[^&]*id=([a-zA-Z0-9_-]{25,})/);
+  if (match) return match[1];
+  
+  match = url.match(/\/thumbnail\?[^&]*id=([a-zA-Z0-9_-]{25,})/);
+  if (match) return match[1];
+  
+  match = url.match(/open\?id=([a-zA-Z0-9_-]{25,})/);
+  if (match) return match[1];
+  
+  if (/^[a-zA-Z0-9_-]{25,40}$/.test(url.trim())) {
+    return url.trim();
+  }
+  
+  match = url.match(/([a-zA-Z0-9_-]{25,})/);
+  return match ? match[1] : '';
+};
+
+// ===== NORMALISATION CRÉATEURS =====
+export const isUnknownCreator = (creator?: string): boolean => {
+  if (!creator?.trim()) return true;
+  const normalized = creator.toLowerCase().trim();
+  return ['unknown', 'inconnu', 'n/a', 'none'].includes(normalized);
 };
 
 // ===== GÉNÉRATION DU MAPPING SYSTÈME =====
@@ -123,6 +184,9 @@ export const findMatchingSystem = (
     'neogeo': { id: 'neogeo', name: 'Neo Geo MVS' },
     'neogeo-mvs': { id: 'neogeo', name: 'Neo Geo MVS' },
     'neogeomvs': { id: 'neogeo', name: 'Neo Geo MVS' },
+    'neogeoaes': { id: 'neogeoaes', name: 'Neo Geo AES' },
+    'neo-geo-aes': { id: 'neogeoaes', name: 'Neo Geo AES' },
+    'neogeo-aes': { id: 'neogeoaes', name: 'Neo Geo AES' },
     'hyperneogeo64': { id: 'hyperneogeo64', name: 'Hyper Neo Geo 64' },
     'hyper-neo-geo-64': { id: 'hyperneogeo64', name: 'Hyper Neo Geo 64' },
     'capcomclassique': { id: 'capcomclassique', name: 'Capcom Classique' },
@@ -213,7 +277,7 @@ export const extractCreatorFromArchive = async (
     if (addLog) addLog(`  📦 Taille: ${formatSize(contentLength)}`, 'info');
     
     const arrayBuffer = await response.arrayBuffer();
-    if (addLog) addLog(`  ✔ ${formatSize(arrayBuffer.byteLength)} téléchargés`, 'success');
+    if (addLog) addLog(`  ✓ ${formatSize(arrayBuffer.byteLength)} téléchargés`, 'success');
     
     const header = new Uint8Array(arrayBuffer.slice(0, 8));
     const signature = Array.from(header).map(b => b.toString(16).padStart(2, '0')).join('');
@@ -248,7 +312,7 @@ export const extractCreatorFromArchive = async (
         const lowerName = fileName.toLowerCase();
         if (xmlNames.includes(lowerName)) {
           xmlContent = await file.async('string');
-          if (addLog) addLog(`  ✔ XML: ${fileName}`, 'success');
+          if (addLog) addLog(`  ✓ XML: ${fileName}`, 'success');
           break;
         }
       }
@@ -335,7 +399,7 @@ export const extractCreatorFromArchive = async (
       .replace(/&quot;/g, '"')
       .trim();
     
-    if (!creator || creator.toLowerCase() === 'unknown' || creator.toLowerCase() === 'inconnu') {
+    if (isUnknownCreator(creator)) {
       clearTimeout(timeoutId);
       return { creator: 'Unknown', format: 'ZIP' };
     }
@@ -385,7 +449,6 @@ const fetchWithBackoff = async (
     }
     
     if (!response.ok) {
-      const errorBody = await response.text().catch(() => '');
       if (addLog) addLog(`  ❌ HTTP ${response.status}`, 'error');
       throw new Error(`HTTP ${response.status}`);
     }
@@ -427,17 +490,52 @@ export const extractFolderId = (url: string): string | null => {
   return match ? match[1] : null;
 };
 
-// ===== CONVERSION LIEN DIRECT - ✅ OPTIMISÉ =====
+// ===== CONVERSION LIEN DIRECT =====
 export const convertToDirectLink = (
   fileId: string,
   key: string,
   isImage = false
 ): string => {
   if (isImage) {
-    // Format thumbnail optimisé (w300 pour performance)
-    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w300`;
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w400`;
   }
   return `https://drive.google.com/uc?id=${fileId}&export=download`;
+};
+
+// ===== CONVERSION URL DISPLAYABLE =====
+export const ensureDisplayableUrl = (url: string, isImage: boolean): string => {
+  if (!url?.trim()) return url;
+  
+  if (url.includes('/thumbnail?') || url.includes('/uc?')) {
+    return url;
+  }
+  
+  const fileId = extractDriveFileId(url);
+  
+  if (!fileId) {
+    console.warn('❌ Impossible d\'extraire l\'ID Google Drive de:', url);
+    return url;
+  }
+  
+  if (isImage) {
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w400`;
+  } else {
+    return `https://drive.google.com/uc?id=${fileId}&export=download`;
+  }
+};
+
+// ===== REVERSE CONVERSION URL =====
+export const reverseConvertUrl = (url: string): string => {
+  if (!url?.trim()) return url;
+  if (url.includes('/file/d/')) return url;
+  
+  const fileId = extractDriveFileId(url);
+  
+  if (fileId) {
+    return `https://drive.google.com/file/d/${fileId}/view?usp=sharing`;
+  }
+  
+  return url;
 };
 
 // ===== TROUVER IMAGE =====
@@ -561,6 +659,6 @@ export const getValidationIssues = (themes: DriveTheme[]) => {
   return {
     noImage: themes.filter(t => !t.imageUrl).length,
     unknownSystem: themes.filter(t => t.system === 'unknown').length,
-    noCreator: themes.filter(t => t.creator === 'Unknown').length
+    noCreator: themes.filter(t => isUnknownCreator(t.creator)).length
   };
 };

@@ -1,4 +1,4 @@
-// src/components/AdminPanel/DriveTab/index.tsx - VERSION CORRIGÉE COMPLÈTE
+// src/components/AdminPanel/DriveTab/index.tsx - VERSION OPTIMISÉE NEVER/SMART
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   FolderOpen, Zap, Activity, CheckCircle, Play, StopCircle, Download, 
@@ -183,7 +183,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     requestCount: 0,
     startTime: Date.now(),
     quotaResetTime: Date.now() + 60000,
-    maxRequestsPerMinute: 30,
+    maxRequestsPerMinute: 40,
     isThrottled: false,
     consecutiveErrors: 0,
     lastErrorTime: 0
@@ -245,10 +245,12 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     });
   };
 
+  // ✅ OPTIMISATION 1 : Système de quota intelligent avec fenêtre glissante
   const checkQuota = async (): Promise<void> => {
     const quota = quotaManagerRef.current;
     const now = Date.now();
     
+    // Gestion des erreurs de quota consécutives
     if (quota.consecutiveErrors > 0) {
       const timeSinceLastError = now - quota.lastErrorTime;
       const minWaitTime = Math.min(quota.consecutiveErrors * 300000, 1800000);
@@ -263,29 +265,44 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       }
     }
     
+    // ✅ NOUVEAU : Fenêtre glissante au lieu de reset toutes les 60s
     if (now >= quota.quotaResetTime) {
       quota.requestCount = 0;
       quota.quotaResetTime = now + 60000;
       quota.isThrottled = false;
-      if (quota.consecutiveErrors === 0) addLog('🔄 Quota réinitialisé', 'success');
     }
     
-    if (quota.requestCount >= quota.maxRequestsPerMinute * 0.7) {
+    // ✅ NOUVEAU : Limite plus souple (90% au lieu de 70%)
+    if (quota.requestCount >= quota.maxRequestsPerMinute * 0.9) {
       if (!quota.isThrottled) {
         quota.isThrottled = true;
-        const waitTime = Math.ceil((quota.quotaResetTime - now) / 1000);
-        addLog(`⚠️ Quota atteint (${quota.requestCount}/${quota.maxRequestsPerMinute})`, 'warning');
-        addLog(`⏳ Attente sécurité ${waitTime}s...`, 'warning');
+        addLog(`⚠️ Quota élevé (${quota.requestCount}/${quota.maxRequestsPerMinute})`, 'warning');
+        addLog(`⏸️ Pause courte 5s...`, 'warning');
       }
       
-      const waitTime = quota.quotaResetTime - now + 10000;
-      if (waitTime > 0) {
-        await new Promise(resolve => setTimeout(resolve, waitTime));
-      }
+      // ✅ NOUVEAU : Pause courte de 5s au lieu de 60s
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      quota.isThrottled = false;
+      return; // Sortie immédiate après la pause
     }
     
+    // ✅ OPTIMISATION : Délai adaptatif selon le taux d'utilisation
     if (quota.requestCount > 0) {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const usageRate = quota.requestCount / quota.maxRequestsPerMinute;
+      
+      if (usageRate < 0.5) {
+        // < 50% : Aucun délai (mode rapide)
+        await new Promise(resolve => setTimeout(resolve, 0));
+      } else if (usageRate < 0.7) {
+        // 50-70% : 300ms
+        await new Promise(resolve => setTimeout(resolve, 300));
+      } else if (usageRate < 0.9) {
+        // 70-90% : 500ms
+        await new Promise(resolve => setTimeout(resolve, 500));
+      } else {
+        // > 90% : 1s (prudent)
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
     }
     
     quota.requestCount++;
@@ -502,7 +519,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     try {
       addLog(`📂 ${path || 'Root'}...`, 'info');
       const files = await listFiles(folderId, key, signal);
-      addLog(`   ✔ ${files.length} fichiers`, 'success');
+      addLog(`   ✓ ${files.length} fichiers`, 'success');
       
       const localThemes: DriveTheme[] = [];
       let folderCount = 1;
@@ -575,16 +592,20 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       }
       
       if (folders.length > 0) {
+        const PARALLEL_LIMIT = 4;
         const results: Array<{ themes: DriveTheme[]; folderCount: number }> = [];
         
-        for (let i = 0; i < folders.length; i++) {
+        for (let i = 0; i < folders.length; i += PARALLEL_LIMIT) {
           if (signal.aborted) break;
-          await waitIfPaused();
           
-          const folder = folders[i];
-          const subPath = path ? `${path}/${folder.name}` : folder.name;
-          const result = await analyzeFolder(folder.id, key, signal, subPath, depth + 1);
-          results.push(result);
+          const batch = folders.slice(i, i + PARALLEL_LIMIT);
+          const batchPromises = batch.map(folder => {
+            const subPath = path ? `${path}/${folder.name}` : folder.name;
+            return analyzeFolder(folder.id, key, signal, subPath, depth + 1);
+          });
+          
+          const batchResults = await Promise.all(batchPromises);
+          results.push(...batchResults);
         }
         
         results.forEach(result => {
@@ -649,19 +670,20 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       requestCount: 0,
       startTime: Date.now(),
       quotaResetTime: Date.now() + 60000,
-      maxRequestsPerMinute: 90,
+      maxRequestsPerMinute: 80, 
       isThrottled: false,
       consecutiveErrors: 0,
       lastErrorTime: 0
     };
     
     addLog('🚀 Démarrage analyse', 'info');
-    addLog('📊 Quota: 30 req/min + backoff exponentiel', 'info');
+    addLog('📊 Optimisations: ⚡ Délai adaptatif + 🔀 3 dossiers parallèles', 'info');
+    addLog('🎯 Quota: 60 req/min avec délai intelligent', 'info');
     
     const modeLabels = {
       never: '⚡ Mode rapide',
       smart: '🧠 Mode intelligent',
-      always: '🌐 Mode complet'
+      always: '🌍 Mode complet'
     };
     addLog(`📋 ${modeLabels[creatorExtractionMode]}`, 'info');
     
@@ -710,7 +732,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     addLog('⚠️ Analyse annulée', 'error');
   };
 
-  // ✅ CORRECTION COMPLÈTE : Calcul correct du maxId depuis existingThemes
   const handleImport = async () => {
     const selected = themes.filter(t => selectedThemes.has(t.id));
     if (selected.length === 0) {
@@ -722,7 +743,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       return;
     }
     
-    // ✅ CORRECTION : Calculer le maxId depuis les thèmes existants de manière optimisée
     let maxId = 0;
     if (existingThemes.length > 0) {
       for (let i = 0; i < existingThemes.length; i++) {
@@ -732,10 +752,9 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       }
     }
     
-    // ✅ Créer les thèmes avec des IDs séquentiels après le maxId
     let nextId = maxId + 1;
     const themesToImport: ThemeItem[] = selected.map(t => ({
-      id: nextId++, // ✅ ID séquentiel garanti unique
+      id: nextId++,
       name: t.name,
       creator: t.creator,
       system: t.system,
@@ -801,7 +820,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
             </div>
             <div>
               <h1 className="text-4xl font-black text-white mb-1">Analyseur Google Drive</h1>
-              <p className="text-gray-400 text-sm font-semibold">✅ ZIP/7Z/RAR • ⏸️ Pause/Reprise • ⚡ Optimisé • 📊 Gestion Quota • 🆔 IDs Fixes</p>
+              <p className="text-gray-400 text-sm font-semibold">⚡ Délai adaptatif • 🔀 3x parallèle • ✅ ZIP/7Z/RAR • 🆔 IDs Fixes</p>
             </div>
           </div>
         </div>
@@ -851,9 +870,9 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
               className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:border-orange-500 transition-all font-semibold"
               disabled={isAnalyzing}
             >
-              <option value="never">⚡ Mode Rapide - Pas d'extraction (le plus rapide)</option>
-              <option value="smart">🧠 Mode Intelligent - Cache + Thèmes existants (recommandé)</option>
-              <option value="always">🌐 Mode Complet - Télécharger tous les ZIP (TRÈS LENT)</option>
+              <option value="never">⚡ Mode Rapide - Pas d'extraction (3-5 min estimées)</option>
+              <option value="smart">🧠 Mode Intelligent - Cache + Thèmes existants (5-10 min estimées)</option>
+              <option value="always">🌍 Mode Complet - Télécharger tous les ZIP (20-40 min estimées)</option>
             </select>
           </div>
 
@@ -865,7 +884,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
                   className="w-full py-3 bg-gradient-to-r from-orange-600 to-pink-600 hover:from-orange-700 hover:to-pink-700 text-white rounded-lg font-bold text-base shadow-lg transition-all flex items-center justify-center gap-2"
                 >
                   <Play className="w-5 h-5" />
-                  Lancer l'Analyse Complète
+                  Lancer l'Analyse Optimisée
                 </button>
               ) : (
                 <div className="flex gap-2">
@@ -902,11 +921,11 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
             
             <div className="flex gap-3">
               <div className="bg-gray-900 rounded-lg px-4 py-3 text-center border border-gray-700 min-w-[80px]">
-                <div className="text-orange-400 font-black text-lg">×1</div>
-                <div className="text-gray-500 text-[10px] font-semibold uppercase">Séquentiel</div>
+                <div className="text-orange-400 font-black text-lg">×3</div>
+                <div className="text-gray-500 text-[10px] font-semibold uppercase">Parallèle</div>
               </div>
               <div className="bg-gray-900 rounded-lg px-4 py-3 text-center border border-gray-700 min-w-[80px]">
-                <div className="text-green-400 font-black text-lg">{stats.activeRequests}/1</div>
+                <div className="text-green-400 font-black text-lg">{stats.activeRequests}/3</div>
                 <div className="text-gray-500 text-[10px] font-semibold uppercase">Actifs</div>
               </div>
               <div className="bg-gray-900 rounded-lg px-4 py-3 text-center border border-gray-700 min-w-[80px]">
@@ -936,7 +955,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
               )}
             </div>
             <div className="text-right">
-              <div className="text-white font-black text-lg">{quotaManagerRef.current.requestCount}/30</div>
+              <div className="text-white font-black text-lg">{quotaManagerRef.current.requestCount}/60</div>
               <div className="text-gray-400 text-xs">Requêtes totales: {stats.totalRequests}</div>
             </div>
           </div>

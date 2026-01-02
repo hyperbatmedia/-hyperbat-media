@@ -11,12 +11,9 @@ import AddTab from './AddTab';
 import ManageTab from './ManageTab';
 import ImportTab from './ImportTab';
 import DriveTab from './DriveTab';
+import { extractDriveFileId, isUnknownCreator } from './DriveTab/DriveHelpers';
 
-export type AdminTab =
-  | 'add'
-  | 'manage'
-  | 'import'
-  | 'drive-import';
+export type AdminTab = 'add' | 'manage' | 'import' | 'drive-import';
 
 interface AdminPanelProps {
   themes: ThemeItem[];
@@ -79,161 +76,99 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
   handleDeleteTheme,
   convertGoogleDriveUrl
 }) => {
-  /**
-   * ✅ VERSION CORRIGÉE COMPLÈTE AVEC GESTION INTELLIGENTE DES IDS
-   * 
-   * Logique de merge :
-   * 1. Détection par clé (name + system + downloadUrl) ET par ID
-   * 2. Préservation des corrections manuelles (créateurs édités)
-   * 3. Enrichissement automatique des créateurs manquants
-   * 4. Gestion des conflits avec priorité aux données existantes
-   */
-  const handleImportThemes = async (
-    newThemes: ThemeItem[]
-  ): Promise<void> => {
-    console.log('🚀 Début import:', newThemes.length, 'thèmes');
-    
-    // ✅ 1️⃣ Calculer le prochain ID disponible
-    let maxId = 0;
-    if (themes.length > 0) {
-      for (let i = 0; i < themes.length; i++) {
-        if (themes[i].id > maxId) {
-          maxId = themes[i].id;
-        }
-      }
-    }
-    console.log('📊 Max ID actuel:', maxId);
-    
-    // ✅ 2️⃣ Clé d'unicité : name + system + downloadUrl
-    const makeKey = (t: ThemeItem) =>
-      `${t.name.toLowerCase()}|${t.system}|${t.downloadUrl}`;
 
-    // ✅ 3️⃣ Double indexation : par clé ET par ID
+  const handleImportThemes = async (newThemes: ThemeItem[]): Promise<void> => {
+    console.log('🚀 Import démarré:', newThemes.length);
+
+    let maxId = 0;
+    for (const t of themes) {
+      if (t.id > maxId) maxId = t.id;
+    }
+    let nextId = maxId + 1;
+
+    const makeKey = (t: ThemeItem) =>
+      `${t.name.toLowerCase().trim()}|${t.system}|${extractDriveFileId(t.downloadUrl)}`;
+
     const themeMap = new Map<string, ThemeItem>();
     const idMap = new Map<number, ThemeItem>();
 
-    // Indexer les thèmes existants
     for (const theme of themes) {
-      themeMap.set(makeKey(theme), theme);
-      if (theme.id) {
-        idMap.set(theme.id, theme);
-      }
+      const key = makeKey(theme);
+      themeMap.set(key, theme);
+      idMap.set(theme.id, theme);
     }
-    console.log('📇 Thèmes existants indexés:', themeMap.size);
 
-    // ✅ 4️⃣ Traiter les thèmes importés avec logique intelligente
-    let nextId = maxId + 1;
     let newCount = 0;
+    let deduplicatedCount = 0;
     let enrichedCount = 0;
     let preservedCount = 0;
     let conflictCount = 0;
-    
+
     for (const incoming of newThemes) {
       const key = makeKey(incoming);
-      
-      // Vérifier existence par clé OU par ID
-      const existingByKey = themeMap.get(key);
-      const existingById = incoming.id ? idMap.get(incoming.id) : null;
-      
-      // Priorité à l'ID si disponible (plus fiable)
-      const existing = existingById || existingByKey;
+      const existing = themeMap.get(key);
 
-      if (!existing) {
-        // ✅ NOUVEAU THÈME
-        const newTheme: ThemeItem = {
-          ...incoming,
-          id: incoming.id || nextId++ // Garde l'ID si fourni, sinon génère
-        };
-        themeMap.set(key, newTheme);
-        if (newTheme.id) idMap.set(newTheme.id, newTheme);
-        newCount++;
-        console.log('➕ Nouveau:', newTheme.name, '(ID:', newTheme.id, ')');
-        
-      } else {
-        // ✅ THÈME EXISTANT - Merge intelligent
-        
-        // 🔍 Analyser les créateurs
-        const existingCreator = existing.creator?.trim().toLowerCase();
-        const incomingCreator = incoming.creator?.trim().toLowerCase();
-        
-        const existingIsValid = existingCreator && 
-          existingCreator !== 'unknown' && 
-          existingCreator !== 'inconnu' &&
-          existingCreator.length > 0;
-        
-        const incomingIsValid = incomingCreator && 
-          incomingCreator !== 'unknown' && 
-          incomingCreator !== 'inconnu' &&
-          incomingCreator.length > 0;
-        
+      if (existing) {
+        deduplicatedCount++;
+
+        const existingIsValid = !isUnknownCreator(existing.creator);
+        const incomingIsValid = !isUnknownCreator(incoming.creator);
+
         let finalCreator = existing.creator;
-        let action = 'keep';
-        
+
         if (existingIsValid && !incomingIsValid) {
-          // L'existant a un créateur valide, le nouveau non → GARDER
-          finalCreator = existing.creator;
-          action = 'preserve';
           preservedCount++;
-          console.log('🛡️ Préservé:', existing.name, '→', existing.creator);
-          
         } else if (!existingIsValid && incomingIsValid) {
-          // Le nouveau a un créateur valide, l'existant non → ENRICHIR
           finalCreator = incoming.creator;
-          action = 'enrich';
           enrichedCount++;
-          console.log('✨ Enrichi:', existing.name, '→', incoming.creator);
-          
-        } else if (existingIsValid && incomingIsValid && existingCreator !== incomingCreator) {
-          // CONFLIT : Les deux ont un créateur différent
-          // → PRIORITÉ à l'existant (correction manuelle préservée)
-          finalCreator = existing.creator;
-          action = 'conflict';
+        } else if (
+          existingIsValid &&
+          incomingIsValid &&
+          existing.creator.toLowerCase().trim() !== incoming.creator.toLowerCase().trim()
+        ) {
           conflictCount++;
-          console.warn('⚠️ Conflit:', existing.name, '| Gardé:', existing.creator, '| Ignoré:', incoming.creator);
-          
-        } else {
-          // Même créateur ou les deux vides → Garder l'existant
-          finalCreator = existing.creator;
         }
-        
-        // Merge final avec préservation de l'ID existant
+
         const merged: ThemeItem = {
           ...existing,
           creator: finalCreator,
-          // Mettre à jour autres champs si nécessaire (mais garder ID existant)
           size: incoming.size || existing.size,
           imageUrl: incoming.imageUrl || existing.imageUrl,
-          downloadUrl: incoming.downloadUrl || existing.downloadUrl,
-          category: incoming.category || existing.category
+          category: incoming.category || existing.category,
+          downloadUrl: incoming.downloadUrl || existing.downloadUrl
         };
-        
+
         themeMap.set(key, merged);
-        if (merged.id) idMap.set(merged.id, merged);
+        idMap.set(merged.id, merged);
+        continue;
       }
+
+      const safeId = incoming.id && !idMap.has(incoming.id) ? incoming.id : nextId++;
+
+      const newTheme: ThemeItem = {
+        ...incoming,
+        id: safeId
+      };
+
+      themeMap.set(key, newTheme);
+      idMap.set(safeId, newTheme);
+      newCount++;
     }
 
-    // ✅ 5️⃣ Sauvegarde finale
     const updatedThemes = Array.from(themeMap.values());
 
-    console.log('📊 Résumé import:');
-    console.log('  ➕ Nouveaux:', newCount);
-    console.log('  ✨ Enrichis:', enrichedCount);
-    console.log('  🛡️ Préservés:', preservedCount);
-    console.log('  ⚠️ Conflits:', conflictCount);
-    console.log('  📦 Total final:', updatedThemes.length);
+    console.log('📊 Résumé import');
+    console.log('➕ Nouveaux:', newCount);
+    console.log('🔍 Dédupliqués:', deduplicatedCount);
+    console.log('✨ Enrichis:', enrichedCount);
+    console.log('🛡️ Préservés:', preservedCount);
+    console.log('⚠️ Conflits:', conflictCount);
+    console.log('📦 Total:', updatedThemes.length);
 
     await saveThemes(updatedThemes);
     setThemes(updatedThemes);
-    
-    // Afficher un résumé à l'utilisateur
-    const summary = [
-      newCount > 0 ? `✅ ${newCount} nouveau(x)` : null,
-      enrichedCount > 0 ? `✨ ${enrichedCount} enrichi(s)` : null,
-      preservedCount > 0 ? `🛡️ ${preservedCount} préservé(s)` : null,
-      conflictCount > 0 ? `⚠️ ${conflictCount} conflit(s) résolu(s)` : null
-    ].filter(Boolean).join(' • ');
-    
-    console.log('✅ Import terminé:', summary);
+
+    console.log('✅ Import terminé — état cohérent');
   };
 
   return (
