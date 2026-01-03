@@ -347,6 +347,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                   expandedSystems={systemsLogic.expandedSystems}
                   toggleSystemCategories={systemsLogic.toggleSystemCategories}
                   allThemes={themes}
+                  isDarkMode={isDarkMode}
                 />
               </div>
             )}

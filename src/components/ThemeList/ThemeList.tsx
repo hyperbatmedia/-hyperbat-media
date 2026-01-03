@@ -1,4 +1,4 @@
-// Fichier: src/components/ThemeList/ThemeList.tsx - VERSION CORRIGÉE
+// Fichier: src/components/ThemeList/ThemeList.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { Download, X } from 'lucide-react';
 import { ThemeItem, SystemRow } from '../../types';
@@ -229,7 +229,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                   <span className="text-gray-400 text-xs">• {theme.size}</span>
                 </div>
 
-                <p className="text-xs text-gray-400 mb-2">Par {theme.creator}</p>
+                <p className="text-xs text-cyan-400 font-semibold mb-2">Par {theme.creator}</p>
 
                 <a
                   href={theme.downloadUrl}

@@ -1,4 +1,4 @@
-// DriveHelpers.ts - VERSION NETTOYÉE ET OPTIMISÉE
+// DriveHelpers.ts - VERSION COMPLÈTE AVEC DÉTECTION CATÉGORIES
 
 import { systemsData } from '../../../constants';
 
@@ -67,6 +67,152 @@ export const detectArchiveFormat = (signature: string): 'ZIP' | '7Z' | 'RAR' | '
   if (signature.startsWith('526172211a07')) return 'RAR';
   if (signature.startsWith('526172211a070100')) return 'RAR';
   return 'UNKNOWN';
+};
+
+// ===== NORMALISATION POUR COMPARAISON =====
+/**
+ * Normalise une chaîne pour la comparaison (insensible à la casse et accents)
+ */
+export const normalizeForComparison = (str: string): string => {
+  return str
+    .toLowerCase()
+    .trim()
+    .normalize('NFD') // Décompose les accents (é → e + ´)
+    .replace(/[\u0300-\u036f]/g, '') // Supprime les accents
+    .replace(/[^a-z0-9]+/g, ''); // Ne garde que lettres et chiffres
+};
+
+// ===== DÉTECTION CATÉGORIE PAR CHEMIN =====
+/**
+ * Détecte la catégorie d'un thème basé sur le dernier segment du chemin (N3)
+ * 
+ * Structure attendue:
+ * - N0: ROOT (Drive racine)
+ * - N1: Section (console portable, console salon, arcade, etc.)
+ * - N2: Système (PlayStation, CPS1, NES, etc.)
+ * - N3: Catégorie (system-themes, game-themes, default-themes, artwork)
+ * 
+ * @param folderPath - Chemin complet du dossier
+ * @returns Catégorie détectée
+ */
+export const detectCategoryFromPath = (folderPath: string): string => {
+  if (!folderPath) {
+    console.warn('⚠️ Chemin vide, défaut: game-themes');
+    return 'game-themes';
+  }
+  
+  // Découpe le chemin en segments
+  const pathSegments = folderPath
+    .split('/')
+    .map(s => s.trim())
+    .filter(s => s.length > 0);
+  
+  if (pathSegments.length === 0) {
+    console.warn('⚠️ Aucun segment trouvé, défaut: game-themes');
+    return 'game-themes';
+  }
+  
+  // Prendre le DERNIER segment (N3 = dossier de catégorie)
+  const lastSegment = pathSegments[pathSegments.length - 1];
+  const normalized = normalizeForComparison(lastSegment);
+  
+  console.log('🔍 Détection catégorie:', {
+    chemin: folderPath,
+    segments: pathSegments,
+    dernierSegment: lastSegment,
+    normalisé: normalized
+  });
+  
+  // =====================================================
+  // 1. SYSTEM-THEMES
+  // =====================================================
+  const systemPatterns = [
+    'systemthemes',
+    'systemtheme',
+    'themesysteme',
+    'themesystemes',
+    'themesystem',
+    'systemdefault',
+    'system'
+  ];
+  
+  for (const pattern of systemPatterns) {
+    if (normalized === pattern || normalized.includes(pattern)) {
+      console.log('✅ MATCH system-themes:', lastSegment, '→', pattern);
+      return 'system-themes';
+    }
+  }
+  
+  // =====================================================
+  // 2. DEFAULT-THEMES
+  // =====================================================
+  const defaultPatterns = [
+    'defaultthemes',
+    'defaulttheme',
+    'themedefault',
+    'themesdefault',
+    'default',
+    'defaut'
+  ];
+  
+  for (const pattern of defaultPatterns) {
+    if (normalized === pattern || normalized.includes(pattern)) {
+      console.log('✅ MATCH default-themes:', lastSegment, '→', pattern);
+      return 'default-themes';
+    }
+  }
+  
+  // =====================================================
+  // 3. ARTWORK
+  // =====================================================
+  const artworkPatterns = [
+    'artwork',
+    'artworks',
+    'screenshot',
+    'screenshots',
+    'art',
+    'arts',
+    'capture',
+    'captures'
+  ];
+  
+  for (const pattern of artworkPatterns) {
+    if (normalized === pattern || normalized.includes(pattern)) {
+      console.log('✅ MATCH artwork:', lastSegment, '→', pattern);
+      return 'artwork';
+    }
+  }
+  
+  // =====================================================
+  // 4. GAME-THEMES (par défaut et patterns spécifiques)
+  // =====================================================
+  const gamePatterns = [
+    'gamethemes',
+    'gametheme',
+    'themedejeux',
+    'themedejeu',
+    'themejeux',
+    'themejeu',
+    'themesjeux',
+    'themesjeu',
+    'jeux',
+    'jeu',
+    'games',
+    'game'
+  ];
+  
+  for (const pattern of gamePatterns) {
+    if (normalized === pattern || normalized.includes(pattern)) {
+      console.log('✅ MATCH game-themes:', lastSegment, '→', pattern);
+      return 'game-themes';
+    }
+  }
+  
+  // =====================================================
+  // 5. PAR DÉFAUT
+  // =====================================================
+  console.log('⚠️ Aucun pattern trouvé pour:', lastSegment, '→ défaut: game-themes');
+  return 'game-themes';
 };
 
 // ===== GESTION CLÉ API =====
@@ -277,7 +423,7 @@ export const extractCreatorFromArchive = async (
     if (addLog) addLog(`  📦 Taille: ${formatSize(contentLength)}`, 'info');
     
     const arrayBuffer = await response.arrayBuffer();
-    if (addLog) addLog(`  ✓ ${formatSize(arrayBuffer.byteLength)} téléchargés`, 'success');
+    if (addLog) addLog(`  ✔ ${formatSize(arrayBuffer.byteLength)} téléchargés`, 'success');
     
     const header = new Uint8Array(arrayBuffer.slice(0, 8));
     const signature = Array.from(header).map(b => b.toString(16).padStart(2, '0')).join('');
@@ -312,7 +458,7 @@ export const extractCreatorFromArchive = async (
         const lowerName = fileName.toLowerCase();
         if (xmlNames.includes(lowerName)) {
           xmlContent = await file.async('string');
-          if (addLog) addLog(`  ✓ XML: ${fileName}`, 'success');
+          if (addLog) addLog(`  ✔ XML: ${fileName}`, 'success');
           break;
         }
       }

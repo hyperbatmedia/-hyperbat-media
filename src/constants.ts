@@ -55,6 +55,7 @@ export const systemsData: SystemsDataStructure = {
         visco: { label: 'VISCO', systems: ['Visco'] },
         seibu: { label: 'SEIBU KAIHATSU', systems: ['Seibu Kaihatsu'] },
         nichibutsu: { label: 'NICHIBUTSU', systems: ['Nichibutsu'] },
+        banpresto: { label: 'BANPRESTO', systems: ['Banpresto'] },
         incredi: { label: 'INCREDIBLE TECHNOLOGIES', systems: ['Incredible Technologies'] },
         zinc: { label: 'ZINC', systems: ['Zinc'] },
         sammy: { label: 'SAMMY', systems: ['Sammy', 'Atomiswave', 'SSV'] },

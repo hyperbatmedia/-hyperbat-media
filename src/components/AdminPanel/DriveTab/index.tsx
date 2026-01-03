@@ -1,4 +1,4 @@
-// src/components/AdminPanel/DriveTab/index.tsx - VERSION OPTIMISÉE NEVER/SMART
+// src/components/AdminPanel/DriveTab/index.tsx - VERSION AVEC DÉTECTION CATÉGORIES
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   FolderOpen, Zap, Activity, CheckCircle, Play, StopCircle, Download, 
@@ -7,7 +7,8 @@ import {
 import { 
   DriveTheme, generateSystemMapping, findMatchingSystem, formatSize, 
   extractFolderId, convertToDirectLink, findMatchingImage, fetchWithRetry, 
-  saveUrls, loadUrls, saveDriveApiKey, loadDriveApiKey, extractCreatorFromArchive 
+  saveUrls, loadUrls, saveDriveApiKey, loadDriveApiKey, extractCreatorFromArchive,
+  detectCategoryFromPath // ✅ AJOUT
 } from './DriveHelpers';
 
 interface ThemeItem {
@@ -245,12 +246,10 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     });
   };
 
-  // ✅ OPTIMISATION 1 : Système de quota intelligent avec fenêtre glissante
   const checkQuota = async (): Promise<void> => {
     const quota = quotaManagerRef.current;
     const now = Date.now();
     
-    // Gestion des erreurs de quota consécutives
     if (quota.consecutiveErrors > 0) {
       const timeSinceLastError = now - quota.lastErrorTime;
       const minWaitTime = Math.min(quota.consecutiveErrors * 300000, 1800000);
@@ -265,14 +264,12 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       }
     }
     
-    // ✅ NOUVEAU : Fenêtre glissante au lieu de reset toutes les 60s
     if (now >= quota.quotaResetTime) {
       quota.requestCount = 0;
       quota.quotaResetTime = now + 60000;
       quota.isThrottled = false;
     }
     
-    // ✅ NOUVEAU : Limite plus souple (90% au lieu de 70%)
     if (quota.requestCount >= quota.maxRequestsPerMinute * 0.9) {
       if (!quota.isThrottled) {
         quota.isThrottled = true;
@@ -280,27 +277,21 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
         addLog(`⏸️ Pause courte 5s...`, 'warning');
       }
       
-      // ✅ NOUVEAU : Pause courte de 5s au lieu de 60s
       await new Promise(resolve => setTimeout(resolve, 3000));
       quota.isThrottled = false;
-      return; // Sortie immédiate après la pause
+      return;
     }
     
-    // ✅ OPTIMISATION : Délai adaptatif selon le taux d'utilisation
     if (quota.requestCount > 0) {
       const usageRate = quota.requestCount / quota.maxRequestsPerMinute;
       
       if (usageRate < 0.5) {
-        // < 50% : Aucun délai (mode rapide)
         await new Promise(resolve => setTimeout(resolve, 0));
       } else if (usageRate < 0.7) {
-        // 50-70% : 300ms
         await new Promise(resolve => setTimeout(resolve, 300));
       } else if (usageRate < 0.9) {
-        // 70-90% : 500ms
         await new Promise(resolve => setTimeout(resolve, 500));
       } else {
-        // > 90% : 1s (prudent)
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
     }
@@ -519,7 +510,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     try {
       addLog(`📂 ${path || 'Root'}...`, 'info');
       const files = await listFiles(folderId, key, signal);
-      addLog(`   ✓ ${files.length} fichiers`, 'success');
+      addLog(`   ✔ ${files.length} fichiers`, 'success');
       
       const localThemes: DriveTheme[] = [];
       let folderCount = 1;
@@ -546,6 +537,10 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
         const matchedSystem = findMatchingSystem(systemName, systemMapping, addLog);
         addLog(`🎮 ${archives.length} → ${matchedSystem.systemName}`, 'info');
         
+        // ✅ DÉTECTION DE LA CATÉGORIE
+        const detectedCategory = detectCategoryFromPath(path);
+        addLog(`  🏷️ Catégorie: ${detectedCategory}`, 'info');
+        
         for (const archive of archives) {
           if (signal.aborted) break;
           await waitIfPaused();
@@ -559,7 +554,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
             name,
             systemDisplayName: matchedSystem.systemName,
             system: matchedSystem.systemId,
-            category: 'game-themes',
+            category: detectedCategory, // ✅ CATÉGORIE DÉTECTÉE AUTOMATIQUEMENT
             imageUrl: image ? convertToDirectLink(image.id, key, true) : '',
             downloadUrl: convertToDirectLink(archive.id, key),
             creator,
@@ -679,6 +674,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     addLog('🚀 Démarrage analyse', 'info');
     addLog('📊 Optimisations: ⚡ Délai adaptatif + 🔀 3 dossiers parallèles', 'info');
     addLog('🎯 Quota: 60 req/min avec délai intelligent', 'info');
+    addLog('🏷️ Détection automatique des catégories activée', 'success');
     
     const modeLabels = {
       never: '⚡ Mode rapide',
@@ -820,7 +816,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
             </div>
             <div>
               <h1 className="text-4xl font-black text-white mb-1">Analyseur Google Drive</h1>
-              <p className="text-gray-400 text-sm font-semibold">⚡ Délai adaptatif • 🔀 3x parallèle • ✅ ZIP/7Z/RAR • 🆔 IDs Fixes</p>
+              <p className="text-gray-400 text-sm font-semibold">⚡ Délai adaptatif • 🔀 3x parallèle • ✅ ZIP/7Z/RAR • 🏷️ Catégories auto • 🆔 IDs Fixes</p>
             </div>
           </div>
         </div>

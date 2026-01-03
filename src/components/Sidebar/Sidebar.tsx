@@ -35,13 +35,15 @@ interface SidebarProps {
   expandedSystems: Record<string, boolean>;
   toggleSystemCategories: (systemId: string) => void;
   allThemes?: Array<{ id: number; system: string; [key: string]: any }>;
+  isDarkMode: boolean;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
   systems, sidebarSearch, setSidebarSearch, selectedSystem, selectedCategory,
   handleSystemSelect, setSelectedCategory, expandedSections, toggleSection,
   expandedSubsections, toggleSubsection, expandedSystems, toggleSystemCategories,
-  allThemes = []
+  allThemes = [],
+  isDarkMode
 }) => {
   const { links, isLoading: isLoadingLinks } = useLinksLoader();
   
@@ -84,7 +86,6 @@ const Sidebar: React.FC<SidebarProps> = ({
            Object.values(expandedSubsections).some(v => v);
   }, [expandedSections, expandedSubsections]);
 
-  // 🆕 Compteur de thèmes par système
   const themeCountBySystem = useMemo(() => {
     if (!allThemes || allThemes.length === 0) {
       return {};
@@ -101,13 +102,11 @@ const Sidebar: React.FC<SidebarProps> = ({
     return counts;
   }, [allThemes]);
 
-  // 🆕 Compteur de thèmes par section (header) et subsection
   const themeCountBySection = useMemo(() => {
     const sectionCounts: Record<string, number> = {};
     const subsectionCounts: Record<string, number> = {};
     
     systems.forEach(system => {
-      // Ignorer les headers/subheaders eux-mêmes et les boutons du haut
       if (system.isHeader || system.isSubHeader || TOP_BUTTON_IDS.includes(system.id as any)) {
         return;
       }
@@ -116,12 +115,10 @@ const Sidebar: React.FC<SidebarProps> = ({
       const normalizedSystemId = systemIdParts[systemIdParts.length - 1].toLowerCase().replace(/[^a-z0-9]+/g, '');
       const themeCount = themeCountBySystem[normalizedSystemId] || 0;
       
-      // Ajouter au compteur de la section
       if (system.section) {
         sectionCounts[system.section] = (sectionCounts[system.section] || 0) + themeCount;
       }
       
-      // Ajouter au compteur de la subsection
       if (system.subsection && system.subsection !== 'collections') {
         subsectionCounts[system.subsection] = (subsectionCounts[system.subsection] || 0) + themeCount;
       }
@@ -201,7 +198,9 @@ const Sidebar: React.FC<SidebarProps> = ({
             toggleSection(system.section || '');
           }
         }}
-        className="w-full text-left pt-3 pb-1 px-2 rounded transition flex items-center justify-between hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
+        className={`w-full text-left pt-3 pb-1 px-2 rounded transition flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+          isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-200'
+        }`}
         aria-expanded={isExpanded}
         aria-label={`${system.name} section${sectionCount > 0 ? `, ${sectionCount} thèmes` : ''}`}
       >
@@ -240,7 +239,9 @@ const Sidebar: React.FC<SidebarProps> = ({
             toggleSubsection(system.subsection || '');
           }
         }}
-        className="w-full text-left pt-2 pb-1 px-3 ml-2 rounded transition flex items-center justify-between hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
+        className={`w-full text-left pt-2 pb-1 px-3 ml-2 rounded transition flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+          isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-200'
+        }`}
         aria-expanded={isExpanded}
         aria-label={`${system.name} subsection${subsectionCount > 0 ? `, ${subsectionCount} thèmes` : ''}`}
       >
@@ -281,7 +282,13 @@ const Sidebar: React.FC<SidebarProps> = ({
     const normalizedSystemId = systemIdParts[systemIdParts.length - 1].toLowerCase().replace(/[^a-z0-9]+/g, '');
     const themeCount = themeCountBySystem[normalizedSystemId] || 0;
     
-    const buttonStyle = isTopButton 
+    const defaultBg = isDarkMode ? 'bg-gray-800' : 'bg-gray-100';
+    const defaultBorder = isDarkMode ? 'border-gray-700' : 'border-gray-300';
+    const defaultHoverBg = isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200';
+    const defaultHoverBorder = isDarkMode ? 'hover:border-gray-600' : 'hover:border-gray-400';
+    const defaultTextColor = isDarkMode ? 'text-gray-200' : 'text-gray-800';
+    const defaultHoverText = isDarkMode ? 'hover:text-white' : 'hover:text-gray-900';
+	const buttonStyle = isTopButton 
       ? { 
           background: 'linear-gradient(135deg, #FFA500 0%, #FF9E33 100%)',
           borderColor: '#FFD700',
@@ -299,7 +306,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     return (
       <div className="px-2 py-1">
         <div
-          className={`w-full px-4 py-2 rounded-lg transition-all duration-200 font-semibold border-2 flex items-center justify-between ${system.subsection && system.subsection !== 'collections' && !searchActive ? 'ml-4' : ''} ${isSelected || isTopButton ? 'text-white' : 'bg-gray-800 border-gray-700 hover:bg-gray-700 hover:border-gray-600 hover:shadow-lg'} ${isTopButton ? 'hover:shadow-lg hover:brightness-125' : ''}`}
+          className={`w-full px-4 py-2 rounded-lg transition-all duration-200 font-semibold border-2 flex items-center justify-between ${system.subsection && system.subsection !== 'collections' && !searchActive ? 'ml-4' : ''} ${isSelected || isTopButton ? 'text-white' : `${defaultBg} ${defaultBorder} ${defaultHoverBg} ${defaultHoverBorder} hover:shadow-lg`} ${isTopButton ? 'hover:shadow-lg hover:brightness-125' : ''}`}
           style={{
             ...buttonStyle,
             transition: 'all 0.3s ease',
@@ -322,7 +329,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               href={correspondingLink.url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex-1 text-left text-sm min-w-0 pr-2 focus:outline-none rounded ${isSelected || isTopButton ? 'text-white' : 'hover:text-gray-200'}`}
+              className={`flex-1 text-left text-sm min-w-0 pr-2 focus:outline-none rounded ${isSelected || isTopButton ? 'text-white' : `${defaultTextColor} ${defaultHoverText}`}`}
               style={textStyle}
               aria-label={system.name}
               onClick={() => {
@@ -348,7 +355,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   e.currentTarget.blur();
                 }
               }}
-              className={`flex-1 text-left text-sm min-w-0 pr-2 focus:outline-none rounded ${isSelected || isTopButton ? 'text-white' : 'hover:text-gray-200'}`}
+              className={`flex-1 text-left text-sm min-w-0 pr-2 focus:outline-none rounded ${isSelected || isTopButton ? 'text-white' : `${defaultTextColor} ${defaultHoverText}`}`}
               style={textStyle}
               aria-label={`${system.name}${themeCount > 0 ? `, ${themeCount} thèmes` : ''}`}
               aria-current={isSelected ? 'page' : undefined}
@@ -402,7 +409,11 @@ const Sidebar: React.FC<SidebarProps> = ({
                   setSelectedCategory('all');
                 }
               }}
-              className={`w-full text-left px-3 py-1.5 rounded text-sm transition focus:outline-none focus:ring-2 focus:ring-orange-500 ${selectedCategory === 'all' ? 'text-white font-semibold' : 'text-gray-300 hover:text-white hover:bg-gray-800'}`}
+              className={`w-full text-left px-3 py-1.5 rounded text-sm transition focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                selectedCategory === 'all' 
+                  ? 'text-white font-semibold' 
+                  : `${isDarkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-200'}`
+              }`}
               style={selectedCategory === 'all' ? { backgroundColor: `${colors.bg}80` } : {}}
               aria-label="Toutes les catégories"
               aria-current={selectedCategory === 'all' ? 'true' : undefined}
@@ -419,7 +430,11 @@ const Sidebar: React.FC<SidebarProps> = ({
                     setSelectedCategory(cat.id);
                   }
                 }}
-                className={`w-full text-left px-3 py-1.5 rounded text-sm transition focus:outline-none focus:ring-2 focus:ring-orange-500 ${selectedCategory === cat.id ? 'text-white font-semibold' : 'text-gray-300 hover:text-white hover:bg-gray-800'}`}
+                className={`w-full text-left px-3 py-1.5 rounded text-sm transition focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                  selectedCategory === cat.id 
+                    ? 'text-white font-semibold' 
+                    : `${isDarkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-200'}`
+                }`}
                 style={selectedCategory === cat.id ? { backgroundColor: `${colors.bg}80` } : {}}
                 aria-label={cat.name}
                 aria-current={selectedCategory === cat.id ? 'true' : undefined}
@@ -437,7 +452,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <aside className="w-80 flex-shrink-0">
       <style>{SIDEBAR_INLINE_STYLES}</style>
 
-      <div className="bg-gray-900 rounded-lg p-4 border-4 sticky top-4 overflow-visible" style={{ borderColor: '#FF8C00', maxHeight: 'calc(100vh - 2rem)' }}>
+      <div className={`rounded-lg p-4 border-4 sticky top-4 overflow-visible ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`} style={{ borderColor: '#FF8C00', maxHeight: 'calc(100vh - 2rem)' }}>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-black" style={{ color: '#FF8C00' }}>SYSTÈMES</h3>
           <div className="flex gap-2">
@@ -546,7 +561,9 @@ const Sidebar: React.FC<SidebarProps> = ({
                             placeholder="Rechercher un système... (Ctrl+K)"
                             value={sidebarSearch} 
                             onChange={(e) => setSidebarSearch(e.target.value)} 
-                            className="w-full bg-gray-800 text-white rounded-lg pl-10 pr-10 py-2 text-sm border-2 border-gray-700 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-500"
+                            className={`w-full rounded-lg pl-10 pr-10 py-2 text-sm border-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-500 ${
+                              isDarkMode ? 'bg-gray-800 text-white border-gray-700' : 'bg-white text-gray-900 border-gray-300'
+                            }`}
                             aria-label="Rechercher un système"
                             autoComplete="off"
                           />
