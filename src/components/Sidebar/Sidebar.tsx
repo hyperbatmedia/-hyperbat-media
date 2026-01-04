@@ -34,7 +34,7 @@ interface SidebarProps {
   toggleSubsection: (subsection: string) => void;
   expandedSystems: Record<string, boolean>;
   toggleSystemCategories: (systemId: string) => void;
-  allThemes?: Array<{ id: number; system: string; [key: string]: any }>;
+  allThemes?: Array<{ id: number; system: string; category: string; [key: string]: any }>;
   isDarkMode: boolean;
 }
 
@@ -97,6 +97,29 @@ const Sidebar: React.FC<SidebarProps> = ({
       if (!theme.system) return;
       const normalized = theme.system.toLowerCase().replace(/[^a-z0-9]+/g, '');
       counts[normalized] = (counts[normalized] || 0) + 1;
+    });
+    
+    return counts;
+  }, [allThemes]);
+
+  // ✅ NOUVEAU: Compteur de thèmes par catégorie pour chaque système
+  const themeCountBySystemAndCategory = useMemo(() => {
+    if (!allThemes || allThemes.length === 0) {
+      return {};
+    }
+    
+    const counts: Record<string, Record<string, number>> = {};
+    
+    allThemes.forEach(theme => {
+      if (!theme.system || !theme.category) return;
+      
+      const normalizedSystem = theme.system.toLowerCase().replace(/[^a-z0-9]+/g, '');
+      
+      if (!counts[normalizedSystem]) {
+        counts[normalizedSystem] = {};
+      }
+      
+      counts[normalizedSystem][theme.category] = (counts[normalizedSystem][theme.category] || 0) + 1;
     });
     
     return counts;
@@ -282,6 +305,9 @@ const Sidebar: React.FC<SidebarProps> = ({
     const normalizedSystemId = systemIdParts[systemIdParts.length - 1].toLowerCase().replace(/[^a-z0-9]+/g, '');
     const themeCount = themeCountBySystem[normalizedSystemId] || 0;
     
+    // ✅ NOUVEAU: Récupérer les compteurs par catégorie pour ce système
+    const categoryCounts = themeCountBySystemAndCategory[normalizedSystemId] || {};
+    
     const defaultBg = isDarkMode ? 'bg-gray-800' : 'bg-gray-100';
     const defaultBorder = isDarkMode ? 'border-gray-700' : 'border-gray-300';
     const defaultHoverBg = isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200';
@@ -415,33 +441,63 @@ const Sidebar: React.FC<SidebarProps> = ({
                   : `${isDarkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-200'}`
               }`}
               style={selectedCategory === 'all' ? { backgroundColor: `${colors.bg}80` } : {}}
-              aria-label="Toutes les catégories"
+              aria-label={`Toutes les catégories${themeCount > 0 ? `, ${themeCount} thèmes` : ''}`}
               aria-current={selectedCategory === 'all' ? 'true' : undefined}
             >
-              Toutes les catégories
+              <span className="flex items-center gap-1">
+                Toutes les catégories
+                {themeCount > 0 && (
+                  <span 
+                    className="text-xs opacity-80 font-normal"
+                    style={{ 
+                      color: selectedCategory === 'all' ? 'rgba(255,255,255,0.85)' : 'rgba(255,140,0,0.9)',
+                      textShadow: selectedCategory === 'all' ? '0 1px 2px rgba(0,0,0,0.3)' : 'none'
+                    }}
+                  >
+                    ({themeCount})
+                  </span>
+                )}
+              </span>
             </button>
-            {system.categories!.map(cat => (
-              <button 
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setSelectedCategory(cat.id);
-                  }
-                }}
-                className={`w-full text-left px-3 py-1.5 rounded text-sm transition focus:outline-none focus:ring-2 focus:ring-orange-500 ${
-                  selectedCategory === cat.id 
-                    ? 'text-white font-semibold' 
-                    : `${isDarkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-200'}`
-                }`}
-                style={selectedCategory === cat.id ? { backgroundColor: `${colors.bg}80` } : {}}
-                aria-label={cat.name}
-                aria-current={selectedCategory === cat.id ? 'true' : undefined}
-              >
-                {cat.name}
-              </button>
-            ))}
+            {system.categories!.map(cat => {
+              const categoryCount = categoryCounts[cat.id] || 0;
+              
+              return (
+                <button 
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setSelectedCategory(cat.id);
+                    }
+                  }}
+                  className={`w-full text-left px-3 py-1.5 rounded text-sm transition focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                    selectedCategory === cat.id 
+                      ? 'text-white font-semibold' 
+                      : `${isDarkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-200'}`
+                  }`}
+                  style={selectedCategory === cat.id ? { backgroundColor: `${colors.bg}80` } : {}}
+                  aria-label={`${cat.name}${categoryCount > 0 ? `, ${categoryCount} thèmes` : ''}`}
+                  aria-current={selectedCategory === cat.id ? 'true' : undefined}
+                >
+                  <span className="flex items-center gap-1">
+                    {cat.name}
+                    {categoryCount > 0 && (
+                      <span 
+                        className="text-xs opacity-80 font-normal"
+                        style={{ 
+                          color: selectedCategory === cat.id ? 'rgba(255,255,255,0.85)' : 'rgba(255,140,0,0.9)',
+                          textShadow: selectedCategory === cat.id ? '0 1px 2px rgba(0,0,0,0.3)' : 'none'
+                        }}
+                      >
+                        ({categoryCount})
+                      </span>
+                    )}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         )}
       </div>

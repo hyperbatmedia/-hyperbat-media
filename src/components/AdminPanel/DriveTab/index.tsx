@@ -1,4 +1,4 @@
-// src/components/AdminPanel/DriveTab/index.tsx - VERSION AVEC DÉTECTION CATÉGORIES
+// src/components/AdminPanel/DriveTab/index.tsx 
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   FolderOpen, Zap, Activity, CheckCircle, Play, StopCircle, Download, 
@@ -8,7 +8,7 @@ import {
   DriveTheme, generateSystemMapping, findMatchingSystem, formatSize, 
   extractFolderId, convertToDirectLink, findMatchingImage, fetchWithRetry, 
   saveUrls, loadUrls, saveDriveApiKey, loadDriveApiKey, extractCreatorFromArchive,
-  detectCategoryFromPath // ✅ AJOUT
+  detectCategoryFromPath
 } from './DriveHelpers';
 
 interface ThemeItem {
@@ -20,6 +20,7 @@ interface ThemeItem {
   imageUrl: string;
   downloadUrl: string;
   size: string;
+  date?: string;
 }
 
 interface DriveTabProps {
@@ -52,10 +53,9 @@ const parseSize = (sizeStr: string): number => {
   };
   return value * (multipliers[unit] || 1);
 };
-
 // Composants internes
 const ThemeCard = ({ theme, isSelected, onToggleSelect }: any) => {
-  const [imageError, setImageError] = useState(false);
+  const [imageError, setImageError] = React.useState(false);
   return (
     <div
       onClick={onToggleSelect}
@@ -112,6 +112,12 @@ const ThemeCard = ({ theme, isSelected, onToggleSelect }: any) => {
         <div className={`text-xs ${theme.creator !== 'Unknown' ? 'text-green-400 font-semibold' : 'text-gray-500'}`}>
           Par {theme.creator}
         </div>
+        {/* ✅ AFFICHAGE DATE */}
+        {theme.date && (
+          <div className="text-xs text-gray-400">
+            📅 {theme.date}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -371,6 +377,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     }
   };
 
+  // ✅ MODIFICATION: Ajouter createdTime et modifiedTime dans la requête
   const listFiles = async (folderId: string, key: string, signal: AbortSignal) => {
     let allFiles: any[] = [];
     let pageToken: string | null = null;
@@ -379,7 +386,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       if (signal.aborted) throw new Error('Annulé');
       await waitIfPaused();
       
-      const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&key=${key}&fields=files(id,name,mimeType,size),nextPageToken&pageSize=1000${pageToken ? `&pageToken=${pageToken}` : ''}`;
+      const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&key=${key}&fields=files(id,name,mimeType,size,createdTime,modifiedTime),nextPageToken&pageSize=1000${pageToken ? `&pageToken=${pageToken}` : ''}`;
       const data = await fetchWithQuota(url, signal);
       allFiles = [...allFiles, ...(data.files || [])];
       pageToken = data.nextPageToken || null;
@@ -510,7 +517,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     try {
       addLog(`📂 ${path || 'Root'}...`, 'info');
       const files = await listFiles(folderId, key, signal);
-      addLog(`   ✔ ${files.length} fichiers`, 'success');
+      addLog(`   ✓ ${files.length} fichiers`, 'success');
       
       const localThemes: DriveTheme[] = [];
       let folderCount = 1;
@@ -537,7 +544,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
         const matchedSystem = findMatchingSystem(systemName, systemMapping, addLog);
         addLog(`🎮 ${archives.length} → ${matchedSystem.systemName}`, 'info');
         
-        // ✅ DÉTECTION DE LA CATÉGORIE
         const detectedCategory = detectCategoryFromPath(path);
         addLog(`  🏷️ Catégorie: ${detectedCategory}`, 'info');
         
@@ -549,16 +555,20 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
           const { creator, format } = await getCreatorOptimized(archive, matchedSystem, key, signal);
           const image = findMatchingImage(archive.name, images);
           
+          // ✅ AJOUT: Récupération de la date du ZIP
+          const archiveDate = archive.modifiedTime?.split('T')[0] || archive.createdTime?.split('T')[0] || '';
+          
           const newTheme: DriveTheme = {
             id: `theme_${++themeIdCounter.current}`,
             name,
             systemDisplayName: matchedSystem.systemName,
             system: matchedSystem.systemId,
-            category: detectedCategory, // ✅ CATÉGORIE DÉTECTÉE AUTOMATIQUEMENT
+            category: detectedCategory,
             imageUrl: image ? convertToDirectLink(image.id, key, true) : '',
             downloadUrl: convertToDirectLink(archive.id, key),
             creator,
             size: formatSize(archive.size),
+            date: archiveDate, // ✅ DATE DU ZIP
             selected: false,
             archiveFormat: format as 'ZIP' | '7Z' | 'RAR' | 'UNKNOWN'
           };
@@ -675,6 +685,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     addLog('📊 Optimisations: ⚡ Délai adaptatif + 🔀 3 dossiers parallèles', 'info');
     addLog('🎯 Quota: 60 req/min avec délai intelligent', 'info');
     addLog('🏷️ Détection automatique des catégories activée', 'success');
+    addLog('📅 Récupération des dates de fichiers activée', 'success');
     
     const modeLabels = {
       never: '⚡ Mode rapide',
@@ -757,7 +768,8 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       category: t.category,
       imageUrl: t.imageUrl,
       downloadUrl: t.downloadUrl,
-      size: t.size
+      size: t.size,
+      date: t.date // ✅ TRANSMISSION DE LA DATE
     }));
     
     try {
@@ -816,7 +828,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
             </div>
             <div>
               <h1 className="text-4xl font-black text-white mb-1">Analyseur Google Drive</h1>
-              <p className="text-gray-400 text-sm font-semibold">⚡ Délai adaptatif • 🔀 3x parallèle • ✅ ZIP/7Z/RAR • 🏷️ Catégories auto • 🆔 IDs Fixes</p>
+              <p className="text-gray-400 text-sm font-semibold">⚡ Délai adaptatif • 🔀 3x parallèle • ✅ ZIP/7Z/RAR • 🏷️ Catégories auto • 📅 Dates • 🆔 IDs Fixes</p>
             </div>
           </div>
         </div>

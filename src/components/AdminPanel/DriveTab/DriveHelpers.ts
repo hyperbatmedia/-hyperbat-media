@@ -1,4 +1,4 @@
-// DriveHelpers.ts - VERSION COMPLÈTE AVEC DÉTECTION CATÉGORIES
+// DriveHelpers.ts - VERSION COMPLÈTE AVEC DATE + FORMATAGE FR
 
 import { systemsData } from '../../../constants';
 
@@ -34,6 +34,7 @@ export interface DriveTheme {
   downloadUrl: string;
   creator: string;
   size: string;
+  date?: string;
   selected?: boolean;
   archiveFormat?: 'ZIP' | '7Z' | 'RAR' | 'UNKNOWN';
 }
@@ -60,6 +61,20 @@ export const QUEUE_DELAY = 5000;
 export const MAX_REQUESTS_PER_MINUTE = 60;
 export const CREATOR_CACHE_STORAGE = 'hyperbat_creator_cache';
 
+// ===== FORMATAGE DATE FR =====
+export const formatDateFR = (dateStr?: string): string => {
+  if (!dateStr?.trim()) return '';
+  
+  try {
+    const [year, month, day] = dateStr.split('-');
+    if (!year || !month || !day) return dateStr;
+    return `${day}/${month}/${year}`;
+  } catch (error) {
+    console.warn('Erreur formatage date:', dateStr, error);
+    return dateStr;
+  }
+};
+
 // ===== DÉTECTION FORMAT ARCHIVE =====
 export const detectArchiveFormat = (signature: string): 'ZIP' | '7Z' | 'RAR' | 'UNKNOWN' => {
   if (signature.startsWith('504b')) return 'ZIP';
@@ -70,38 +85,22 @@ export const detectArchiveFormat = (signature: string): 'ZIP' | '7Z' | 'RAR' | '
 };
 
 // ===== NORMALISATION POUR COMPARAISON =====
-/**
- * Normalise une chaîne pour la comparaison (insensible à la casse et accents)
- */
 export const normalizeForComparison = (str: string): string => {
   return str
     .toLowerCase()
     .trim()
-    .normalize('NFD') // Décompose les accents (é → e + ´)
-    .replace(/[\u0300-\u036f]/g, '') // Supprime les accents
-    .replace(/[^a-z0-9]+/g, ''); // Ne garde que lettres et chiffres
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '');
 };
 
 // ===== DÉTECTION CATÉGORIE PAR CHEMIN =====
-/**
- * Détecte la catégorie d'un thème basé sur le dernier segment du chemin (N3)
- * 
- * Structure attendue:
- * - N0: ROOT (Drive racine)
- * - N1: Section (console portable, console salon, arcade, etc.)
- * - N2: Système (PlayStation, CPS1, NES, etc.)
- * - N3: Catégorie (system-themes, game-themes, default-themes, artwork)
- * 
- * @param folderPath - Chemin complet du dossier
- * @returns Catégorie détectée
- */
 export const detectCategoryFromPath = (folderPath: string): string => {
   if (!folderPath) {
     console.warn('⚠️ Chemin vide, défaut: game-themes');
     return 'game-themes';
   }
   
-  // Découpe le chemin en segments
   const pathSegments = folderPath
     .split('/')
     .map(s => s.trim())
@@ -112,7 +111,6 @@ export const detectCategoryFromPath = (folderPath: string): string => {
     return 'game-themes';
   }
   
-  // Prendre le DERNIER segment (N3 = dossier de catégorie)
   const lastSegment = pathSegments[pathSegments.length - 1];
   const normalized = normalizeForComparison(lastSegment);
   
@@ -123,9 +121,6 @@ export const detectCategoryFromPath = (folderPath: string): string => {
     normalisé: normalized
   });
   
-  // =====================================================
-  // 1. SYSTEM-THEMES
-  // =====================================================
   const systemPatterns = [
     'systemthemes',
     'systemtheme',
@@ -143,9 +138,6 @@ export const detectCategoryFromPath = (folderPath: string): string => {
     }
   }
   
-  // =====================================================
-  // 2. DEFAULT-THEMES
-  // =====================================================
   const defaultPatterns = [
     'defaultthemes',
     'defaulttheme',
@@ -162,9 +154,6 @@ export const detectCategoryFromPath = (folderPath: string): string => {
     }
   }
   
-  // =====================================================
-  // 3. ARTWORK
-  // =====================================================
   const artworkPatterns = [
     'artwork',
     'artworks',
@@ -183,9 +172,6 @@ export const detectCategoryFromPath = (folderPath: string): string => {
     }
   }
   
-  // =====================================================
-  // 4. GAME-THEMES (par défaut et patterns spécifiques)
-  // =====================================================
   const gamePatterns = [
     'gamethemes',
     'gametheme',
@@ -208,9 +194,6 @@ export const detectCategoryFromPath = (folderPath: string): string => {
     }
   }
   
-  // =====================================================
-  // 5. PAR DÉFAUT
-  // =====================================================
   console.log('⚠️ Aucun pattern trouvé pour:', lastSegment, '→ défaut: game-themes');
   return 'game-themes';
 };

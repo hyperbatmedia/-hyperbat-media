@@ -1,6 +1,7 @@
+// ManageTab.tsx 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Search, Download, Edit2, Trash2, Eye, X, AlertCircle, ImageOff, User, CheckSquare, Square, Upload, Filter, ArrowUpDown, Zap, ChevronDown, Users } from 'lucide-react';
-import { ensureDisplayableUrl, reverseConvertUrl, isUnknownCreator } from './DriveTab/DriveHelpers';
+import { ensureDisplayableUrl, reverseConvertUrl, isUnknownCreator, formatDateFR } from './DriveTab/DriveHelpers';
 
 interface ThemeItem {
   id: number;
@@ -11,6 +12,7 @@ interface ThemeItem {
   imageUrl: string;
   downloadUrl: string;
   size: string;
+  date?: string; // ✅ CHAMP DATE
 }
 
 interface SystemRow {
@@ -391,8 +393,6 @@ const BulkCreatorEditModal = ({
   );
 };
 
-// Suite de ManageTab.tsx - Composants de cartes et modales
-
 const ThemeCard = ({ 
   theme, 
   systemName,
@@ -482,258 +482,16 @@ const ThemeCard = ({
             </span>
           )}
         </div>
+        {/* ✅ AFFICHAGE DATE EN FORMAT FR */}
+        {theme.date && (
+          <div className="text-xs text-gray-400 flex items-center gap-1">
+            📅 {formatDateFR(theme.date)}
+          </div>
+        )}
       </div>
     </div>
   );
 };
-
-const PreviewModal = ({ theme, onClose, onEdit, onDelete, systems, categories }: {
-  theme: ThemeItem;
-  onClose: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
-  systems: SystemRow[];
-  categories: Category[];
-}) => {
-  const systemName = systems.find(s => s.id === theme.system)?.name || theme.system;
-  const categoryName = categories.find(c => c.id === theme.category)?.name || theme.category;
-
-  return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-orange-500 max-w-2xl w-full shadow-2xl" onClick={e => e.stopPropagation()}>
-        <div className="bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-4 flex items-center justify-between rounded-t-2xl">
-          <h2 className="text-2xl font-black text-white">👁️ Prévisualisation</h2>
-          <button onClick={onClose} className="text-white hover:text-gray-200">
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-        
-        <div className="p-6 space-y-4">
-          <div className="relative h-64 rounded-xl overflow-hidden bg-gray-950">
-            {theme.imageUrl && !isInvalidUrl(theme.imageUrl) ? (
-              <img src={theme.imageUrl} alt={theme.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <ImageOff className="w-16 h-16 text-red-400" />
-              </div>
-            )}
-          </div>
-          
-          <div className="space-y-3">
-            <div>
-              <span className="text-gray-400 text-sm">Nom:</span>
-              <p className="text-white font-bold text-xl">{theme.name}</p>
-            </div>
-            <div>
-              <span className="text-gray-400 text-sm">Créateur:</span>
-              <p className="text-orange-400 font-semibold">{theme.creator || 'Inconnu'}</p>
-            </div>
-            <div className="flex gap-2 flex-wrap">
-              <span className="px-3 py-1 bg-blue-600 text-white text-sm font-semibold rounded-full">
-                🎮 {systemName}
-              </span>
-              <span className="px-3 py-1 bg-orange-600 text-white text-sm font-semibold rounded-full">
-                {categoryName}
-              </span>
-              <span className="px-3 py-1 bg-gray-700 text-gray-300 text-sm font-semibold rounded-full">
-                {theme.size}
-              </span>
-            </div>
-          </div>
-          
-          <div className="flex gap-3 pt-4">
-            <button onClick={onEdit}
-              className="flex-1 py-3 bg-gradient-to-r from-orange-600 to-pink-600 hover:from-orange-700 hover:to-pink-700 text-white rounded-lg font-bold flex items-center justify-center gap-2">
-              <Edit2 className="w-5 h-5" />
-              Modifier
-            </button>
-            <button onClick={onDelete}
-              className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold flex items-center justify-center gap-2">
-              <Trash2 className="w-5 h-5" />
-              Supprimer
-            </button>
-            <a href={theme.downloadUrl} target="_blank" rel="noopener noreferrer"
-              className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold flex items-center justify-center gap-2">
-              <Download className="w-5 h-5" />
-              Télécharger
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const EditModal = ({ theme, onSave, onClose, systems, categories }: {
-  theme: ThemeItem;
-  onSave: (theme: ThemeItem) => void;
-  onClose: () => void;
-  systems: SystemRow[];
-  categories: Category[];
-}) => {
-  const [editData, setEditData] = useState<ThemeItem>({ ...theme });
-  const availableSystems = systems.filter(s => !s.isHeader && !s.isSubHeader);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave({
-      ...editData,
-      name: editData.name.trim(),
-      creator: editData.creator.trim(),
-      imageUrl: editData.imageUrl.trim(),
-      downloadUrl: editData.downloadUrl.trim(),
-      size: editData.size.trim()
-    });
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-orange-500 max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
-        <div className="sticky top-0 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-4 flex items-center justify-between z-10">
-          <h2 className="text-2xl font-black text-white">✏️ Modifier le thème</h2>
-          <button onClick={onClose} className="text-white hover:text-gray-200">
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-        
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-bold text-gray-300 mb-2">Nom du thème *</label>
-              <input type="text" required value={editData.name} 
-                onChange={e => setEditData({...editData, name: e.target.value})}
-                className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
-            </div>
-            <div>
-              <label className="block text-sm font-bold text-gray-300 mb-2">Créateur *</label>
-              <input type="text" required value={editData.creator} 
-                onChange={e => setEditData({...editData, creator: e.target.value})}
-                className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
-            </div>
-            <div>
-              <label className="block text-sm font-bold text-gray-300 mb-2">Système *</label>
-              <select required value={editData.system} onChange={e => setEditData({...editData, system: e.target.value})}
-                className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none">
-                {availableSystems.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-bold text-gray-300 mb-2">Catégorie *</label>
-              <select required value={editData.category} onChange={e => setEditData({...editData, category: e.target.value})}
-                className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none">
-                {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-bold text-gray-300 mb-2">Taille</label>
-              <input type="text" value={editData.size} onChange={e => setEditData({...editData, size: e.target.value})}
-                className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
-            </div>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-bold text-gray-300 mb-2">URL de l'image</label>
-            <input type="url" value={editData.imageUrl} onChange={e => setEditData({...editData, imageUrl: e.target.value})}
-              className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-bold text-gray-300 mb-2">URL de téléchargement</label>
-            <input type="url" value={editData.downloadUrl} onChange={e => setEditData({...editData, downloadUrl: e.target.value})}
-              className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
-          </div>
-          
-          <div className="flex gap-3 pt-4 border-t border-gray-700">
-            <button type="button" onClick={onClose} className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold">
-              Annuler
-            </button>
-            <button type="submit" className="flex-1 py-3 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 text-white rounded-lg font-bold shadow-lg">
-              💾 Enregistrer
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-};
-
-const ImportModal = ({ onImport, onClose }: {
-  onImport: (themes: Omit<ThemeItem, 'id'>[]) => void;
-  onClose: () => void;
-}) => {
-  const [jsonText, setJsonText] = useState('');
-  const [error, setError] = useState('');
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setJsonText(event.target?.result as string);
-      setError('');
-    };
-    reader.readAsText(file);
-  };
-
-  const handleImport = () => {
-    try {
-      const parsed = JSON.parse(jsonText);
-      if (!Array.isArray(parsed)) {
-        setError('Le fichier doit contenir un tableau');
-        return;
-      }
-      onImport(parsed);
-      onClose();
-    } catch (err) {
-      setError('JSON invalide : ' + (err as Error).message);
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-orange-500 max-w-3xl w-full shadow-2xl" onClick={e => e.stopPropagation()}>
-        <div className="bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-4 flex items-center justify-between">
-          <h2 className="text-2xl font-black text-white">📥 Importer des thèmes</h2>
-          <button onClick={onClose} className="text-white"><X className="w-6 h-6" /></button>
-        </div>
-        
-        <div className="p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-bold text-gray-300 mb-2">Charger un fichier JSON</label>
-            <input type="file" accept=".json" onChange={handleFileUpload}
-              className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gradient-to-r file:from-orange-600 file:to-pink-600 file:text-white hover:file:from-orange-700 hover:file:to-pink-700 cursor-pointer" />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-bold text-gray-300 mb-2">Ou coller le JSON directement</label>
-            <textarea value={jsonText} onChange={e => { setJsonText(e.target.value); setError(''); }} rows={10} placeholder='[{"name":"Theme 1","creator":"John","system":"ps4","category":"gaming",...}]'
-              className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none font-mono text-sm" />
-          </div>
-          
-          {error && (
-            <div className="p-3 bg-red-600/20 border border-red-500 rounded-xl flex items-center gap-2 text-red-400">
-              <AlertCircle className="w-5 h-5" />
-              <span className="font-semibold">{error}</span>
-            </div>
-          )}
-          
-          <div className="flex gap-3 pt-4 border-t border-gray-700">
-            <button onClick={onClose} className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold">
-              Annuler
-            </button>
-            <button onClick={handleImport} disabled={!jsonText} 
-              className="flex-1 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold flex items-center justify-center gap-2">
-              <Upload className="w-5 h-5" />
-              Importer
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ManageTab.tsx - COMPOSANT PRINCIPAL
 
 export default function ManageTab({ themes, setThemes, saveThemes, systems, categories }: ManageTabProps) {
   const [filters, setFilters] = useState({
@@ -885,12 +643,13 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       category: theme.category,
       imageUrl: reverseConvertUrl(theme.imageUrl),
       downloadUrl: reverseConvertUrl(theme.downloadUrl),
-      size: theme.size
+      size: theme.size,
+      date: theme.date // ✅ EXPORT DE LA DATE
     }));
     
     const filename = `themes_${selectedIds.length > 0 ? 'selection' : 'filtered'}_${new Date().toISOString().split('T')[0]}.json`;
     downloadJson(data, filename);
-    showToast(`✅ ${data.length} thème(s) exporté(s) avec IDs`, 'success');
+    showToast(`✅ ${data.length} thème(s) exporté(s) avec IDs et dates`, 'success');
   };
 
   const handleImport = (imported: Omit<ThemeItem, 'id'>[]) => {
@@ -1135,7 +894,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
           {totalPages > 1 && (
             <div className="flex items-center justify-between pt-4 border-t border-gray-700">
               <div className="text-sm text-gray-400">
-                Affichage <span className="text-white font-semibold">{((currentPage - 1) * itemsPerPage) + 1}</span> à{' '}
+                Affichage <span className="text-white font-semibold">{((currentPage - 1) * itemsPerPage) + 1}</span> à {' '}
                 <span className="text-white font-semibold">{Math.min(currentPage * itemsPerPage, sorted.length)}</span> sur{' '}
                 <span className="text-white font-semibold">{sorted.length}</span>
               </div>
@@ -1192,3 +951,263 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     </div>
   );
 }
+
+const PreviewModal = ({ theme, onClose, onEdit, onDelete, systems, categories }: {
+  theme: ThemeItem;
+  onClose: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  systems: SystemRow[];
+  categories: Category[];
+}) => {
+  const systemName = systems.find(s => s.id === theme.system)?.name || theme.system;
+  const categoryName = categories.find(c => c.id === theme.category)?.name || theme.category;
+
+  return (
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onClose}>
+      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-orange-500 max-w-2xl w-full shadow-2xl" onClick={e => e.stopPropagation()}>
+        <div className="bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-4 flex items-center justify-between rounded-t-2xl">
+          <h2 className="text-2xl font-black text-white">👁️ Prévisualisation</h2>
+          <button onClick={onClose} className="text-white hover:text-gray-200">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+        
+        <div className="p-6 space-y-4">
+          <div className="relative h-64 rounded-xl overflow-hidden bg-gray-950">
+            {theme.imageUrl && !isInvalidUrl(theme.imageUrl) ? (
+              <img src={theme.imageUrl} alt={theme.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <ImageOff className="w-16 h-16 text-red-400" />
+              </div>
+            )}
+          </div>
+          
+          <div className="space-y-3">
+            <div>
+              <span className="text-gray-400 text-sm">Nom:</span>
+              <p className="text-white font-bold text-xl">{theme.name}</p>
+            </div>
+            <div>
+              <span className="text-gray-400 text-sm">Créateur:</span>
+              <p className="text-orange-400 font-semibold">{theme.creator || 'Inconnu'}</p>
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              <span className="px-3 py-1 bg-blue-600 text-white text-sm font-semibold rounded-full">
+                🎮 {systemName}
+              </span>
+              <span className="px-3 py-1 bg-orange-600 text-white text-sm font-semibold rounded-full">
+                {categoryName}
+              </span>
+              <span className="px-3 py-1 bg-gray-700 text-gray-300 text-sm font-semibold rounded-full">
+                {theme.size}
+              </span>
+              {/* ✅ DATE DANS PREVIEW */}
+              {theme.date && (
+                <span className="px-3 py-1 bg-purple-600 text-white text-sm font-semibold rounded-full">
+                  📅 {formatDateFR(theme.date)}
+                </span>
+              )}
+            </div>
+          </div>
+          
+          <div className="flex gap-3 pt-4">
+            <button onClick={onEdit}
+              className="flex-1 py-3 bg-gradient-to-r from-orange-600 to-pink-600 hover:from-orange-700 hover:to-pink-700 text-white rounded-lg font-bold flex items-center justify-center gap-2">
+              <Edit2 className="w-5 h-5" />
+              Modifier
+            </button>
+            <button onClick={onDelete}
+              className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold flex items-center justify-center gap-2">
+              <Trash2 className="w-5 h-5" />
+              Supprimer
+            </button>
+            <a href={theme.downloadUrl} target="_blank" rel="noopener noreferrer"
+              className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold flex items-center justify-center gap-2">
+              <Download className="w-5 h-5" />
+              Télécharger
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const EditModal = ({ theme, onSave, onClose, systems, categories }: {
+  theme: ThemeItem;
+  onSave: (theme: ThemeItem) => void;
+  onClose: () => void;
+  systems: SystemRow[];
+  categories: Category[];
+}) => {
+  const [editData, setEditData] = useState<ThemeItem>({ ...theme });
+  const availableSystems = systems.filter(s => !s.isHeader && !s.isSubHeader);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave({
+      ...editData,
+      name: editData.name.trim(),
+      creator: editData.creator.trim(),
+      imageUrl: editData.imageUrl.trim(),
+      downloadUrl: editData.downloadUrl.trim(),
+      size: editData.size.trim()
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onClose}>
+      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-orange-500 max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
+        <div className="sticky top-0 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-4 flex items-center justify-between z-10">
+          <h2 className="text-2xl font-black text-white">✏️ Modifier le thème</h2>
+          <button onClick={onClose} className="text-white hover:text-gray-200">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-bold text-gray-300 mb-2">Nom du thème *</label>
+              <input type="text" required value={editData.name} 
+                onChange={e => setEditData({...editData, name: e.target.value})}
+                className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-300 mb-2">Créateur *</label>
+              <input type="text" required value={editData.creator} 
+                onChange={e => setEditData({...editData, creator: e.target.value})}
+                className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-300 mb-2">Système *</label>
+              <select required value={editData.system} onChange={e => setEditData({...editData, system: e.target.value})}
+                className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none">
+                {availableSystems.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-300 mb-2">Catégorie *</label>
+              <select required value={editData.category} onChange={e => setEditData({...editData, category: e.target.value})}
+                className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none">
+                {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-300 mb-2">Taille</label>
+              <input type="text" value={editData.size} onChange={e => setEditData({...editData, size: e.target.value})}
+                className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
+            </div>
+            {/* ✅ CHAMP DATE (lecture seule) */}
+            {editData.date && (
+              <div>
+                <label className="block text-sm font-bold text-gray-300 mb-2">📅 Date</label>
+                <input type="text" value={formatDateFR(editData.date)} readOnly
+                  className="w-full p-3 bg-gray-900 border border-gray-700 rounded-xl text-gray-400 cursor-not-allowed" />
+              </div>
+            )}
+          </div>
+          
+          <div>
+            <label className="block text-sm font-bold text-gray-300 mb-2">URL de l'image</label>
+            <input type="url" value={editData.imageUrl} onChange={e => setEditData({...editData, imageUrl: e.target.value})}
+              className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-bold text-gray-300 mb-2">URL de téléchargement</label>
+            <input type="url" value={editData.downloadUrl} onChange={e => setEditData({...editData, downloadUrl: e.target.value})}
+              className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
+          </div>
+          
+          <div className="flex gap-3 pt-4 border-t border-gray-700">
+            <button type="button" onClick={onClose} className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold">
+              Annuler
+            </button>
+            <button type="submit" className="flex-1 py-3 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 text-white rounded-lg font-bold shadow-lg">
+              💾 Enregistrer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+const ImportModal = ({ onImport, onClose }: {
+  onImport: (themes: Omit<ThemeItem, 'id'>[]) => void;
+  onClose: () => void;
+}) => {
+  const [jsonText, setJsonText] = useState('');
+  const [error, setError] = useState('');
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setJsonText(event.target?.result as string);
+      setError('');
+    };
+    reader.readAsText(file);
+  };
+
+  const handleImport = () => {
+    try {
+      const parsed = JSON.parse(jsonText);
+      if (!Array.isArray(parsed)) {
+        setError('Le fichier doit contenir un tableau');
+        return;
+      }
+      onImport(parsed);
+      onClose();
+    } catch (err) {
+      setError('JSON invalide : ' + (err as Error).message);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onClose}>
+      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-orange-500 max-w-3xl w-full shadow-2xl" onClick={e => e.stopPropagation()}>
+        <div className="bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-4 flex items-center justify-between">
+          <h2 className="text-2xl font-black text-white">🔥 Importer des thèmes</h2>
+          <button onClick={onClose} className="text-white"><X className="w-6 h-6" /></button>
+        </div>
+        
+        <div className="p-6 space-y-4">
+          <div>
+            <label className="block text-sm font-bold text-gray-300 mb-2">Charger un fichier JSON</label>
+            <input type="file" accept=".json" onChange={handleFileUpload}
+              className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gradient-to-r file:from-orange-600 file:to-pink-600 file:text-white hover:file:from-orange-700 hover:file:to-pink-700 cursor-pointer" />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-bold text-gray-300 mb-2">Ou coller le JSON directement</label>
+            <textarea value={jsonText} onChange={e => { setJsonText(e.target.value); setError(''); }} rows={10} placeholder='[{"name":"Theme 1","creator":"John","system":"ps4","category":"gaming",...}]'
+              className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none font-mono text-sm" />
+          </div>
+          
+          {error && (
+            <div className="p-3 bg-red-600/20 border border-red-500 rounded-xl flex items-center gap-2 text-red-400">
+              <AlertCircle className="w-5 h-5" />
+              <span className="font-semibold">{error}</span>
+            </div>
+          )}
+          
+          <div className="flex gap-3 pt-4 border-t border-gray-700">
+            <button onClick={onClose} className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold">
+              Annuler
+            </button>
+            <button onClick={handleImport} disabled={!jsonText} 
+              className="flex-1 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold flex items-center justify-center gap-2">
+              <Upload className="w-5 h-5" />
+              Importer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

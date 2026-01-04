@@ -9,6 +9,7 @@ export type ThemeItem = {
   downloadUrl: string;
   creator: string;
   size: string;
+  date?: string;
 };
 
 // Utilise Omit pour éviter de répéter toutes les propriétés
