@@ -12,7 +12,7 @@ interface ThemeItem {
   imageUrl: string;
   downloadUrl: string;
   size: string;
-  date?: string; // ✅ CHAMP DATE
+  date?: string;
 }
 
 interface SystemRow {
@@ -482,7 +482,6 @@ const ThemeCard = ({
             </span>
           )}
         </div>
-        {/* ✅ AFFICHAGE DATE EN FORMAT FR */}
         {theme.date && (
           <div className="text-xs text-gray-400 flex items-center gap-1">
             📅 {formatDateFR(theme.date)}
@@ -510,6 +509,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const [showImportModal, setShowImportModal] = useState(false);
   const [showBulkCreatorModal, setShowBulkCreatorModal] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [isCleaning, setIsCleaning] = useState(false);
 
   const itemsPerPage = 12;
   const availableSystems = systems.filter(s => !s.isHeader && !s.isSubHeader);
@@ -644,7 +644,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       imageUrl: reverseConvertUrl(theme.imageUrl),
       downloadUrl: reverseConvertUrl(theme.downloadUrl),
       size: theme.size,
-      date: theme.date // ✅ EXPORT DE LA DATE
+      date: theme.date
     }));
     
     const filename = `themes_${selectedIds.length > 0 ? 'selection' : 'filtered'}_${new Date().toISOString().split('T')[0]}.json`;
@@ -659,6 +659,94 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     setThemes(updated);
     saveThemes(updated);
     showToast(`✅ ${newThemes.length} thème(s) importé(s)`, 'success');
+  };
+
+  const handleAutoCleanup = async () => {
+    if (!confirm('⚠️ ATTENTION : Cette fonction va vérifier si les fichiers ZIP existent toujours sur Google Drive.\n\nCela peut prendre du temps (plusieurs minutes).\n\nVoulez-vous continuer ?')) {
+      return;
+    }
+
+    // Backup automatique avant nettoyage
+    const backupFilename = `backup_avant_nettoyage_${new Date().toISOString().split('T')[0]}.json`;
+    downloadJson(themes, backupFilename);
+    showToast('💾 Backup créé : ' + backupFilename, 'success');
+    
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    if (!confirm('⚠️ DERNIÈRE CONFIRMATION\n\nLe backup a été téléchargé.\n\nNOTE : Google Drive peut bloquer certaines vérifications. Seuls les liens vraiment morts seront supprimés.\n\nContinuer ?')) {
+      return;
+    }
+
+    setIsCleaning(true);
+    showToast('🔍 Vérification des fichiers ZIP...', 'success');
+    
+    const validThemes: ThemeItem[] = [];
+    const suspiciousThemes: ThemeItem[] = [];
+    let deletedCount = 0;
+    let checkedCount = 0;
+
+    for (const theme of themes) {
+      checkedCount++;
+      
+      try {
+        // On essaie de charger juste les premiers bytes du fichier
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
+        
+        // Utiliser une requête GET avec Range pour tester sans tout télécharger
+        const response = await fetch(theme.downloadUrl, { 
+          method: 'GET',
+          headers: {
+            'Range': 'bytes=0-1' // Ne télécharge que 2 bytes
+          },
+          signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
+        // Si status 200 (OK) ou 206 (Partial Content) = fichier existe
+        if (response.ok || response.status === 206) {
+          validThemes.push(theme);
+        } else if (response.status === 404) {
+          // 404 = vraiment mort
+          deletedCount++;
+        } else {
+          // Autre erreur = on garde par sécurité
+          validThemes.push(theme);
+          suspiciousThemes.push(theme);
+        }
+      } catch (error: any) {
+        // En cas d'erreur réseau/timeout, on GARDE le thème par sécurité
+        validThemes.push(theme);
+        suspiciousThemes.push(theme);
+      }
+      
+      if (checkedCount % 5 === 0) {
+        showToast(`🔍 Vérification... ${checkedCount}/${themes.length}`, 'success');
+      }
+    }
+
+    if (deletedCount > 0) {
+      setThemes(validThemes);
+      await saveThemes(validThemes);
+      showToast(`✅ Nettoyage terminé : ${deletedCount} thème(s) supprimé(s)`, 'success');
+      
+      if (suspiciousThemes.length > 0) {
+        setTimeout(() => {
+          showToast(`⚠️ ${suspiciousThemes.length} thème(s) non vérifiables conservés par sécurité`, 'success');
+        }, 2000);
+      }
+    } else {
+      showToast('✅ Aucun lien mort trouvé ! Tous les thèmes sont OK.', 'success');
+      
+      if (suspiciousThemes.length > 0) {
+        setTimeout(() => {
+          showToast(`ℹ️ ${suspiciousThemes.length} thème(s) non vérifiables (conservés)`, 'success');
+        }, 2000);
+      }
+    }
+    
+    setIsCleaning(false);
   };
 
   const resetFilters = () => {
@@ -800,6 +888,14 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
               className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all">
               <Download className="w-4 h-4" />
               Export ({selectedIds.length || sorted.length})
+            </button>
+
+            <button 
+              onClick={handleAutoCleanup}
+              disabled={isCleaning}
+              className="px-4 py-2 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all">
+              <Trash2 className="w-4 h-4" />
+              {isCleaning ? '🔍 Nettoyage...' : '🧹 Nettoyer liens morts'}
             </button>
           </div>
         </div>
@@ -1003,7 +1099,6 @@ const PreviewModal = ({ theme, onClose, onEdit, onDelete, systems, categories }:
               <span className="px-3 py-1 bg-gray-700 text-gray-300 text-sm font-semibold rounded-full">
                 {theme.size}
               </span>
-              {/* ✅ DATE DANS PREVIEW */}
               {theme.date && (
                 <span className="px-3 py-1 bg-purple-600 text-white text-sm font-semibold rounded-full">
                   📅 {formatDateFR(theme.date)}
@@ -1100,7 +1195,6 @@ const EditModal = ({ theme, onSave, onClose, systems, categories }: {
               <input type="text" value={editData.size} onChange={e => setEditData({...editData, size: e.target.value})}
                 className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
             </div>
-            {/* ✅ CHAMP DATE (lecture seule) */}
             {editData.date && (
               <div>
                 <label className="block text-sm font-bold text-gray-300 mb-2">📅 Date</label>
@@ -1172,7 +1266,7 @@ const ImportModal = ({ onImport, onClose }: {
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-orange-500 max-w-3xl w-full shadow-2xl" onClick={e => e.stopPropagation()}>
         <div className="bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-4 flex items-center justify-between">
-          <h2 className="text-2xl font-black text-white">🔥 Importer des thèmes</h2>
+          <h2 className="text-2xl font-black text-white">📥 Importer des thèmes</h2>
           <button onClick={onClose} className="text-white"><X className="w-6 h-6" /></button>
         </div>
         

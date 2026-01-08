@@ -1,4 +1,3 @@
-// src/components/AdminPanel/DriveTab/index.tsx 
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   FolderOpen, Zap, Activity, CheckCircle, Play, StopCircle, Download, 
@@ -30,9 +29,8 @@ interface DriveTabProps {
 }
 
 type SortOption = 'name' | 'system' | 'size';
-type CreatorExtractionMode = 'never' | 'smart' | 'always';
+type CreatorExtractionMode = 'never' | 'always';
 
-// Utilitaires
 const getSystemColor = (systemName: string): string => {
   if (systemName.includes('MAME') || systemName.includes('CPS')) return 'from-purple-600 to-pink-600';
   if (systemName.includes('Neo Geo')) return 'from-yellow-600 to-red-600';
@@ -53,7 +51,7 @@ const parseSize = (sizeStr: string): number => {
   };
   return value * (multipliers[unit] || 1);
 };
-// Composants internes
+
 const ThemeCard = ({ theme, isSelected, onToggleSelect }: any) => {
   const [imageError, setImageError] = React.useState(false);
   return (
@@ -112,7 +110,6 @@ const ThemeCard = ({ theme, isSelected, onToggleSelect }: any) => {
         <div className={`text-xs ${theme.creator !== 'Unknown' ? 'text-green-400 font-semibold' : 'text-gray-500'}`}>
           Par {theme.creator}
         </div>
-        {/* ✅ AFFICHAGE DATE */}
         {theme.date && (
           <div className="text-xs text-gray-400">
             📅 {theme.date}
@@ -156,7 +153,6 @@ const SystemProgressCard = ({ system }: any) => {
 };
 
 const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = [], setAdminTab }) => {
-  // États
   const [apiKey, setApiKey] = useState(() => loadDriveApiKey());
   const [driveUrls, setDriveUrls] = useState<string[]>(() => loadUrls());
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -176,7 +172,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
   const [sortAsc, setSortAsc] = useState(true);
   const [creatorExtractionMode, setCreatorExtractionMode] = useState<CreatorExtractionMode>('never');
   
-  // Refs
   const abortControllerRef = useRef<AbortController | null>(null);
   const isPausedRef = useRef(false);
   const pauseResolversRef = useRef<Set<() => void>>(new Set());
@@ -196,7 +191,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     lastErrorTime: 0
   });
 
-  // Effects
   useEffect(() => { isPausedRef.current = isPaused; }, [isPaused]);
   useEffect(() => { saveUrls(driveUrls); }, [driveUrls]);
   useEffect(() => { if (apiKey?.length >= 39) saveDriveApiKey(apiKey); }, [apiKey]);
@@ -209,7 +203,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     return () => clearInterval(interval);
   }, [isAnalyzing, stats.startTime]);
 
-  // Fonctions utilitaires
   const addLog = (message: string, type: 'info' | 'success' | 'error' | 'warning' = 'info') => {
     setLogs(prev => [...prev, {
       time: new Date().toLocaleTimeString('fr-FR'),
@@ -377,7 +370,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     }
   };
 
-  // ✅ MODIFICATION: Ajouter createdTime et modifiedTime dans la requête
   const listFiles = async (folderId: string, key: string, signal: AbortSignal) => {
     let allFiles: any[] = [];
     let pageToken: string | null = null;
@@ -461,11 +453,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       creatorCacheRef.current.set(cacheKey, creator);
       addLog(`♻️ Existant: ${name} → ${creator}`, 'success');
       return { creator, format: 'EXISTING' };
-    }
-    
-    if (creatorExtractionMode === 'smart') {
-      addLog(`⭐ Skip: ${name}`, 'info');
-      return { creator: 'Unknown', format: 'SKIPPED' };
     }
     
     if (signal.aborted) return { creator: 'Unknown', format: 'ABORTED' };
@@ -555,7 +542,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
           const { creator, format } = await getCreatorOptimized(archive, matchedSystem, key, signal);
           const image = findMatchingImage(archive.name, images);
           
-          // ✅ AJOUT: Récupération de la date du ZIP
           const archiveDate = archive.modifiedTime?.split('T')[0] || archive.createdTime?.split('T')[0] || '';
           
           const newTheme: DriveTheme = {
@@ -568,7 +554,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
             downloadUrl: convertToDirectLink(archive.id, key),
             creator,
             size: formatSize(archive.size),
-            date: archiveDate, // ✅ DATE DU ZIP
+            date: archiveDate,
             selected: false,
             archiveFormat: format as 'ZIP' | '7Z' | 'RAR' | 'UNKNOWN'
           };
@@ -689,8 +675,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     
     const modeLabels = {
       never: '⚡ Mode rapide',
-      smart: '🧠 Mode intelligent',
-      always: '🌍 Mode complet'
+      always: '🌐 Mode complet'
     };
     addLog(`📋 ${modeLabels[creatorExtractionMode]}`, 'info');
     
@@ -769,7 +754,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       imageUrl: t.imageUrl,
       downloadUrl: t.downloadUrl,
       size: t.size,
-      date: t.date // ✅ TRANSMISSION DE LA DATE
+      date: t.date
     }));
     
     try {
@@ -816,7 +801,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black p-6">
-      {/* HEADER */}
       <div className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-1">
         <div className="bg-gray-900 rounded-[22px] p-6">
           <div className="flex items-center gap-5">
@@ -834,7 +818,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
         </div>
       </div>
 
-      {/* CONFIGURATION */}
       <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700 shadow-xl mb-6">
         <div className="space-y-4">
           <div>
@@ -879,8 +862,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
               disabled={isAnalyzing}
             >
               <option value="never">⚡ Mode Rapide - Pas d'extraction (3-5 min estimées)</option>
-              <option value="smart">🧠 Mode Intelligent - Cache + Thèmes existants (5-10 min estimées)</option>
-              <option value="always">🌍 Mode Complet - Télécharger tous les ZIP (20-40 min estimées)</option>
+              <option value="always">🌐 Mode Complet - Télécharger tous les ZIP (20-40 min estimées)</option>
             </select>
           </div>
 
@@ -949,7 +931,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
         </div>
       </div>
 
-      {/* QUOTA INDICATOR */}
       {isAnalyzing && (
         <div className="bg-gray-800 rounded-2xl p-4 border border-gray-700 shadow-xl mb-6">
           <div className="flex items-center justify-between mb-2">
@@ -985,7 +966,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
         </div>
       )}
 
-      {/* MÉTRIQUES */}
       {isAnalyzing && (
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -1043,7 +1023,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
         </>
       )}
 
-      {/* RÉSULTATS */}
       {themes.length > 0 && !isAnalyzing && (
         <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 shadow-xl">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 mb-5">

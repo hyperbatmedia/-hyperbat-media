@@ -56,7 +56,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
             const src = img.dataset.src;
             
             if (src) {
-              // 🆕 Force le rechargement même si src existe déjà
+              // 🆕 Force le rechargement même si src existe déjà 
               img.src = src;
               observerRef.current?.unobserve(img);
             }
@@ -84,6 +84,32 @@ const ThemeList: React.FC<ThemeListProps> = ({
 
   const getSystemName = (systemId: string) =>
     systems.find(s => s.id === systemId)?.name || systemId;
+
+  // ✅ AJOUTÉ : Fonction pour formater la date
+  const formatDate = (dateStr: string | undefined) => {
+    if (!dateStr) return null;
+    
+    // Si format YYYY-MM-DD
+    if (dateStr.includes('-')) {
+      const [year, month, day] = dateStr.split('-');
+      return `${day}/${month}/${year}`;
+    }
+    
+    // Sinon retourner tel quel (déjà au format DD/MM/YYYY)
+    return dateStr;
+  };
+
+  // ✅ AJOUTÉ : Fonction pour obtenir le nom de la catégorie
+  const getCategoryName = (categoryId: string) => {
+    const categoryMap: Record<string, string> = {
+      'game-themes': 'Jeu',
+      'default-themes': 'Défaut',
+      'main-themes': 'Principal',
+      'tools': 'Outil',
+      'tutorials': 'Tutoriel'
+    };
+    return categoryMap[categoryId] || categoryId;
+  };
 
   if (filteredThemesLength === 0) {
     return (
@@ -212,10 +238,11 @@ const ThemeList: React.FC<ThemeListProps> = ({
               </div>
 
               <div className="p-2">
-                <h3 className="font-bold text-sm mb-1 text-white group-hover:text-orange-400 transition truncate">
+                <h3 className="font-bold text-sm mb-2 text-white group-hover:text-orange-400 transition truncate">
                   {theme.name}
                 </h3>
 
+                {/* ✅ LIGNE 1 : Système et Catégorie */}
                 <div className="flex gap-2 text-xs mb-1 flex-wrap items-center">
                   <span className="px-2 py-1 rounded-full text-xs font-semibold border"
                     style={{
@@ -226,10 +253,51 @@ const ThemeList: React.FC<ThemeListProps> = ({
                   >
                     {getSystemName(theme.system)}
                   </span>
-                  <span className="text-gray-400 text-xs">• {theme.size}</span>
+                  
+                  <span className="px-2 py-1 rounded-full text-xs font-semibold border"
+                    style={{
+                      backgroundColor: 'rgba(59, 130, 246, 0.3)',
+                      color: '#60A5FA',
+                      borderColor: 'rgba(59, 130, 246, 0.5)'
+                    }}
+                  >
+                    {getCategoryName(theme.category)}
+                  </span>
                 </div>
 
-                <p className="text-xs text-cyan-400 font-semibold mb-2">Par {theme.creator}</p>
+                {/* ✅ LIGNE 2 : Date et Taille */}
+                <div className="flex gap-2 text-xs mb-2 flex-wrap items-center">
+                  {theme.date && (
+                    <>
+                      <span className="px-2 py-0.5 rounded-full text-xs font-semibold border"
+                        style={{
+                          backgroundColor: 'rgba(255, 140, 0, 0.7)',
+                          color: '#FFF',
+                          borderColor: 'rgba(255, 140, 0, 0.8)'
+                        }}
+                      >
+                        {formatDate(theme.date)}
+                      </span>
+                      <span className="text-gray-600">•</span>
+                    </>
+                  )}
+                  
+                  <span className="text-gray-400 text-xs">{theme.size}</span>
+                </div>
+
+                <div className="flex justify-center mb-2">
+                  <p className="text-sm font-semibold px-4 py-1.5 rounded inline-block"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%)',
+                      color: '#FCD34D',
+                      borderLeft: '2px solid #F59E0B',
+                      borderRight: '2px solid #F59E0B',
+                      fontSize: '0.8rem'
+                    }}
+                  >
+                    ⭐ Par {theme.creator}
+                  </p>
+                </div>
 
                 <a
                   href={theme.downloadUrl}

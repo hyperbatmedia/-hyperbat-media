@@ -4,6 +4,7 @@ import {
   Edit2,
   FileJson,
   FolderOpen,
+  RefreshCw,
   LucideIcon
 } from 'lucide-react';
 import { ThemeItem, SystemRow, Category, NewThemeForm } from '../../types';
@@ -11,9 +12,10 @@ import AddTab from './AddTab';
 import ManageTab from './ManageTab';
 import ImportTab from './ImportTab';
 import DriveTab from './DriveTab';
+import SyncTab from './SyncTab';
 import { extractDriveFileId, isUnknownCreator } from './DriveTab/DriveHelpers';
 
-export type AdminTab = 'add' | 'manage' | 'import' | 'drive-import';
+export type AdminTab = 'add' | 'manage' | 'import' | 'drive-import' | 'sync';
 
 interface AdminPanelProps {
   themes: ThemeItem[];
@@ -78,8 +80,6 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
 }) => {
 
   const handleImportThemes = async (newThemes: ThemeItem[]): Promise<void> => {
-    console.log('🚀 Import démarré:', newThemes.length);
-
     let maxId = 0;
     for (const t of themes) {
       if (t.id > maxId) maxId = t.id;
@@ -135,7 +135,8 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
           size: incoming.size || existing.size,
           imageUrl: incoming.imageUrl || existing.imageUrl,
           category: incoming.category || existing.category,
-          downloadUrl: incoming.downloadUrl || existing.downloadUrl
+          downloadUrl: incoming.downloadUrl || existing.downloadUrl,
+          date: incoming.date || existing.date
         };
 
         themeMap.set(key, merged);
@@ -157,18 +158,14 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
 
     const updatedThemes = Array.from(themeMap.values());
 
-    console.log('📊 Résumé import');
-    console.log('➕ Nouveaux:', newCount);
-    console.log('🔍 Dédupliqués:', deduplicatedCount);
-    console.log('✨ Enrichis:', enrichedCount);
-    console.log('🛡️ Préservés:', preservedCount);
-    console.log('⚠️ Conflits:', conflictCount);
-    console.log('📦 Total:', updatedThemes.length);
-
     await saveThemes(updatedThemes);
     setThemes(updatedThemes);
+  };
 
-    console.log('✅ Import terminé — état cohérent');
+  const handleDeleteThemes = async (themeIds: number[]): Promise<void> => {
+    const updatedThemes = themes.filter(theme => !themeIds.includes(theme.id));
+    await saveThemes(updatedThemes);
+    setThemes(updatedThemes);
   };
 
   return (
@@ -183,6 +180,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
           <TabButton tab="manage" currentTab={adminTab} setAdminTab={setAdminTab} icon={Edit2} label="Gérer" />
           <TabButton tab="import" currentTab={adminTab} setAdminTab={setAdminTab} icon={FileJson} label="Importer JSON" />
           <TabButton tab="drive-import" currentTab={adminTab} setAdminTab={setAdminTab} icon={FolderOpen} label="Import Drive" />
+          <TabButton tab="sync" currentTab={adminTab} setAdminTab={setAdminTab} icon={RefreshCw} label="Synchronisation" />
         </div>
 
         {adminTab === 'add' && (
@@ -210,6 +208,13 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
           <DriveTab
             onImportThemes={handleImportThemes}
             existingThemes={themes}
+          />
+        )}
+
+        {adminTab === 'sync' && (
+          <SyncTab
+            existingThemes={themes}
+            onDeleteThemes={handleDeleteThemes}
           />
         )}
 

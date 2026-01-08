@@ -20,7 +20,8 @@ const deepCloneThemes = (themes: ThemeItem[]): ThemeItem[] => {
     category: theme.category,
     imageUrl: theme.imageUrl,
     downloadUrl: theme.downloadUrl,
-    size: theme.size
+    size: theme.size,
+    date: theme.date  // ✅ AJOUTÉ : copier la date
   }));
 };
 

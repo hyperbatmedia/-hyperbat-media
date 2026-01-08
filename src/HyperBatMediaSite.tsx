@@ -1,8 +1,7 @@
 // Fichier: src/HyperBatMediaSite.tsx 
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon } from 'lucide-react';
+import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc } from 'lucide-react';
 
-// --- Importations ---
 import { NewThemeForm, ThemeItem } from './types';
 import { categories } from './constants';
 import { useThemeStorage } from './hooks/useThemeStorage';
@@ -12,25 +11,17 @@ import Sidebar from './components/Sidebar/Sidebar';
 import AdminPanel, { AdminTab } from './components/AdminPanel/AdminPanel'; 
 import ThemeList from './components/ThemeList/ThemeList';
 
-// --- Constantes ---
 const THEMES_PER_PAGE = 20;
 
-// --- Utilitaires ---
-/**
- * ✅ VERSION CORRIGÉE - Compatible tous environnements
- * Format qui fonctionne en local et en déploiement GitHub Pages
- */
 const convertGoogleDriveUrl = (url: string, isImage: boolean = false): string => {
   if (!url || typeof url !== 'string') return url;
   
-  // Si déjà converti en format thumbnail ou uc, on garde tel quel
   if (url.includes('/thumbnail?') || url.includes('/uc?')) {
     return url;
   }
   
   let fileId = '';
   
-  // Extraction de l'ID Google Drive - Tous formats supportés
   let match = url.match(/\/file\/d\/([a-zA-Z0-9_-]{25,})/);
   if (match) fileId = match[1];
   
@@ -54,23 +45,17 @@ const convertGoogleDriveUrl = (url: string, isImage: boolean = false): string =>
   }
   
   if (!fileId) {
-    console.warn('❌ Impossible d\'extraire l\'ID Google Drive de:', url);
+    console.warn('⚠️ Impossible d\'extraire l\'ID Google Drive de:', url);
     return url;
   }
   
-  // ✅ FORMAT QUI FONCTIONNE PARTOUT
   if (isImage) {
-    // Pour les images: format thumbnail (pas de CORS)
     return `https://drive.google.com/thumbnail?id=${fileId}&sz=w400`;
   } else {
-    // Pour les téléchargements: format uc classique
     return `https://drive.google.com/uc?id=${fileId}&export=download`;
   }
 };
 
-/**
- * ✅ Compare l'ID de la sidebar avec le system du thème
- */
 const matchSystemId = (themeSystem: string, selectedSystemId: string): boolean => {
   if (selectedSystemId === 'all') return true;
   
@@ -98,18 +83,16 @@ const getThemeColors = (isDarkMode: boolean) => ({
 });
 
 export default function HyperBatMediaSite(): JSX.Element {
-  // --- States ---
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sidebarSearch, setSidebarSearch] = useState<string>('');
   const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [sortBy, setSortBy] = useState<'name' | 'date'>('name');
   
-  // Admin
   const [showAdminPanel, setShowAdminPanel] = useState<boolean>(false);
   const [adminTab, setAdminTab] = useState<AdminTab>('add');
 
-  // Hooks
   const { themes: rawThemes, setThemes, isLoading, saveThemes } = useThemeStorage();
   const systemsLogic = useSystemsLogic(); 
   
@@ -120,10 +103,8 @@ export default function HyperBatMediaSite(): JSX.Element {
 
   const colors = useMemo(() => getThemeColors(isDarkMode), [isDarkMode]);
 
-  // ✅ Les URLs sont converties automatiquement (seulement si nécessaire)
   const themes = useMemo(() => {
     return rawThemes.map(theme => {
-      // Ne convertir que si l'URL n'est pas déjà au bon format
       const needsImageConversion = theme.imageUrl && !theme.imageUrl.includes('/thumbnail?');
       const needsDownloadConversion = theme.downloadUrl && !theme.downloadUrl.includes('/uc?');
       
@@ -135,7 +116,6 @@ export default function HyperBatMediaSite(): JSX.Element {
     });
   }, [rawThemes]);
 
-  // --- Handler spécial pour la recherche (détection "canafloche") ---
   const handleSearchChange = (value: string) => {
     if (value.toLowerCase() === 'canafloche') {
       setShowAdminPanel(true);
@@ -145,7 +125,6 @@ export default function HyperBatMediaSite(): JSX.Element {
     }
   };
 
-  // --- Handlers ---
   const handleAddTheme = async () => {
     if (!newTheme.name || !newTheme.creator) {
       alert('Veuillez remplir les champs obligatoires');
@@ -179,7 +158,6 @@ export default function HyperBatMediaSite(): JSX.Element {
     }
   };
 
-  // --- Filtering & Pagination ---
   const filteredThemes = useMemo(() => {
     const searchLower = searchTerm.toLowerCase();
     return themes
@@ -192,8 +170,41 @@ export default function HyperBatMediaSite(): JSX.Element {
         const matchesCategory = systemsLogic.selectedCategory === 'all' || theme.category === systemsLogic.selectedCategory;
         return matchesSearch && matchesSystem && matchesCategory;
       })
-      .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
-  }, [searchTerm, systemsLogic.selectedSystem, systemsLogic.selectedCategory, themes]);
+      .sort((a, b) => {
+        if (sortBy === 'date') {
+          // Gérer les deux formats de date : YYYY-MM-DD et DD/MM/YYYY
+          const parseDate = (dateStr: string | undefined) => {
+            if (!dateStr) return 0;
+            // Si format YYYY-MM-DD (avec tirets)
+            if (dateStr.includes('-')) {
+              return new Date(dateStr).getTime();
+            }
+            // Si format DD/MM/YYYY (avec slashes)
+            return new Date(dateStr.split('/').reverse().join('-')).getTime();
+          };
+          
+          const dateA = parseDate(a.date);
+          const dateB = parseDate(b.date);
+          
+          // Si les deux n'ont pas de date, trier par ID (qui est souvent un timestamp)
+          if (dateA === 0 && dateB === 0) {
+            return b.id - a.id; // Plus récent (ID plus grand) en premier
+          }
+          
+          // Si les dates sont différentes, trier par date
+          if (dateA !== dateB) {
+            // Les thèmes AVEC date en premier
+            if (dateA === 0) return 1;  // a sans date va à la fin
+            if (dateB === 0) return -1; // b sans date va à la fin
+            return dateB - dateA; // Plus récent en premier
+          }
+          
+          // Si les dates sont identiques, trier par nom
+          return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+        }
+        return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+      });
+  }, [searchTerm, systemsLogic.selectedSystem, systemsLogic.selectedCategory, themes, sortBy]);
 
   const paginatedThemes = useMemo(() => {
     const startIndex = (currentPage - 1) * THEMES_PER_PAGE;
@@ -202,9 +213,8 @@ export default function HyperBatMediaSite(): JSX.Element {
 
   const totalPages = Math.max(1, Math.ceil(filteredThemes.length / THEMES_PER_PAGE));
 
-  useEffect(() => { setCurrentPage(1); }, [searchTerm, systemsLogic.selectedSystem, systemsLogic.selectedCategory]);
+  useEffect(() => { setCurrentPage(1); }, [searchTerm, systemsLogic.selectedSystem, systemsLogic.selectedCategory, sortBy]);
 
-  // --- Render ---
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.bg, color: colors.text }}>
@@ -218,7 +228,6 @@ export default function HyperBatMediaSite(): JSX.Element {
 
   return (
     <div className="min-h-screen relative overflow-hidden transition-colors duration-300" style={{ backgroundColor: colors.bg, color: colors.text }}>
-      {/* Particules (mode sombre uniquement) */}
       {isDarkMode && (
         <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
           {[...Array(25)].map((_, i) => (
@@ -249,7 +258,6 @@ export default function HyperBatMediaSite(): JSX.Element {
           @keyframes float { 0% { transform: translateY(0px) translateX(0px); } 25% { transform: translateY(-20px) translateX(10px); } 50% { transform: translateY(-40px) translateX(-10px); } 75% { transform: translateY(-20px) translateX(10px); } 100% { transform: translateY(0px) translateX(0px); } }
         `}</style>
 
-        {/* HEADER */}
         <header className={`bg-gradient-to-b ${colors.headerBg} to-transparent border-b-4`} style={{ borderColor: '#FF8C00' }}>
           <div className="container mx-auto px-4 py-6">
             <div className="flex flex-col items-center justify-center mb-4">
@@ -280,7 +288,6 @@ export default function HyperBatMediaSite(): JSX.Element {
         </header>
 
         <div className="container mx-auto px-4 py-8">
-          {/* BOUTONS ET RECHERCHE - Masqué en mode admin */}
           {!showAdminPanel && (
             <div className="flex items-center" style={{ marginTop: '40px', marginBottom: '32px' }}>
               <div className="flex gap-2" style={{ width: '320px', justifyContent: 'center' }}>
@@ -291,6 +298,14 @@ export default function HyperBatMediaSite(): JSX.Element {
                 <button onClick={() => setViewMode('list')} className="p-3 rounded-lg transition border-2"
                   style={viewMode === 'list' ? { backgroundColor: '#FF8C00', borderColor: '#FFD700' } : { backgroundColor: colors.cardBg, borderColor: '#4b5563' }}>
                   <List className="w-5 h-5" />
+                </button>
+                <button 
+                  onClick={() => setSortBy(sortBy === 'name' ? 'date' : 'name')} 
+                  className="p-3 rounded-lg transition border-2 flex items-center gap-2"
+                  style={sortBy === 'date' ? { backgroundColor: '#FF8C00', borderColor: '#FFD700' } : { backgroundColor: colors.cardBg, borderColor: '#4b5563' }}
+                  title={sortBy === 'name' ? 'Trier par date' : 'Trier par nom'}>
+                  {sortBy === 'name' ? <SortAsc className="w-5 h-5" /> : <Calendar className="w-5 h-5" />}
+                  <span className="text-xs font-bold">{sortBy === 'name' ? 'A-Z' : 'DATE'}</span>
                 </button>
                 <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-3 rounded-lg transition border-2"
                   style={{ backgroundColor: colors.cardBg, borderColor: '#4b5563', color: '#FFA500' }}
@@ -317,7 +332,6 @@ export default function HyperBatMediaSite(): JSX.Element {
             </div>
           )}
 
-          {/* Bouton thème uniquement en mode admin */}
           {showAdminPanel && (
             <div className="flex justify-end mb-6">
               <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-3 rounded-lg transition border-2"
@@ -374,14 +388,31 @@ export default function HyperBatMediaSite(): JSX.Element {
                     <span className="font-bold text-lg" style={{ color: '#FFD700' }}>{filteredThemes.length}</span>
                     <span style={{ color: colors.textSecondary }}>{filteredThemes.length > 1 ? 'thèmes' : 'thème'}</span>
                   </div>
+                  <span style={{ color: colors.textSecondary }}>•</span>
+                  <div className="flex items-center gap-2">
+                    <span style={{ color: colors.textSecondary }}>Tri:</span>
+                    <span className="font-bold" style={{ color: '#FFA500' }}>
+                      {sortBy === 'name' ? 'Nom' : 'Date'}
+                    </span>
+                  </div>
                 </div>
               )}
 
               {showAdminPanel && (
-                <AdminPanel themes={rawThemes} setThemes={setThemes} saveThemes={saveThemes} systems={systemsLogic.systems}
-                  categories={categories} adminTab={adminTab} setAdminTab={setAdminTab} newTheme={newTheme}
-                  setNewTheme={setNewTheme} handleAddTheme={handleAddTheme} handleDeleteTheme={handleDeleteTheme}
-                  convertGoogleDriveUrl={convertGoogleDriveUrl} />
+                <AdminPanel 
+                  themes={rawThemes} 
+                  setThemes={setThemes} 
+                  saveThemes={saveThemes} 
+                  systems={systemsLogic.systems}
+                  categories={categories} 
+                  adminTab={adminTab} 
+                  setAdminTab={setAdminTab} 
+                  newTheme={newTheme}
+                  setNewTheme={setNewTheme} 
+                  handleAddTheme={handleAddTheme} 
+                  handleDeleteTheme={handleDeleteTheme}
+                  convertGoogleDriveUrl={convertGoogleDriveUrl} 
+                />
               )}
 
               {!showAdminPanel && (
@@ -403,7 +434,6 @@ export default function HyperBatMediaSite(): JSX.Element {
           </div>
         </div>
 
-        {/* FOOTER */}
         <footer className={`bg-gradient-to-t ${colors.headerBg} to-transparent border-t-4 mt-20 py-4`} style={{ borderColor: '#FF8C00' }}>
           <div className="container mx-auto px-4 text-center text-sm" style={{ color: colors.textSecondary }}>
             <p className="font-black text-lg mb-1" style={{ color: '#FF8C00' }}>HYPERBAT MEDIA</p>
