@@ -1,6 +1,6 @@
 // Fichier: src/HyperBatMediaSite.tsx 
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc } from 'lucide-react';
+import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3 } from 'lucide-react';
 
 import { NewThemeForm, ThemeItem } from './types';
 import { categories } from './constants';
@@ -116,6 +116,15 @@ export default function HyperBatMediaSite(): JSX.Element {
     });
   }, [rawThemes]);
 
+  const themeStats = useMemo(() => {
+    const gameThemes = themes.filter(t => t.category === 'game-themes').length;
+    const systemThemes = themes.filter(t => t.category === 'system-themes').length;
+    const defaultThemes = themes.filter(t => t.category === 'default-themes').length;
+    const total = themes.length;
+    
+    return { gameThemes, systemThemes, defaultThemes, total };
+  }, [themes]);
+
   const handleSearchChange = (value: string) => {
     if (value.toLowerCase() === 'canafloche') {
       setShowAdminPanel(true);
@@ -172,34 +181,27 @@ export default function HyperBatMediaSite(): JSX.Element {
       })
       .sort((a, b) => {
         if (sortBy === 'date') {
-          // Gérer les deux formats de date : YYYY-MM-DD et DD/MM/YYYY
           const parseDate = (dateStr: string | undefined) => {
             if (!dateStr) return 0;
-            // Si format YYYY-MM-DD (avec tirets)
             if (dateStr.includes('-')) {
               return new Date(dateStr).getTime();
             }
-            // Si format DD/MM/YYYY (avec slashes)
             return new Date(dateStr.split('/').reverse().join('-')).getTime();
           };
           
           const dateA = parseDate(a.date);
           const dateB = parseDate(b.date);
           
-          // Si les deux n'ont pas de date, trier par ID (qui est souvent un timestamp)
           if (dateA === 0 && dateB === 0) {
-            return b.id - a.id; // Plus récent (ID plus grand) en premier
+            return b.id - a.id;
           }
           
-          // Si les dates sont différentes, trier par date
           if (dateA !== dateB) {
-            // Les thèmes AVEC date en premier
-            if (dateA === 0) return 1;  // a sans date va à la fin
-            if (dateB === 0) return -1; // b sans date va à la fin
-            return dateB - dateA; // Plus récent en premier
+            if (dateA === 0) return 1;
+            if (dateB === 0) return -1;
+            return dateB - dateA;
           }
           
-          // Si les dates sont identiques, trier par nom
           return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
         }
         return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
@@ -276,6 +278,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                 <Gamepad2 className="w-12 h-12" style={{ color: '#FF8C00' }} />
               </div>
             </div>
+
             {showAdminPanel && (
               <div className="flex justify-center">
                 <button onClick={() => { setShowAdminPanel(false); }} 
@@ -287,49 +290,119 @@ export default function HyperBatMediaSite(): JSX.Element {
           </div>
         </header>
 
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-4">
           {!showAdminPanel && (
-            <div className="flex items-center" style={{ marginTop: '40px', marginBottom: '32px' }}>
-              <div className="flex gap-2" style={{ width: '320px', justifyContent: 'center' }}>
-                <button onClick={() => setViewMode('grid')} className="p-3 rounded-lg transition border-2"
-                  style={viewMode === 'grid' ? { backgroundColor: '#FF8C00', borderColor: '#FFD700' } : { backgroundColor: colors.cardBg, borderColor: '#4b5563' }}>
-                  <Grid className="w-5 h-5" />
-                </button>
-                <button onClick={() => setViewMode('list')} className="p-3 rounded-lg transition border-2"
-                  style={viewMode === 'list' ? { backgroundColor: '#FF8C00', borderColor: '#FFD700' } : { backgroundColor: colors.cardBg, borderColor: '#4b5563' }}>
-                  <List className="w-5 h-5" />
-                </button>
+            <>
+              {/* Statistiques des thèmes - CENTRÉES */}
+              <div className="flex justify-center gap-3 mb-4" style={{ marginLeft: '320px' }}>
                 <button 
-                  onClick={() => setSortBy(sortBy === 'name' ? 'date' : 'name')} 
-                  className="p-3 rounded-lg transition border-2 flex items-center gap-2"
-                  style={sortBy === 'date' ? { backgroundColor: '#FF8C00', borderColor: '#FFD700' } : { backgroundColor: colors.cardBg, borderColor: '#4b5563' }}
-                  title={sortBy === 'name' ? 'Trier par date' : 'Trier par nom'}>
-                  {sortBy === 'name' ? <SortAsc className="w-5 h-5" /> : <Calendar className="w-5 h-5" />}
-                  <span className="text-xs font-bold">{sortBy === 'name' ? 'A-Z' : 'DATE'}</span>
+                  onClick={() => systemsLogic.setSelectedCategory('game-themes')}
+                  className="px-7 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer" 
+                  style={{ 
+                    backgroundColor: '#D97706', 
+                    borderColor: systemsLogic.selectedCategory === 'game-themes' ? '#FFFF00' : '#FFD700',
+                    borderWidth: systemsLogic.selectedCategory === 'game-themes' ? '3px' : '2px',
+                    boxShadow: systemsLogic.selectedCategory === 'game-themes' ? '0 0 10px rgba(255, 215, 0, 0.3)' : 'none'
+                  }}>
+                  <Trophy className="w-2.5 h-2.5" style={{ color: '#e0e0e0' }} />
+                  <div>
+                    <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>Thèmes de jeux</p>
+                    <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{themeStats.gameThemes}</p>
+                  </div>
                 </button>
-                <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-3 rounded-lg transition border-2"
-                  style={{ backgroundColor: colors.cardBg, borderColor: '#4b5563', color: '#FFA500' }}
-                  title={isDarkMode ? 'Mode clair' : 'Mode sombre'}>
-                  {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+
+                <button 
+                  onClick={() => systemsLogic.setSelectedCategory('system-themes')}
+                  className="px-7 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer" 
+                  style={{ 
+                    backgroundColor: '#D97706', 
+                    borderColor: systemsLogic.selectedCategory === 'system-themes' ? '#FFFF00' : '#FFD700',
+                    borderWidth: systemsLogic.selectedCategory === 'system-themes' ? '3px' : '2px',
+                    boxShadow: systemsLogic.selectedCategory === 'system-themes' ? '0 0 10px rgba(255, 215, 0, 0.3)' : 'none'
+                  }}>
+                  <Monitor className="w-2.5 h-2.5" style={{ color: '#e0e0e0' }} />
+                  <div>
+                    <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>Thèmes système</p>
+                    <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{themeStats.systemThemes}</p>
+                  </div>
+                </button>
+
+                <button 
+                  onClick={() => systemsLogic.setSelectedCategory('default-themes')}
+                  className="px-7 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer" 
+                  style={{ 
+                    backgroundColor: '#D97706', 
+                    borderColor: systemsLogic.selectedCategory === 'default-themes' ? '#FFFF00' : '#FFD700',
+                    borderWidth: systemsLogic.selectedCategory === 'default-themes' ? '3px' : '2px',
+                    boxShadow: systemsLogic.selectedCategory === 'default-themes' ? '0 0 10px rgba(255, 215, 0, 0.3)' : 'none'
+                  }}>
+                  <Star className="w-2.5 h-2.5" style={{ color: '#e0e0e0' }} />
+                  <div>
+                    <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>Thèmes default</p>
+                    <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{themeStats.defaultThemes}</p>
+                  </div>
+                </button>
+
+                <button 
+                  onClick={() => systemsLogic.setSelectedCategory('all')}
+                  className="px-7 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer" 
+                  style={{ 
+                    backgroundColor: '#D97706', 
+                    borderColor: systemsLogic.selectedCategory === 'all' ? '#FFFF00' : '#FFD700',
+                    borderWidth: systemsLogic.selectedCategory === 'all' ? '3px' : '2px',
+                    boxShadow: systemsLogic.selectedCategory === 'all' ? '0 0 10px rgba(255, 215, 0, 0.3)' : 'none'
+                  }}>
+                  <BarChart3 className="w-2.5 h-2.5" style={{ color: '#e0e0e0' }} />
+                  <div>
+                    <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>Total global</p>
+                    <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{themeStats.total}</p>
+                  </div>
                 </button>
               </div>
 
-              <div style={{ width: '43px' }}></div>
-
-              <div className="relative" style={{ width: '800px', maxWidth: '100%' }}>
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: '#FFA500' }} />
-                <input type="text" placeholder="Rechercher un thème, un jeu, un créateur..." value={searchTerm}
-                  onChange={(e) => handleSearchChange(e.target.value)}
-                  className="w-full rounded-lg pl-12 pr-12 py-3 border-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  style={{ backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.border }} />
-                {searchTerm && (
-                  <button onClick={() => setSearchTerm('')} className="absolute right-4 top-1/2 -translate-y-1/2 transition hover:brightness-110"
-                    style={{ color: colors.textSecondary }} title="Effacer la recherche">
-                    <X className="w-5 h-5" />
+              {/* Barre de recherche et contrôles */}
+              <div className="flex items-center mb-6">
+                <div className="flex gap-2" style={{ width: '320px', justifyContent: 'flex-start', paddingLeft: '2px' }}>
+                  <button onClick={() => setViewMode('grid')} className="p-3 rounded-lg transition border-2"
+                    style={viewMode === 'grid' ? { backgroundColor: '#FF8C00', borderColor: '#FFD700' } : { backgroundColor: colors.cardBg, borderColor: '#4b5563' }}>
+                    <Grid className="w-5 h-5" />
                   </button>
-                )}
+                  <button onClick={() => setViewMode('list')} className="p-3 rounded-lg transition border-2"
+                    style={viewMode === 'list' ? { backgroundColor: '#FF8C00', borderColor: '#FFD700' } : { backgroundColor: colors.cardBg, borderColor: '#4b5563' }}>
+                    <List className="w-5 h-5" />
+                  </button>
+                  <button 
+                    onClick={() => setSortBy(sortBy === 'name' ? 'date' : 'name')} 
+                    className="p-3 rounded-lg transition border-2 flex items-center gap-2"
+                    style={sortBy === 'date' ? { backgroundColor: '#FF8C00', borderColor: '#FFD700' } : { backgroundColor: colors.cardBg, borderColor: '#4b5563' }}
+                    title={sortBy === 'name' ? 'Trier par date' : 'Trier par nom'}>
+                    {sortBy === 'name' ? <SortAsc className="w-5 h-5" /> : <Calendar className="w-5 h-5" />}
+                    <span className="text-xs font-bold">{sortBy === 'name' ? 'A-Z' : 'DATE'}</span>
+                  </button>
+                  <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-3 rounded-lg transition border-2"
+                    style={{ backgroundColor: colors.cardBg, borderColor: '#4b5563', color: '#FFA500' }}
+                    title={isDarkMode ? 'Mode clair' : 'Mode sombre'}>
+                    {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                  </button>
+                </div>
+
+                <div style={{ flex: 1 }}></div>
+
+                <div className="relative" style={{ width: '800px', maxWidth: '100%', marginRight: '60px' }}>
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: '#FFA500' }} />
+                  <input type="text" placeholder="Rechercher un thème, un jeu, un créateur..." value={searchTerm}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    className="w-full rounded-lg pl-12 pr-12 py-3 border-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    style={{ backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.border }} />
+                  {searchTerm && (
+                    <button onClick={() => setSearchTerm('')} className="absolute right-4 top-1/2 -translate-y-1/2 transition hover:brightness-110"
+                      style={{ color: colors.textSecondary }} title="Effacer la recherche">
+                      <X className="w-5 h-5" />
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
+            </>
           )}
 
           {showAdminPanel && (
@@ -342,7 +415,7 @@ export default function HyperBatMediaSite(): JSX.Element {
             </div>
           )}
 
-          <div className="flex gap-6">
+          <div className="flex gap-6" style={{ marginLeft: '-30px' }}>
             {!showAdminPanel && (
               <div style={{ paddingTop: '52px' }}>
                 <Sidebar 
