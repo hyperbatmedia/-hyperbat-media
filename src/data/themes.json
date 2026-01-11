@@ -99,17 +99,6 @@
     "date": "2026-01-06"
   },
   {
-    "id": 5254,
-    "name": "_default v2",
-    "creator": "Finch",
-    "system": "neogeo",
-    "category": "default-themes",
-    "imageUrl": "https://drive.google.com/file/d/1bRneuwVgbyQaUp_I_aI50d5ZCjd7HBQI/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1hbLJ3-uz_mmzscffu6R77KdeCQa_73Tt/view?usp=sharing",
-    "size": "827.3 KB",
-    "date": "2026-01-10"
-  },
-  {
     "id": 550,
     "name": "005",
     "creator": "Roni",
@@ -196,6 +185,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1MENPsI7Sx8tkJPpRzcuOJqtWZT7dLuVP/view?usp=sharing",
     "size": "2.4 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 6399,
+    "name": "1941 - Counter Attack (Japan)",
+    "creator": "Unknown",
+    "system": "supergrafx",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1JcCVTtmiYs86CpVGTbtipjGz_4Tavmlp/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1GOV0L1XjnJcS9d_p5Dg17FhrQZfoc6XU/view?usp=sharing",
+    "size": "1.2 MB",
+    "date": "2026-01-11"
   },
   {
     "id": 547,
@@ -792,6 +792,17 @@
     "date": "2025-11-30"
   },
   {
+    "id": 6420,
+    "name": "Aidyn Chronicles - The First Mage (USA) (Rev 1)",
+    "creator": "Unknown",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1_vlSUsOSMhMq7AK6kkdfdMuLKmA0gegQ/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1oOI1PWjGlI8OBt_Vh8JSzrpiOMGkwXEu/view?usp=sharing",
+    "size": "2.1 MB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 1189,
     "name": "Air Rescue (Europe)",
     "creator": "Mrfomt",
@@ -900,6 +911,17 @@
     "downloadUrl": "https://drive.google.com/file/d/16DrmPDNYU-_eTX7H7GF90C69sq78P1Ls/view?usp=sharing",
     "size": "6.2 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 6398,
+    "name": "Aldynes - The Misson Code for Rage Crisis (Japan)",
+    "creator": "Unknown",
+    "system": "supergrafx",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Hnu7XA0qnyJsF_UFbBffVR01GThprUq5/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/12d7LXmyqRk2SF6i179yrLoKeAhvllaU4/view?usp=sharing",
+    "size": "1.3 MB",
+    "date": "2026-01-11"
   },
   {
     "id": 1187,
@@ -1232,11 +1254,11 @@
     "date": "2025-11-13"
   },
   {
-    "id": 5864,
+    "id": 6899,
     "name": "amigacdtv",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "amigacdtv",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1cRF5KvnKBondRG2L3-wsx1b95NJPTZVz/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1_kvvty8U1V2hTa7j-jDN27Ilg32JUimB/view?usp=sharing",
     "size": "5.9 MB",
@@ -1386,11 +1408,11 @@
     "date": "2026-01-02"
   },
   {
-    "id": 5873,
+    "id": 6912,
     "name": "apfm1000",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "apfm1000",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/13n77pjdr3IJZLz4HRPeWxRVoENR1hm0X/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/11BqqnhaBapAyt13r6P6c9GTnfUL5q24r/view?usp=sharing",
     "size": "388.7 KB",
@@ -1408,22 +1430,22 @@
     "date": "2025-11-30"
   },
   {
-    "id": 5910,
+    "id": 6950,
     "name": "apple2",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "appleii",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1OICKdkZZ27wGT9ULiKlSoyjxEH-3lSNM/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1OjXmQasUKEgfjw6CHAfC-lo9ritxOFFk/view?usp=sharing",
     "size": "663.5 KB",
     "date": "2026-01-10"
   },
   {
-    "id": 5908,
+    "id": 6948,
     "name": "apple2gs",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "appleiigs",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1AHETB_v154RKRNlXi2qZm1GVetXDXncP/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/157RmSFONEGQLe_1wxTzlfKAZSkxRoswE/view?usp=sharing",
     "size": "467.8 KB",
@@ -1441,11 +1463,11 @@
     "date": "2025-12-15"
   },
   {
-    "id": 5909,
+    "id": 6949,
     "name": "archimedes",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "archimedes",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/18xyZNBiRcDWsXcWNyVenC4gbtVVCYu8G/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/13ezolq5VzjwD4tk5B3Oj-1G_EzHi5R9d/view?usp=sharing",
     "size": "561.8 KB",
@@ -1716,6 +1738,17 @@
     "date": "2026-01-10"
   },
   {
+    "id": 6419,
+    "name": "Asteroids Hyper 64 (USA)",
+    "creator": "Unknown",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/163lg_2S1cJ17jGpcVPLaD6kw8d6BiO5t/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1w7p3cgJoZV6vtjBYYvD157h6OXCqz-_8/view?usp=sharing",
+    "size": "1.3 MB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 1090,
     "name": "Astro Boy - The Video Game (USA) (En,Fr,De,Es,It)",
     "creator": "KevoBatoYT",
@@ -1782,11 +1815,22 @@
     "date": "2026-01-05"
   },
   {
-    "id": 5863,
-    "name": "atarijaguarcd",
-    "creator": "Finch",
-    "system": "atarijaguarcd",
+    "id": 6898,
+    "name": "atari5200",
+    "creator": "Unknown",
+    "system": "atari5200",
     "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1eI1nye3Bsv6Gs0KNg0PsRnaqmIHwGd7Y/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1pydoL5dyeMDNs4cstafEa8SblXe8TsJo/view?usp=sharing",
+    "size": "13.5 MB",
+    "date": "2026-01-10"
+  },
+  {
+    "id": 6897,
+    "name": "atarijaguarcd",
+    "creator": "Unknown",
+    "system": "atarijaguarcd",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1HGJR3x767Ydyd9AqtAy6gtEICibAfYY8/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Bo7nOVHVqvj0U04rLCAuwpbSNJOiAZf8/view?usp=sharing",
     "size": "593.0 KB",
@@ -2299,6 +2343,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 6397,
+    "name": "Battle Ace (Japan)",
+    "creator": "Unknown",
+    "system": "supergrafx",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1TECTWqAlP4jOdVwMyJj2-R7zJr59DL8v/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1lihiH0P88C-6YlpTXgv9SotYGqUKyOCh/view?usp=sharing",
+    "size": "843.7 KB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 1114,
     "name": "Battle of Giants - Dinosaurs",
     "creator": "KevoBatoYT",
@@ -2387,11 +2442,11 @@
     "date": "2025-11-13"
   },
   {
-    "id": 5907,
+    "id": 6947,
     "name": "bbcmicro",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "bbcmicro",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1REusKGRu4TTv8M6FSTysUsk8UgeG__v4/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/17QtTDvbPWriGG9iUGw9RVknEIH8_GkzN/view?usp=sharing",
     "size": "726.1 KB",
@@ -2506,6 +2561,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1PMZi2Rj2f8kvg2TnCgxIvux-SJKXfKQ7/view?usp=sharing",
     "size": "2.2 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 6423,
+    "name": "Bio F.R.E.A.K.S. (USA)",
+    "creator": "Unknown",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1-YKjtRlOrdIX3Hn30yXXaNpaWy1tevjp/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1fMGGlOzijb9DyDpdimGxa377rTCxqWLT/view?usp=sharing",
+    "size": "1.6 MB",
+    "date": "2026-01-11"
   },
   {
     "id": 497,
@@ -3256,6 +3322,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 6571,
+    "name": "California Games (USA, Europe, Brazil) (En)",
+    "creator": "Unknown",
+    "system": "mastersystem",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1l08b3RTizV6RERxUNq7LTPyKqB0g_zt6/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1AOUu0JQeut856M0f2C7sHYSXF2qAB-CW/view?usp=sharing",
+    "size": "8.7 MB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 5540,
     "name": "California Games II (Europe)",
     "creator": "yanni9867",
@@ -3465,6 +3542,17 @@
     "date": "2025-11-30"
   },
   {
+    "id": 6572,
+    "name": "Casino Games (USA, Europe)",
+    "creator": "Unknown",
+    "system": "mastersystem",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1n5yhCoCtDpwfiFzYxYqXuCpUJ61OP6DR/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1J77y8W1-3Mf8Op3Ww8dBVE_iS8Bm1n-_/view?usp=sharing",
+    "size": "4.2 MB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 742,
     "name": "Casino Kid (USA)",
     "creator": "christophe",
@@ -3663,6 +3751,28 @@
     "date": "2025-11-13"
   },
   {
+    "id": 6573,
+    "name": "Champions of Europe (Europe, Brazil) (En)",
+    "creator": "Unknown",
+    "system": "mastersystem",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1iFqBwfSkGGwMUdEn9kfpRwGpCYZB1wfm/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ftWN1-5WXWNI_d5P2Pu1puUKD6XantIe/view?usp=sharing",
+    "size": "2.3 MB",
+    "date": "2026-01-11"
+  },
+  {
+    "id": 6570,
+    "name": "Championship Hockey (Europe)",
+    "creator": "Unknown",
+    "system": "mastersystem",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Vtz2ZunP5z8brUja6ipVS4W2zdfO-pPe/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1BnYuCx6Zxd3ZdSXR21iOnEYG9NV9i9KD/view?usp=sharing",
+    "size": "969.0 KB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 470,
     "name": "champwr",
     "creator": "Unknown",
@@ -3694,6 +3804,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1QcKpJTXSwLP6y6hEoRlAmshoGLARhcup/view?usp=sharing",
     "size": "2.7 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 6569,
+    "name": "Cheese Cat-astrophe Starring Speedy Gonzales (Europe, Brazil) (En,Fr,De,Es)",
+    "creator": "Unknown",
+    "system": "mastersystem",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/13AstTX6MaqWs4Zr5laNLCpK0xQ5m4SM7/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1KkJBySJAfekSyAaIGd3gqHmlsr0KFIgQ/view?usp=sharing",
+    "size": "1.3 MB",
+    "date": "2026-01-11"
   },
   {
     "id": 1107,
@@ -3751,6 +3872,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 6568,
+    "name": "Choplifter (USA, Europe, Brazil) (En)",
+    "creator": "Unknown",
+    "system": "mastersystem",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1tmGNsoGWkeG-cZYYcLoi9lpiqTkoGaBz/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1TI629E2TUuKXskhauLULI9wU_fjS15w9/view?usp=sharing",
+    "size": "6.7 MB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 1106,
     "name": "Chrono Trigger",
     "creator": "KevoBatoYT",
@@ -3773,6 +3905,28 @@
     "date": "2025-11-03"
   },
   {
+    "id": 6567,
+    "name": "Chuck Rock (Europe, Brazil) (En)",
+    "creator": "Unknown",
+    "system": "mastersystem",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1pHkRr_pwQ1VsH_zlxixlXAFgYXVcav-8/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1xWk9vGH7kZTyPHnG6iePMGzDAK-F-7vq/view?usp=sharing",
+    "size": "3.4 MB",
+    "date": "2026-01-11"
+  },
+  {
+    "id": 6566,
+    "name": "Chuck Rock II - Son of Chuck (Europe)",
+    "creator": "Unknown",
+    "system": "mastersystem",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1n9ssu7_1FJVWkGkidPWS0NP4J6QESIRG/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1owgnvRYYsTPSWJANreN7oX9IYItXQhGN/view?usp=sharing",
+    "size": "5.8 MB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 743,
     "name": "Circus Caper (USA)",
     "creator": "christophe",
@@ -3793,6 +3947,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1DpqGl4_sCokOgEqqTqTtEAHhDCLJunHV/view?usp=sharing",
     "size": "5.7 MB",
     "date": "2025-11-04"
+  },
+  {
+    "id": 6565,
+    "name": "Cloud Master (USA, Europe, Brazil) (En)",
+    "creator": "Unknown",
+    "system": "mastersystem",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1_ON88tpfdl1rEkhXkJ7B3RfjNIyhytEg/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1QZNm2mGupdhu0EwDNZQBabYhRX3QkRqw/view?usp=sharing",
+    "size": "7.2 MB",
+    "date": "2026-01-11"
   },
   {
     "id": 966,
@@ -4345,6 +4510,17 @@
     "date": "2025-11-30"
   },
   {
+    "id": 6396,
+    "name": "Daimakaimura (Japan)",
+    "creator": "Unknown",
+    "system": "supergrafx",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/11axAMx6cXW5KO9bB3qA6OSkECu6is2tN/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1q7Nk3NSdX4R1x5vUJcNTk0Ydndn5StXi/view?usp=sharing",
+    "size": "1.2 MB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 724,
     "name": "Dance Aerobics (USA)",
     "creator": "Christophe",
@@ -4433,11 +4609,11 @@
     "date": "2025-11-03"
   },
   {
-    "id": 5302,
+    "id": 6306,
     "name": "datach",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "datach",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1J32kX8QgDeBhzJRdk26awfJ0w9IIhLTb/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1DjXmiDLPohVMWTMK5DjJeRoQnpYE5ACt/view?usp=sharing",
     "size": "1.5 MB",
@@ -4849,6 +5025,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1R46Uqu2MUOEA_UBHoHPyVloCK_zYqBrZ/view?usp=sharing",
     "size": "1.6 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 6903,
+    "name": "Defender (USA, Europe)",
+    "creator": "Unknown",
+    "system": "adventurevision",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1ez5pzpo0tVHIvo7-3OpHq3jLA7Mdv66T/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1QT0f0PjGrg3CKqUSchGRUwM_qkdsdJDO/view?usp=sharing",
+    "size": "1.5 MB",
+    "date": "2026-01-11"
   },
   {
     "id": 930,
@@ -5555,6 +5742,17 @@
     "date": "2025-11-30"
   },
   {
+    "id": 6951,
+    "name": "Dropzone (Europe)",
+    "creator": "Unknown",
+    "system": "atari800",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1-sU9Fsy1qR8zNBrNNmjJOuoYHoWsv7l4/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1rA2nzleUK_h7HZLav7ouhpnSU2Rcgsam/view?usp=sharing",
+    "size": "743.2 KB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 420,
     "name": "dsaber",
     "creator": "Unknown",
@@ -6006,6 +6204,17 @@
     "date": "2026-01-05"
   },
   {
+    "id": 6946,
+    "name": "Fallout (1997) (1997)",
+    "creator": "Unknown",
+    "system": "msdos",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1_dVDJSBYuJgAMfw7i-o_DWfgLCnEphOI/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1mqiRRR1Tm0Qw4ZtK4CZivJEm8M_PRXUS/view?usp=sharing",
+    "size": "810.8 KB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 1167,
     "name": "Fantasy Zone - The Maze (USA, Europe)",
     "creator": "Mrfomt",
@@ -6259,6 +6468,17 @@
     "date": "2025-11-30"
   },
   {
+    "id": 6405,
+    "name": "Final Fantasy VIII (FRANCE) (USA)",
+    "creator": "Unknown",
+    "system": "playstation",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1fOaO2tkQ7eq9tszGUtARCnorpR16qUkZ/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1uFReXt7-QvjzO5YYhl7Z-Mmb3wIAoABG/view?usp=sharing",
+    "size": "422.6 KB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 1064,
     "name": "Final Fantasy XII - Revenant Wings",
     "creator": "KevoBatoYT",
@@ -6325,11 +6545,11 @@
     "date": "2025-11-13"
   },
   {
-    "id": 5869,
+    "id": 6910,
     "name": "flash",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "flash",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1rz2uMjhEmLbYxbPUdf-6rktRiwyAFVML/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1WLxkLqS6CN8xCrzowee56R92RVJCxCaX/view?usp=sharing",
     "size": "311.7 KB",
@@ -6435,11 +6655,11 @@
     "date": "2025-11-01"
   },
   {
-    "id": 5872,
+    "id": 6911,
     "name": "fpinball",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "futurepinball",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1-K_f3sn7PCZRVB7kum8ZEy9nZZ-0RONw/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/10q1HkPc8OFS4Ce0SSthjLq8tKoKHjbTf/view?usp=sharing",
     "size": "1.2 MB",
@@ -7909,6 +8129,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 6410,
+    "name": "Hybrid Heaven (USA)",
+    "creator": "Unknown",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1OVX6KrYj-WlD5r5JD6pvniun6KAntkFh/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1P2DH22fn_bXtR6VvT2zGjCkQAZwWeZv0/view?usp=sharing",
+    "size": "1.9 MB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 353,
     "name": "hyperspt",
     "creator": "Unknown",
@@ -8171,6 +8402,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1rwFkPkd8-d7PUKzMx_jk8dALNic9D2DO/view?usp=sharing",
     "size": "1.9 MB",
     "date": "2025-11-14"
+  },
+  {
+    "id": 6406,
+    "name": "Italian Job, The (USA)",
+    "creator": "Unknown",
+    "system": "playstation",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/14K-V81RQ1429LROua91DudSqVtsUa8pT/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1DJlzs3t2RIc7jGXsjfkU4JW9zLDA5rJS/view?usp=sharing",
+    "size": "865.7 KB",
+    "date": "2026-01-11"
   },
   {
     "id": 971,
@@ -9207,6 +9449,17 @@
     "date": "2026-01-02"
   },
   {
+    "id": 6416,
+    "name": "Legend of Zelda, The - Majora's Mask (USA)",
+    "creator": "Unknown",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/15JQjni1m1KS0MNNXIuS9MmoxJqD-c71H/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1rFTz3BFR-0Lw91o8XfbEbmD1EpeZnCTK/view?usp=sharing",
+    "size": "1.8 MB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 900,
     "name": "Legend of Zelda, The - Phantom Hourglass",
     "creator": "KevoBatoYT",
@@ -9460,6 +9713,17 @@
     "date": "2025-12-01"
   },
   {
+    "id": 6395,
+    "name": "Madou King Granzort (Japan)",
+    "creator": "Unknown",
+    "system": "supergrafx",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1xd_dPUFfIYhPAGkrNnoCV-rYmv0Q1alE/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1CNMVa49ZcUao4nc9iyg9A_nS98bjZzsv/view?usp=sharing",
+    "size": "1.1 MB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 840,
     "name": "magdrop2",
     "creator": "Dav",
@@ -9570,11 +9834,11 @@
     "date": "2025-11-13"
   },
   {
-    "id": 5868,
+    "id": 6909,
     "name": "mbee",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "microbee",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1gYs6ZGDtnsUbqVMSWMxa_9rxwcUznmxK/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1VMT1J7zMxTnnkfZ0g3B5UgVQROqr1qY2/view?usp=sharing",
     "size": "618.8 KB",
@@ -9625,11 +9889,11 @@
     "date": "2025-11-17"
   },
   {
-    "id": 5399,
+    "id": 6424,
     "name": "megadrive-msu",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "megadrivemsu",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1izvuvh2EkLVs9qRdyRY8iEjQklCy9S4r/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1I15BeEjC66728WqiOLkObBMKlctIcO_B/view?usp=sharing",
     "size": "327.2 KB",
@@ -9834,6 +10098,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 6411,
+    "name": "Mission - Impossible (USA)",
+    "creator": "Unknown",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1MUKHKtCAEGWu-5JpIKjo2KNBwXf43hr6/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1UmM_RpRsKe0d3U-KaXvQRmHlX4jr2HLF/view?usp=sharing",
+    "size": "2.8 MB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 300,
     "name": "mk",
     "creator": "Arcanjohack",
@@ -9964,6 +10239,28 @@
     "downloadUrl": "https://drive.google.com/file/d/1nYWg4jV_dnTti15M2Al_o6NTtOTArmD5/view?usp=sharing",
     "size": "2.3 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 6414,
+    "name": "Mortal Kombat Mythologies - Sub-Zero (USA)",
+    "creator": "Unknown",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1YpnHUW_xPjY2m0Q5HWPLK6JEHcMkDgDz/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Wu8rOp1-Z9OQ5EWGe4pcb0siRjTimRfl/view?usp=sharing",
+    "size": "3.2 MB",
+    "date": "2026-01-11"
+  },
+  {
+    "id": 6413,
+    "name": "Mortal Kombat Trilogy (USA) (Rev 2)",
+    "creator": "Unknown",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1EHe3rPatitd5_28BQhGhsixmPbP9xCLo/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1DF6bs8VXuNTOO9irPXAVO9eG9DWchiyi/view?usp=sharing",
+    "size": "2.3 MB",
+    "date": "2026-01-11"
   },
   {
     "id": 95,
@@ -10516,11 +10813,22 @@
     "date": "2025-11-14"
   },
   {
-    "id": 5397,
+    "id": 6258,
+    "name": "neogeo",
+    "creator": "Unknown",
+    "system": "neogeo",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1bRneuwVgbyQaUp_I_aI50d5ZCjd7HBQI/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1hbLJ3-uz_mmzscffu6R77KdeCQa_73Tt/view?usp=sharing",
+    "size": "827.3 KB",
+    "date": "2026-01-11"
+  },
+  {
+    "id": 6408,
     "name": "neogeo64",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "neogeo64",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1HfQFILXDTgiqe5vk457ohC96XXr9mNd1/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1JcnQBq3r0OmjXSj7CnQaWkABWP2UWMIb/view?usp=sharing",
     "size": "1.1 MB",
@@ -10604,6 +10912,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 6422,
+    "name": "Nightmare Creatures (USA)",
+    "creator": "Unknown",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/18mfhxgq01cqfi7BC2Hij_yrvjvK_0E97/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Fgirk_hA3EhLBk35yh9mfCfA_mTT-7Mq/view?usp=sharing",
+    "size": "4.0 MB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 1158,
     "name": "Ninja Gaiden (Europe)",
     "creator": "Mrfomt",
@@ -10681,11 +11000,11 @@
     "date": "2026-01-03"
   },
   {
-    "id": 5388,
+    "id": 6392,
     "name": "nomad",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "nomad",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/164ZXTSvNrZFAsxK96LRo9dLKNg-Dqnfk/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1CAYgj0NbjDSIRtzCutrYcs9TSqMTCfE7/view?usp=sharing",
     "size": "331.0 KB",
@@ -10723,6 +11042,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1yRo3Wdfx04fzadgGoDZ2KFTi5_8Xf0bl/view?usp=sharing",
     "size": "2.0 MB",
     "date": "2025-12-01"
+  },
+  {
+    "id": 6417,
+    "name": "Nuclear Strike 64 (USA)",
+    "creator": "Unknown",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1wdUHitxu3bFy60UePQOP_UZCh1utyKFa/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1pJSkXuhsLXKFTJBVbYvOfGM7ek5oLvxo/view?usp=sharing",
+    "size": "1.4 MB",
+    "date": "2026-01-11"
   },
   {
     "id": 138,
@@ -11033,6 +11363,17 @@
     "date": "2026-01-05"
   },
   {
+    "id": 6412,
+    "name": "Perfect Dark (USA) (Rev 1)",
+    "creator": "Unknown",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1ZHCFnlL_lbUp_Gv1_PtcNaJ_GaoeJy2h/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1iZA9IvgQnPMdwOrHldZ7xZa7BM6JZr4p/view?usp=sharing",
+    "size": "2.3 MB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 262,
     "name": "perfrman",
     "creator": "Unknown",
@@ -11099,22 +11440,22 @@
     "date": "2025-12-01"
   },
   {
-    "id": 5870,
+    "id": 6905,
     "name": "pinballfx2",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "pinballfx2",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1Nj289zj4NgvLxbruHJm7qUSPmbBXp7R5/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1gR6xU0rVyGCs23O4YDPXbXjrYOty5CAt/view?usp=sharing",
     "size": "1015.4 KB",
     "date": "2026-01-10"
   },
   {
-    "id": 5866,
+    "id": 6904,
     "name": "pinballfx3",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "pinballfx3",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/12fw5-6pyZMu-LPQQgg0H24A427psxgXx/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Zb9sq0lrynzWk1_Z43xZwbQdYER4ICom/view?usp=sharing",
     "size": "455.9 KB",
@@ -11264,11 +11605,11 @@
     "date": "2025-11-14"
   },
   {
-    "id": 5301,
+    "id": 6304,
     "name": "pocketstation",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "pocketstation",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1pFbhLtPdYkTKtM6GzqgycRZvt5zY85ip/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/10tVaYcE9eWDb9Qxfs1XbBelN_5h3eACQ/view?usp=sharing",
     "size": "301.4 KB",
@@ -11449,6 +11790,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1WPQJDnljPqJo_giWZf8dQsl5KUr0Y-jK/view?usp=sharing",
     "size": "3.0 MB",
     "date": "2025-11-30"
+  },
+  {
+    "id": 6409,
+    "name": "Pokemon Stadium (USA) (Rev 2)",
+    "creator": "Unknown",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1HVwAezJl_f7go1bbWf7rrLA2ztGDwllQ/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1KHbOy_rUDvUtk_KGzMTPluvYhSc2jFa3/view?usp=sharing",
+    "size": "2.5 MB",
+    "date": "2026-01-11"
   },
   {
     "id": 923,
@@ -11825,22 +12177,22 @@
     "date": "2025-12-16"
   },
   {
-    "id": 5394,
+    "id": 6403,
     "name": "pv1000",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "pv1000",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1w_LVPGCBJh3pFT9hGVy_EEM6d44Sguyg/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1ALCaBRAO8DJO9a73-Myi7l6jvt2qCG0X/view?usp=sharing",
     "size": "165.0 KB",
     "date": "2026-01-10"
   },
   {
-    "id": 5867,
+    "id": 6907,
     "name": "pv2000",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "pv2000",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1NF-shP6V3zQ1OJYc8w5zP0FZx31M3cpJ/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1NK-F1sjhu9AhnYYpamqG4WwK7Xqe21rL/view?usp=sharing",
     "size": "1.9 MB",
@@ -11933,6 +12285,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1RJagnygwgC5NP8Ah46UKPV668L56ySjb/view?usp=sharing",
     "size": "1.9 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 6418,
+    "name": "Quake II (USA)",
+    "creator": "Unknown",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1mAhLX9XL801BAYOhGYyAUveVD5SuqZ5t/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1wdOyDAfYd_6fCqycKzcKV9Zm4wmxrls1/view?usp=sharing",
+    "size": "1.5 MB",
+    "date": "2026-01-11"
   },
   {
     "id": 648,
@@ -12463,11 +12826,11 @@
     "date": "2025-11-14"
   },
   {
-    "id": 5390,
+    "id": 6394,
     "name": "scv",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "supercassettevision",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1KI-vuWUW0joq-XvC01w8hecIGDr_dH3e/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Vp1Vrn3ESRDk6FjD4rhsYCtXhUfSdRLb/view?usp=sharing",
     "size": "448.2 KB",
@@ -12518,9 +12881,9 @@
     "date": "2025-11-13"
   },
   {
-    "id": 5539,
+    "id": 6564,
     "name": "segacd",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "megacd",
     "category": "default-themes",
     "imageUrl": "https://drive.google.com/file/d/1pStfQnwa5gqjOCGq5lv2inM6bFMvza0E/view?usp=sharing",
@@ -12914,6 +13277,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 6421,
+    "name": "Shadow Man (USA)",
+    "creator": "Unknown",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1yTyJTB-2ZjOC_jH4N4GvwvWd4XQDyM4n/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1RnAvT4MarB0BGsIv5jOc_WZ1-QSWK2al/view?usp=sharing",
+    "size": "1.1 MB",
+    "date": "2026-01-11"
+  },
+  {
     "id": 225,
     "name": "shdancer",
     "creator": "Unknown",
@@ -13189,11 +13563,11 @@
     "date": "2025-11-13"
   },
   {
-    "id": 5871,
+    "id": 6908,
     "name": "sorcerer",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "sorcerer",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1m73Es14Q298rjmrl7kAYnca_OJfCAMjU/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1wy7G_caiLO7uE-65JfOJY264jL_-Dj79/view?usp=sharing",
     "size": "197.6 KB",
@@ -13209,6 +13583,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1AkCnoWVHIWBXZ78GjtyxAi8x-DgVwKir/view?usp=sharing",
     "size": "891.1 KB",
     "date": "2025-11-15"
+  },
+  {
+    "id": 6902,
+    "name": "Space Force (USA, Europe)",
+    "creator": "Unknown",
+    "system": "adventurevision",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1PPSXNKSvMmIlHJ5OFVWjbpN2ehdgSGun/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1OwgHjdKWI1rT62zBlZkhk3AuVLbq8nj2/view?usp=sharing",
+    "size": "783.5 KB",
+    "date": "2026-01-11"
   },
   {
     "id": 1147,
@@ -13705,15 +14090,26 @@
     "size": "2.0 MB"
   },
   {
-    "id": 5395,
+    "id": 6404,
     "name": "sufami",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "sufamiturbo",
     "category": "default-themes",
     "imageUrl": "https://drive.google.com/file/d/1dheDGZ0-cyY0ZIjy1T3YHniFUf3HlrvM/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/14RmIiUEPZ7WeRnFM_Kjd-h7_cWzz7IOe/view?usp=sharing",
     "size": "698.8 KB",
     "date": "2026-01-10"
+  },
+  {
+    "id": 6901,
+    "name": "Super Cobra (USA, Europe)",
+    "creator": "Unknown",
+    "system": "adventurevision",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1namesxqhpxbmwyzCS2SZ7URqw_s7oscs/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1T4_HaOSoT8KsPvpS2s75HT8ZIAk4ypax/view?usp=sharing",
+    "size": "1.1 MB",
+    "date": "2026-01-11"
   },
   {
     "id": 690,
@@ -13727,11 +14123,11 @@
     "date": "2026-01-02"
   },
   {
-    "id": 5389,
+    "id": 6393,
     "name": "supergrafx",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "supergrafx",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1ubct9hXK2okvIKvuu2gtQq8zBCfuRiW5/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Ly7Dc_cauZ7hjNKVdlV8Az-5Pwur8Nlp/view?usp=sharing",
     "size": "402.2 KB",
@@ -13892,11 +14288,11 @@
     "date": "2025-11-13"
   },
   {
-    "id": 5865,
+    "id": 6906,
     "name": "tic80",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "tic80",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1uLn_yPEk8lMqB6BHYxP08pGJRGD7JDED/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1HOZP6zxWhVrB9k4yKJ1wlHIL9sy5ywvQ/view?usp=sharing",
     "size": "105.3 KB",
@@ -14198,6 +14594,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1ZVZIyGuDq_6HX9wHRJjrsc2ZaBmTkI0N/view?usp=sharing",
     "size": "833.1 KB",
     "date": "2025-11-14"
+  },
+  {
+    "id": 6900,
+    "name": "Turtles (USA, Europe)",
+    "creator": "Unknown",
+    "system": "adventurevision",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/12xdjPvg7-omEjJzXPFJKb_2bLBrPbcJy/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1YkgDXJzAcW0F07ciWcfEmpvMka00tEiT/view?usp=sharing",
+    "size": "539.1 KB",
+    "date": "2026-01-11"
   },
   {
     "id": 184,
@@ -14805,9 +15212,9 @@
     "date": "2026-01-05"
   },
   {
-    "id": 5387,
+    "id": 6391,
     "name": "wonderswan",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "wonderswan",
     "category": "default-themes",
     "imageUrl": "https://drive.google.com/file/d/1o6eG4LAOQRzxk8uCE9AdM3BV47EOsdLC/view?usp=sharing",
@@ -14816,11 +15223,11 @@
     "date": "2026-01-10"
   },
   {
-    "id": 5300,
+    "id": 6305,
     "name": "wonderswancolor",
-    "creator": "Finch",
+    "creator": "Unknown",
     "system": "wonderswancolor",
-    "category": "default-themes",
+    "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1SP32mYazu1tkxxCa3ep2tuvbFjgSoyfL/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1e4EHEIrYe-RHvHPQzPIpMJOCPIZQQN9A/view?usp=sharing",
     "size": "1.5 MB",
@@ -14924,6 +15331,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1Xd8QmxbxevBi2YfCJR1Njs8WnEfxEpoO/view?usp=sharing",
     "size": "2.8 MB",
     "date": "2025-11-03"
+  },
+  {
+    "id": 6415,
+    "name": "Yoshi's Story (USA) (En,Ja)",
+    "creator": "Unknown",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1OSNSY8pwWf5j9FgtTjCBu9FIUyz7O9gU/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/18OJS2w8goTqp2XtGVqH72ADuzYRLq3BQ/view?usp=sharing",
+    "size": "2.2 MB",
+    "date": "2026-01-11"
   },
   {
     "id": 760,
