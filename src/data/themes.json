@@ -1487,7 +1487,7 @@
   {
     "id": 1201,
     "name": "archrivl",
-    "creator": "Roni",
+    "creator": "Unknown",
     "system": "ballyclassics",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1IPCtrX4164PCaa92AeM5gewK4Wz5EQfo/view?usp=sharing",
@@ -2686,7 +2686,7 @@
   {
     "id": 1200,
     "name": "blasted",
-    "creator": "Roni",
+    "creator": "Unknown",
     "system": "ballyclassics",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1bxkPl-30Nuf-ocgorY9DHbNOGCk9TH19/view?usp=sharing",
@@ -3212,7 +3212,7 @@
     "date": "2025-11-13"
   },
   {
-    "id": 7713,
+    "id": 7712,
     "name": "Bucky O_Hare",
     "creator": "huhe-8554",
     "system": "nes",
@@ -3333,7 +3333,7 @@
     "date": "2025-11-13"
   },
   {
-    "id": 7712,
+    "id": 7711,
     "name": "California Games",
     "creator": "huhe-8554",
     "system": "nes",
@@ -7304,7 +7304,7 @@
     "date": "2025-11-13"
   },
   {
-    "id": 8021,
+    "id": 7881,
     "name": "gnw_ball",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7315,7 +7315,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7968,
+    "id": 7828,
     "name": "gnw_bfight",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7326,7 +7326,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8017,
+    "id": 7877,
     "name": "gnw_bfightn",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7337,7 +7337,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8018,
+    "id": 7878,
     "name": "gnw_bjack",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7348,7 +7348,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8016,
+    "id": 7876,
     "name": "gnw_boxing",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7359,7 +7359,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8020,
+    "id": 7880,
     "name": "gnw_bsweep",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7370,7 +7370,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8019,
+    "id": 7879,
     "name": "gnw_cgrab",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7381,7 +7381,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8013,
+    "id": 7873,
     "name": "gnw_chef",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7392,7 +7392,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8015,
+    "id": 7875,
     "name": "gnw_climber",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7403,7 +7403,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8002,
+    "id": 7862,
     "name": "gnw_climbern",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7414,7 +7414,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8014,
+    "id": 7874,
     "name": "gnw_dkcirc",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7425,7 +7425,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8007,
+    "id": 7867,
     "name": "gnw_dkhockey",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7436,7 +7436,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8003,
+    "id": 7863,
     "name": "gnw_dkjr",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7447,7 +7447,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8009,
+    "id": 7869,
     "name": "gnw_dkjrp",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7458,7 +7458,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8005,
+    "id": 7865,
     "name": "gnw_dkong",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7469,7 +7469,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8004,
+    "id": 7864,
     "name": "gnw_dkong2",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7480,7 +7480,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8006,
+    "id": 7866,
     "name": "gnw_dkong3",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7491,7 +7491,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8008,
+    "id": 7868,
     "name": "gnw_egg",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7502,7 +7502,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8010,
+    "id": 7870,
     "name": "gnw_fire",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7513,7 +7513,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8011,
+    "id": 7871,
     "name": "gnw_fireatk",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7524,7 +7524,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8012,
+    "id": 7872,
     "name": "gnw_fires",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7535,7 +7535,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7997,
+    "id": 7857,
     "name": "gnw_flagman",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7546,7 +7546,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7969,
+    "id": 7829,
     "name": "gnw_gcliff",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7557,7 +7557,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7999,
+    "id": 7859,
     "name": "gnw_ghouse",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7568,7 +7568,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8000,
+    "id": 7860,
     "name": "gnw_helmet",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7579,7 +7579,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7995,
+    "id": 7855,
     "name": "gnw_judge",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7590,7 +7590,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8001,
+    "id": 7861,
     "name": "gnw_lboat",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7601,7 +7601,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7998,
+    "id": 7858,
     "name": "gnw_lion",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7612,7 +7612,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7996,
+    "id": 7856,
     "name": "gnw_manhole",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7623,7 +7623,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7988,
+    "id": 7848,
     "name": "gnw_manholeg",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7634,7 +7634,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7990,
+    "id": 7850,
     "name": "gnw_mario",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7645,7 +7645,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7987,
+    "id": 7847,
     "name": "gnw_mariocm",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7656,7 +7656,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7992,
+    "id": 7852,
     "name": "gnw_mariocmt",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7667,7 +7667,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7989,
+    "id": 7849,
     "name": "gnw_mariotj",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7678,7 +7678,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7991,
+    "id": 7851,
     "name": "gnw_mbaway",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7689,7 +7689,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7994,
+    "id": 7854,
     "name": "gnw_mickdon",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7700,7 +7700,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7993,
+    "id": 7853,
     "name": "gnw_mmouse",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7711,7 +7711,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7978,
+    "id": 7838,
     "name": "gnw_mmousep",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7722,7 +7722,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7982,
+    "id": 7842,
     "name": "gnw_octopus",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7733,7 +7733,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7976,
+    "id": 7836,
     "name": "gnw_opanic",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7744,7 +7744,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7975,
+    "id": 7835,
     "name": "gnw_pchute",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7755,7 +7755,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7984,
+    "id": 7844,
     "name": "gnw_pinball",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7766,7 +7766,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7985,
+    "id": 7845,
     "name": "gnw_popeye",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7777,7 +7777,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7983,
+    "id": 7843,
     "name": "gnw_popeyep",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7788,7 +7788,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7986,
+    "id": 7846,
     "name": "gnw_rshower",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7799,7 +7799,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7981,
+    "id": 7841,
     "name": "gnw_sbuster",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7810,7 +7810,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7977,
+    "id": 7837,
     "name": "gnw_smb",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7821,7 +7821,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7979,
+    "id": 7839,
     "name": "gnw_smbn",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7832,7 +7832,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7980,
+    "id": 7840,
     "name": "gnw_snoopyp",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7843,7 +7843,7 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7973,
+    "id": 7833,
     "name": "gnw_squish",
     "creator": "Akeshi",
     "system": "gamewatch",
@@ -7854,9 +7854,9 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7974,
+    "id": 7834,
     "name": "gnw_ssparky",
-    "creator": "huhe-8554",
+    "creator": "Akeshi",
     "system": "gamewatch",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1xht7xnXfXpeXi4KtGb5knWdWpKa6CLhz/view?usp=sharing",
@@ -7865,9 +7865,9 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7972,
+    "id": 7832,
     "name": "gnw_stennis",
-    "creator": "huhe-8554",
+    "creator": "Akeshi",
     "system": "gamewatch",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1hSCMRPaV1G53Amko7PSxbZGm58KgD9j8/view?usp=sharing",
@@ -7876,9 +7876,9 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7970,
+    "id": 7830,
     "name": "gnw_tbridge",
-    "creator": "huhe-8554",
+    "creator": "Akeshi",
     "system": "gamewatch",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1h46asMZqoHVLmsXmx4IGnNRJzq6p1hLM/view?usp=sharing",
@@ -7887,9 +7887,9 @@
     "date": "2026-01-11"
   },
   {
-    "id": 7971,
+    "id": 7831,
     "name": "gnw_tfish",
-    "creator": "huhe-8554",
+    "creator": "Akeshi",
     "system": "gamewatch",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/15V_DBYV7JjVGhwYDWyEdOpa01Cam5s-F/view?usp=sharing",
@@ -7898,9 +7898,9 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8023,
+    "id": 7883,
     "name": "gnw_vermin",
-    "creator": "huhe-8554",
+    "creator": "Akeshi",
     "system": "gamewatch",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1Be2f_kRmysZ5bumhx3iW-Hg0lf_oS9L3/view?usp=sharing",
@@ -7909,9 +7909,9 @@
     "date": "2026-01-11"
   },
   {
-    "id": 8022,
+    "id": 7882,
     "name": "gnw_zelda",
-    "creator": "huhe-8554",
+    "creator": "Akeshi",
     "system": "gamewatch",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1b6LiVf-jiXPkAewqJJwg7YefamXxKEIp/view?usp=sharing",
@@ -8065,7 +8065,7 @@
   {
     "id": 1199,
     "name": "gorf",
-    "creator": "qbertaddict",
+    "creator": "Unknown",
     "system": "ballyclassics",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1EhRtocangLnP3h9uENO595dne4gdibGY/view?usp=sharing",
@@ -8241,7 +8241,7 @@
   {
     "id": 1204,
     "name": "groovef",
-    "creator": "Roni",
+    "creator": "Unknown",
     "system": "atlus",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1B0ljS_XMb3tkC9Tz_8P8x-qlEHHlEgnH/view?usp=sharing",
@@ -8560,7 +8560,7 @@
   {
     "id": 1207,
     "name": "heberpop",
-    "creator": "Roni",
+    "creator": "Unknown",
     "system": "atlus",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1PDaDOw5j9wbbyYw6WLOwpUlaKHqfHl7c/view?usp=sharing",
@@ -8758,7 +8758,7 @@
   {
     "id": 1206,
     "name": "hvnsgate",
-    "creator": "Roni",
+    "creator": "Unknown",
     "system": "atlus",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1Z-d-kwqyC2uG5hYSsFnyYdNrk6UofK5z/view?usp=sharing",
@@ -13213,7 +13213,7 @@
   {
     "id": 1198,
     "name": "robby",
-    "creator": "Roni",
+    "creator": "Unknown",
     "system": "ballyclassics",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1fsFon02h_KC49Heh75Z6p_wbKfCfys48/view?usp=sharing",
@@ -13517,17 +13517,6 @@
     "downloadUrl": "https://drive.google.com/file/d/1XsSwcW9qyrxdR1T03RtYHsuiNuIlnCyw/view?usp=sharing",
     "size": "1.1 MB",
     "date": "2025-11-13"
-  },
-  {
-    "id": 6564,
-    "name": "segacd",
-    "creator": "Unknown",
-    "system": "megacd",
-    "category": "system-themes",
-    "imageUrl": "https://drive.google.com/file/d/1pStfQnwa5gqjOCGq5lv2inM6bFMvza0E/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1FdwYuxCMRnXuPxivy87cESMN1B5iZ2lk/view?usp=sharing",
-    "size": "1.1 MB",
-    "date": "2026-01-10"
   },
   {
     "id": 791,
@@ -14728,17 +14717,6 @@
     "size": "2.0 MB"
   },
   {
-    "id": 6404,
-    "name": "sufami",
-    "creator": "Unknown",
-    "system": "sufamiturbo",
-    "category": "system-themes",
-    "imageUrl": "https://drive.google.com/file/d/1dheDGZ0-cyY0ZIjy1T3YHniFUf3HlrvM/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/14RmIiUEPZ7WeRnFM_Kjd-h7_cWzz7IOe/view?usp=sharing",
-    "size": "698.8 KB",
-    "date": "2026-01-10"
-  },
-  {
     "id": 6901,
     "name": "Super Cobra (USA, Europe)",
     "creator": "Finch",
@@ -14840,7 +14818,7 @@
   {
     "id": 1197,
     "name": "tapper",
-    "creator": "Roni",
+    "creator": "Unknown",
     "system": "ballyclassics",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1Xiko68JwiFQqOLruKAzKiP5UUrKJ3-9z/view?usp=sharing",
@@ -15848,17 +15826,6 @@
     "downloadUrl": "https://drive.google.com/file/d/1RvTSaCdmmca8gHYsBDKqP2gGIHOKzvdr/view?usp=sharing",
     "size": "1.2 MB",
     "date": "2026-01-05"
-  },
-  {
-    "id": 6391,
-    "name": "wonderswan",
-    "creator": "Unknown",
-    "system": "wonderswan",
-    "category": "system-themes",
-    "imageUrl": "https://drive.google.com/file/d/1o6eG4LAOQRzxk8uCE9AdM3BV47EOsdLC/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1hsFYYLzA4cCPQE5OYrF1zVhqJcCZD2nf/view?usp=sharing",
-    "size": "517.2 KB",
-    "date": "2026-01-10"
   },
   {
     "id": 6305,
