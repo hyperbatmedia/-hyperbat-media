@@ -64,7 +64,7 @@ export const systemsData: SystemsDataStructure = {
         technoparrot: { label: 'TECHNOPARROT', systems: ['TechnoParrot'] },
         williams: { label: 'WILLIAMS', systems: ['Williams Classic'] },
         tecmo: { label: 'TECMO', systems: ['Tecmo'] },
-        'autres-arcade': { label: 'AUTRES CONSTRUCTEURS', systems: ['AAE (Another Arcade Emulator)', 'Daphne (LaserDisc)', 'Singe (LaserDisc)', 'American Laser Games', 'Gaelco', 'IGS', 'Irem', 'Technos', 'Midway', 'FBNeo'] }
+        'autres-arcade': { label: 'AUTRES CONSTRUCTEURS', systems: ['AAE ', 'Daphne (LaserDisc)', 'Singe (LaserDisc)', 'American Laser Games', 'Gaelco', 'IGS', 'Irem', 'Technos', 'Midway', 'FBNeo'] }
     },
     home: {
         magnavox: { label: 'MAGNAVOX', systems: ['Odyssey', 'Odyssey 2 / Videopac'] },
