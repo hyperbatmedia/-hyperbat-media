@@ -62,7 +62,9 @@ export const systemsData: SystemsDataStructure = {
         zinc: { label: 'ZINC', systems: ['Zinc'] },
         sammy: { label: 'SAMMY', systems: ['Sammy', 'Atomiswave', 'SSV'] },
         technoparrot: { label: 'TECHNOPARROT', systems: ['TechnoParrot'] },
-        'autres-arcade': { label: 'AUTRES CONSTRUCTEURS', systems: ['Daphne (LaserDisc)', 'Singe (LaserDisc)', 'American Laser Games', 'Gaelco', 'IGS', 'Irem', 'Technos', 'Midway', 'FBNeo'] }
+        williams: { label: 'WILLIAMS', systems: ['Williams Classic'] },
+        tecmo: { label: 'TECMO', systems: ['Tecmo'] },
+        'autres-arcade': { label: 'AUTRES CONSTRUCTEURS', systems: ['AAE (Another Arcade Emulator)', 'Daphne (LaserDisc)', 'Singe (LaserDisc)', 'American Laser Games', 'Gaelco', 'IGS', 'Irem', 'Technos', 'Midway', 'FBNeo'] }
     },
     home: {
         magnavox: { label: 'MAGNAVOX', systems: ['Odyssey', 'Odyssey 2 / Videopac'] },
