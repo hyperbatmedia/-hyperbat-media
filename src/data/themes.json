@@ -143,6 +143,50 @@
     "date": "2026-01-15"
   },
   {
+    "id": 10363,
+    "name": "_default",
+    "creator": "Unknown",
+    "system": "wii",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/19a1ooyYIBD6zzan0E3Pu6nnmu24Mis5F/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1m_NQ_SX7uNegA0h0vu33duTWTcWbL-XR/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-01-16"
+  },
+  {
+    "id": 10383,
+    "name": "_default",
+    "creator": "Unknown",
+    "system": "switch",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1uipiH9j2nXron5rtHBjcxM5KY4CDVT8n/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Tzd2uYB8XAceHDiH8Qy9XnIUrnagrwz0/view?usp=sharing",
+    "size": "2.4 MB",
+    "date": "2026-01-16"
+  },
+  {
+    "id": 10414,
+    "name": "_default",
+    "creator": "Unknown",
+    "system": "neogeocd",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1iOaSbAhdEO1BzyuGg7HCOrbOuwoT0zxH/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/16fdda0ARSkxghRWVVZ-MKlOvcTU0w7Dc/view?usp=sharing",
+    "size": "2.3 MB",
+    "date": "2026-01-16"
+  },
+  {
+    "id": 10432,
+    "name": "_default",
+    "creator": "Unknown",
+    "system": "nintendo64",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1h7H1GO3SoVBLlhGWWtZvew6Q9lqN7cwn/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1dmdNm81Qq2YVNV-F7PYaVbxLJOeGv8RO/view?usp=sharing",
+    "size": "2.2 MB",
+    "date": "2026-01-16"
+  },
+  {
     "id": 550,
     "name": "005",
     "creator": "Roni",
@@ -801,6 +845,17 @@
     "downloadUrl": "https://drive.google.com/file/d/15Sf0zj458obJpsE7Jfh8RxrSXmp4gLeb/view?usp=sharing",
     "size": "5.1 MB",
     "date": "2026-01-02"
+  },
+  {
+    "id": 10279,
+    "name": "Adventures in the Magic Kingdom",
+    "creator": "Unknown",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/19sgKX9VHxrZ5a9eVZirky2Fhh9mICzyS/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1HI_27EExczkPzN9L1Qx0rW_kNNHtYCdS/view?usp=sharing",
+    "size": "4.6 MB",
+    "date": "2026-01-16"
   },
   {
     "id": 754,
@@ -2673,6 +2728,17 @@
     "date": "2025-11-05"
   },
   {
+    "id": 10274,
+    "name": "Batman Returns",
+    "creator": "Unknown",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1LiZR7HO22rlFMGDTn3JUfvBM-nmzXj3L/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ThBo26tU_6cnMGxVjaxCcwkcJIwVqUaT/view?usp=sharing",
+    "size": "953.2 KB",
+    "date": "2026-01-16"
+  },
+  {
     "id": 1126,
     "name": "Batman Returns (Europe)",
     "creator": "Mrfomt",
@@ -3034,6 +3100,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1UnGFMTV-YocyzRXebmVzAzpyGd52h4lM/view?usp=sharing",
     "size": "1.6 MB",
     "date": "2026-01-10"
+  },
+  {
+    "id": 11002,
+    "name": "Blasphemous",
+    "creator": "Unknown",
+    "system": "windows",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1LyIeL_SdKI0dCT9x5FKFdamXCvx2t3zk/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1HZlpyq_HX4snQ9TQjz6QyHlq3MxqmXF2/view?usp=sharing",
+    "size": "9.7 MB",
+    "date": "2026-01-16"
   },
   {
     "id": 495,
@@ -3883,6 +3960,17 @@
     "date": "2026-01-05"
   },
   {
+    "id": 10273,
+    "name": "Captain America and the Avengers",
+    "creator": "Unknown",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1KGDGOBRuUzDOUNu0JEwtqJEec0PncLIP/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1l3VWOpgBeoQ7DKh8nQpiQUBWY_JgNbDY/view?usp=sharing",
+    "size": "2.1 MB",
+    "date": "2026-01-16"
+  },
+  {
     "id": 479,
     "name": "captaven",
     "creator": "Roni",
@@ -4279,6 +4367,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 10272,
+    "name": "Chip 'n Dale Rescue Rangers",
+    "creator": "Unknown",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/14mZJbidTP3M-mjXoHQPAa48wsJJiC5xo/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1XBElrti5mzVvrsblSbtbyPy6QGaAcy5Y/view?usp=sharing",
+    "size": "8.3 MB",
+    "date": "2026-01-16"
+  },
+  {
     "id": 6568,
     "name": "Choplifter (USA, Europe, Brazil) (En)",
     "creator": "yanni9867",
@@ -4453,6 +4552,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1rkcTjC3UPSPdItQG5DXtOg_9Z_grwBUG/view?usp=sharing",
     "size": "5.0 MB",
     "date": "2025-11-03"
+  },
+  {
+    "id": 10976,
+    "name": "colecovision",
+    "creator": "Unknown",
+    "system": "colecovision",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1zdrwLNL1W_St4AA20ruCoxSvbbm2Sbrv/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1myts7AxW_CqrQEnHqmkc08IZ3qlTQfgD/view?usp=sharing",
+    "size": "1.8 MB",
+    "date": "2026-01-16"
   },
   {
     "id": 746,
@@ -5049,6 +5159,17 @@
     "date": "2025-11-17"
   },
   {
+    "id": 10280,
+    "name": "Darkwing Duck",
+    "creator": "Unknown",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1s9BTyFtu7GJ3qHJEeCTPQ8tEyw0mvAew/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1eysyAznPQ4rJu_A7dRsWdhWSEnjrnd8s/view?usp=sharing",
+    "size": "2.9 MB",
+    "date": "2026-01-16"
+  },
+  {
     "id": 740,
     "name": "Dash Galaxy in the Alien Asylum (USA)",
     "creator": "Christophe",
@@ -5588,6 +5709,28 @@
     "date": "2026-01-03"
   },
   {
+    "id": 9452,
+    "name": "deroon",
+    "creator": "Unknown",
+    "system": "tecmo",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1AzhxD344VHaHnMca5yQlHtoSIt-u2pqz/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1qqiOhipKVJhDD2ETV0CR_c1S1N7yfzP8/view?usp=sharing",
+    "size": "3.1 MB",
+    "date": "2026-01-16"
+  },
+  {
+    "id": 9627,
+    "name": "deroon",
+    "creator": "Unknown",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1E4F5mvu9R1Cd384wXC7IpdPZ5TdgEcqQ/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ePNSv3HsX7HtT1lU1w-3QmMm63DFC-W4/view?usp=sharing",
+    "size": "3.1 MB",
+    "date": "2026-01-16"
+  },
+  {
     "id": 1069,
     "name": "Detective Conan & Kindaichi Case Files - Chance Encounter of 2 Great Detectives",
     "creator": "KevoBatoYT",
@@ -5641,6 +5784,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1Yb4QCGfAorgyNWBF92ptz0XXTs5nMil6/view?usp=sharing",
     "size": "5.5 MB",
     "date": "2026-01-05"
+  },
+  {
+    "id": 10277,
+    "name": "Dick Tracy",
+    "creator": "Unknown",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1gEWI1hRAKO58P8-1J1KLWOU1YMqDvZAm/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/12yeIIfgQrIiK5L0TiKzrNAl7AKSXThou/view?usp=sharing",
+    "size": "5.8 MB",
+    "date": "2026-01-16"
   },
   {
     "id": 1110,
@@ -5861,6 +6015,28 @@
     "downloadUrl": "https://drive.google.com/file/d/1FllGB7MJQDiXjh23vwfwk__53s2gO8_p/view?usp=sharing",
     "size": "10.7 MB",
     "date": "2025-11-30"
+  },
+  {
+    "id": 9455,
+    "name": "doapp",
+    "creator": "Unknown",
+    "system": "tecmo",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1R54FzQVvwRo0h4odSY4dcNwe3v7Xsa9w/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1N_t4BK_j1AY_sCWs714DxmQPvFkwfLU4/view?usp=sharing",
+    "size": "1.9 MB",
+    "date": "2026-01-16"
+  },
+  {
+    "id": 9630,
+    "name": "doapp",
+    "creator": "Unknown",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1JT9sv-QpPZ1i21EoBLVPEt8ndRgyi3mO/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1tetcU1kL1S-gq5aTVh4-CV1qUZLfTtRY/view?usp=sharing",
+    "size": "1.9 MB",
+    "date": "2026-01-16"
   },
   {
     "id": 427,
@@ -6413,6 +6589,28 @@
     "date": "2025-12-07"
   },
   {
+    "id": 9454,
+    "name": "eightfrc",
+    "creator": "Unknown",
+    "system": "tecmo",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1sWudxIVr8HJxpE_m7ChhfpbZN9XxKHkU/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1lB7nPL26aj__LExz2YqQPJ5QOCSTzKUy/view?usp=sharing",
+    "size": "2.5 MB",
+    "date": "2026-01-16"
+  },
+  {
+    "id": 9629,
+    "name": "eightfrc",
+    "creator": "Unknown",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1MfTjl13WuJ7rzTePOC0wso47elUr5nWi/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1V2nfDu9l_mhmLQs6Mc4NBZNrywr9Eny3/view?usp=sharing",
+    "size": "2.5 MB",
+    "date": "2026-01-16"
+  },
+  {
     "id": 879,
     "name": "eightman",
     "creator": "Dav",
@@ -6818,6 +7016,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1g_KoRGk4PIoRlOzqxrKhwD8D2Hb-yrk4/view?usp=sharing",
     "size": "2.4 MB",
     "date": "2025-11-30"
+  },
+  {
+    "id": 10276,
+    "name": "Felix the Cat",
+    "creator": "Unknown",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1SyAOkJ36GNo5xvyEJV4N6HrmVVYoygO9/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/152hdyB0LDwaQk0fYK22DWkBpdsraRerS/view?usp=sharing",
+    "size": "1.8 MB",
+    "date": "2026-01-16"
   },
   {
     "id": 404,
@@ -7689,6 +7898,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 10973,
+    "name": "gc",
+    "creator": "Unknown",
+    "system": "gamecube",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1loLrn4ENUkSlEtOodUXpJBpayyAIJAVg/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1dLQqxyOwhyhedhUSJPhe0xferjorPcWu/view?usp=sharing",
+    "size": "3.2 MB",
+    "date": "2026-01-16"
+  },
+  {
     "id": 622,
     "name": "gdfs",
     "creator": "Roni",
@@ -7896,6 +8116,28 @@
     "downloadUrl": "https://drive.google.com/file/d/1_GHLQ_W5BpJKiIIIPUpaQQGNXXmphrbu/view?usp=sharing",
     "size": "2.6 MB",
     "date": "2025-11-30"
+  },
+  {
+    "id": 9453,
+    "name": "glpracr",
+    "creator": "Unknown",
+    "system": "tecmo",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/158yNNllwSN7nGqPkEtOfuP7GGLLKJehe/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1MKio47DeDpIKztJ6NMXzUYWmvbx5of8P/view?usp=sharing",
+    "size": "2.0 MB",
+    "date": "2026-01-16"
+  },
+  {
+    "id": 9628,
+    "name": "glpracr",
+    "creator": "Unknown",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1FMEzdL49v2sA_duYZNo3mnGAhyTGJVa1/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1nuoFb-_NKrU7375lUryLPH_xodUMuPLp/view?usp=sharing",
+    "size": "2.0 MB",
+    "date": "2026-01-16"
   },
   {
     "id": 379,
@@ -8701,6 +8943,17 @@
     "date": "2025-11-14"
   },
   {
+    "id": 10400,
+    "name": "gp32",
+    "creator": "Unknown",
+    "system": "gp32",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/18ZVA4jAgqIyCRFQxHqs-tD8oY9H5DFKU/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1zFuytP6Zrlu14aBkFvdq_rpfZxTbvtO-/view?usp=sharing",
+    "size": "3.9 MB",
+    "date": "2026-01-16"
+  },
+  {
     "id": 865,
     "name": "gpilots",
     "creator": "Dav",
@@ -8820,6 +9073,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1y8Ks_Qbtmf4tbLUrg8F8e7geoKw8bnap/view?usp=sharing",
     "size": "4.7 MB",
     "date": "2025-11-30"
+  },
+  {
+    "id": 10275,
+    "name": "Gremlins 2 - The New Batch",
+    "creator": "Unknown",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1LjEDU8IvtqC2J2EsE9iyVW4bb3sRHyAq/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1DQ48k93Su7sXugOjVNnvgPSalnajB95B/view?usp=sharing",
+    "size": "4.1 MB",
+    "date": "2026-01-16"
   },
   {
     "id": 1019,
@@ -9746,6 +10010,17 @@
     "date": "2026-01-02"
   },
   {
+    "id": 10278,
+    "name": "Jaws",
+    "creator": "Unknown",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1xm4oU-SSKN7e5UvyfgRiyTe0eXl8cp3O/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/15d1qU_q_Y1FxNOrgCN54M1OXhJxA1s37/view?usp=sharing",
+    "size": "3.7 MB",
+    "date": "2026-01-16"
+  },
+  {
     "id": 343,
     "name": "jedi",
     "creator": "Roni",
@@ -10096,6 +10371,28 @@
     "downloadUrl": "https://drive.google.com/file/d/1oU71IS-wNVcv4Nvy1jm4eQlkjH8IRawE/view?usp=sharing",
     "size": "944.1 KB",
     "date": "2025-11-15"
+  },
+  {
+    "id": 9623,
+    "name": "kinst",
+    "creator": "Unknown",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/18wMygx7QeBNP2x8IgTkk7dUj_NgM-WjD/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/16qXmQYCLuQdeVMEksteO8zehM9zkyfcN/view?usp=sharing",
+    "size": "1.5 MB",
+    "date": "2026-01-16"
+  },
+  {
+    "id": 9622,
+    "name": "kinst2",
+    "creator": "Unknown",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1zAxp1DnATMGYP-2YZ1Mco6vu9Ac8Bike/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1j7xV2i2c7ZlI9Nv38ArERXjWBYIEhhtK/view?usp=sharing",
+    "size": "2.2 MB",
+    "date": "2026-01-16"
   },
   {
     "id": 914,
@@ -11616,6 +11913,17 @@
     "date": "2025-11-14"
   },
   {
+    "id": 10211,
+    "name": "model2",
+    "creator": "Unknown",
+    "system": "model2",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1lEU6z67uu7AtJDS6FA92yVZ0vEciUczg/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1D_oFdMu3lsdw52vB7l7GtrrQ3Q8ToFq2/view?usp=sharing",
+    "size": "4.4 MB",
+    "date": "2026-01-16"
+  },
+  {
     "id": 8636,
     "name": "model3",
     "creator": "Dav",
@@ -12188,6 +12496,28 @@
     "date": "2026-01-14"
   },
   {
+    "id": 10398,
+    "name": "Need for Speed - Underground 2 (USA)",
+    "creator": "Unknown",
+    "system": "playstation2",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Sbg2enYcnYM87L8EZrUtbocUTrvcQsWT/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/12guLLT9BU8HdCHFs0C8RMGgtxh71VJel/view?usp=sharing",
+    "size": "5.0 MB",
+    "date": "2026-01-16"
+  },
+  {
+    "id": 11003,
+    "name": "Need for Speed - Underground 2 (USA)",
+    "creator": "Unknown",
+    "system": "windows",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1c4VnyFl4axTpOpMMoo-DiQ4eO0KzwWJb/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1yazjcQCVPRk4cYUJ7m97UWb7cXqC01t3/view?usp=sharing",
+    "size": "5.0 MB",
+    "date": "2026-01-16"
+  },
+  {
     "id": 10,
     "name": "nemo",
     "creator": "Roni",
@@ -12276,6 +12606,17 @@
     "date": "2026-01-10"
   },
   {
+    "id": 10412,
+    "name": "neogeocd",
+    "creator": "Unknown",
+    "system": "neogeocd",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1D94U9eqdRp0MbFu7d430tbxmMsdmvS_Y/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1P_-BLtjO8iewttJkEgbWRSGVhwSiBYfH/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-01-16"
+  },
+  {
     "id": 820,
     "name": "neomrdo",
     "creator": "Dav",
@@ -12285,6 +12626,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1Zja1aYytLtHx4yd4uJVc3_jwfKyARjVc/view?usp=sharing",
     "size": "1.8 MB",
     "date": "2025-11-14"
+  },
+  {
+    "id": 11001,
+    "name": "Neon Inferno",
+    "creator": "Unknown",
+    "system": "windows",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/13tWamwD1YMDvE9qjwyfwDtTW5OMaU3rR/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1_e-Fv_oCFjgCDr744VpfkceQ6leOnQo2/view?usp=sharing",
+    "size": "5.0 MB",
+    "date": "2026-01-16"
   },
   {
     "id": 8776,
@@ -12835,6 +13187,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1ZFJf0OSgAtEwlG4Nb6Vknrb0fFWGkgSE/view?usp=sharing",
     "size": "1.1 MB",
     "date": "2026-01-14"
+  },
+  {
+    "id": 10405,
+    "name": "pcfx",
+    "creator": "Unknown",
+    "system": "pcfx",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1LoePJLkYqGv1PQa4v4XUl5UhNdDLQHq_/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1JvBH41QuxYGxI68bIEiKERQ8mZmtMGP1/view?usp=sharing",
+    "size": "1.0 MB",
+    "date": "2026-01-16"
   },
   {
     "id": 132,
@@ -13673,6 +14036,39 @@
     "date": "2025-11-13"
   },
   {
+    "id": 9626,
+    "name": "ptblank",
+    "creator": "Unknown",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1tebcjJOF9xow3_qF4HfF0wOg0rWnsjHx/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1CErjWwH8ayLG8tv111rru9re-JUg1864/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-01-16"
+  },
+  {
+    "id": 9625,
+    "name": "ptblank2",
+    "creator": "Unknown",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1JhusmW1uG6dh2Uz1zZSEroaGEBc5yMpC/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Fj1wtX2GF710HwX_-DIuzykHqr4EOfgT/view?usp=sharing",
+    "size": "2.2 MB",
+    "date": "2026-01-16"
+  },
+  {
+    "id": 9624,
+    "name": "ptblank3",
+    "creator": "Unknown",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1oVmjqiHCWqS5DWRToZg2WSiQoNNx6JjA/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1NJiZ_6WITqwo5RQ_uKZQdiQvk-LzyqjB/view?usp=sharing",
+    "size": "3.1 MB",
+    "date": "2026-01-16"
+  },
+  {
     "id": 118,
     "name": "puckman",
     "creator": "Roni",
@@ -14320,6 +14716,28 @@
     "downloadUrl": "https://drive.google.com/file/d/1qzePqWDt3hoaF7fBEOFiCIpuNF7hL1F6/view?usp=sharing",
     "size": "3.2 MB",
     "date": "2025-11-01"
+  },
+  {
+    "id": 9456,
+    "name": "rygar",
+    "creator": "Unknown",
+    "system": "tecmo",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1IjQ6KjeM5tH6oxzHqYnLuicF0NLQCi3L/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Fi4RhRGx_RGUbrOOe1FMyrsAkzWJmWNe/view?usp=sharing",
+    "size": "3.2 MB",
+    "date": "2026-01-15"
+  },
+  {
+    "id": 9631,
+    "name": "rygar",
+    "creator": "Unknown",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1_7P8wXgl-XufLhPEwG7LjbIMW9Mr_FYm/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1rFYdPtbWanSciIYVFs7SVPaxBwjjglD1/view?usp=sharing",
+    "size": "3.2 MB",
+    "date": "2026-01-16"
   },
   {
     "id": 799,
@@ -15773,6 +16191,17 @@
     "date": "2026-01-11"
   },
   {
+    "id": 10416,
+    "name": "Super Mario 64 (USA)",
+    "creator": "Unknown",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1bxrFp8G22qI9hCu8TrVG9lhQhwvohWh0/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1_IA38145RTsMCFWE0CwDfDiaGYScnB_g/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-01-16"
+  },
+  {
     "id": 690,
     "name": "Super Mario Bros. 3 (Europe)",
     "creator": "huhe-8554",
@@ -15817,6 +16246,17 @@
     "date": "2026-01-14"
   },
   {
+    "id": 10390,
+    "name": "supracan",
+    "creator": "Unknown",
+    "system": "superacan",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1g0T5mUEjvZ5y3dvI9FY4Hb8zFSNcug8A/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1QJp7FrTES3OFCfgq2E5HoYX7PeyPFk0H/view?usp=sharing",
+    "size": "2.5 MB",
+    "date": "2026-01-16"
+  },
+  {
     "id": 627,
     "name": "suprslam",
     "creator": "Roni",
@@ -15859,6 +16299,17 @@
     "downloadUrl": "https://drive.google.com/file/d/19M2C4Ze4lGoaMyMQ0obYEbrBBiiBI4yR/view?usp=sharing",
     "size": "2.0 MB",
     "date": "2026-01-14"
+  },
+  {
+    "id": 10373,
+    "name": "switch_V1",
+    "creator": "Unknown",
+    "system": "switch",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/18J41dXj-39Brg4A0gozAO2jtxLGoiakq/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1BfQlFfShziRB2imUywHgSwFWpdkzP_oH/view?usp=sharing",
+    "size": "6.3 MB",
+    "date": "2026-01-16"
   },
   {
     "id": 691,
@@ -15914,6 +16365,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1cO3pc_ut3WOIv1VOUOh855TBUzPtv9Na/view?usp=sharing",
     "size": "3.9 MB",
     "date": "2026-01-15"
+  },
+  {
+    "id": 9632,
+    "name": "tbowl",
+    "creator": "Unknown",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1nbdaurqFFgkVeSNb7dFdkXcAUAsOpdOq/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1QlQ8PmTLI2s90E4UkI5lsB1odY0d3oFU/view?usp=sharing",
+    "size": "3.9 MB",
+    "date": "2026-01-16"
   },
   {
     "id": 7891,
@@ -16433,6 +16895,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 11004,
+    "name": "UnderMine2",
+    "creator": "Unknown",
+    "system": "windows",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Q7kZixi8Nhhqxzl22D243wjxRTk7tyYM/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1JrmKi34fvWZ8ACYGLkvAc56nXJjPm8sA/view?usp=sharing",
+    "size": "8.7 MB",
+    "date": "2026-01-16"
+  },
+  {
     "id": 25,
     "name": "unsquad",
     "creator": "Roni",
@@ -16827,6 +17300,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1QQmFc0PrRwxx7KS-w4CTgFQbYod01XWb/view?usp=sharing",
     "size": "2.1 MB",
     "date": "2025-11-14"
+  },
+  {
+    "id": 10366,
+    "name": "wii",
+    "creator": "Unknown",
+    "system": "wii",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1dLusP5qE1y0Zw80DT0zDPlJ4GfQouEjm/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Qh3coyXYf8L2mH7_1Kq436-Rmav01o1t/view?usp=sharing",
+    "size": "5.5 MB",
+    "date": "2026-01-16"
   },
   {
     "id": 8777,
