@@ -145,7 +145,7 @@
   {
     "id": 10363,
     "name": "_default",
-    "creator": "Unknown",
+    "creator": "Akeshi",
     "system": "wii",
     "category": "default-themes",
     "imageUrl": "https://drive.google.com/file/d/19a1ooyYIBD6zzan0E3Pu6nnmu24Mis5F/view?usp=sharing",
@@ -156,7 +156,7 @@
   {
     "id": 10383,
     "name": "_default",
-    "creator": "Unknown",
+    "creator": "Kairos182",
     "system": "switch",
     "category": "default-themes",
     "imageUrl": "https://drive.google.com/file/d/1uipiH9j2nXron5rtHBjcxM5KY4CDVT8n/view?usp=sharing",
@@ -167,7 +167,7 @@
   {
     "id": 10414,
     "name": "_default",
-    "creator": "Unknown",
+    "creator": "Kairos182",
     "system": "neogeocd",
     "category": "default-themes",
     "imageUrl": "https://drive.google.com/file/d/1iOaSbAhdEO1BzyuGg7HCOrbOuwoT0zxH/view?usp=sharing",
@@ -178,7 +178,7 @@
   {
     "id": 10432,
     "name": "_default",
-    "creator": "Unknown",
+    "creator": "Akeshi",
     "system": "nintendo64",
     "category": "default-themes",
     "imageUrl": "https://drive.google.com/file/d/1h7H1GO3SoVBLlhGWWtZvew6Q9lqN7cwn/view?usp=sharing",
@@ -849,7 +849,7 @@
   {
     "id": 10279,
     "name": "Adventures in the Magic Kingdom",
-    "creator": "Unknown",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/19sgKX9VHxrZ5a9eVZirky2Fhh9mICzyS/view?usp=sharing",
@@ -2730,7 +2730,7 @@
   {
     "id": 10274,
     "name": "Batman Returns",
-    "creator": "Unknown",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1LiZR7HO22rlFMGDTn3JUfvBM-nmzXj3L/view?usp=sharing",
@@ -3104,7 +3104,7 @@
   {
     "id": 11002,
     "name": "Blasphemous",
-    "creator": "Unknown",
+    "creator": "Kairos182",
     "system": "windows",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1LyIeL_SdKI0dCT9x5FKFdamXCvx2t3zk/view?usp=sharing",
@@ -3962,7 +3962,7 @@
   {
     "id": 10273,
     "name": "Captain America and the Avengers",
-    "creator": "Unknown",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1KGDGOBRuUzDOUNu0JEwtqJEec0PncLIP/view?usp=sharing",
@@ -4369,7 +4369,7 @@
   {
     "id": 10272,
     "name": "Chip 'n Dale Rescue Rangers",
-    "creator": "Unknown",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/14mZJbidTP3M-mjXoHQPAa48wsJJiC5xo/view?usp=sharing",
@@ -4556,7 +4556,7 @@
   {
     "id": 10976,
     "name": "colecovision",
-    "creator": "Unknown",
+    "creator": "Akeshi",
     "system": "colecovision",
     "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1zdrwLNL1W_St4AA20ruCoxSvbbm2Sbrv/view?usp=sharing",
@@ -5161,7 +5161,7 @@
   {
     "id": 10280,
     "name": "Darkwing Duck",
-    "creator": "Unknown",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1s9BTyFtu7GJ3qHJEeCTPQ8tEyw0mvAew/view?usp=sharing",
@@ -5711,7 +5711,7 @@
   {
     "id": 9452,
     "name": "deroon",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "tecmo",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1AzhxD344VHaHnMca5yQlHtoSIt-u2pqz/view?usp=sharing",
@@ -5722,7 +5722,7 @@
   {
     "id": 9627,
     "name": "deroon",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1E4F5mvu9R1Cd384wXC7IpdPZ5TdgEcqQ/view?usp=sharing",
@@ -5788,7 +5788,7 @@
   {
     "id": 10277,
     "name": "Dick Tracy",
-    "creator": "Unknown",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1gEWI1hRAKO58P8-1J1KLWOU1YMqDvZAm/view?usp=sharing",
@@ -6019,7 +6019,7 @@
   {
     "id": 9455,
     "name": "doapp",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "tecmo",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1R54FzQVvwRo0h4odSY4dcNwe3v7Xsa9w/view?usp=sharing",
@@ -6030,7 +6030,7 @@
   {
     "id": 9630,
     "name": "doapp",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1JT9sv-QpPZ1i21EoBLVPEt8ndRgyi3mO/view?usp=sharing",
@@ -6591,7 +6591,7 @@
   {
     "id": 9454,
     "name": "eightfrc",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "tecmo",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1sWudxIVr8HJxpE_m7ChhfpbZN9XxKHkU/view?usp=sharing",
@@ -6602,7 +6602,7 @@
   {
     "id": 9629,
     "name": "eightfrc",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1MfTjl13WuJ7rzTePOC0wso47elUr5nWi/view?usp=sharing",
@@ -7020,7 +7020,7 @@
   {
     "id": 10276,
     "name": "Felix the Cat",
-    "creator": "Unknown",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1SyAOkJ36GNo5xvyEJV4N6HrmVVYoygO9/view?usp=sharing",
@@ -7900,7 +7900,7 @@
   {
     "id": 10973,
     "name": "gc",
-    "creator": "Unknown",
+    "creator": "Kairos182",
     "system": "gamecube",
     "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1loLrn4ENUkSlEtOodUXpJBpayyAIJAVg/view?usp=sharing",
@@ -8120,7 +8120,7 @@
   {
     "id": 9453,
     "name": "glpracr",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "tecmo",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/158yNNllwSN7nGqPkEtOfuP7GGLLKJehe/view?usp=sharing",
@@ -8131,7 +8131,7 @@
   {
     "id": 9628,
     "name": "glpracr",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1FMEzdL49v2sA_duYZNo3mnGAhyTGJVa1/view?usp=sharing",
@@ -8945,7 +8945,7 @@
   {
     "id": 10400,
     "name": "gp32",
-    "creator": "Unknown",
+    "creator": "Akeshi",
     "system": "gp32",
     "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/18ZVA4jAgqIyCRFQxHqs-tD8oY9H5DFKU/view?usp=sharing",
@@ -9077,7 +9077,7 @@
   {
     "id": 10275,
     "name": "Gremlins 2 - The New Batch",
-    "creator": "Unknown",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1LjEDU8IvtqC2J2EsE9iyVW4bb3sRHyAq/view?usp=sharing",
@@ -10012,7 +10012,7 @@
   {
     "id": 10278,
     "name": "Jaws",
-    "creator": "Unknown",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1xm4oU-SSKN7e5UvyfgRiyTe0eXl8cp3O/view?usp=sharing",
@@ -10375,7 +10375,7 @@
   {
     "id": 9623,
     "name": "kinst",
-    "creator": "Unknown",
+    "creator": "Akeshi",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/18wMygx7QeBNP2x8IgTkk7dUj_NgM-WjD/view?usp=sharing",
@@ -10386,7 +10386,7 @@
   {
     "id": 9622,
     "name": "kinst2",
-    "creator": "Unknown",
+    "creator": "Akeshi",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1zAxp1DnATMGYP-2YZ1Mco6vu9Ac8Bike/view?usp=sharing",
@@ -11915,7 +11915,7 @@
   {
     "id": 10211,
     "name": "model2",
-    "creator": "Unknown",
+    "creator": "Akeshi",
     "system": "model2",
     "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1lEU6z67uu7AtJDS6FA92yVZ0vEciUczg/view?usp=sharing",
@@ -12498,7 +12498,7 @@
   {
     "id": 10398,
     "name": "Need for Speed - Underground 2 (USA)",
-    "creator": "Unknown",
+    "creator": "Kairos182",
     "system": "playstation2",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1Sbg2enYcnYM87L8EZrUtbocUTrvcQsWT/view?usp=sharing",
@@ -12509,7 +12509,7 @@
   {
     "id": 11003,
     "name": "Need for Speed - Underground 2 (USA)",
-    "creator": "Unknown",
+    "creator": "Kairos182",
     "system": "windows",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1c4VnyFl4axTpOpMMoo-DiQ4eO0KzwWJb/view?usp=sharing",
@@ -12608,7 +12608,7 @@
   {
     "id": 10412,
     "name": "neogeocd",
-    "creator": "Unknown",
+    "creator": "Kairos182",
     "system": "neogeocd",
     "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1D94U9eqdRp0MbFu7d430tbxmMsdmvS_Y/view?usp=sharing",
@@ -12630,7 +12630,7 @@
   {
     "id": 11001,
     "name": "Neon Inferno",
-    "creator": "Unknown",
+    "creator": "Kairos182",
     "system": "windows",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/13tWamwD1YMDvE9qjwyfwDtTW5OMaU3rR/view?usp=sharing",
@@ -13191,7 +13191,7 @@
   {
     "id": 10405,
     "name": "pcfx",
-    "creator": "Unknown",
+    "creator": "Akeshi",
     "system": "pcfx",
     "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1LoePJLkYqGv1PQa4v4XUl5UhNdDLQHq_/view?usp=sharing",
@@ -14038,7 +14038,7 @@
   {
     "id": 9626,
     "name": "ptblank",
-    "creator": "Unknown",
+    "creator": "Akeshi",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1tebcjJOF9xow3_qF4HfF0wOg0rWnsjHx/view?usp=sharing",
@@ -14049,7 +14049,7 @@
   {
     "id": 9625,
     "name": "ptblank2",
-    "creator": "Unknown",
+    "creator": "Akeshi",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1JhusmW1uG6dh2Uz1zZSEroaGEBc5yMpC/view?usp=sharing",
@@ -14060,7 +14060,7 @@
   {
     "id": 9624,
     "name": "ptblank3",
-    "creator": "Unknown",
+    "creator": "Akeshi",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1oVmjqiHCWqS5DWRToZg2WSiQoNNx6JjA/view?usp=sharing",
@@ -14720,7 +14720,7 @@
   {
     "id": 9456,
     "name": "rygar",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "tecmo",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1IjQ6KjeM5tH6oxzHqYnLuicF0NLQCi3L/view?usp=sharing",
@@ -14731,7 +14731,7 @@
   {
     "id": 9631,
     "name": "rygar",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1_7P8wXgl-XufLhPEwG7LjbIMW9Mr_FYm/view?usp=sharing",
@@ -16193,7 +16193,7 @@
   {
     "id": 10416,
     "name": "Super Mario 64 (USA)",
-    "creator": "Unknown",
+    "creator": "Finch",
     "system": "nintendo64",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1bxrFp8G22qI9hCu8TrVG9lhQhwvohWh0/view?usp=sharing",
@@ -16248,7 +16248,7 @@
   {
     "id": 10390,
     "name": "supracan",
-    "creator": "Unknown",
+    "creator": "Akeshi",
     "system": "superacan",
     "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1g0T5mUEjvZ5y3dvI9FY4Hb8zFSNcug8A/view?usp=sharing",
@@ -16303,7 +16303,7 @@
   {
     "id": 10373,
     "name": "switch_V1",
-    "creator": "Unknown",
+    "creator": "Kairos182",
     "system": "switch",
     "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/18J41dXj-39Brg4A0gozAO2jtxLGoiakq/view?usp=sharing",
@@ -16369,7 +16369,7 @@
   {
     "id": 9632,
     "name": "tbowl",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1nbdaurqFFgkVeSNb7dFdkXcAUAsOpdOq/view?usp=sharing",
@@ -16897,7 +16897,7 @@
   {
     "id": 11004,
     "name": "UnderMine2",
-    "creator": "Unknown",
+    "creator": "Kairos182",
     "system": "windows",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1Q7kZixi8Nhhqxzl22D243wjxRTk7tyYM/view?usp=sharing",
@@ -17304,7 +17304,7 @@
   {
     "id": 10366,
     "name": "wii",
-    "creator": "Unknown",
+    "creator": "Kairos182",
     "system": "wii",
     "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1dLusP5qE1y0Zw80DT0zDPlJ4GfQouEjm/view?usp=sharing",
