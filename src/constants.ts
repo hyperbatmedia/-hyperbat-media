@@ -40,7 +40,7 @@ export const systemsData: SystemsDataStructure = {
         },
         namco: { label: 'NAMCO', systems: ['Namco Classique', 'Namco System', 'Namco System 2x6', 'Namco System 10', 'Namco System 11', 'Namco System 12', 'Namco System 21', 'Namco System 22', 'Namco System 23', 'Namco System 246', 'Namco System 256', 'Namco System Super 256', 'Namco System 357', 'Namco System 369', 'Namco System ES1', 'Namco System ES2', 'Namco System ES3', 'Namco System FL', 'Namco System NA-1', 'Namco System NA-2'] },
         konami: { label: 'KONAMI', systems: ['Konami Classique', 'Konami', 'Konami Bubble System', 'Konami GX', 'Konami GTI', 'Konami M2', 'Konami Hornet', 'Konami Python', 'Konami Viper', 'Konami Firebeat', 'Konami Twinkle', 'Konami Windy', 'Konami Windy X2', 'Konami System 573', 'Bemani DJ Main', 'Bemani PC', 'e-Amusement'] },
-        taito: { label: 'TAITO', systems: ['Taito Classique', 'Taito', 'Taito F3', 'Taito G-Net', 'Type X', 'Type X2', 'Type X3', 'Type X Zero'] },
+        taito: { label: 'TAITO', systems: ['Taito Classique', 'Taito', 'Taito F3', 'Taito G-Net', 'Type X', 'Type X2', 'Type X3', 'Type X Zero', 'NESiCAxLive', 'NESiCAxLive 2'] },
         'nintendo-arcade': { label: 'NINTENDO', systems: ['PlayChoice-10', 'VS System'] },
         triforce: { label: 'TRIFORCE', systems: ['Triforce'] },
         'atari-arcade': { label: 'ATARI', systems: ['Atari Classique', 'Atari System 1', 'Atari System 2'] },
@@ -66,6 +66,8 @@ export const systemsData: SystemsDataStructure = {
         technoparrot: { label: 'TECHNOPARROT', systems: ['TechnoParrot'] },
         williams: { label: 'WILLIAMS', systems: ['Williams Classic'] },
         tecmo: { label: 'TECMO', systems: ['Tecmo'] },
+        rawthrills: { label: 'RAW THRILLS', systems: ['Raw Thrills'] },
+        igt: { label: 'IGT SLOTS', systems: ['IGT Slots'] },
         'autres-arcade': { label: 'AUTRES CONSTRUCTEURS', systems: ['AAE ', 'Daphne (LaserDisc)', 'Singe (LaserDisc)', 'American Laser Games', 'Gaelco', 'IGS', 'Irem', 'Technos', 'Midway', 'FBNeo'] }
     },
     home: {

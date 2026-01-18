@@ -214,10 +214,164 @@
     "creator": "Christophe Verez",
     "system": "atari2600",
     "category": "default-themes",
-    "imageUrl": "https://drive.google.com/file/d/18jFXL8zKJMKXF3NeXtiEMjZki38ePo19/view?usp=sharing",
+    "imageUrl": "https://drive.google.com/file/d/1OhbLz8bj3ozsZUOQxw9mJLnVkSaKchFg/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1o0Ci7h6TKtSuttWthBVUAD-WMdxjiqqG/view?usp=sharing",
     "size": "1.6 MB",
+    "date": "2026-01-18"
+  },
+  {
+    "id": 15070,
+    "name": "_default",
+    "creator": "Roni",
+    "system": "konamibubblesystem",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1xK95mszZLr1bA6jWQL9bux41oJzO-qtp/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1DH-Bt0oC69xwtJXsWHCgzmFAx4-1BoVl/view?usp=sharing",
+    "size": "666.5 KB",
     "date": "2026-01-17"
+  },
+  {
+    "id": 15102,
+    "name": "_default",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1robfNjJnzdQ6onPwrZuDvPC9kHSCTM1N/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1G6MP_UnqSiw1N-veek5DpBE-7q7mPw74/view?usp=sharing",
+    "size": "724.5 KB",
+    "date": "2026-01-17"
+  },
+  {
+    "id": 15980,
+    "name": "_default",
+    "creator": "Christophe",
+    "system": "pcengineturbografx16",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1SbfMUUwRFWYcH4tmbHNueeyPqO-XavDG/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/17R1syjz1WahfdJB-vP97G_sRd7iUQtrP/view?usp=sharing",
+    "size": "539.9 KB",
+    "date": "2026-01-18"
+  },
+  {
+    "id": 16128,
+    "name": "_default",
+    "creator": "Christophe",
+    "system": "playstation2",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1X20_2fFpzRFqnX0RQ_mLqcINnIPsQI74/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/15CW9scuX5hfNwllNHJI2L3d2_F1zi5wC/view?usp=sharing",
+    "size": "4.0 MB",
+    "date": "2026-01-18"
+  },
+  {
+    "id": 16135,
+    "name": "_default",
+    "creator": "Christophe",
+    "system": "playstation3",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1-9OeUS5AyiCCPeId3Ly_8fQto_Y-zEg2/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1fBUxi0x2UGtojZsFCKEnbKDWRvhzXaxX/view?usp=sharing",
+    "size": "1.5 MB",
+    "date": "2026-01-18"
+  },
+  {
+    "id": 16136,
+    "name": "_default",
+    "creator": "Christophe",
+    "system": "playstation",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1S2-sv1fIJBWoRpbmCeU6rsHi3wD_fh2h/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/18m65j75ClXsqF5bgkE5D7ja9pT-pTdB4/view?usp=sharing",
+    "size": "1.9 MB",
+    "date": "2026-01-18"
+  },
+  {
+    "id": 16141,
+    "name": "_default",
+    "creator": "Akeshi",
+    "system": "gameboyadvance",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1bGp8j4O4-_YkFMk3fpIk-5MIKuzz3BrY/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1AoiRTT98tZgzQNNRvxAoxMCl4WXQAmpN/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-01-18"
+  },
+  {
+    "id": 16146,
+    "name": "_default",
+    "creator": "Akeshi",
+    "system": "gameboycolor",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1xLYi951QVRRLe0TFlLi14qYXqJ7EICj5/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1aXYWJyZb01X2JJyRZFeB61a_G3XbvqBu/view?usp=sharing",
+    "size": "1.9 MB",
+    "date": "2026-01-18"
+  },
+  {
+    "id": 16723,
+    "name": "_default",
+    "creator": "Christophe",
+    "system": "gamecube",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1nJuJ44uEH14M8yLkA4xJZG4pLN4JotS_/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1jh79TYk9o2jv3wYYigbQxNsnh4ZrR-yv/view?usp=sharing",
+    "size": "2.1 MB",
+    "date": "2026-01-18"
+  },
+  {
+    "id": 16725,
+    "name": "_default",
+    "creator": "Christophe",
+    "system": "atari7800",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1cdnlP9In-HYUx8M51jIgJli8JXKWl9Vx/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1X8XtTlJHfjhI8DnGJYLiwQifDmylCdUS/view?usp=sharing",
+    "size": "1.3 MB",
+    "date": "2026-01-18"
+  },
+  {
+    "id": 16727,
+    "name": "_default",
+    "creator": "Christophe",
+    "system": "atarijaguar",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1D9QLmE8m_cyjyhiSYAnpRmlk8Elb82oQ/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1OnjPzLMq1DiyctB1j9bTaei43TIuGOao/view?usp=sharing",
+    "size": "839.0 KB",
+    "date": "2026-01-18"
+  },
+  {
+    "id": 16127,
+    "name": "_default v1",
+    "creator": "Christophe",
+    "system": "playstation2",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1wuZsEEih9TscL1tkDmk6rKFa6K2IHEXT/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1jhDMnybTINK98kxkFGZhBreixT2TEaKJ/view?usp=sharing",
+    "size": "22.0 MB",
+    "date": "2026-01-18"
+  },
+  {
+    "id": 16726,
+    "name": "_default v1",
+    "creator": "Christophe",
+    "system": "atarijaguar",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1p6cOL8s2-C0ury6nPBMYshizyHQwk-1s/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1f-IAhsnFQ81M2xw1OypCCGqRYCHtOW6O/view?usp=sharing",
+    "size": "272.6 KB",
+    "date": "2026-01-18"
+  },
+  {
+    "id": 16165,
+    "name": "_default_V1",
+    "creator": "Christophe",
+    "system": "nintendo64",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1vrnKXhX3eSJ8SSlp2bjoZs-cmjFCyHBE/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1TkyFWQntJ_HrxN1qvFZFfNOI79SFuSmk/view?usp=sharing",
+    "size": "1.1 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 550,
@@ -847,6 +1001,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 15122,
+    "name": "actfancr",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/19fakd0quq-Z-8oAztmSlV5ulcqHvy8tT/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1i2KhgxJGeXUfelxYc4Fe6eD6ZvNZrs4w/view?usp=sharing",
+    "size": "1006.8 KB",
+    "date": "2025-11-13"
+  },
+  {
     "id": 1193,
     "name": "Action Fighter (USA, Europe)",
     "creator": "Mrfomt",
@@ -900,6 +1065,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1fwtJiFRHQAncBT363mvnQQgqyBcgy63a/view?usp=sharing",
     "size": "4.0 MB",
     "date": "2025-11-07"
+  },
+  {
+    "id": 15059,
+    "name": "adrenaline",
+    "creator": "KevoBatoYT",
+    "system": "adrenalineamusement",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/14XEqPWUUsng3ncmvzgycVZ1rm7oWxmVi/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/13uWp7iy2Rvf6qMUBYm8UpNADNPnvHJj9/view?usp=sharing",
+    "size": "8.7 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 989,
@@ -1230,6 +1406,17 @@
     "downloadUrl": "https://drive.google.com/file/d/12d7LXmyqRk2SF6i179yrLoKeAhvllaU4/view?usp=sharing",
     "size": "1.3 MB",
     "date": "2026-01-11"
+  },
+  {
+    "id": 15058,
+    "name": "aleck64",
+    "creator": "KevoBatoYT",
+    "system": "aleck64",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1RyfsQ-jugQ4klkuDc79i_uWTHfijZwU5/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1_nK4dxECzgT9uJHg4F0w19fC2JTudzHk/view?usp=sharing",
+    "size": "12.6 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 1187,
@@ -2411,7 +2598,7 @@
   {
     "id": 13418,
     "name": "atlus_V1",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "atlus",
     "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1pH96Wfud4jbYSF-oPODxiBgJWnxFfBeX/view?usp=sharing",
@@ -2596,6 +2783,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 15121,
+    "name": "backfire",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1cMuarxgRiARynuKmrN09XKr89CVETpJ6/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1YEOs0ImpPK-8T9dIpLFKpsAIUzA2-2fA/view?usp=sharing",
+    "size": "5.5 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 714,
     "name": "Bad Dudes vs. Dragon Ninja (Europe)",
     "creator": "huhe-8554",
@@ -2616,6 +2814,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1jv2e2aD_wnyRahiliFdAdTz8szVPf2JU/view?usp=sharing",
     "size": "1.6 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 15120,
+    "name": "baddudes",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1YbZ2kQNddcWh7NxtcvqCZnIKBND1mBOn/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/16gV62IJA7Vs6bhBayLsJHJo2be0NBAqW/view?usp=sharing",
+    "size": "1.6 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 70,
@@ -4092,6 +4301,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 15119,
+    "name": "captaven",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1sZhsPrP9Hm2uTUfG1VDY-N4DD9HaxvuA/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1jjQBKnZpkS-5vRC5TGBxYhhgk0nbZ09L/view?usp=sharing",
+    "size": "2.2 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 46,
     "name": "captcomm",
     "creator": "Roni",
@@ -4332,6 +4552,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1sXsAJR6O32X5Y1kAyGCdZ-QXiWMGPlR0/view?usp=sharing",
     "size": "3.1 MB",
     "date": "2026-01-02"
+  },
+  {
+    "id": 16746,
+    "name": "cgenie",
+    "creator": "KevoBatoYT",
+    "system": "eg2000",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1jvLSECEmaWIgTa-DfqRUVBIWrR2bh_Cm/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1x5Sa5xk4UgjW-PuMzcjU19VXjtCZscWw/view?usp=sharing",
+    "size": "8.4 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 471,
@@ -4653,6 +4884,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 15118,
+    "name": "cninja",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1b6DB89mcbOMamTbjK55xKifAWvP186nj/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1NYg2cJgVfqZ5BbKaKDcKgN2-oeBSyFk6/view?usp=sharing",
+    "size": "3.4 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 66,
     "name": "cobraab",
     "creator": "pento5185",
@@ -4915,6 +5157,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1iv54a8IfhP8WST4e8lZ0Rf0ARxLgGkK1/view?usp=sharing",
     "size": "1.9 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 15117,
+    "name": "cppicf",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1e5ceDB2yNOC4DPno5kNaU2jqTQ8iuaRa/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1CLuLuqw6z-LBKBtvWg85Q-zx7tydiGFQ/view?usp=sharing",
+    "size": "1.9 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 2433,
@@ -5214,6 +5467,17 @@
     "date": "2025-11-30"
   },
   {
+    "id": 16609,
+    "name": "Daffy Duck in Hollywood (Europe, Brazil) (En,Fr,De,Es,It)",
+    "creator": "yanni9867",
+    "system": "mastersystem",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1jXOZG-I4uSzGeuFOtJ_bYGdLz4M87IZQ/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1kbHv9TLUG61r7MqrhicPU96FWpGHKtvy/view?usp=sharing",
+    "size": "4.2 MB",
+    "date": "2026-01-17"
+  },
+  {
     "id": 6396,
     "name": "Daimakaimura (Japan)",
     "creator": "Finch",
@@ -5223,6 +5487,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1q7Nk3NSdX4R1x5vUJcNTk0Ydndn5StXi/view?usp=sharing",
     "size": "1.2 MB",
     "date": "2026-01-11"
+  },
+  {
+    "id": 16608,
+    "name": "Danan - The Jungle Fighter (Europe, Brazil) (En)",
+    "creator": "yanni9867",
+    "system": "mastersystem",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1WaAhRki29Wnwvwu9biPUrPA8Py0JPZnd/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1b60wdPjs418Y34ndA1lVOZqbdMWvEcfg/view?usp=sharing",
+    "size": "8.8 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 724,
@@ -5344,6 +5619,39 @@
     "downloadUrl": "https://drive.google.com/file/d/1DjXmiDLPohVMWTMK5DjJeRoQnpYE5ACt/view?usp=sharing",
     "size": "1.5 MB",
     "date": "2026-01-10"
+  },
+  {
+    "id": 15983,
+    "name": "datach_V1",
+    "creator": "KevoBatoYT",
+    "system": "datach",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1_tpHzltb5fpWMx3jdLxQ7Kbdo-zKN3Su/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1_DHKT3Wmj-NdHUwD806lK7BrWvAcpZo3/view?usp=sharing",
+    "size": "7.1 MB",
+    "date": "2026-01-18"
+  },
+  {
+    "id": 15123,
+    "name": "dataeast",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1V0g9NIBI3bt-sVQTwJlL9LcePYyonbXH/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1lXg_OJDzLu9F7-obWi4OgRh9z014FzhJ/view?usp=sharing",
+    "size": "7.8 MB",
+    "date": "2026-01-17"
+  },
+  {
+    "id": 15124,
+    "name": "dataeast Alt",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/18wZpWWFFNVhfGs3rdq76HK84OBOQOiDB/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1c03GD4ys9d9FK4anow3B0Tt3GWQfY3qX/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-01-17"
   },
   {
     "id": 1053,
@@ -5720,6 +6028,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 16607,
+    "name": "Dead Angle (USA, Europe, Brazil) (En)",
+    "creator": "yanni9867",
+    "system": "mastersystem",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1_vweaSDfdmzI2fUXtCW5ujnJ_c3m45jI/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1DSeea3NwVEAekEKoAhan0g105aGLC_3j/view?usp=sharing",
+    "size": "7.3 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 4535,
     "name": "Dead or Alive 5 - Last Round",
     "creator": "huhe-8554",
@@ -5949,6 +6268,17 @@
     "downloadUrl": "https://drive.google.com/file/d/12yeIIfgQrIiK5L0TiKzrNAl7AKSXThou/view?usp=sharing",
     "size": "5.8 MB",
     "date": "2026-01-16"
+  },
+  {
+    "id": 16606,
+    "name": "Dick Tracy (USA, Europe, Brazil) (En)",
+    "creator": "yanni9867",
+    "system": "mastersystem",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1oGT55IlVHSqfnBjWdU6nSu34gGtsBiVI/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1jCeKkFAulYvOoCgy5u3MmYmObFn_KI7S/view?usp=sharing",
+    "size": "8.4 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 1110,
@@ -7040,6 +7370,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 16745,
+    "name": "exl100",
+    "creator": "KevoBatoYT",
+    "system": "exelvisionexl100",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1UNqO9wPZcOnRyEFxmoBw__nvu6ywLg31/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/12MfQINYlwJ-t2_t4VNX6v338PLOtXYp6/view?usp=sharing",
+    "size": "1.1 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 756,
     "name": "F-Zero (Europe)",
     "creator": "pento5185",
@@ -7258,6 +7599,17 @@
     "downloadUrl": "https://drive.google.com/file/d/14CwssEn0P2zSCObekOMKatrAIt9VB8CF/view?usp=sharing",
     "size": "4.2 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 15116,
+    "name": "fghthist",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1NjhMVA492jELb9Ad-7R-OPvdsB9gaDDB/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1e8TmVSWros2Kw5RIXX9KBngV2fRcENrk/view?usp=sharing",
+    "size": "4.2 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 1071,
@@ -7700,6 +8052,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 15115,
+    "name": "funkyjet",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/11UlxKv3AufdcpHDv6pwuNwI-yJ4fVDCn/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1pNTakl6J0f5Cn-cqave3cUiWWwEfCX5P/view?usp=sharing",
+    "size": "1.7 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 393,
     "name": "futari15",
     "creator": "Dav",
@@ -8017,6 +8380,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1DKhTaA1Fw_ZVVAMPv0oMVmfzGIbRrrq0/view?usp=sharing",
     "size": "2.3 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 15114,
+    "name": "gatedoom",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1MjD0t5qaAHiiIBELFfnw_4t-M88CeAGt/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1QEUo_0z1vcP63tS7BG36TaLjIpwOIhIX/view?usp=sharing",
+    "size": "2.3 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 385,
@@ -9130,6 +9504,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 15113,
+    "name": "gondo",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1yuEP0BLZIPhOYL0r1oyTMnscmtnw6NoG/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/11EL6TyUVt7GypU35rQtrRRxAYUJvWXS-/view?usp=sharing",
+    "size": "2.7 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 937,
     "name": "Goosebumps HorrorLand",
     "creator": "KevoBatoYT",
@@ -10043,6 +10428,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 15061,
+    "name": "igtslots",
+    "creator": "KevoBatoYT",
+    "system": "igtslots",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1AyCRliTY1ul_EMzSQwqNNg87uP_j8er1/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1v1YF9t5QC4cQR3vz8uuhfq2QxfJOsj4b/view?usp=sharing",
+    "size": "35.1 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 350,
     "name": "ikari",
     "creator": "Sk0ney",
@@ -10637,6 +11033,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 15112,
+    "name": "karnov",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1GAC0wHOS4tS1P7a4jTOZetBz66wKdQez/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1sjtyzQGkK8fXvjsrEESlrZk0RcVR6lv3/view?usp=sharing",
+    "size": "4.3 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 859,
     "name": "karnovr",
     "creator": "Dav",
@@ -10679,6 +11086,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1loEHEhXp3oZ8Mv6l0L3Fs-Nk-DWRkrzL/view?usp=sharing",
     "size": "2.0 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 15111,
+    "name": "kchamp",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1v69prNT2jCuqQ8emqNZOxrTmReKxDNwU/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1VNYfsyY1l8BBLgjvBhBLxRzjvxQX15C3/view?usp=sharing",
+    "size": "2.0 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 1164,
@@ -11107,6 +11525,17 @@
     "imageUrl": "https://drive.google.com/file/d/1nDBBvKaPCX-smaeo8T0CpOIpUDHVf8C0/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1c1Kup-l7d-CP04wqGRXqv7CXieVRCdkF/view?usp=sharing",
     "size": "691.6 KB",
+    "date": "2026-01-17"
+  },
+  {
+    "id": 15069,
+    "name": "konamiBS",
+    "creator": "Roni",
+    "system": "konamibubblesystem",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1713DicF2GTpSVrVxUzb_mdCrfMjxGCS8/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1z9YqGkInZzUY3yYxi7oPbevN6PXh-vrM/view?usp=sharing",
+    "size": "1.5 MB",
     "date": "2026-01-17"
   },
   {
@@ -11605,6 +12034,28 @@
     "date": "2026-01-15"
   },
   {
+    "id": 15110,
+    "name": "lnc",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/17fLSVD4y-LHOilPpB9vKO2jQDYZr8hna/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1IN0PCOdT_joyWt7rBWYrB_hKYWcTgoMN/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-01-18"
+  },
+  {
+    "id": 15291,
+    "name": "lnc",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Y6SrBh_nFz6Hwew7KNtvmwf8JqqWsQiL/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1EQVjPOrv0mUhp0wHgwLXmA3Mrmpxw86J/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 315,
     "name": "loht",
     "creator": "Roni",
@@ -11614,6 +12065,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1fxT4TRlqTpnU0VqitJqM-F1YV-gWHNqu/view?usp=sharing",
     "size": "3.8 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 15057,
+    "name": "loopy",
+    "creator": "KevoBatoYT",
+    "system": "casioloopy",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1xazIMrmcfxVhTPBCQlocSfvVuXsDX8fw/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/18MnmmemwzdP8ZQuk3Mp0ysiiDpv9eE10/view?usp=sharing",
+    "size": "3.3 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 4521,
@@ -12804,6 +13266,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 15109,
+    "name": "mutantf",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1DJNnWyzAHkuEwyIcqILzUeSvn5LIWAvG/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ZwPjSE6sSASWKlChXNSjccLWrRtlm1Ax/view?usp=sharing",
+    "size": "1.3 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 828,
     "name": "mutnat",
     "creator": "Dav",
@@ -12879,6 +13352,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1I12iiag0XFVQXNFgAFhfr8EvWdvrWFVm/view?usp=sharing",
     "size": "2.8 MB",
     "date": "2025-11-14"
+  },
+  {
+    "id": 15065,
+    "name": "namcoes3",
+    "creator": "KevoBatoYT",
+    "system": "namcosystemes3",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1GUvy9hf10qERhSSkforcFxKgo-XwHfLW/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1w9-go_WlYvjQRk2wmn_2gqLx_xRF_ENr/view?usp=sharing",
+    "size": "1.4 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 14146,
@@ -13299,6 +13783,28 @@
     "date": "2026-01-02"
   },
   {
+    "id": 15066,
+    "name": "nesicax",
+    "creator": "KevoBatoYT",
+    "system": "nes",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1UwYTjjmKjGNu2xFWHtnHHtRnxWHt7p3Y/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1thv-77Syma0iUJMYdvLafucVxah3a2HQ/view?usp=sharing",
+    "size": "6.2 MB",
+    "date": "2026-01-18"
+  },
+  {
+    "id": 15068,
+    "name": "nesicax2",
+    "creator": "KevoBatoYT",
+    "system": "nes",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1kigfKdxK4jn3tTEiuqZ35pfF-xNAJhW4/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1F5nsxAUWLtzWJsBkt_o6d3q1EnLi8SGi/view?usp=sharing",
+    "size": "13.0 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 8793,
     "name": "ngage",
     "creator": "Dav",
@@ -13453,6 +13959,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 15108,
+    "name": "nitrobal",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1vAwU0bRecqkSJv4z-Aq-H_yEbQEb4DRD/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Ho3jzg1C9MA3ZSluc_f9K10a0jr3zSb3/view?usp=sharing",
+    "size": "2.2 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 614,
     "name": "nmaster",
     "creator": "Roni",
@@ -13506,6 +14023,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1GdtMbfAgwGpMAkrSE9u7yo0hummJAf4_/view?usp=sharing",
     "size": "1.8 MB",
     "date": "2025-12-01"
+  },
+  {
+    "id": 15107,
+    "name": "nslasher",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Ifw6AEIve5p1Abrsu03-2-Gs7lxjcbBO/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1QiZXdgusgrqNkVbFRXkz4ztQ0AE7FtdR/view?usp=sharing",
+    "size": "1.8 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 145,
@@ -13638,6 +14166,17 @@
     "downloadUrl": "https://drive.google.com/file/d/11fUYxijB9Ez76d5xMJwN1v0cMU-GV672/view?usp=sharing",
     "size": "2.1 MB",
     "date": "2025-12-01"
+  },
+  {
+    "id": 15106,
+    "name": "oscar",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1uYcP6HTjXRVaZK056V9Ap6LAA9GNS4o3/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1f59pfzbe8UcZtAhY0ri5xj0ZwqDwXt1z/view?usp=sharing",
+    "size": "2.1 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 140,
@@ -13935,6 +14474,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1jNVGIFg3nZaamgLvbFBhWx2smW4MtFTD/view?usp=sharing",
     "size": "1.2 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 15105,
+    "name": "perfrman",
+    "creator": "Mrfomt",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1KL2swLQ1W_bQ9uti2UbxEAyOYpVWGsPk/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1o2SPP1xf3U7hT3P6DZHL69HCWmLK_rQg/view?usp=sharing",
+    "size": "1.2 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 814,
@@ -15136,6 +15686,17 @@
     "date": "2026-01-05"
   },
   {
+    "id": 15062,
+    "name": "rawthrills",
+    "creator": "KevoBatoYT",
+    "system": "rawthrills",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1wPcE6__yvKtfGRRSDed9ejs4bZJS9piz/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1H76EPRrXm9C7i_uSurg25jYx_Swc7qrZ/view?usp=sharing",
+    "size": "12.9 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 58,
     "name": "rb",
     "creator": "pento5185",
@@ -15367,6 +15928,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 15104,
+    "name": "robocop",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1uuB6rMhtAFs6-V6PqEXuJQyH9nu682pw/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1cqPOkKZ7ap9nr_oL2pqCP5UEBx89fy4g/view?usp=sharing",
+    "size": "1.9 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 698,
     "name": "RoboCop 2 (Europe)",
     "creator": "huhe-8554",
@@ -15464,6 +16036,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1qzePqWDt3hoaF7fBEOFiCIpuNF7hL1F6/view?usp=sharing",
     "size": "3.2 MB",
     "date": "2025-11-01"
+  },
+  {
+    "id": 16743,
+    "name": "rx78",
+    "creator": "KevoBatoYT",
+    "system": "rx78",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1A4-XWD5V3fyUdvQCZ2teuT201Ls6opLA/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1eV_ioNTTlIV7MjlgVFwcIm53wNTwnKWh/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 9456,
@@ -15697,6 +16280,28 @@
     "date": "2026-01-10"
   },
   {
+    "id": 15076,
+    "name": "segaer",
+    "creator": "KevoBatoYT",
+    "system": "europar",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1GNXSwW8RW2aIIxu9iK7e79D4j6KZgYQ-/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1xrTCZ8T-UFAhhbKOXTVq04EMxyqef3lC/view?usp=sharing",
+    "size": "6.7 MB",
+    "date": "2026-01-18"
+  },
+  {
+    "id": 15063,
+    "name": "segare",
+    "creator": "KevoBatoYT",
+    "system": "ringedge",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/100AK6W111zc_EPwMfpEOVQ2iYOveAbDM/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/12-rvQIjZdjkQXldxyS3oU05KprfDqUrM/view?usp=sharing",
+    "size": "1.8 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 12555,
     "name": "segartv",
     "creator": "KevoBatoYT",
@@ -15708,9 +16313,20 @@
     "date": "2026-01-17"
   },
   {
+    "id": 15064,
+    "name": "segarw",
+    "creator": "KevoBatoYT",
+    "system": "ringwide",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1_j5BzuO0RaJRmNuRHxQZxH1RBrdNkgrN/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/11wNJcBzp1HgTUagu90z3NeQ526rHeJ5u/view?usp=sharing",
+    "size": "2.7 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 14165,
     "name": "SegaSystem16",
-    "creator": "Roni",
+    "creator": "Dav",
     "system": "system16",
     "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1tM9NWM_1AER_0ylhUusAOvPnupMeSnHa/view?usp=sharing",
@@ -15721,7 +16337,7 @@
   {
     "id": 14155,
     "name": "SegaSystem18",
-    "creator": "Dav",
+    "creator": "Roni",
     "system": "system18",
     "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1bWVT2U48d9AXdgqarzHn5Ivf0rLtxQMo/view?usp=sharing",
@@ -16489,6 +17105,17 @@
     "date": "2026-01-10"
   },
   {
+    "id": 16750,
+    "name": "sorcerer_V1",
+    "creator": "KevoBatoYT",
+    "system": "sorcerer",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1ruHKpGj61T3QTGJj_TOCXEJhWOG15dKU/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/11aoH_Re2hgM6wRTd63xT_k6nY-nwKof9/view?usp=sharing",
+    "size": "4.1 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 657,
     "name": "soulsurf",
     "creator": "Roni",
@@ -17082,6 +17709,17 @@
     "date": "2026-01-17"
   },
   {
+    "id": 16099,
+    "name": "Super Mario World 2 - Yoshi's Island (USA)",
+    "creator": "Akeshi",
+    "system": "supernintendo",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1_AbUF2DilFEz1ebqrNuZsuS0F2PaUxIo/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/10D9ExB1GUpRUWJrqjggHZ60KYlNEivoc/view?usp=sharing",
+    "size": "4.7 MB",
+    "date": "2026-01-18"
+  },
+  {
     "id": 6393,
     "name": "supergrafx",
     "creator": "Finch",
@@ -17377,6 +18015,17 @@
     "downloadUrl": "https://drive.google.com/file/d/12zccxjevIxlUpT1Zy3-eo53vZDpfG4xr/view?usp=sharing",
     "size": "3.0 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 15103,
+    "name": "thndzone",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1bDWgsl65Tnxlpr_oOcK08WRsMQgYForf/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1gO-dw_ait8XT-I_6xtvkWOfAFoP7sSiZ/view?usp=sharing",
+    "size": "3.0 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 6906,
@@ -17762,6 +18411,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1nfOzMe1-Hji9Lk9nZpFfvome7jPA0GpH/view?usp=sharing",
     "size": "5.1 MB",
     "date": "2025-11-14"
+  },
+  {
+    "id": 15060,
+    "name": "typex2",
+    "creator": "KevoBatoYT",
+    "system": "taito",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/12mrTSeBnRNPRYm5XwIv_MpwWsRWqsOYt/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1SuqsvFayA0OVmVDOKh0NW69LMpZskQWS/view?usp=sharing",
+    "size": "6.9 MB",
+    "date": "2026-01-18"
   },
   {
     "id": 607,
