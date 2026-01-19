@@ -63,7 +63,7 @@ export const systemsData: SystemsDataStructure = {
         incredi: { label: 'INCREDIBLE TECHNOLOGIES', systems: ['Incredible Technologies'] },
         zinc: { label: 'ZINC', systems: ['Zinc'] },
         sammy: { label: 'SAMMY', systems: ['Sammy', 'Atomiswave', 'SSV'] },
-        technoparrot: { label: 'TECHNOPARROT', systems: ['TechnoParrot'] },
+         Teknoparrot: { label: ' Teknoparrot', systems: [' Teknoparrot'] },
         williams: { label: 'WILLIAMS', systems: ['Williams Classic'] },
         tecmo: { label: 'TECMO', systems: ['Tecmo'] },
         rawthrills: { label: 'RAW THRILLS', systems: ['Raw Thrills'] },

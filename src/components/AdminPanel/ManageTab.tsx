@@ -511,7 +511,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [isCleaning, setIsCleaning] = useState(false);
 
-  const itemsPerPage = 50;
+  const itemsPerPage = 52;
   const availableSystems = systems.filter(s => !s.isHeader && !s.isSubHeader);
 
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
