@@ -171,8 +171,11 @@ export default function HyperBatMediaSite(): JSX.Element {
     const searchLower = searchTerm.toLowerCase();
     return themes
       .filter(theme => {
+        const systemName = systemsLogic.systems.find(s => s.id === theme.system)?.name || theme.system;
+        
         const matchesSearch = theme.name.toLowerCase().includes(searchLower) || 
-                            theme.creator.toLowerCase().includes(searchLower);
+                            theme.creator.toLowerCase().includes(searchLower) ||
+                            systemName.toLowerCase().includes(searchLower);
         
         const matchesSystem = matchSystemId(theme.system, systemsLogic.selectedSystem);
         
@@ -206,7 +209,7 @@ export default function HyperBatMediaSite(): JSX.Element {
         }
         return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
       });
-  }, [searchTerm, systemsLogic.selectedSystem, systemsLogic.selectedCategory, themes, sortBy]);
+  }, [searchTerm, systemsLogic.selectedSystem, systemsLogic.selectedCategory, themes, sortBy, systemsLogic.systems]);
 
   const paginatedThemes = useMemo(() => {
     const startIndex = (currentPage - 1) * THEMES_PER_PAGE;
@@ -390,7 +393,7 @@ export default function HyperBatMediaSite(): JSX.Element {
 
                 <div className="relative" style={{ width: '800px', maxWidth: '100%', marginRight: '60px' }}>
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: '#FFA500' }} />
-                  <input type="text" placeholder="Rechercher un thème, un jeu, un créateur..." value={searchTerm}
+                  <input type="text" placeholder="Rechercher un thème, un jeu, un créateur, un système..." value={searchTerm}
                     onChange={(e) => handleSearchChange(e.target.value)}
                     className="w-full rounded-lg pl-12 pr-12 py-3 border-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
                     style={{ backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.border }} />
