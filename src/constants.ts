@@ -84,7 +84,8 @@ export const systemsData: SystemsDataStructure = {
         bandai: { label: 'BANDAI', systems: ['Super Cassette Vision'] },
         casio: { label: 'CASIO', systems: ['Casio Loopy', 'PV-1000'] },
         tomy: { label: 'TOMY', systems: ['Tutor'] },
-        autres: { label: 'CONSTRUCTEURS DIVERS', systems: ['Vectrex', 'Adventurevision', 'TV Games'] },
+        entex: { label: 'ENTEX', systems: ['Adventure Vision'] },
+        autres: { label: 'CONSTRUCTEURS DIVERS', systems: ['Vectrex', 'TV Games'] },
         nintendo: { 
             label: 'NINTENDO', 
             systems: [
@@ -113,7 +114,7 @@ export const systemsData: SystemsDataStructure = {
         commodore: { label: 'COMMODORE', systems: ['Amiga CD32', 'Amiga CDTV'] },
         funtech: { label: 'FUNTECH', systems: ['Super A\'Can'] },
         apple: { label: 'APPLE / BANDAI', systems: ['Pippin'] },
-        microsoft: { label: 'MICROSOFT XBOX', systems: ['Xbox', 'Xbox 360'] },
+        microsoft: { label: 'MICROSOFT XBOX', systems: ['Xbox', 'Xbox 360', 'Xbox Live Arcade'] },
         valve: { label: 'VALVE', systems: ['Steam'] },
         amazon: { label: 'AMAZON', systems: ['Fire TV'] },
         pegasus: { label: 'PEGASUS', systems: ['Pegasus (NES Famiclone)'] }
