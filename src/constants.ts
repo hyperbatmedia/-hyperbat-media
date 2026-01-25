@@ -36,7 +36,7 @@ export const systemsData: SystemsDataStructure = {
         },
         'sega-arcade': {
           label: 'SEGA',
-          systems: ['Sega G80', 'System 1', 'System 2', 'System E', 'System C', 'System C-2', 'System 16', 'System 18', 'System 24', 'System 32', 'System Multi 32', 'X Board', 'Y Board', 'ST-V', 'Europa-R', 'System SP', 'Model 1', 'Model 2', 'Model 3', 'Hikaru', 'Naomi', 'Naomi 2', 'Chihiro', 'Lindbergh', 'RingEdge', 'RingEdge 2', 'RingWide']
+          systems: ['Sega G80', 'System 1', 'System 2', 'System E', 'System C', 'System C-2', 'System 16', 'System 18', 'System 24', 'System 32', 'System Multi 32', 'X Board', 'Y Board', 'ST-V', 'Europa-R', 'System SP', 'Model 1', 'Model 2', 'Model 3', 'Hikaru', 'Naomi', 'Naomi 2', 'Chihiro', 'Lindbergh', 'RingEdge', 'RingEdge 2', 'RingWide', 'ALLS']
         },
         namco: { label: 'NAMCO', systems: ['Namco Classique', 'Namco System', 'Namco System 2x6', 'Namco System 10', 'Namco System 11', 'Namco System 12', 'Namco System 21', 'Namco System 22', 'Namco System 23', 'Namco System 246', 'Namco System 256', 'Namco System Super 256', 'Namco System 357', 'Namco System 369', 'Namco System ES1', 'Namco System ES2', 'Namco System ES3', 'Namco System FL', 'Namco System NA-1', 'Namco System NA-2'] },
         konami: { label: 'KONAMI', systems: ['Konami Classique', 'Konami', 'Konami Bubble System', 'Konami GX', 'Konami GTI', 'Konami M2', 'Konami Hornet', 'Konami Python', 'Konami Viper', 'Konami Firebeat', 'Konami Twinkle', 'Konami Windy', 'Konami Windy X2', 'Konami System 573', 'Bemani DJ Main', 'Bemani PC', 'e-Amusement'] },
@@ -81,10 +81,11 @@ export const systemsData: SystemsDataStructure = {
         ballyastrocade: { label: 'BALLY', systems: ['Astrocade'] },
         worlds: { label: 'WORLDS OF WONDER', systems: ['Action Max'] },
         coleco: { label: 'COLECO', systems: ['ColecoVision', 'Coleco Adam'] },
-        bandai: { label: 'BANDAI', systems: ['Super Cassette Vision'] },
+        bandai: { label: 'BANDAI', systems: ['Super Vision 8000', 'Super Cassette Vision'] },
         casio: { label: 'CASIO', systems: ['Casio Loopy', 'PV-1000'] },
         tomy: { label: 'TOMY', systems: ['Tutor'] },
         entex: { label: 'ENTEX', systems: ['Adventure Vision'] },
+        videobrain: { label: 'VIDEOBRAIN', systems: ['VideoBrain Family Computer'] },
         autres: { label: 'CONSTRUCTEURS DIVERS', systems: ['Vectrex', 'TV Games'] },
         nintendo: { 
             label: 'NINTENDO', 
@@ -180,6 +181,7 @@ export const systemsData: SystemsDataStructure = {
         oric: { label: 'ORIC', systems: ['Oric-1', 'Oric Atmos'] },
         p2000: { label: 'PHILIPS P2000', systems: ['P2000T'] },
         vg5000: { label: 'PHILIPS VG5000', systems: ['VG 5000'] },
+        sord: { label: 'SORD', systems: ['Sord M5'] },
         adobe: { label: 'ADOBE', systems: ['Flash'] },
         windows: { label: 'WINDOWS', systems: ['Windows 3.x', 'Windows 9x', 'Windows'] },
         dos: { label: 'DOS', systems: ['MS-DOS', 'PC DOS'] }
