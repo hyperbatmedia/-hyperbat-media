@@ -1,6 +1,6 @@
 // ManageTab.tsx 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Search, Download, Edit2, Trash2, Eye, X, AlertCircle, ImageOff, User, CheckSquare, Square, Upload, Filter, ArrowUpDown, Zap, ChevronDown, Users } from 'lucide-react';
+import { Search, Download, Edit2, Trash2, Eye, X, AlertCircle, ImageOff, User, CheckSquare, Square, Upload, Filter, ArrowUpDown, Zap, ChevronDown, Users, Database } from 'lucide-react';
 import { ensureDisplayableUrl, reverseConvertUrl, isUnknownCreator, formatDateFR } from './DriveTab/DriveHelpers';
 
 interface ThemeItem {
@@ -13,6 +13,7 @@ interface ThemeItem {
   downloadUrl: string;
   size: string;
   date?: string;
+  onScreenScraper?: boolean;
 }
 
 interface SystemRow {
@@ -366,25 +367,157 @@ const BulkCreatorEditModal = ({
             <div className="flex items-start gap-2">
               <AlertCircle className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-orange-300">
-                <span className="font-bold">Attention :</span> Cette action remplacera le créateur de tous les thèmes sélectionnés. Cette modification est irréversible.
+                <p className="font-bold mb-1">Attention</p>
+                <p>Cette action modifiera le créateur de tous les thèmes sélectionnés. Cette modification est irréversible.</p>
               </div>
             </div>
           </div>
-          
+
           <div className="flex gap-3 pt-4 border-t border-gray-700">
             <button 
               type="button" 
-              onClick={onClose} 
+              onClick={onClose}
               className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold transition-all"
             >
               Annuler
             </button>
             <button 
-              type="submit" 
-              className="flex-1 py-3 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 hover:from-purple-700 hover:via-pink-700 hover:to-orange-700 text-white rounded-lg font-bold shadow-lg transition-all flex items-center justify-center gap-2"
+              type="submit"
+              className="flex-1 py-3 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 hover:from-purple-700 hover:via-pink-700 hover:to-orange-700 text-white rounded-lg font-bold shadow-lg transition-all"
             >
-              <Users className="w-5 h-5" />
-              Appliquer à {selectedThemes.length} thème{selectedThemes.length > 1 ? 's' : ''}
+              💾 Appliquer aux {selectedThemes.length} thème(s)
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// NOUVELLE MODALE POUR SCREENSCRAPER
+const BulkScreenScraperEditModal = ({ 
+  selectedThemes, 
+  onSave, 
+  onClose 
+}: {
+  selectedThemes: ThemeItem[];
+  onSave: (isOnScreenScraper: boolean) => void;
+  onClose: () => void;
+}) => {
+  const [isOnScreenScraper, setIsOnScreenScraper] = useState(true);
+  
+  const stats = useMemo(() => {
+    const onSS = selectedThemes.filter(t => t.onScreenScraper).length;
+    const notOnSS = selectedThemes.length - onSS;
+    return { onSS, notOnSS };
+  }, [selectedThemes]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(isOnScreenScraper);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onClose}>
+      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-blue-500 max-w-lg w-full shadow-2xl" onClick={e => e.stopPropagation()}>
+        <div className="bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 p-3 flex items-center justify-between">
+          <h2 className="text-xl font-black text-white flex items-center gap-2">
+            <Database className="w-6 h-6" />
+            ScreenScraper
+          </h2>
+          <button onClick={onClose} className="text-white hover:text-gray-200">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="p-4 space-y-3">
+          <div className="bg-gray-950/50 rounded-lg p-3 border border-gray-700">
+            <div className="flex items-center gap-2 mb-3">
+              <AlertCircle className="w-5 h-5 text-blue-400" />
+              <span className="text-blue-400 font-bold">Thèmes sélectionnés</span>
+            </div>
+            <div className="text-white font-semibold mb-1">
+              {selectedThemes.length} thème{selectedThemes.length > 1 ? 's' : ''} sélectionné{selectedThemes.length > 1 ? 's' : ''}
+            </div>
+            
+            <div className="grid grid-cols-2 gap-2">
+              <div className="bg-green-600/20 border border-green-500/50 rounded-lg p-2">
+                <div className="text-green-400 text-xs font-semibold mb-1">Sur ScreenScraper</div>
+                <div className="text-white text-xl font-black">{stats.onSS}</div>
+              </div>
+              <div className="bg-orange-600/20 border border-orange-500/50 rounded-lg p-2">
+                <div className="text-orange-400 text-xs font-semibold mb-1">Pas sur ScreenScraper</div>
+                <div className="text-white text-xl font-black">{stats.notOnSS}</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold text-gray-300 mb-2">
+              Nouveau statut *
+            </label>
+            
+            <div className="space-y-2">
+              <label 
+                className={`flex items-center gap-2 p-3 border-2 rounded-lg cursor-pointer transition-all ${
+                  isOnScreenScraper 
+                    ? 'bg-green-600/20 border-green-500' 
+                    : 'bg-gray-900 border-gray-700 hover:border-gray-600'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="screenscraper"
+                  checked={isOnScreenScraper}
+                  onChange={() => setIsOnScreenScraper(true)}
+                  className="w-4 h-4 text-green-600 cursor-pointer"
+                />
+                <div className="flex items-center gap-2 flex-1">
+                  <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                    <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-white font-semibold text-sm">Disponible</span>
+                </div>
+              </label>
+
+              <label 
+                className={`flex items-center gap-2 p-3 border-2 rounded-lg cursor-pointer transition-all ${
+                  !isOnScreenScraper 
+                    ? 'bg-orange-600/20 border-orange-500' 
+                    : 'bg-gray-900 border-gray-700 hover:border-gray-600'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="screenscraper"
+                  checked={!isOnScreenScraper}
+                  onChange={() => setIsOnScreenScraper(false)}
+                  className="w-4 h-4 text-orange-600 cursor-pointer"
+                />
+                <div className="flex items-center gap-2 flex-1">
+                  <X className="w-5 h-5 text-orange-400" />
+                  <span className="text-white font-semibold text-sm">Pas disponible</span>
+                </div>
+              </label>
+            </div>
+            
+          </div>
+
+
+          <div className="flex gap-2 pt-2 border-t border-gray-700">
+            <button 
+              type="button" 
+              onClick={onClose}
+              className="flex-1 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold text-sm transition-all"
+            >
+              Annuler
+            </button>
+            <button 
+              type="submit"
+              className="flex-1 py-2 bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 hover:from-blue-700 hover:via-cyan-700 hover:to-blue-700 text-white rounded-lg font-bold text-sm shadow-lg transition-all"
+            >
+              💾 Appliquer
             </button>
           </div>
         </form>
@@ -395,8 +528,8 @@ const BulkCreatorEditModal = ({
 
 const ThemeCard = ({ 
   theme, 
-  systemName,
-  categoryName,
+  systemName, 
+  categoryName, 
   onView, 
   isSelected, 
   onToggleSelect 
@@ -408,17 +541,13 @@ const ThemeCard = ({
   isSelected: boolean;
   onToggleSelect: () => void;
 }) => {
-  const [imageError, setImageError] = React.useState(false);
-  const missingCreator = isUnknownCreator(theme.creator);
+  const [imageError, setImageError] = useState(false);
   const invalidUrl = isInvalidUrl(theme.imageUrl);
-  const hasProblem = missingCreator || invalidUrl || imageError;
-
-  React.useEffect(() => {
-    setImageError(false);
-  }, [theme.imageUrl]);
+  const missingCreator = isUnknownCreator(theme.creator);
+  const hasProblem = invalidUrl || missingCreator;
 
   return (
-    <div className={`group relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl overflow-hidden border-2 transition-all hover:scale-[1.02] ${
+    <div className={`group relative bg-gradient-to-br from-gray-900 to-gray-950 rounded-xl overflow-hidden border-2 transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
       isSelected ? 'border-orange-500 ring-4 ring-orange-500/30 shadow-lg shadow-orange-500/20' : 
       hasProblem ? 'border-red-500/70' : 'border-gray-700/50 hover:border-orange-500/50'
     }`}>
@@ -487,6 +616,15 @@ const ThemeCard = ({
             📅 {formatDateFR(theme.date)}
           </div>
         )}
+        {theme.onScreenScraper && (
+          <div className="text-xs text-green-400 flex items-center gap-1 font-semibold">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+              <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+            </svg>
+            ScreenScraper
+          </div>
+        )}
       </div>
     </div>
   );
@@ -498,7 +636,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     category: '',
     system: '',
     onlyInvalidUrls: false,
-    onlyMissingCreators: false
+    onlyMissingCreators: false,
+    onlyNotOnScreenScraper: false
   });
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [sortBy, setSortBy] = useState<'name' | 'creator' | 'system'>('name');
@@ -508,6 +647,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const [viewTheme, setViewTheme] = useState<ThemeItem | null>(null);
   const [showImportModal, setShowImportModal] = useState(false);
   const [showBulkCreatorModal, setShowBulkCreatorModal] = useState(false);
+  const [showBulkScreenScraperModal, setShowBulkScreenScraperModal] = useState(false);  // NOUVEAU
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [isCleaning, setIsCleaning] = useState(false);
 
@@ -522,7 +662,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const stats = useMemo(() => ({
     total: themes.length,
     invalidUrls: themes.filter(t => isInvalidUrl(t.imageUrl)).length,
-    missingCreators: themes.filter(t => isUnknownCreator(t.creator)).length
+    missingCreators: themes.filter(t => isUnknownCreator(t.creator)).length,
+    notOnScreenScraper: themes.filter(t => !t.onScreenScraper).length
   }), [themes]);
 
   const themesWithConvertedUrls = useMemo(() => {
@@ -545,6 +686,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       if (filters.category && theme.category !== filters.category) return false;
       if (filters.onlyInvalidUrls && !isInvalidUrl(theme.imageUrl)) return false;
       if (filters.onlyMissingCreators && !isUnknownCreator(theme.creator)) return false;
+      if (filters.onlyNotOnScreenScraper && theme.onScreenScraper) return false;
       return true;
     });
   }, [themesWithConvertedUrls, filters]);
@@ -624,6 +766,24 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     showToast(`✅ Créateur modifié pour ${selectedIds.length} thème(s)`, 'success');
   };
 
+  // NOUVELLE FONCTION POUR SCREENSCRAPER
+  const handleBulkScreenScraperEdit = (isOnScreenScraper: boolean) => {
+    const updated = themes.map(theme => 
+      selectedIds.includes(theme.id) 
+        ? { ...theme, onScreenScraper: isOnScreenScraper }
+        : theme
+    );
+    
+    setThemes(updated);
+    saveThemes(updated);
+    setSelectedIds([]);
+    setShowBulkScreenScraperModal(false);
+    showToast(
+      `✅ Statut ScreenScraper modifié pour ${selectedIds.length} thème(s)`, 
+      'success'
+    );
+  };
+
   const handleSaveEdit = async (edited: ThemeItem) => {
     const updated = themes.map(t => t.id === edited.id ? edited : t);
     setThemes(updated);
@@ -644,7 +804,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       imageUrl: reverseConvertUrl(theme.imageUrl),
       downloadUrl: reverseConvertUrl(theme.downloadUrl),
       size: theme.size,
-      date: theme.date
+      date: theme.date,
+      onScreenScraper: theme.onScreenScraper
     }));
     
     const filename = `themes_${selectedIds.length > 0 ? 'selection' : 'filtered'}_${new Date().toISOString().split('T')[0]}.json`;
@@ -755,11 +916,12 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       category: '',
       system: '',
       onlyInvalidUrls: false,
-      onlyMissingCreators: false
+      onlyMissingCreators: false,
+      onlyNotOnScreenScraper: false
     });
   };
 
-  const hasActiveFilters = filters.search || filters.category || filters.system || filters.onlyInvalidUrls || filters.onlyMissingCreators;
+  const hasActiveFilters = filters.search || filters.category || filters.system || filters.onlyInvalidUrls || filters.onlyMissingCreators || filters.onlyNotOnScreenScraper;
   const selectedThemes = themes.filter(t => selectedIds.includes(t.id));
 
   if (themes.length === 0) {
@@ -860,6 +1022,23 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
                 filters.onlyMissingCreators ? 'bg-white text-yellow-600' : 'bg-gray-800 text-white'
               }`}>{stats.missingCreators}</span>
             </button>
+            <button
+              onClick={() => setFilters({...filters, onlyNotOnScreenScraper: !filters.onlyNotOnScreenScraper})}
+              className={`px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${
+                filters.onlyNotOnScreenScraper 
+                  ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg' 
+                  : 'bg-gray-900 border border-gray-700 text-gray-300 hover:border-blue-500'
+              }`}
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+              </svg>
+              Pas sur ScreenScraper
+              <span className={`px-2 py-0.5 rounded-full text-xs font-black ${
+                filters.onlyNotOnScreenScraper ? 'bg-white text-blue-600' : 'bg-gray-800 text-white'
+              }`}>{stats.notOnScreenScraper}</span>
+            </button>
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
@@ -912,6 +1091,13 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
                 className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-semibold flex items-center gap-2 transition-all shadow-lg">
                 <Users className="w-4 h-4" />
                 Modifier créateurs
+              </button>
+              {/* NOUVEAU BOUTON SCREENSCRAPER */}
+              <button 
+                onClick={() => setShowBulkScreenScraperModal(true)}
+                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg font-semibold flex items-center gap-2 transition-all shadow-lg">
+                <Database className="w-4 h-4" />
+                Modifier ScreenScraper
               </button>
               <button onClick={handleBulkDelete}
                 className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold flex items-center gap-2 transition-all">
@@ -1042,6 +1228,15 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
           selectedThemes={selectedThemes}
           onSave={handleBulkCreatorEdit}
           onClose={() => setShowBulkCreatorModal(false)}
+        />
+      )}
+
+      {/* NOUVELLE MODALE SCREENSCRAPER */}
+      {showBulkScreenScraperModal && selectedThemes.length > 0 && (
+        <BulkScreenScraperEditModal
+          selectedThemes={selectedThemes}
+          onSave={handleBulkScreenScraperEdit}
+          onClose={() => setShowBulkScreenScraperModal(false)}
         />
       )}
     </div>
@@ -1195,6 +1390,7 @@ const EditModal = ({ theme, onSave, onClose, systems, categories }: {
               <input type="text" value={editData.size} onChange={e => setEditData({...editData, size: e.target.value})}
                 className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
             </div>
+
             {editData.date && (
               <div>
                 <label className="block text-sm font-bold text-gray-300 mb-2">📅 Date</label>
@@ -1202,6 +1398,26 @@ const EditModal = ({ theme, onSave, onClose, systems, categories }: {
                   className="w-full p-3 bg-gray-900 border border-gray-700 rounded-xl text-gray-400 cursor-not-allowed" />
               </div>
             )}
+            
+            <div className="md:col-span-2">
+              <label className="flex items-center gap-3 p-4 bg-gray-950 border border-gray-700 rounded-xl cursor-pointer hover:border-blue-500 transition">
+                <input 
+                  type="checkbox" 
+                  checked={editData.onScreenScraper || false}
+                  onChange={e => setEditData({...editData, onScreenScraper: e.target.checked})}
+                  className="w-5 h-5 rounded border-gray-600 text-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-0 bg-gray-800 cursor-pointer"
+                />
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                    <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-sm font-bold text-gray-300">
+                    Disponible sur ScreenScraper
+                  </span>
+                </div>
+              </label>
+            </div>
           </div>
           
           <div>

@@ -4,6 +4,7 @@ import { Download, X } from 'lucide-react';
 import { ThemeItem, SystemRow } from '../../types';
 import { getThemeKey } from '../../utils/themeUtils';
 import Lightbox from '../Lightbox/Lightbox';
+import ScreenScraperBadge from '../ScreenScraperBadge';
 
 interface ThemeListProps {
   viewMode: 'grid' | 'list';
@@ -237,7 +238,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                 )}
               </div>
 
-              <div className="p-2">
+              <div className="p-3">
                 <h3 className="font-bold text-sm mb-2 text-white group-hover:text-orange-400 transition truncate">
                   {theme.name}
                 </h3>
@@ -295,9 +296,16 @@ const ThemeList: React.FC<ThemeListProps> = ({
                       fontSize: '0.8rem'
                     }}
                   >
-                    ⭐ Par {theme.creator}
+                    ✨ Par {theme.creator}
                   </p>
                 </div>
+
+                {/* Badge ScreenScraper */}
+                {theme.onScreenScraper && (
+                  <div className="mb-2">
+                    <ScreenScraperBadge />
+                  </div>
+                )}
 
                 <a
                   href={theme.downloadUrl}

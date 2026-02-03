@@ -10,6 +10,7 @@ export type ThemeItem = {
   creator: string;
   size: string;
   date?: string;
+  onScreenScraper?: boolean;  // ← NOUVEAU
 };
 
 // Utilise Omit pour éviter de répéter toutes les propriétés

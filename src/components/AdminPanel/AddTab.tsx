@@ -10,6 +10,7 @@ interface NewThemeForm {
   downloadUrl: string;
   creator: string;
   size: string;
+  onScreenScraper?: boolean;  // ← NOUVEAU
 }
 
 interface SystemRow {
@@ -97,7 +98,8 @@ const AddTab: React.FC<AddTabProps> = ({
     category: '', 
     imageUrl: '', 
     downloadUrl: '', 
-    size: '' 
+    size: '',
+    onScreenScraper: false  // ← NOUVEAU
   };
   const safeSystems = systems || [];
   const safeCategories = categories || [];
@@ -138,6 +140,7 @@ const AddTab: React.FC<AddTabProps> = ({
         downloadUrl: '',
         creator: safeNewTheme.creator, 
         size: '',
+        onScreenScraper: false  // ← NOUVEAU
       });
       setRawImageUrlInput('');
       setRawDownloadUrlInput('');
@@ -152,12 +155,12 @@ const AddTab: React.FC<AddTabProps> = ({
     }
   };
 
-  const handleInputChange = (field: keyof NewThemeForm, value: string) => {
-    if (field === 'imageUrl') {
+  const handleInputChange = (field: keyof NewThemeForm, value: string | boolean) => {
+    if (field === 'imageUrl' && typeof value === 'string') {
       setRawImageUrlInput(value);
       setImagePreview(''); 
       setImageError(false);
-    } else if (field === 'downloadUrl') {
+    } else if (field === 'downloadUrl' && typeof value === 'string') {
       setRawDownloadUrlInput(value);
     } else {
       setNewTheme((prev: NewThemeForm) => ({ ...prev, [field]: value }));
@@ -259,6 +262,27 @@ const AddTab: React.FC<AddTabProps> = ({
                   placeholder="Créateur du Thème"
                   className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition"
                 />
+              </div>
+
+              {/* ← NOUVEAU: Checkbox ScreenScraper */}
+              <div className="md:col-span-2">
+                <label className="flex items-center gap-3 p-4 bg-gray-950 border border-gray-700 rounded-xl cursor-pointer hover:border-blue-500 transition">
+                  <input 
+                    type="checkbox" 
+                    checked={safeNewTheme.onScreenScraper || false}
+                    onChange={(e) => handleInputChange('onScreenScraper', e.target.checked)}
+                    className="w-5 h-5 rounded border-gray-600 text-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-0 bg-gray-800 cursor-pointer"
+                  />
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                      <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-sm font-bold text-gray-300">
+                      Disponible sur ScreenScraper
+                    </span>
+                  </div>
+                </label>
               </div>
             </div>
           </div>

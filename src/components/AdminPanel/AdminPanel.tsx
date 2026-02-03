@@ -5,6 +5,7 @@ import {
   FileJson,
   FolderOpen,
   RefreshCw,
+  Database,
   LucideIcon
 } from 'lucide-react';
 import { ThemeItem, SystemRow, Category, NewThemeForm } from '../../types';
@@ -13,9 +14,10 @@ import ManageTab from './ManageTab';
 import ImportTab from './ImportTab';
 import DriveTab from './DriveTab';
 import SyncTab from './SyncTab';
+import ScreenScraperSyncTab from './ScreenScraperSyncTab';
 import { extractDriveFileId, isUnknownCreator } from './DriveTab/DriveHelpers';
 
-export type AdminTab = 'add' | 'manage' | 'import' | 'drive-import' | 'sync';
+export type AdminTab = 'add' | 'manage' | 'import' | 'drive-import' | 'sync' | 'screenscraper-sync';
 
 interface AdminPanelProps {
   themes: ThemeItem[];
@@ -136,7 +138,8 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
           imageUrl: incoming.imageUrl || existing.imageUrl,
           category: incoming.category || existing.category,
           downloadUrl: incoming.downloadUrl || existing.downloadUrl,
-          date: incoming.date || existing.date
+          date: incoming.date || existing.date,
+          onScreenScraper: incoming.onScreenScraper || existing.onScreenScraper  // ← NOUVEAU
         };
 
         themeMap.set(key, merged);
@@ -181,6 +184,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
           <TabButton tab="import" currentTab={adminTab} setAdminTab={setAdminTab} icon={FileJson} label="Importer JSON" />
           <TabButton tab="drive-import" currentTab={adminTab} setAdminTab={setAdminTab} icon={FolderOpen} label="Import Drive" />
           <TabButton tab="sync" currentTab={adminTab} setAdminTab={setAdminTab} icon={RefreshCw} label="Synchronisation" />
+          <TabButton tab="screenscraper-sync" currentTab={adminTab} setAdminTab={setAdminTab} icon={Database} label="ScreenScraper Sync" />
         </div>
 
         {adminTab === 'add' && (
@@ -215,6 +219,16 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
           <SyncTab
             existingThemes={themes}
             onDeleteThemes={handleDeleteThemes}
+          />
+        )}
+
+        {adminTab === 'screenscraper-sync' && (
+          <ScreenScraperSyncTab
+            themes={themes}
+            onUpdateThemes={async (updatedThemes) => {
+              await saveThemes(updatedThemes);
+              setThemes(updatedThemes);
+            }}
           />
         )}
 
