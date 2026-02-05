@@ -37,13 +37,13 @@ const ThemeList: React.FC<ThemeListProps> = ({
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // 🆕 CORRECTION : Réinitialise les images quand la liste de thèmes change
+  // 🔧 FIX : Réinitialiser les images chargées quand on change de page
   useEffect(() => {
     setLoadedImages(new Set());
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [currentPage, themes.length]); // 🆕 Ajout de themes.length
+  }, [currentPage]);
 
-  // ⚡ Intersection Observer pour lazy loading
+  // Intersection Observer pour lazy loading (IDENTIQUE À L'ORIGINAL)
   useEffect(() => {
     if (observerRef.current) {
       observerRef.current.disconnect();
@@ -57,7 +57,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
             const src = img.dataset.src;
             
             if (src) {
-              // 🆕 Force le rechargement même si src existe déjà 
               img.src = src;
               observerRef.current?.unobserve(img);
             }
@@ -70,7 +69,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
       }
     );
 
-    // 🆕 Observer toutes les images dès le montage
+    // Observer toutes les images dès le montage
     const images = document.querySelectorAll('img[data-src]');
     images.forEach(img => {
       if (observerRef.current) {
@@ -86,21 +85,17 @@ const ThemeList: React.FC<ThemeListProps> = ({
   const getSystemName = (systemId: string) =>
     systems.find(s => s.id === systemId)?.name || systemId;
 
-  // ✅ AJOUTÉ : Fonction pour formater la date
   const formatDate = (dateStr: string | undefined) => {
     if (!dateStr) return null;
     
-    // Si format YYYY-MM-DD
     if (dateStr.includes('-')) {
       const [year, month, day] = dateStr.split('-');
       return `${day}/${month}/${year}`;
     }
     
-    // Sinon retourner tel quel (déjà au format DD/MM/YYYY)
     return dateStr;
   };
 
-  // ✅ AJOUTÉ : Fonction pour obtenir le nom de la catégorie
   const getCategoryName = (categoryId: string) => {
     const categoryMap: Record<string, string> = {
       'game-themes': 'Jeu',
@@ -127,9 +122,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
         @keyframes fadeIn {
           from { opacity: 0; }
           to { opacity: 1; }
-        }
-        @keyframes spin {
-          to { transform: rotate(360deg); }
         }
         .theme-card {
           animation: fadeIn 0.3s ease-out;
@@ -194,9 +186,8 @@ const ThemeList: React.FC<ThemeListProps> = ({
                       <div className="absolute inset-0 skeleton" />
                     )}
                     
-                    {/* 🆕 Image avec key unique pour forcer le re-render */}
+                    {/* 🔧 FIX : Image sans la key complexe qui causait des problèmes */}
                     <img
-                      key={`${key}-${themes.length}-${currentPage}`}
                       ref={(el) => {
                         if (el && observerRef.current) {
                           observerRef.current.observe(el);
@@ -243,7 +234,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                   {theme.name}
                 </h3>
 
-                {/* ✅ LIGNE 1 : Système et Catégorie */}
+                {/* LIGNE 1 : Système et Catégorie */}
                 <div className="flex gap-2 text-xs mb-1 flex-wrap items-center">
                   <span className="px-2 py-1 rounded-full text-xs font-semibold border"
                     style={{
@@ -266,7 +257,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                   </span>
                 </div>
 
-                {/* ✅ LIGNE 2 : Date et Taille */}
+                {/* LIGNE 2 : Date et Taille */}
                 <div className="flex gap-2 text-xs mb-2 flex-wrap items-center">
                   {theme.date && (
                     <>

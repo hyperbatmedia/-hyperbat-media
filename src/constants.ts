@@ -50,6 +50,7 @@ export const systemsData: SystemsDataStructure = {
         nmk: { label: 'NMK', systems: ['NMK'] },
         raizing: { label: 'RAIZING', systems: ['Raizing'] },
         kaneko: { label: 'KANEKO', systems: ['Kaneko'] },
+        irem: { label: 'IREM', systems: ['Irem M-62', 'Irem M-72', 'Irem M-92'] },
         dataeast: { label: 'DATA EAST', systems: ['Data East', 'Data East 16-bit'] },
         mitchell: { label: 'MITCHELL', systems: ['Mitchell'] },
         jaleco: { label: 'JALECO', systems: ['Jaleco'] },
@@ -68,7 +69,7 @@ export const systemsData: SystemsDataStructure = {
         tecmo: { label: 'TECMO', systems: ['Tecmo'] },
         rawthrills: { label: 'RAW THRILLS', systems: ['Raw Thrills'] },
         igt: { label: 'IGT SLOTS', systems: ['IGT Slots'] },
-        'autres-arcade': { label: 'AUTRES CONSTRUCTEURS', systems: ['AAE ', 'Daphne (LaserDisc)', 'Singe (LaserDisc)', 'American Laser Games', 'Gaelco', 'IGS', 'Irem', 'Technos', 'Midway', 'FBNeo'] }
+        'autres-arcade': { label: 'AUTRES CONSTRUCTEURS', systems: ['AAE ', 'Daphne (LaserDisc)', 'Singe (LaserDisc)', 'American Laser Games', 'Gaelco', 'IGS', 'Technos', 'Midway', 'FBNeo'] }
     },
     home: {
         magnavox: { label: 'MAGNAVOX', systems: ['Odyssey', 'Odyssey 2 / Videopac'] },
@@ -182,6 +183,7 @@ export const systemsData: SystemsDataStructure = {
         p2000: { label: 'PHILIPS P2000', systems: ['P2000T'] },
         vg5000: { label: 'PHILIPS VG5000', systems: ['VG 5000'] },
         sord: { label: 'SORD', systems: ['Sord M5'] },
+        memotech: { label: 'MEMOTECH', systems: ['MTX 512'] },
         adobe: { label: 'ADOBE', systems: ['Flash'] },
         windows: { label: 'WINDOWS', systems: ['Windows 3.x', 'Windows 9x', 'Windows'] },
         dos: { label: 'DOS', systems: ['MS-DOS', 'PC DOS'] }
