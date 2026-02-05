@@ -177,9 +177,18 @@ const Sidebar: React.FC<SidebarProps> = ({
       if (system.isHeader || system.isSubHeader) return false;
       
       const nameLower = system.name?.toLowerCase() || '';
-      const words = nameLower.split(/[\s\-\/&()]+/).filter(w => w.length > 0);
+      const labelLower = system.label?.toLowerCase() || '';
+      const subsectionLower = system.subsection?.toLowerCase() || '';
       
-      return nameLower.startsWith(normalizedSearch) || words.some(word => word.startsWith(normalizedSearch));
+      const nameWords = nameLower.split(/[\s\-\/&()]+/).filter(w => w.length > 0);
+      const labelWords = labelLower.split(/[\s\-\/&()]+/).filter(w => w.length > 0);
+      
+      // Recherche dans name, label et subsection
+      return nameLower.startsWith(normalizedSearch) || 
+             nameWords.some(word => word.startsWith(normalizedSearch)) ||
+             labelLower.includes(normalizedSearch) ||
+             labelWords.some(word => word.startsWith(normalizedSearch)) ||
+             subsectionLower.includes(normalizedSearch);
     });
     
     const sorted = filtered.sort((a, b) => {

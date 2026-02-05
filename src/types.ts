@@ -20,6 +20,7 @@ export type NewThemeForm = Omit<ThemeItem, 'id'>;
 export type SystemRow = {
   id: string;
   name: string;  // ✅ Retiré le '?' pour rendre name obligatoire
+  label?: string; // ✅ Label du constructeur (ex: "MEMOTECH", "IREM", "SEGA")
   isHeader?: boolean;
   isSubHeader?: boolean;
   section?: string;

@@ -64,6 +64,7 @@ export const generateSystems = (cats: Category[], data: SystemsDataStructure, ic
         result.push({
           id: systemId,
           name: systemName,
+          label: subsectionData.label, // Ajoute le label du constructeur (ex: "MEMOTECH")
           section,
           subsection: subsectionKey,
           categories: cats
