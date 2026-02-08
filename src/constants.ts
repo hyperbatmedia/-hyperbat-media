@@ -119,6 +119,7 @@ export const systemsData: SystemsDataStructure = {
         microsoft: { label: 'MICROSOFT XBOX', systems: ['Xbox', 'Xbox 360', 'Xbox Live Arcade'] },
         valve: { label: 'VALVE', systems: ['Steam'] },
         amazon: { label: 'AMAZON', systems: ['Fire TV'] },
+        zeebo: { label: 'ZEEBO', systems: ['Zeebo'] },
         pegasus: { label: 'PEGASUS', systems: ['Pegasus (NES Famiclone)'] }
     },
     portable: {
@@ -130,7 +131,7 @@ export const systemsData: SystemsDataStructure = {
         'nec-portable': { label: 'NEC', systems: ['PC Engine GT / TurboExpress'] },
         'sega-portable': { label: 'SEGA', systems: ['Game Gear', 'Nomad'] },
         'snk-portable': { label: 'SNK', systems: ['Neo Geo Pocket', 'Neo Geo Pocket Color'] },
-        'sony-portable': { label: 'SONY PLAYSTATION', systems: ['PocketStation', 'PSP', 'PSP Go', 'PS Vita'] },
+        'sony-portable': { label: 'SONY PLAYSTATION', systems: ['PocketStation', 'PSP', 'PSP Mini', 'PSP Go', 'PS Vita'] },
         bandai: { label: 'BANDAI', systems: ['LCD Solarpower', 'WonderSwan', 'WonderSwan Color'] },
         bitcorp: { label: 'BITCORP', systems: ['Gamate'] },
         hartung: { label: 'HARTUNG', systems: ['Game Master'] },
@@ -157,7 +158,8 @@ export const systemsData: SystemsDataStructure = {
         other: { label: 'AUTRES PORTS', systems: ['Solarus', 'Starship', 'Karaoke'] }
     },
     fantasy: {
-        fantasy: { label: 'FANTASY CONSOLES', systems: ['PICO-8', 'TIC-80', 'WASM-4', 'LowRes NX', 'Lutro', 'Uzebox', 'Vircon32'] }
+        fantasy: { label: 'FANTASY CONSOLES', systems: ['PICO-8', 'TIC-80', 'WASM-4', 'LowRes NX', 'Lutro', 'Uzebox', 'Vircon32'] },
+        lexaloffle: { label: 'LEXALOFFLE', systems: ['Voxatron'] }
     },
     ordinosaure: {
         acorn: { label: 'ACORN', systems: ['Atom', 'Archimedes', 'BBC Micro'] },
