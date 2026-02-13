@@ -1,6 +1,6 @@
 // Fichier: src/HyperBatMediaSite.tsx 
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3 } from 'lucide-react';
+import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image } from 'lucide-react';
 
 import { NewThemeForm, ThemeItem } from './types';
 import { categories } from './constants';
@@ -117,12 +117,17 @@ export default function HyperBatMediaSite(): JSX.Element {
   }, [rawThemes]);
 
   const themeStats = useMemo(() => {
+    const collectionThemes = themes.filter(t => 
+      (t.system === 'collectionspersonnalises' || t.system === 'Collections Personnalisées') && 
+      t.category !== 'artwork'
+    ).length;
+    const artworkThemes = themes.filter(t => t.category === 'artwork').length;
     const gameThemes = themes.filter(t => t.category === 'game-themes').length;
     const systemThemes = themes.filter(t => t.category === 'system-themes').length;
     const defaultThemes = themes.filter(t => t.category === 'default-themes').length;
     const total = themes.length;
     
-    return { gameThemes, systemThemes, defaultThemes, total };
+    return { collectionThemes, artworkThemes, gameThemes, systemThemes, defaultThemes, total };
   }, [themes]);
 
   const handleSearchChange = (value: string) => {
@@ -179,7 +184,13 @@ export default function HyperBatMediaSite(): JSX.Element {
         
         const matchesSystem = matchSystemId(theme.system, systemsLogic.selectedSystem);
         
-        const matchesCategory = systemsLogic.selectedCategory === 'all' || theme.category === systemsLogic.selectedCategory;
+        // Gestion spéciale pour 'collection' : filtre par system mais exclut les artwork
+        const matchesCategory = systemsLogic.selectedCategory === 'all' 
+          ? true 
+          : systemsLogic.selectedCategory === 'collection' 
+            ? (theme.system === 'collectionspersonnalises' && theme.category !== 'artwork')
+            : theme.category === systemsLogic.selectedCategory;
+        
         return matchesSearch && matchesSystem && matchesCategory;
       })
       .sort((a, b) => {
@@ -298,6 +309,38 @@ export default function HyperBatMediaSite(): JSX.Element {
             <>
               {/* Statistiques des thèmes - CENTRÉES */}
               <div className="flex justify-center gap-3 mb-4" style={{ marginLeft: '320px' }}>
+                <button 
+                  onClick={() => systemsLogic.setSelectedCategory('collection')}
+                  className="px-7 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer" 
+                  style={{ 
+                    backgroundColor: '#D97706', 
+                    borderColor: systemsLogic.selectedCategory === 'collection' ? '#FFFF00' : '#FFD700',
+                    borderWidth: systemsLogic.selectedCategory === 'collection' ? '3px' : '2px',
+                    boxShadow: systemsLogic.selectedCategory === 'collection' ? '0 0 10px rgba(255, 215, 0, 0.3)' : 'none'
+                  }}>
+                  <Package className="w-2.5 h-2.5" style={{ color: '#e0e0e0' }} />
+                  <div>
+                    <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>Collection</p>
+                    <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{themeStats.collectionThemes}</p>
+                  </div>
+                </button>
+
+                <button 
+                  onClick={() => systemsLogic.setSelectedCategory('artwork')}
+                  className="px-7 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer" 
+                  style={{ 
+                    backgroundColor: '#D97706', 
+                    borderColor: systemsLogic.selectedCategory === 'artwork' ? '#FFFF00' : '#FFD700',
+                    borderWidth: systemsLogic.selectedCategory === 'artwork' ? '3px' : '2px',
+                    boxShadow: systemsLogic.selectedCategory === 'artwork' ? '0 0 10px rgba(255, 215, 0, 0.3)' : 'none'
+                  }}>
+                  <Image className="w-2.5 h-2.5" style={{ color: '#e0e0e0' }} />
+                  <div>
+                    <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>Artwork</p>
+                    <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{themeStats.artworkThemes}</p>
+                  </div>
+                </button>
+
                 <button 
                   onClick={() => systemsLogic.setSelectedCategory('game-themes')}
                   className="px-7 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer" 
@@ -512,8 +555,40 @@ export default function HyperBatMediaSite(): JSX.Element {
 
         <footer className={`bg-gradient-to-t ${colors.headerBg} to-transparent border-t-4 mt-20 py-4`} style={{ borderColor: '#FF8C00' }}>
           <div className="container mx-auto px-4 text-center text-sm" style={{ color: colors.textSecondary }}>
-            <p className="font-black text-lg mb-1" style={{ color: '#FF8C00' }}>HYPERBAT MEDIA</p>
-            <p className="mt-1">Thème HYPERBAT créé par <span className="font-bold" style={{ color: '#FFA500' }}>Bob Morane</span></p>
+            <p className="font-black text-lg mb-1" style={{
+              background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              filter: 'drop-shadow(2px 2px 0px #000)'
+            }}>HYPERBAT MEDIA</p>
+            <p className="mt-1">
+              Thème HYPERBAT créé par <span className="font-bold" style={{
+                background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                filter: 'drop-shadow(1px 1px 0px #000)'
+              }}>Bob Morane</span> | 
+              Vitrine créée par <span className="font-bold" style={{
+                background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                filter: 'drop-shadow(1px 1px 0px #000)'
+              }}>Christophe</span> | 
+              Mise à jour par <span className="font-bold" style={{
+                background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                filter: 'drop-shadow(1px 1px 0px #000)'
+              }}>Alain et Christophe</span>
+            </p>
+            <p className="mt-2 text-sm">
+              Merci à tous les créateurs de thèmes : <span className="font-bold" style={{
+                background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                filter: 'drop-shadow(1px 1px 0px #000)'
+              }}>Bob,Dav,Roni,Alain,Huhe8554,Finch,KevoBatoYT,Akeshi,Arcanjohack,CrazyYann,Kairos182,Krakerman,Mrfomt,pento5185,qbertaddict,Sk0ney,Virtual Postman,yanni9867 et tous les autres</span>
+            </p>
           </div>
         </footer>
       </div>

@@ -3,10 +3,11 @@ import { Category, SystemsDataStructure, SectionIconsStructure } from './types';
 
 // --- categories (statique) - EXPORTÉ pour utilisation dans Lightbox
 export const categories: Category[] = [
+    { id: 'collection', name: 'Collections Personnalisées' },
+    { id: 'artwork', name: 'Artwork' },
     { id: 'game-themes', name: 'Thèmes de jeux' },
     { id: 'system-themes', name: 'Thèmes système' },
-    { id: 'default-themes', name: 'Thème default' },
-    { id: 'artwork', name: 'Artwork' }
+    { id: 'default-themes', name: 'Thème default' }
 ];
 
 // --- systemsData (statique)
