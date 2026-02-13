@@ -568,7 +568,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                 WebkitTextFillColor: 'transparent',
                 filter: 'drop-shadow(1px 1px 0px #000)'
               }}>Bob Morane</span> | 
-              Vitrine créée par <span className="font-bold" style={{
+              Vitrine crée par <span className="font-bold" style={{
                 background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
