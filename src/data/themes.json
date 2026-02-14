@@ -198,17 +198,6 @@
     "date": "2026-01-17"
   },
   {
-    "id": 14984,
-    "name": "_default",
-    "creator": "Christophe",
-    "system": "gamecube",
-    "category": "default-themes",
-    "imageUrl": "https://drive.google.com/file/d/199VG8s3vf5Y4xt_wYKzTOZ7arMoGAg6m/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1zzTuyVv86V6YEA8zraABEiWgJNUFPc4O/view?usp=sharing",
-    "size": "2.1 MB",
-    "date": "2026-01-17"
-  },
-  {
     "id": 14988,
     "name": "_default",
     "creator": "Christophe",
@@ -13163,17 +13152,6 @@
     "onScreenScraper": true
   },
   {
-    "id": 14082,
-    "name": "jaleco",
-    "creator": "Roni",
-    "system": "jaleco",
-    "category": "system-themes",
-    "imageUrl": "https://drive.google.com/file/d/1LxkVC07d1iUOP-WSLLB_GwjpunaQAR-B/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1JobH4xIm1aHuLpy2Oz7-bd4VEozxOltJ/view?usp=sharing",
-    "size": "1.1 MB",
-    "date": "2026-01-17"
-  },
-  {
     "id": 23001,
     "name": "jaleco",
     "creator": "Roni",
@@ -15795,17 +15773,6 @@
     "imageUrl": "https://drive.google.com/file/d/1gs7w6teXfb6DN5k9cixIWRDqJtH_cSSc/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1vr_jLDPs83VLRlhU_FI-QRHXOYHJpcGV/view?usp=sharing",
     "size": "4.8 MB",
-    "date": "2025-11-14"
-  },
-  {
-    "id": 833,
-    "name": "mslug-alt GIF Heavy",
-    "creator": "Dav",
-    "system": "neogeoaes",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1zUhTb-dxy5Ez4ZCOUAtbs2LSLmisxuFh/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1osxLc4TUNTsIqnUfXorFGa7TK4hgpClB/view?usp=sharing",
-    "size": "25.4 MB",
     "date": "2025-11-14"
   },
   {
@@ -18720,17 +18687,6 @@
     "size": "1.5 MB",
     "date": "2026-01-11",
     "onScreenScraper": true
-  },
-  {
-    "id": 8057,
-    "name": "quartet2",
-    "creator": "Roni",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1m0pf6mekBHyCfhDDtnNRl5QT2x3TQE_O/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1gzTd3uxGB0sM4QkXyD3Ted2tO-_4wCF9/view?usp=sharing",
-    "size": "2.1 MB",
-    "date": "2026-01-14"
   },
   {
     "id": 11183,
