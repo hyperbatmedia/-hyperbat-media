@@ -1154,6 +1154,25 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
             </button>
           </div>
 
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-700">
+              <div className="text-sm text-gray-400">
+                Affichage <span className="text-white font-semibold">{((currentPage - 1) * itemsPerPage) + 1}</span> à{' '}
+                <span className="text-white font-semibold">{Math.min(currentPage * itemsPerPage, sorted.length)}</span> sur{' '}
+                <span className="text-white font-semibold">{sorted.length}</span>
+              </div>
+              <div className="flex gap-2">
+                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1} className="px-3 py-1 bg-gray-900 rounded-lg text-white disabled:opacity-30">Premier</button>
+                <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="px-3 py-1 bg-gray-900 rounded-lg text-white disabled:opacity-30">Précédent</button>
+                <div className="px-4 py-2 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 text-white rounded-lg font-bold">
+                  Page {currentPage} / {totalPages}
+                </div>
+                <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className="px-3 py-1 bg-gray-900 rounded-lg text-white disabled:opacity-30">Suivant</button>
+                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages} className="px-3 py-1 bg-gray-900 rounded-lg text-white disabled:opacity-30">Dernier</button>
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-6">
             {paginated.map(theme => {
               const systemName = availableSystems.find(s => s.id === theme.system)?.name || theme.system;

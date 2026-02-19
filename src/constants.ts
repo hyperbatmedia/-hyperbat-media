@@ -97,6 +97,8 @@ export const systemsData: SystemsDataStructure = {
                 'Famicom Disk System',
                 'Datach', 
                 'Super Nintendo', 
+                'Super Famicom',
+                'Super Game Boy', 
                 'SNES-MSU1', 
                 'Satellaview', 
                 'Sufami Turbo', 
@@ -128,7 +130,7 @@ export const systemsData: SystemsDataStructure = {
         epoch: { label: 'EPOCH', systems: ['Game Pocket Computer'] },
         'milton-bradley': { label: 'MILTON BRADLEY', systems: ['Microvision'] },
         'atari-portable': { label: 'ATARI', systems: ['Lynx', 'Lynx (Camplynx)'] },
-        'nintendo-portable': { label: 'NINTENDO', systems: ['Game & Watch', 'Game Boy', 'Game Boy (2 Players)', 'Super Game Boy', 'Game Boy Color', 'Game Boy Color (2 Players)', 'Game Boy Advance', 'Game Boy Advance (2 Players)', 'Game Boy MSU', 'Virtual Boy', 'Pokémon Mini', 'DS', '3DS'] },
+        'nintendo-portable': { label: 'NINTENDO', systems: ['Game & Watch', 'Game Boy', 'Game Boy Hacks', 'Game Boy (2 Players)', 'Super Game Boy', 'Game Boy Color', 'Game Boy Color Hacks', 'Game Boy Color (2 Players)', 'Game Boy Advance', 'Game Boy Advance (2 Players)', 'Game Boy MSU', 'Virtual Boy', 'Pokémon Mini', 'DS', '3DS'] },
         'nec-portable': { label: 'NEC', systems: ['PC Engine GT / TurboExpress'] },
         'sega-portable': { label: 'SEGA', systems: ['Game Gear', 'Nomad'] },
         'snk-portable': { label: 'SNK', systems: ['Neo Geo Pocket', 'Neo Geo Pocket Color'] },
@@ -143,7 +145,7 @@ export const systemsData: SystemsDataStructure = {
         nokia: { label: 'NOKIA', systems: ['N-Gage', 'N-Gage QD'] },
         mobile: { label: 'MOBILE', systems: ['J2ME (Java Mobile)'] },
         watara: { label: 'WATARA', systems: ['Supervision'] },
-        lcd: { label: 'LCD GAMES', systems: ['Game & Watch', 'Tiger LCD', 'LCD Handhelds'] },
+        lcd: { label: 'LCD GAMES', systems: ['Game & Watch', 'Tiger LCD', 'LCD Handhelds', 'Elektronika-Handheld'] },
         dingoo: { label: 'DINGOO', systems: ['Dingoo A320'] },
         openpandora: { label: 'OPEN PANDORA', systems: ['Pandora'] },
         arduboy: { label: 'ARDUBOY', systems: ['Arduboy'] },
@@ -189,7 +191,9 @@ export const systemsData: SystemsDataStructure = {
         memotech: { label: 'MEMOTECH', systems: ['MTX 512'] },
         adobe: { label: 'ADOBE', systems: ['Flash'] },
         windows: { label: 'WINDOWS', systems: ['Windows 3.x', 'Windows 9x', 'Windows'] },
-        dos: { label: 'DOS', systems: ['MS-DOS', 'PC DOS'] }
+        pecom: { label: 'PECOM', systems: ['Pecom 64'] },
+        dos: { label: 'DOS', systems: ['MS-DOS', 'PC DOS'] },
+        dec: { label: 'DEC', systems: ['PDP-1', 'PDP-8', 'PDP-11'] }
     },
     flipper: {
         simulateurs: { label: 'SIMULATEURS', systems: ['Visual Pinball', 'Future Pinball', 'Pinball FX', 'Pinball FX2', 'Pinball FX3', 'Zaccaria Pinball', 'Pinball M'] }

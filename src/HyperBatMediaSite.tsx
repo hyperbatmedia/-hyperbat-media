@@ -16,7 +16,7 @@ const THEMES_PER_PAGE = 20;
 const convertGoogleDriveUrl = (url: string, isImage: boolean = false): string => {
   if (!url || typeof url !== 'string') return url;
   
-  if (url.includes('/thumbnail?') || url.includes('/uc?')) {
+  if (url.includes('/thumbnail?') || url.includes('/uc?') || url.includes('lh3.googleusercontent.com')) {
     return url;
   }
   
@@ -50,7 +50,7 @@ const convertGoogleDriveUrl = (url: string, isImage: boolean = false): string =>
   }
   
   if (isImage) {
-    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w400`;
+    return `https://lh3.googleusercontent.com/d/${fileId}=w400`;
   } else {
     return `https://drive.google.com/uc?id=${fileId}&export=download`;
   }
@@ -125,9 +125,10 @@ export default function HyperBatMediaSite(): JSX.Element {
     const gameThemes = themes.filter(t => t.category === 'game-themes').length;
     const systemThemes = themes.filter(t => t.category === 'system-themes').length;
     const defaultThemes = themes.filter(t => t.category === 'default-themes').length;
+    const screenScraperThemes = themes.filter(t => t.onScreenScraper === true).length;
     const total = themes.length;
     
-    return { collectionThemes, artworkThemes, gameThemes, systemThemes, defaultThemes, total };
+    return { collectionThemes, artworkThemes, gameThemes, systemThemes, defaultThemes, screenScraperThemes, total };
   }, [themes]);
 
   const handleSearchChange = (value: string) => {
@@ -189,7 +190,9 @@ export default function HyperBatMediaSite(): JSX.Element {
           ? true 
           : systemsLogic.selectedCategory === 'collection' 
             ? (theme.system === 'collectionspersonnalises' && theme.category !== 'artwork')
-            : theme.category === systemsLogic.selectedCategory;
+            : systemsLogic.selectedCategory === 'screenscraper'
+              ? theme.onScreenScraper === true
+              : theme.category === systemsLogic.selectedCategory;
         
         return matchesSearch && matchesSystem && matchesCategory;
       })
@@ -244,34 +247,13 @@ export default function HyperBatMediaSite(): JSX.Element {
 
   return (
     <div className="min-h-screen relative overflow-hidden transition-colors duration-300" style={{ backgroundColor: colors.bg, color: colors.text }}>
-      {isDarkMode && (
-        <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
-          {[...Array(25)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                width: Math.random() * 3 + 1 + 'px',
-                height: Math.random() * 3 + 1 + 'px',
-                backgroundColor: ['#FF8C00', '#FFD700', '#FFA500'][i % 3],
-                left: Math.random() * 100 + '%',
-                top: Math.random() * 100 + '%',
-                opacity: Math.random() * 0.5 + 0.2,
-                animation: `twinkle ${Math.random() * 3 + 2}s ease-in-out infinite ${Math.random() * 2}s, float ${Math.random() * 10 + 10}s linear infinite`,
-                boxShadow: `0 0 ${Math.random() * 10 + 5}px currentColor`
-              }}
-            />
-          ))}
-        </div>
-      )}
+
 
       <div className="relative" style={{ zIndex: 1 }}>
         <style>{`
           .custom-scrollbar::-webkit-scrollbar { width: 0px; }
           .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
           .custom-scrollbar::-webkit-scrollbar-thumb { background: transparent; }
-          @keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.8; } }
-          @keyframes float { 0% { transform: translateY(0px) translateX(0px); } 25% { transform: translateY(-20px) translateX(10px); } 50% { transform: translateY(-40px) translateX(-10px); } 75% { transform: translateY(-20px) translateX(10px); } 100% { transform: translateY(0px) translateX(0px); } }
         `}</style>
 
         <header className={`bg-gradient-to-b ${colors.headerBg} to-transparent border-b-4`} style={{ borderColor: '#FF8C00' }}>
@@ -309,6 +291,29 @@ export default function HyperBatMediaSite(): JSX.Element {
             <>
               {/* Statistiques des thèmes - CENTRÉES */}
               <div className="flex justify-center gap-3 mb-4" style={{ marginLeft: '320px' }}>
+                <button 
+                  onClick={() => systemsLogic.setSelectedCategory('screenscraper')}
+                  className="px-7 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer" 
+                  style={{ 
+                    background: '#2a2a2a',
+                    borderColor: systemsLogic.selectedCategory === 'screenscraper' ? '#FFFF00' : '#FFD700',
+                    borderWidth: systemsLogic.selectedCategory === 'screenscraper' ? '3px' : '2px',
+                    boxShadow: systemsLogic.selectedCategory === 'screenscraper' ? '0 0 10px rgba(168, 212, 0, 0.5)' : 'none'
+                  }}>
+                  <div>
+                    <p className="text-xs font-semibold" style={{ color: '#ffffff' }}>disponible sur</p>
+                    <p className="text-xs font-black">
+                      <span style={{ color: '#FFD700' }}>SCREEN</span>
+                      <span style={{ 
+                        background: 'linear-gradient(180deg, #6abf00 0%, #2d6a00 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent'
+                      }}>SCRAPER</span>
+                    </p>
+                    <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{themeStats.screenScraperThemes}</p>
+                  </div>
+                </button>
+
                 <button 
                   onClick={() => systemsLogic.setSelectedCategory('collection')}
                   className="px-7 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer" 

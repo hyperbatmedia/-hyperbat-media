@@ -40,7 +40,17 @@ const ThemeList: React.FC<ThemeListProps> = ({
   // 🔧 FIX : Réinitialiser les images chargées quand on change de page
   useEffect(() => {
     setLoadedImages(new Set());
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      try {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+        document.body.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }
+    }, 10);
   }, [currentPage]);
 
   // Intersection Observer pour lazy loading (IDENTIQUE À L'ORIGINAL)
@@ -64,7 +74,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
         });
       },
       {
-        rootMargin: '200px',
+        rootMargin: '350px',
         threshold: 0.01
       }
     );
@@ -189,7 +199,8 @@ const ThemeList: React.FC<ThemeListProps> = ({
                     {/* 🔧 FIX : Image sans la key complexe qui causait des problèmes */}
                     <img
                       ref={(el) => {
-                        if (el && observerRef.current) {
+                        if (el && !el.dataset.observed && observerRef.current) {
+                          el.dataset.observed = 'true';
                           observerRef.current.observe(el);
                         }
                       }}
@@ -206,7 +217,8 @@ const ThemeList: React.FC<ThemeListProps> = ({
                       }}
                       style={{
                         opacity: loadedImages.has(key) ? 1 : 0,
-                        transition: 'opacity 0.3s ease-in-out'
+                        transition: 'opacity 0.3s ease-in-out',
+                        willChange: 'opacity'
                       }}
                     />
                     
