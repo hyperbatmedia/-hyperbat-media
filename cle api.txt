@@ -1,0 +1,31 @@
+AIzaSyCmFUrPQAszUq6s545UOq_ygHjUWUxFHls          cle api
+✔️ Repo GitHub : -hyperbat-media
+
+✔️ Username GitHub : hyperbatmedia
+
+✔️ vite.config.ts → base: '/-hyperbat-media/' ✅
+
+!
+🔗 Liens importants à garder :
+
+Site web : https://hyperbatmedia.github.io/-hyperbat-media/
+Code source : https://github.com/hyperbatmedia/-hyperbat-media
+
+
+📋 Mémo pour la suite
+Pour mettre à jour votre site :
+ Dans le terminal de Cursor
+git add .
+git commit -m "Description des changements"
+git push
+npm run deploy
+Pour tester en local avant de publier :
+bashnpm run dev
+Puis ouvrez : http://localhost:5173
+https://drive.google.com/drive/folders/1XT5SNdQyozB__B27NGx-r1OscVw5FEyK?usp=drive_link
+
+
+https://drive.google.com/drive/folders/1EY8ZCKvHh58ZzZ9VR8kRvqyTMoPHfKCK?usp=drive_link
+
+
+https://drive.google.com/drive/folders/1YJSUeHH-qQD1aA8RLOK357B-0JyR3S0D?usp=drive_link
