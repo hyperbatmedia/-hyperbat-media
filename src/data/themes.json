@@ -605,6 +605,28 @@
     "date": "2026-02-03"
   },
   {
+    "id": 35646,
+    "name": "_default",
+    "creator": "Finch",
+    "system": "vircon32",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1XadYscwe5qHWuWGEcAaNVNVZXe3mB9cj/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1PHWghJae-ghI-5p21ULj-jCbULpomJbx/view?usp=sharing",
+    "size": "654.0 KB",
+    "date": "2026-04-03"
+  },
+  {
+    "id": 35649,
+    "name": "_default",
+    "creator": "Finch",
+    "system": "wasm4",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/150QcBxCuVovJ9W2eVtDi0-JW_XvNYQ_2/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1meI10NQHLJmt5srJZvFLsYDMb3BXFQ3A/view?usp=sharing",
+    "size": "502.2 KB",
+    "date": "2026-04-03"
+  },
+  {
     "id": 21468,
     "name": "_default V1",
     "creator": "Akeshi",
@@ -683,6 +705,18 @@
     "onScreenScraper": true
   },
   {
+    "id": 34942,
+    "name": "007 - The World Is Not Enough (USA)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/17UR4kOV3rQwPIiQqG3HZaCTC02Gde3P9/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Iw0-mcuG-5I-BYSCVcBxWjFOkIyYmU-0/view?usp=sharing",
+    "size": "2.1 MB",
+    "date": "2026-03-21",
+    "onScreenScraper": true
+  },
+  {
     "id": 12860,
     "name": "1 vs 100 (USA)",
     "creator": "KevoBatoYT",
@@ -726,6 +760,18 @@
     "downloadUrl": "https://drive.google.com/file/d/1jGY6Hc62nKO1vgBDPoYd9DI6bZR_LRzQ/view?usp=sharing",
     "size": "3.6 MB",
     "date": "2026-01-17"
+  },
+  {
+    "id": 34941,
+    "name": "1080 Snowboarding (Japan, USA) (En,Ja)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1M33ksW7VO1TQxUQnf8gT1oM1ecov_g6u/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/15Uc7gxFkQ55ma3lFDigBGVKqYxL3qRab/view?usp=sharing",
+    "size": "1.1 MB",
+    "date": "2026-03-21",
+    "onScreenScraper": true
   },
   {
     "id": 549,
@@ -1061,6 +1107,18 @@
     "downloadUrl": "https://drive.google.com/file/d/1c-VmgNlfMctfLXe4o3EPnreHV2koddj9/view?usp=sharing",
     "size": "5.5 MB",
     "date": "2026-01-25"
+  },
+  {
+    "id": 34842,
+    "name": "3-D Tetris (USA)",
+    "creator": "Finch",
+    "system": "virtualboy",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1-XhqerihK_vHyNEOGOjbKMnXSbuPCkM5/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/11lABmg6U3PyBQ9Ms2Ytg_exORI5P3udS/view?usp=sharing",
+    "size": "508.4 KB",
+    "date": "2026-04-03",
+    "onScreenScraper": true
   },
   {
     "id": 896,
@@ -1652,6 +1710,30 @@
     "onScreenScraper": true
   },
   {
+    "id": 33823,
+    "name": "aerofgt",
+    "creator": "Pento5185",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1p7hR9ZW9_RfrB4t_HwFx3Kg_sUVj5exC/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1YedOc5SGOXWNWzEsN-dfkpbtL4IYrJWL/view?usp=sharing",
+    "size": "3.1 MB",
+    "date": "2026-04-03",
+    "onScreenScraper": true
+  },
+  {
+    "id": 34452,
+    "name": "aerofgt",
+    "creator": "Pento5185",
+    "system": "vssystem",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1YFH5pybKTBaDUXci_Ie7YxswMeO0Naie/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1MGVHpI-Hf79t55V9B_lcN62kV0acwasZ/view?usp=sharing",
+    "size": "3.1 MB",
+    "date": "2026-04-03",
+    "onScreenScraper": true
+  },
+  {
     "id": 25407,
     "name": "AeroGauge (USA)",
     "creator": "Finch",
@@ -1837,6 +1919,30 @@
     "downloadUrl": "https://drive.google.com/file/d/1wNIoqvuOgfCu1jjRZmJFReaR8YS6rtdz/view?usp=sharing",
     "size": "2.6 MB",
     "date": "2026-03-07",
+    "onScreenScraper": true
+  },
+  {
+    "id": 33819,
+    "name": "ajax",
+    "creator": "Pento5185",
+    "system": "konamiclassique",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/19XHZeCBnY-FJ_OgWlhUkef2IY-Z4uiDO/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1uool6yuwrZlsSC7CDDeYCsOSd7nypRR8/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-04-03",
+    "onScreenScraper": true
+  },
+  {
+    "id": 33822,
+    "name": "ajax",
+    "creator": "Pento5185",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/16K5I_NplIeVXlIHNhBZSqRDr8ZPG727x/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1xmcLrbwoukFJZtU2NacQhKcJ-i6rWKF-/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-04-03",
     "onScreenScraper": true
   },
   {
@@ -2057,6 +2163,17 @@
     "downloadUrl": "https://drive.google.com/file/d/19NkcoKsUOAAjtAspxAF5i1i-DiH4wh9D/view?usp=sharing",
     "size": "2.4 MB",
     "date": "2025-11-30"
+  },
+  {
+    "id": 35647,
+    "name": "alice32",
+    "creator": "Finch",
+    "system": "alice32",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1C2XOcWJnxWtOEiuYSKdbFeVQs9ta7-dB/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Fd1DXRD47C3tn4YQ_8V3C9LwAL1QKGkE/view?usp=sharing",
+    "size": "567.1 KB",
+    "date": "2026-04-03"
   },
   {
     "id": 694,
@@ -2320,6 +2437,17 @@
     "size": "2.2 MB",
     "date": "2025-10-28",
     "onScreenScraper": true
+  },
+  {
+    "id": 33698,
+    "name": "Altered Carbon",
+    "creator": "Pento5185",
+    "system": "daphnelaserdisc",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/15Jd7Mj1hlwOwXU5Ev0QXf6Px3JAiFERs/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1GXCLCljUSIM9rqjqwMg0B_18yp--DMI7/view?usp=sharing",
+    "size": "2.1 MB",
+    "date": "2026-03-05"
   },
   {
     "id": 1060,
@@ -3092,6 +3220,30 @@
     "downloadUrl": "https://drive.google.com/file/d/13PG7jYQdAYyTz1Rg79m1rcpnYHoit7J7/view?usp=sharing",
     "size": "4.0 MB",
     "date": "2026-03-07"
+  },
+  {
+    "id": 33482,
+    "name": "astorm",
+    "creator": "Pento5185",
+    "system": "segaclassic",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1VE0Ma_H2eXwu6e0L6kGaiJHqIXTPWnAb/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1fT-G7LeXapjm9mEPgulRjhdRaMfsOwNp/view?usp=sharing",
+    "size": "4.0 MB",
+    "date": "2026-04-03",
+    "onScreenScraper": true
+  },
+  {
+    "id": 33821,
+    "name": "astorm",
+    "creator": "Pento5185",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1BV7TStKxfqIe7b5omb2kYH-zk7mGqFUX/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/14_8uthF3aV41KIWMc_XsuDr8WBz076yt/view?usp=sharing",
+    "size": "4.0 MB",
+    "date": "2026-04-03",
+    "onScreenScraper": true
   },
   {
     "id": 1090,
@@ -7226,6 +7378,18 @@
     "date": "2026-01-04"
   },
   {
+    "id": 34959,
+    "name": "CyberTiger (USA)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Wq0l13ss21A3WEXE74nZBaup9x4HaIN5/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/155tKApDtz7yiNBqRr_ADZ1OBx1_AgokH/view?usp=sharing",
+    "size": "1.8 MB",
+    "date": "2026-03-21",
+    "onScreenScraper": true
+  },
+  {
     "id": 1171,
     "name": "Cyborg Hunter (USA, Europe)",
     "creator": "Mrfomt",
@@ -8658,6 +8822,18 @@
     "date": "2026-03-07"
   },
   {
+    "id": 34869,
+    "name": "DonkeyKongClassic (Shiru)",
+    "creator": "Pento5185",
+    "system": "supernintendo",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/19tkioWb71XTH-m8MMYQGuxoZyb2_Lju_/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Eg0aV4j7PXGItS3UD6CiPCJGFoKcKVKM/view?usp=sharing",
+    "size": "8.3 MB",
+    "date": "2026-04-03",
+    "onScreenScraper": true
+  },
+  {
     "id": 580,
     "name": "donpachi",
     "creator": "Dav",
@@ -9560,6 +9736,18 @@
     "date": "2026-01-18"
   },
   {
+    "id": 34957,
+    "name": "F-1 World Grand Prix (USA)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/11x7dsf6FED-RkjdsEfLBWmh-3bFHUUBE/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1CEq4nDPKmM5IyZ_DJCRaRgM2jk-9mLlo/view?usp=sharing",
+    "size": "842.9 KB",
+    "date": "2026-03-21",
+    "onScreenScraper": true
+  },
+  {
     "id": 756,
     "name": "F-Zero (Europe)",
     "creator": "pento5185",
@@ -9592,6 +9780,18 @@
     "downloadUrl": "https://drive.google.com/file/d/17whKuMopKNM1zfMZjOYNYg_N1flU88-X/view?usp=sharing",
     "size": "8.9 MB",
     "date": "2026-02-08",
+    "onScreenScraper": true
+  },
+  {
+    "id": 34958,
+    "name": "F1 Pole Position 64 (USA) (En,Fr,De)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1rcqySCjq2U3LRXxyKKkqsPVRBHvib85v/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1qcM-FzuBuR-tKDtP4fDHPqiuBDTfc8NJ/view?usp=sharing",
+    "size": "1.1 MB",
+    "date": "2026-03-21",
     "onScreenScraper": true
   },
   {
@@ -9915,6 +10115,30 @@
     "downloadUrl": "https://drive.google.com/file/d/1j6GhsOdCAUVfYq74HCEx3qIprX6BG-hB/view?usp=sharing",
     "size": "1.8 MB",
     "date": "2025-11-30"
+  },
+  {
+    "id": 34956,
+    "name": "Fighter Destiny 2 (USA)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1PQoM14GXmRyOfBzBpauLsnmaG0gg6oDq/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/17kkUJ36GJ-ldL1DqKLN-wkfOasPNIU2r/view?usp=sharing",
+    "size": "1.0 MB",
+    "date": "2026-03-21",
+    "onScreenScraper": true
+  },
+  {
+    "id": 34955,
+    "name": "Fighters Destiny (USA)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1PwGIQ0sRfylZq4t0rjMAkZpu0yFFdmk6/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1jbZiMdiCMWo3OijaluMDbS4VPRDMmdfA/view?usp=sharing",
+    "size": "1.2 MB",
+    "date": "2026-03-21",
+    "onScreenScraper": true
   },
   {
     "id": 873,
@@ -10562,6 +10786,18 @@
     "downloadUrl": "https://drive.google.com/file/d/1MBFPrHIoAOZ0Gec1ekg6Ug2mZLsEAOAc/view?usp=sharing",
     "size": "2.7 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 34841,
+    "name": "Galactic Pinball (Japan, USA)",
+    "creator": "Finch",
+    "system": "virtualboy",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/14pT2U7qf18EGAYwpKPzPNOM0sU_qmTut/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1CSvFRyOFWOKxugnVTCFXSfDU79KpYGJp/view?usp=sharing",
+    "size": "531.1 KB",
+    "date": "2026-04-03",
+    "onScreenScraper": true
   },
   {
     "id": 65,
@@ -12186,6 +12422,18 @@
     "onScreenScraper": true
   },
   {
+    "id": 34954,
+    "name": "Golden Nugget 64 (USA",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/15xbM7k7zssVHcYEHos94wBC21QBdZ6td/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/19D3O1fhXV17gpfgB0Haymok_pxeNqkSm/view?usp=sharing",
+    "size": "911.9 KB",
+    "date": "2026-03-21",
+    "onScreenScraper": true
+  },
+  {
     "id": 1074,
     "name": "Golden Sun - Dark Dawn",
     "creator": "KevoBatoYT",
@@ -12221,6 +12469,18 @@
     "onScreenScraper": true
   },
   {
+    "id": 34943,
+    "name": "GoldenEye 007 (USA)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Thh4yFG-lvW53a24b4TfFG6JwurYGfO1/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1WMLjlgn9bLH-WoK4n_X4Vf91hdexVshy/view?usp=sharing",
+    "size": "1.7 MB",
+    "date": "2026-03-21",
+    "onScreenScraper": true
+  },
+  {
     "id": 378,
     "name": "goldnaxe",
     "creator": "Roni",
@@ -12241,6 +12501,18 @@
     "downloadUrl": "https://drive.google.com/file/d/1siwZOstpLByXB0Cdu8CwBf8gPl8RmHrI/view?usp=sharing",
     "size": "3.9 MB",
     "date": "2026-01-02"
+  },
+  {
+    "id": 34840,
+    "name": "Golf (USA)",
+    "creator": "Finch",
+    "system": "virtualboy",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1U6OxbW8G2HZhID6o8IABVToH0qlcSQrW/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ZnTJMN08naGZIBu4vLGRl-EvtGpDbZ_s/view?usp=sharing",
+    "size": "466.9 KB",
+    "date": "2026-04-03",
+    "onScreenScraper": true
   },
   {
     "id": 377,
@@ -13610,6 +13882,18 @@
     "onScreenScraper": true
   },
   {
+    "id": 34953,
+    "name": "Indy Racing 2000 (USA)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1nO_yiGqNTUgVUrj5ehRVvYaLqejHWso-/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1TTw_KZsN4Omdw4EBsZ7G2lWLdrulwJx7/view?usp=sharing",
+    "size": "953.5 KB",
+    "date": "2026-03-21",
+    "onScreenScraper": true
+  },
+  {
     "id": 1051,
     "name": "Infinite Space",
     "creator": "KevoBatoYT",
@@ -13697,6 +13981,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1sh97kMcUe7DweY4SLq20aGfAYjHOxWxE/view?usp=sharing",
     "size": "469.5 KB",
     "date": "2026-01-17"
+  },
+  {
+    "id": 35241,
+    "name": "intellivision",
+    "creator": "Finch",
+    "system": "intellivision",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1qLx4ZxuhNqXHzV338pPFCKygViK1Ryt3/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1AIVr7EmaGlK11YEwp3pqNt0Tbwgm-egW/view?usp=sharing",
+    "size": "1.5 MB",
+    "date": "2026-04-03"
   },
   {
     "id": 26774,
@@ -13899,6 +14194,18 @@
     "downloadUrl": "https://drive.google.com/file/d/1Xca-zZgbGyn9xJeld6whv1Ispc75QE4T/view?usp=sharing",
     "size": "4.6 MB",
     "date": "2025-11-30",
+    "onScreenScraper": true
+  },
+  {
+    "id": 34839,
+    "name": "Jack Bros. (USA)",
+    "creator": "Finch",
+    "system": "virtualboy",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1T2UwShOMV7zLDMDN51VYE8dr-EYI4NGu/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ImAtekyf64cASDmy2XDpEgjh1JJB4HY2/view?usp=sharing",
+    "size": "717.0 KB",
+    "date": "2026-04-03",
     "onScreenScraper": true
   },
   {
@@ -14829,6 +15136,17 @@
     "date": "2026-01-17"
   },
   {
+    "id": 34675,
+    "name": "konamilcd",
+    "creator": "Finch",
+    "system": "konamilcd",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1_RQVuVc1c93yha0GuZvcL3-7RmQhOHPd/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1gO7Ek788PF5HObMtdM4uZBdHLvaLahpT/view?usp=sharing",
+    "size": "1.8 MB",
+    "date": "2026-04-03"
+  },
+  {
     "id": 908,
     "name": "KORG DS-10 Synthesizer",
     "creator": "KevoBatoYT",
@@ -15341,6 +15659,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 33481,
+    "name": "library",
+    "creator": "Akeshi",
+    "system": "magazines",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/15_ebCDoLWngqFkDAH0bm15fK4yWkfXzR/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1IKB5QF8ruS8FuQwIBzNcIaHLRviVGkD3/view?usp=sharing",
+    "size": "9.0 MB",
+    "date": "2026-03-07"
+  },
+  {
     "id": 318,
     "name": "lightbr",
     "creator": "Roni",
@@ -15720,6 +16049,18 @@
     "date": "2025-11-13"
   },
   {
+    "id": 34838,
+    "name": "Mario Clash (Japan, USA)",
+    "creator": "Finch",
+    "system": "virtualboy",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1hefrKA_4rmn9-YQzm5RFdpJB-JGD3ocH/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1xZJqLfA-VOUp4qm590x0916G42qtE0qh/view?usp=sharing",
+    "size": "570.9 KB",
+    "date": "2026-04-03",
+    "onScreenScraper": true
+  },
+  {
     "id": 643,
     "name": "Mario Kart Arcade GP (Japan)",
     "creator": "Dav",
@@ -15763,6 +16104,18 @@
     "downloadUrl": "https://drive.google.com/file/d/1x6uTtve-1BIpAqiNTgVeYQIcMmYTNZHi/view?usp=sharing",
     "size": "5.8 MB",
     "date": "2026-01-17",
+    "onScreenScraper": true
+  },
+  {
+    "id": 34837,
+    "name": "Mario's Tennis (Japan, USA)",
+    "creator": "Finch",
+    "system": "virtualboy",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1N0_Y7VuwK1kpx8s4raIryQP5Ue7CZonY/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/11i0IBrPsgwFirOzV1qbSzzXFxJSkTc0q/view?usp=sharing",
+    "size": "626.6 KB",
+    "date": "2026-04-03",
     "onScreenScraper": true
   },
   {
@@ -16747,6 +17100,28 @@
     "date": "2026-01-18"
   },
   {
+    "id": 35719,
+    "name": "msx2+",
+    "creator": "Finch",
+    "system": "msx2",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1ef6u5CtulxOYjPzOMTI0xj-lzYxLLDzL/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1L477202WmIKHKdK9wFnreXDjd_eurODT/view?usp=sharing",
+    "size": "710.7 KB",
+    "date": "2026-04-03"
+  },
+  {
+    "id": 35714,
+    "name": "msxturbor",
+    "creator": "Finch",
+    "system": "msxturbor",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1qQWvXj-4rPAIDjX_Sp1YpUTdOl_mUrPP/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/14Ct1QSRDa8DYaml8SxzkoDVOIx4Nnn_z/view?usp=sharing",
+    "size": "1.6 MB",
+    "date": "2026-04-03"
+  },
+  {
     "id": 287,
     "name": "mtrap",
     "creator": "Roni",
@@ -16789,6 +17164,17 @@
     "downloadUrl": "https://drive.google.com/file/d/18OXJRIQgXgXYh3rgVW6pcnUsmYZ8iRXc/view?usp=sharing",
     "size": "6.3 MB",
     "date": "2026-01-25"
+  },
+  {
+    "id": 35654,
+    "name": "mtx512 v2",
+    "creator": "Finch",
+    "system": "mtx512",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1MLTgzX2T7ejiYd5HTIB2IGcauEkz1ph3/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/160iJmoGpXdSGXsZvgT2X8ECB289pella/view?usp=sharing",
+    "size": "1.3 MB",
+    "date": "2026-04-03"
   },
   {
     "id": 285,
@@ -17575,6 +17961,18 @@
     "date": "2026-01-18"
   },
   {
+    "id": 34836,
+    "name": "Nester's Funky Bowling (USA)",
+    "creator": "Finch",
+    "system": "virtualboy",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/157PQYVCzHKs4SoTUD3Z1ktV56YzRI0r7/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1DdyqPZp8NhVXTtSiKwHufqWl1h-8gvMy/view?usp=sharing",
+    "size": "530.3 KB",
+    "date": "2026-04-03",
+    "onScreenScraper": true
+  },
+  {
     "id": 26766,
     "name": "NFL Blitz - Special Edition (USA)",
     "creator": "Finch",
@@ -17941,6 +18339,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1OTCiGo04dWIjNk8Nq6mPb1yOsK5lU9N_/view?usp=sharing",
     "size": "2.6 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 34940,
+    "name": "odyssey2",
+    "creator": "Finch",
+    "system": "odyssey2videopac",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1DcZ67wSqLqcYoTMIOMNRWjK2-EbpoH_Y/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1X64gQCPcgMP70zioAzdqz3dB1Nn4tkdG/view?usp=sharing",
+    "size": "1.7 MB",
+    "date": "2026-04-03"
   },
   {
     "id": 142,
@@ -18509,6 +18918,18 @@
     "downloadUrl": "https://drive.google.com/file/d/1L8OdllD2r2o_l6L_NQRC30SrYH3P_qXT/view?usp=sharing",
     "size": "1009.5 KB",
     "date": "2026-01-05",
+    "onScreenScraper": true
+  },
+  {
+    "id": 34952,
+    "name": "Penny Racers (USA)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/12TfXa6r8XauiUylsbkh4p9FdPj7snudS/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1k0EA0ks42ZejTa-FtJX0myy5wmGQI1WZ/view?usp=sharing",
+    "size": "1.8 MB",
+    "date": "2026-03-21",
     "onScreenScraper": true
   },
   {
@@ -20421,6 +20842,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 35711,
+    "name": "samcoupe",
+    "creator": "Finch",
+    "system": "samcoup",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1qtyZY7Emver9UKWv3iJnyViAeO9eD9Yz/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1k__jzuPWHt1KrGGa2GlmeiboPo4vc7Dm/view?usp=sharing",
+    "size": "840.5 KB",
+    "date": "2026-04-03"
+  },
+  {
     "id": 14216,
     "name": "sammy",
     "creator": "Roni",
@@ -21517,6 +21949,30 @@
     "onScreenScraper": true
   },
   {
+    "id": 34951,
+    "name": "Snowboard Kids (USA)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1LBy_pB07PKyh-28eGhfL7ojKVnCuB7vD/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1t3aCyqEmbozE4QcNzwE8g9bMzPxdARPn/view?usp=sharing",
+    "size": "874.4 KB",
+    "date": "2026-03-21",
+    "onScreenScraper": true
+  },
+  {
+    "id": 34950,
+    "name": "Snowboard Kids 2 (USA)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1LsjPd9JHnYKlQwPQw6LIqdteMUN_VxQb/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1AZKymqBGER3nAB1WRWk-2OeMyh-S-CAz/view?usp=sharing",
+    "size": "1.1 MB",
+    "date": "2026-03-21",
+    "onScreenScraper": true
+  },
+  {
     "id": 218,
     "name": "snowbro2",
     "creator": "mrfomt",
@@ -21761,6 +22217,30 @@
     "downloadUrl": "https://drive.google.com/file/d/1AkCnoWVHIWBXZ78GjtyxAi8x-DgVwKir/view?usp=sharing",
     "size": "891.1 KB",
     "date": "2025-11-15"
+  },
+  {
+    "id": 34949,
+    "name": "South Park (USA)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/10jn-PrhRgijOMviY-OtFlm8odsl0CMHI/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1BhG_zAD9WR7l5enR5uM5U-EQR_vYp-8f/view?usp=sharing",
+    "size": "731.0 KB",
+    "date": "2026-03-21",
+    "onScreenScraper": true
+  },
+  {
+    "id": 34948,
+    "name": "South Park Rally (USA)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1SL4jbYWB3bZuNgcEFSyl6_WK9RzJVacG/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1InO7CsMuuDE550MwaHOnns90leF4a_YE/view?usp=sharing",
+    "size": "21.3 MB",
+    "date": "2026-03-21",
+    "onScreenScraper": true
   },
   {
     "id": 6902,
@@ -22219,6 +22699,18 @@
     "date": "2026-01-20"
   },
   {
+    "id": 34947,
+    "name": "Starshot - Space Circus Fever (USA) (En,Fr,Es)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/110R7GjC5mNgz0yW2Kra3SRsQbYf1jqjq/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1axwV2PGP8F6TETStkzfBoD38KeVbSppN/view?usp=sharing",
+    "size": "1.2 MB",
+    "date": "2026-03-21",
+    "onScreenScraper": true
+  },
+  {
     "id": 204,
     "name": "stonebal",
     "creator": "Sk0ney",
@@ -22669,6 +23161,17 @@
     "onScreenScraper": true
   },
   {
+    "id": 34705,
+    "name": "taddams",
+    "creator": "Finch",
+    "system": "tigerlcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1XSQ0QrYl9uaQHmyGd8KKI08igyHTeJ9d/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1NYu960beKOqVssZ6napFGV1Ys4eiLSga/view?usp=sharing",
+    "size": "1.7 MB",
+    "date": "2026-04-03"
+  },
+  {
     "id": 14214,
     "name": "taito",
     "creator": "Roni",
@@ -22692,6 +23195,28 @@
     "onScreenScraper": true
   },
   {
+    "id": 34704,
+    "name": "taltbeast",
+    "creator": "Finch",
+    "system": "tigerlcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1wnPbdAor0fbiMIu-TOEYXPj9fuP5SgiO/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1BrK4ChCeO6PyqRK3LOlCyIov8GDL_MFC/view?usp=sharing",
+    "size": "2.1 MB",
+    "date": "2026-04-03"
+  },
+  {
+    "id": 34703,
+    "name": "tapollo13",
+    "creator": "Finch",
+    "system": "tigerlcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/15bPuhFzBN7C1NIy6lGCDplkWQ9Do0Qe8/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1-Jf52SndrJ2-FRXxbIuf9AsxLkIp0a_o/view?usp=sharing",
+    "size": "2.1 MB",
+    "date": "2026-04-03"
+  },
+  {
     "id": 200,
     "name": "tapper",
     "creator": "Roni",
@@ -22712,6 +23237,39 @@
     "downloadUrl": "https://drive.google.com/file/d/1D2OegknJuZ-djd86jsEvaKUiHhUfiAhP/view?usp=sharing",
     "size": "777.7 KB",
     "date": "2026-01-05"
+  },
+  {
+    "id": 34702,
+    "name": "tbatfor",
+    "creator": "Finch",
+    "system": "tigerlcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1F0qgZuDQ1pFEw13AQxxT2ecdZgYWwZog/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1MftLG96dA2uPkmvRLzushKc21yxnVqcm/view?usp=sharing",
+    "size": "843.9 KB",
+    "date": "2026-04-03"
+  },
+  {
+    "id": 34701,
+    "name": "tbatman",
+    "creator": "Finch",
+    "system": "tigerlcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1RT7fxqC47a_udR_YaE_A4ZLoVpyPnk5c/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1iYm_hTDPczIVmZaMfy8JpUhZUxcA7QMZ/view?usp=sharing",
+    "size": "1.1 MB",
+    "date": "2026-04-03"
+  },
+  {
+    "id": 34700,
+    "name": "tbatmana",
+    "creator": "Finch",
+    "system": "tigerlcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1TyoYSEBg1qp7JH8Z2zuWSRfYVihjCmjp/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1AjlfZs7Sb75gEnhN7ByvN0jRMC2l5W9B/view?usp=sharing",
+    "size": "1.3 MB",
+    "date": "2026-04-03"
   },
   {
     "id": 7886,
@@ -23040,6 +23598,18 @@
     "date": "2026-01-05"
   },
   {
+    "id": 34946,
+    "name": "Tigger's Honey Hunt (USA)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Dwlu3k_mX_QeSuuKUq7PWTRbXlvy15WP/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1A_3-H0S-Q9Fxh4VV-ivL7ZKjXkl0akoY/view?usp=sharing",
+    "size": "1.0 MB",
+    "date": "2026-03-21",
+    "onScreenScraper": true
+  },
+  {
     "id": 29020,
     "name": "Time Crisis 4",
     "creator": "Akeshi",
@@ -23314,6 +23884,18 @@
     "date": "2025-11-13"
   },
   {
+    "id": 34945,
+    "name": "Toy Story 2 - Buzz Lightyear to the Rescue! (USA) (Rev 1)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1vFgE0sWBErorgU3P6872WhulxYOp43vv/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1YNmOsbbGgZgY3aimfPYBQt2eJO-3PrG9/view?usp=sharing",
+    "size": "693.3 KB",
+    "date": "2026-03-21",
+    "onScreenScraper": true
+  },
+  {
     "id": 772,
     "name": "tpgolf",
     "creator": "Dav",
@@ -23492,6 +24074,18 @@
     "downloadUrl": "https://drive.google.com/file/d/1ZVZIyGuDq_6HX9wHRJjrsc2ZaBmTkI0N/view?usp=sharing",
     "size": "833.1 KB",
     "date": "2025-11-14"
+  },
+  {
+    "id": 34944,
+    "name": "Turok - Dinosaur Hunter (USA) (Rev 2)",
+    "creator": "Finch",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1IppKZuzpO_FEaKUYb5aDLMWOR-3jNupE/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/10wtnykOewZPH6ouVpfzwNDesgE0aVya-/view?usp=sharing",
+    "size": "1.3 MB",
+    "date": "2026-03-21",
+    "onScreenScraper": true
   },
   {
     "id": 25409,
@@ -23682,6 +24276,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1SuqsvFayA0OVmVDOKh0NW69LMpZskQWS/view?usp=sharing",
     "size": "6.9 MB",
     "date": "2026-01-18"
+  },
+  {
+    "id": 33513,
+    "name": "typex2_V1",
+    "creator": "Pento5185",
+    "system": "taito",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1OfNyeJPue35_Bd9KfRb6Qanb6GKrloC4/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1cKUSKAEfsZwDnba53Ad2fCyYEz3MSHZI/view?usp=sharing",
+    "size": "2.8 MB",
+    "date": "2026-04-03"
   },
   {
     "id": 22173,
@@ -24071,6 +24676,17 @@
     "onScreenScraper": true
   },
   {
+    "id": 35648,
+    "name": "Vircon32",
+    "creator": "Finch",
+    "system": "vircon32",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1v66Jy1FEQHBzBW3ayImaR3b0njDpUWRq/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1vHFK4hZAcIlbnRpVG05_zsv8yVhwDpv1/view?usp=sharing",
+    "size": "571.9 KB",
+    "date": "2026-04-03"
+  },
+  {
     "id": 29018,
     "name": "Virtua Striker 3 ",
     "creator": "Akeshi",
@@ -24295,6 +24911,17 @@
     "size": "2.2 MB",
     "date": "2025-12-04",
     "onScreenScraper": true
+  },
+  {
+    "id": 35645,
+    "name": "wasm4",
+    "creator": "Finch",
+    "system": "wasm4",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1jYRqB_GHdKD3tLTE8JnNneIoFAglGkZ5/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1huF-X3FwCSiqTSax3fDLQp73aNI1wRJU/view?usp=sharing",
+    "size": "646.0 KB",
+    "date": "2026-04-03"
   },
   {
     "id": 26786,

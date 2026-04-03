@@ -125,10 +125,11 @@ export default function HyperBatMediaSite(): JSX.Element {
     const gameThemes = themes.filter(t => t.category === 'game-themes').length;
     const systemThemes = themes.filter(t => t.category === 'system-themes').length;
     const defaultThemes = themes.filter(t => t.category === 'default-themes').length;
+    const magazineThemes = themes.filter(t => t.category === 'magazines').length;
     const screenScraperThemes = themes.filter(t => t.onScreenScraper === true).length;
     const total = themes.length;
     
-    return { collectionThemes, artworkThemes, gameThemes, systemThemes, defaultThemes, screenScraperThemes, total };
+    return { collectionThemes, artworkThemes, gameThemes, systemThemes, defaultThemes, magazineThemes, screenScraperThemes, total };
   }, [themes]);
 
   const handleSearchChange = (value: string) => {
@@ -290,7 +291,7 @@ export default function HyperBatMediaSite(): JSX.Element {
           {!showAdminPanel && (
             <>
               {/* Statistiques des thèmes - CENTRÉES */}
-              <div className="flex justify-center gap-3 mb-4" style={{ marginLeft: '320px' }}>
+              <div className="flex justify-center gap-3 mb-4" style={{ marginLeft: '100px' }}>
                 <button 
                   onClick={() => systemsLogic.setSelectedCategory('screenscraper')}
                   className="px-7 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer" 
@@ -311,6 +312,22 @@ export default function HyperBatMediaSite(): JSX.Element {
                       }}>SCRAPER</span>
                     </p>
                     <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{themeStats.screenScraperThemes}</p>
+                  </div>
+                </button>
+
+                <button 
+                  onClick={() => systemsLogic.setSelectedCategory('magazines')}
+                  className="px-7 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer" 
+                  style={{ 
+                    backgroundColor: '#D97706', 
+                    borderColor: systemsLogic.selectedCategory === 'magazines' ? '#FFFF00' : '#FFD700',
+                    borderWidth: systemsLogic.selectedCategory === 'magazines' ? '3px' : '2px',
+                    boxShadow: systemsLogic.selectedCategory === 'magazines' ? '0 0 10px rgba(255, 215, 0, 0.3)' : 'none'
+                  }}>
+                  <span style={{ fontSize: '10px' }}>📰</span>
+                  <div>
+                    <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>Magazines</p>
+                    <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{themeStats.magazineThemes}</p>
                   </div>
                 </button>
 
