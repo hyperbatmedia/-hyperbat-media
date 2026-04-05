@@ -125,7 +125,7 @@ export default function HyperBatMediaSite(): JSX.Element {
     const gameThemes = themes.filter(t => t.category === 'game-themes').length;
     const systemThemes = themes.filter(t => t.category === 'system-themes').length;
     const defaultThemes = themes.filter(t => t.category === 'default-themes').length;
-    const magazineThemes = themes.filter(t => t.category === 'magazines').length;
+    const magazineThemes = themes.filter(t => t.system === 'magazines').length;
     const screenScraperThemes = themes.filter(t => t.onScreenScraper === true).length;
     const total = themes.length;
     
@@ -186,14 +186,15 @@ export default function HyperBatMediaSite(): JSX.Element {
         
         const matchesSystem = matchSystemId(theme.system, systemsLogic.selectedSystem);
         
-        // Gestion spéciale pour 'collection' : filtre par system mais exclut les artwork
         const matchesCategory = systemsLogic.selectedCategory === 'all' 
           ? true 
           : systemsLogic.selectedCategory === 'collection' 
             ? (theme.system === 'collectionspersonnalises' && theme.category !== 'artwork')
             : systemsLogic.selectedCategory === 'screenscraper'
               ? theme.onScreenScraper === true
-              : theme.category === systemsLogic.selectedCategory;
+              : systemsLogic.selectedCategory === 'magazines'
+                ? (theme.system === 'magazines')
+                : theme.category === systemsLogic.selectedCategory;
         
         return matchesSearch && matchesSystem && matchesCategory;
       })
@@ -248,8 +249,6 @@ export default function HyperBatMediaSite(): JSX.Element {
 
   return (
     <div className="min-h-screen relative overflow-hidden transition-colors duration-300" style={{ backgroundColor: colors.bg, color: colors.text }}>
-
-
       <div className="relative" style={{ zIndex: 1 }}>
         <style>{`
           .custom-scrollbar::-webkit-scrollbar { width: 0px; }
@@ -290,7 +289,7 @@ export default function HyperBatMediaSite(): JSX.Element {
         <div className="container mx-auto px-4 py-4">
           {!showAdminPanel && (
             <>
-              {/* Statistiques des thèmes - CENTRÉES */}
+              {/* Statistiques des thèmes */}
               <div className="flex justify-center gap-3 mb-4" style={{ marginLeft: '100px' }}>
                 <button 
                   onClick={() => systemsLogic.setSelectedCategory('screenscraper')}

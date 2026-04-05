@@ -7,8 +7,7 @@ export const categories: Category[] = [
     { id: 'artwork', name: 'Artwork' },
     { id: 'game-themes', name: 'Thèmes de jeux' },
     { id: 'system-themes', name: 'Thèmes système' },
-    { id: 'default-themes', name: 'Thème default' },
-    { id: 'magazines', name: 'Magazines' }
+    { id: 'default-themes', name: 'Thème default' }
 ];
 
 // --- systemsData (statique)
@@ -38,7 +37,7 @@ export const systemsData: SystemsDataStructure = {
         },
         'sega-arcade': {
           label: 'SEGA',
-          systems: ['Sega Classic', 'Sega G80', 'System 1', 'System 2', 'System E', 'System C', 'System C-2', 'System 16', 'System 18', 'System 24', 'System 32', 'System Multi 32', 'X Board', 'Y Board', 'ST-V', 'Europa-R', 'System SP', 'Model 1', 'Model 2', 'Model 3', 'Hikaru', 'Naomi', 'Naomi 2', 'Chihiro', 'Lindbergh', 'RingEdge', 'RingEdge 2', 'RingWide', 'ALLS']
+          systems: ['Sega G80', 'System 1', 'System 2', 'System E', 'System C', 'System C-2', 'System 16', 'System 18', 'System 24', 'System 32', 'System Multi 32', 'X Board', 'Y Board', 'ST-V', 'Europa-R', 'System SP', 'Model 1', 'Model 2', 'Model 3', 'Hikaru', 'Naomi', 'Naomi 2', 'Chihiro', 'Lindbergh', 'RingEdge', 'RingEdge 2', 'RingWide', 'ALLS']
         },
         namco: { label: 'NAMCO', systems: ['Namco Classique', 'Namco System', 'Namco System 2x6', 'Namco System 10', 'Namco System 11', 'Namco System 12', 'Namco System 21', 'Namco System 22', 'Namco System 23', 'Namco System 246', 'Namco System 256', 'Namco System Super 256', 'Namco System 357', 'Namco System 369', 'Namco System ES1', 'Namco System ES2', 'Namco System ES3', 'Namco System FL', 'Namco System NA-1', 'Namco System NA-2'] },
         konami: { label: 'KONAMI', systems: ['Konami Classique', 'Konami', 'Konami Bubble System', 'Konami GX', 'Konami GTI', 'Konami M2', 'Konami Hornet', 'Konami Python', 'Konami Viper', 'Konami Firebeat', 'Konami Twinkle', 'Konami Windy', 'Konami Windy X2', 'Konami System 573', 'Bemani DJ Main', 'Bemani PC', 'e-Amusement'] },
@@ -150,8 +149,7 @@ export const systemsData: SystemsDataStructure = {
         dingoo: { label: 'DINGOO', systems: ['Dingoo A320'] },
         openpandora: { label: 'OPEN PANDORA', systems: ['Pandora'] },
         arduboy: { label: 'ARDUBOY', systems: ['Arduboy'] },
-        valve: { label: 'VALVE', systems: ['Steam Deck'] },
-        konami: { label: 'KONAMI', systems: ['Konami LCD'] }
+        valve: { label: 'VALVE', systems: ['Steam Deck'] }
     },
     ports: {
         zelda: { label: 'ZELDA PORTS', systems: ['Ship of Harkinian (Ocarina of Time)'] },
@@ -195,8 +193,7 @@ export const systemsData: SystemsDataStructure = {
         windows: { label: 'WINDOWS', systems: ['Windows 3.x', 'Windows 9x', 'Windows'] },
         pecom: { label: 'PECOM', systems: ['Pecom 64'] },
         dos: { label: 'DOS', systems: ['MS-DOS', 'PC DOS'] },
-        dec: { label: 'DEC', systems: ['PDP-1', 'PDP-8', 'PDP-11'] },
-        matra: { label: 'MATRA & HACHETTE', systems: ['Alice', 'Alice 32'] }
+        dec: { label: 'DEC', systems: ['PDP-1', 'PDP-8', 'PDP-11'] }
     },
     flipper: {
         simulateurs: { label: 'SIMULATEURS', systems: ['Visual Pinball', 'Future Pinball', 'Pinball FX', 'Pinball FX2', 'Pinball FX3', 'Zaccaria Pinball', 'Pinball M'] }
@@ -204,7 +201,7 @@ export const systemsData: SystemsDataStructure = {
     magazines: {
         magazines: { 
             label: '', 
-            systems: ['Magazines']
+            systems: ['magazines']
         }
     }
 };

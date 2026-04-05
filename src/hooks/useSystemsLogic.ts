@@ -10,7 +10,8 @@ const DEFAULT_SECTIONS = {
   fantasy: false,
   ordinosaure: false,
   ports: false,
-  flipper: false
+  flipper: false,
+  magazines: false
 };
 
 export const generateSystems = (cats: Category[], data: SystemsDataStructure, icons: SectionIconsStructure): SystemRow[] => {
