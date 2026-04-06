@@ -1746,6 +1746,28 @@
     "onScreenScraper": true
   },
   {
+    "id": 36074,
+    "name": "afighter",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/130QaAMLiHto92J6zQZQGxU-5vU4qtIev/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1HzBlb8fh3dvmDgayOFjhqPA4tVSFs7Xl/view?usp=sharing",
+    "size": "2.2 MB",
+    "date": "2026-04-05"
+  },
+  {
+    "id": 36755,
+    "name": "afighter",
+    "creator": "Roni",
+    "system": "system16",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1WqCx8S2_HhMtakK8FF_3DMDjOKKSiWVo/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Wkj9lAph62AVigBL0lKPqx_6D9JfKWTC/view?usp=sharing",
+    "size": "2.2 MB",
+    "date": "2026-04-05"
+  },
+  {
     "id": 717,
     "name": "After Burner (USA)",
     "creator": "huhe-8554",
@@ -6014,6 +6036,18 @@
     "onScreenScraper": true
   },
   {
+    "id": 37174,
+    "name": "Castlevania - Symphony of the Night (USA)",
+    "creator": "KittieKatie",
+    "system": "playstation",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1xHfrD-jw7SjYaoIts5F1Gw65uw4FhNK2/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1MHwbrDCkrDy7rHxkCIRtuzyuzKRLlPgQ/view?usp=sharing",
+    "size": "2.4 MB",
+    "date": "2026-04-06",
+    "onScreenScraper": true
+  },
+  {
     "id": 23271,
     "name": "Castlevania 2 - Simon's Quest",
     "creator": "Huhe-8554",
@@ -6023,6 +6057,18 @@
     "downloadUrl": "https://drive.google.com/file/d/1gab4zSOUNp96mvNOlpGjDIU3SBBdIBEe/view?usp=sharing",
     "size": "3.8 MB",
     "date": "2026-02-03",
+    "onScreenScraper": true
+  },
+  {
+    "id": 37173,
+    "name": "Castlevania Chronicles (USA)",
+    "creator": "KittieKatie",
+    "system": "playstation",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1sRv33DTtH4rpac2RSnj8jyNCc0meWXkC/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1x6QH_vFuQWk_JLOPH37noVG2F9GSqoiR/view?usp=sharing",
+    "size": "2.7 MB",
+    "date": "2026-04-06",
     "onScreenScraper": true
   },
   {
@@ -7094,6 +7140,42 @@
     "downloadUrl": "https://drive.google.com/file/d/1zVih_QtTbEOx_doeQjIJmxB0JOjMTSAr/view?usp=sharing",
     "size": "3.4 MB",
     "date": "2025-11-30"
+  },
+  {
+    "id": 37172,
+    "name": "Crash Bandicoot - Warped (USA)",
+    "creator": "KittieKatie",
+    "system": "playstation",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1GZd8PwfdZ_E_oweIZtK-c7k_GGkGZZWC/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1qfmiFY6a7ZHwe6ZwYV3R9Cyd6vLsUkG7/view?usp=sharing",
+    "size": "4.4 MB",
+    "date": "2026-04-06",
+    "onScreenScraper": true
+  },
+  {
+    "id": 37171,
+    "name": "Crash Bandicoot (USA)",
+    "creator": "KittieKatie",
+    "system": "playstation",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1MtlJSLZGz6j3__mAbj6u7SKhMFcv-qSv/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Nw7Lr964x3MTaWfMTia_EIxGUa6ZYH7I/view?usp=sharing",
+    "size": "3.0 MB",
+    "date": "2026-04-06",
+    "onScreenScraper": true
+  },
+  {
+    "id": 37170,
+    "name": "Crash Bandicoot 2 - Cortex Strikes Back (USA)",
+    "creator": "KittieKatie",
+    "system": "playstation",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1aNjzLCQdGr_XXt9Yjx1qpmYgT52VDgBz/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1CRbUDvX1CCor6cEx3n059o47HIFkxAJT/view?usp=sharing",
+    "size": "3.9 MB",
+    "date": "2026-04-06",
+    "onScreenScraper": true
   },
   {
     "id": 26499,
@@ -8822,6 +8904,18 @@
     "date": "2026-03-07"
   },
   {
+    "id": 37122,
+    "name": "Donkey Kong Country Tropical Freeze",
+    "creator": "Jmsm93",
+    "system": "switch",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1IV6zjXndthMfCFhxSVDQZFZDIKu1erMc/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1i632W5e5uq06IRHLISjckHRDzzzqFZ-5/view?usp=sharing",
+    "size": "5.1 MB",
+    "date": "2026-04-06",
+    "onScreenScraper": true
+  },
+  {
     "id": 34869,
     "name": "DonkeyKongClassic (Shiru)",
     "creator": "Pento5185",
@@ -8831,6 +8925,18 @@
     "downloadUrl": "https://drive.google.com/file/d/1Eg0aV4j7PXGItS3UD6CiPCJGFoKcKVKM/view?usp=sharing",
     "size": "8.3 MB",
     "date": "2026-04-03",
+    "onScreenScraper": true
+  },
+  {
+    "id": 37123,
+    "name": "DonkeyKongCountryHD",
+    "creator": "Jmsm93",
+    "system": "switch",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1ikih-jzfGWaDs46Dkplxs856DUI-3JLa/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1aWbQPmZ4NL1u5vM_OapmspL40zYJ_fPr/view?usp=sharing",
+    "size": "2.9 MB",
+    "date": "2026-04-06",
     "onScreenScraper": true
   },
   {
@@ -12660,6 +12766,18 @@
     "date": "2026-01-20"
   },
   {
+    "id": 37169,
+    "name": "Gran Turismo (USA)",
+    "creator": "KittieKatie",
+    "system": "playstation",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1V5t64C11RzHI7Ud0z8eo7a-WhI0jb07Z/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1-ngZKbH41e9nm7R8SwRuwWozZFCPs2P8/view?usp=sharing",
+    "size": "2.9 MB",
+    "date": "2026-04-06",
+    "onScreenScraper": true
+  },
+  {
     "id": 1014,
     "name": "Grand Theft Auto - Chinatown Wars",
     "creator": "KevoBatoYT",
@@ -13277,6 +13395,18 @@
     "downloadUrl": "https://drive.google.com/file/d/1TQB0Cy88N8VGcSa2lCjIMhbdJNLoPi70/view?usp=sharing",
     "size": "5.8 MB",
     "date": "2026-01-20"
+  },
+  {
+    "id": 37168,
+    "name": "Hello Kitty - Cube Frenzy (USA)",
+    "creator": "KittieKatie",
+    "system": "playstation",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1rwcIsbczg5q3FCP8fX1uJtmGZZEz-a4S/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1TDrV303Y0fyg7o8R02Flt4qhrmT5rFx7/view?usp=sharing",
+    "size": "1.2 MB",
+    "date": "2026-04-06",
+    "onScreenScraper": true
   },
   {
     "id": 933,
@@ -15140,6 +15270,17 @@
     "name": "konamilcd",
     "creator": "Finch",
     "system": "konamilcd",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1_RQVuVc1c93yha0GuZvcL3-7RmQhOHPd/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1gO7Ek788PF5HObMtdM4uZBdHLvaLahpT/view?usp=sharing",
+    "size": "1.8 MB",
+    "date": "2026-04-03"
+  },
+  {
+    "id": 36936,
+    "name": "konamilcd",
+    "creator": "Finch",
+    "system": "konami",
     "category": "system-themes",
     "imageUrl": "https://drive.google.com/file/d/1_RQVuVc1c93yha0GuZvcL3-7RmQhOHPd/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1gO7Ek788PF5HObMtdM4uZBdHLvaLahpT/view?usp=sharing",
@@ -17067,6 +17208,30 @@
     "date": "2025-11-14"
   },
   {
+    "id": 35776,
+    "name": "mspacmnf",
+    "creator": "KittieKatie",
+    "system": "midway",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1bKknYec2eoGzuTteOmpR34NMznxXLSMp/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1uxV06Kfu33GpE-DtCmG6BYv4MzS3A2EI/view?usp=sharing",
+    "size": "698.4 KB",
+    "date": "2026-04-06",
+    "onScreenScraper": true
+  },
+  {
+    "id": 36073,
+    "name": "mspacmnf",
+    "creator": "KittieKatie",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1G5rkH3s7cnKfrpQgmY3AEap6NPV-Js2Q/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/13ls3-4lck7_u1ZTA4HbHksz3JMuLZtTB/view?usp=sharing",
+    "size": "698.4 KB",
+    "date": "2026-04-06",
+    "onScreenScraper": true
+  },
+  {
     "id": 11,
     "name": "msword",
     "creator": "Roni",
@@ -18341,6 +18506,18 @@
     "date": "2025-11-13"
   },
   {
+    "id": 37167,
+    "name": "Oddworld - Abe's Exoddus (USA)",
+    "creator": "KittieKatie",
+    "system": "playstation",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1uzPyfvC5uM0TM653aGkkfELK33dNjvPk/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1NYco0nOebt8qD5_045BAZGUhn2dTwR68/view?usp=sharing",
+    "size": "8.3 MB",
+    "date": "2026-04-06",
+    "onScreenScraper": true
+  },
+  {
     "id": 34940,
     "name": "odyssey2",
     "creator": "Finch",
@@ -18763,6 +18940,18 @@
     "downloadUrl": "https://drive.google.com/file/d/1pXBN9aTHkhM5s4BNBRogTIfZYr2zxuWL/view?usp=sharing",
     "size": "1.7 MB",
     "date": "2026-03-03",
+    "onScreenScraper": true
+  },
+  {
+    "id": 37166,
+    "name": "PaRappa the Rapper (USA) (En,Fr,De,Es,It)",
+    "creator": "KittieKatie",
+    "system": "playstation",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1a-wmV7_jU_SiaG8Q02zDlAarms9F84fo/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ruI9qZF_0AxyQjSB3yjt6a20pMTyK0Zi/view?usp=sharing",
+    "size": "1.4 MB",
+    "date": "2026-04-06",
     "onScreenScraper": true
   },
   {
@@ -20488,6 +20677,18 @@
     "downloadUrl": "https://drive.google.com/file/d/1RJRtiR4eKLO13ZPeJuKHgycey0ZZwSbf/view?usp=sharing",
     "size": "4.6 MB",
     "date": "2025-12-01"
+  },
+  {
+    "id": 37165,
+    "name": "Ridge Racer (USA)",
+    "creator": "KittieKatie",
+    "system": "playstation",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/15GsHYQTQbjcctf9ziaxUNpx3SuczOirf/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ZLymcEEpRoWCnUPmnrr0Aywe_YMBWVuL/view?usp=sharing",
+    "size": "2.9 MB",
+    "date": "2026-04-06",
+    "onScreenScraper": true
   },
   {
     "id": 803,
@@ -22956,6 +23157,18 @@
     "onScreenScraper": true
   },
   {
+    "id": 37121,
+    "name": "Super Mario Bros U Deluxe",
+    "creator": "Jmsm93",
+    "system": "switch",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/10V6UkjdzFaJhdr9rwcy33ip6qyj3Ml31/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1-eVGZs_XHC3JcV-8CFR00TseLe2LePQk/view?usp=sharing",
+    "size": "7.4 MB",
+    "date": "2026-04-06",
+    "onScreenScraper": true
+  },
+  {
     "id": 690,
     "name": "Super Mario Bros. 3 (Europe)",
     "creator": "huhe-8554",
@@ -23405,6 +23618,17 @@
     "size": "1.9 MB",
     "date": "2026-01-20",
     "onScreenScraper": true
+  },
+  {
+    "id": 35722,
+    "name": "tekken",
+    "creator": "Christophe",
+    "system": "collectionspersonnalises",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1ODDbqoMyPUjbrCynsHjs5lrTtf_fJAhP/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ykRQJvAqewvgtXwofIwZXUSSxHrD4aYc/view?usp=sharing",
+    "size": "9.8 MB",
+    "date": "2026-04-06"
   },
   {
     "id": 26495,
