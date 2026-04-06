@@ -33,11 +33,11 @@ export const SIDEBAR_COLORS = {
 } as const;
 
 /**
- * Liens externes
+ * Liens externes (fallback si le JSON ne charge pas)
  */
 export const EXTERNAL_LINKS = {
-  discord: 'https://discord.gg/votre-serveur',  // ⚠️ À REMPLACER
-  arrm: 'https://www.arm.com',                   // ⚠️ À REMPLACER par le bon lien
+  discord: 'https://discord.gg/votre-serveur',  // ⚠️ À REMPLACER par le vrai lien
+  arrm: 'https://www.arm.com',                   // ⚠️ À REMPLACER par le vrai lien
 } as const;
 
 /**
@@ -52,9 +52,11 @@ export const SCROLL_CONFIG = {
 
 /**
  * Styles CSS pour la scrollbar personnalisée
- * Compatible Chrome/Safari/Edge (webkit)
+ * - webkit : Chrome, Edge, Opera
+ * - standard : Firefox (scrollbar-color + scrollbar-width)
  */
 export const SCROLLBAR_STYLES = `
+  /* ── Chrome / Edge / Opera (webkit) ── */
   .custom-scrollbar::-webkit-scrollbar {
     width: ${SCROLL_CONFIG.scrollbarWidth};
   }
@@ -68,6 +70,13 @@ export const SCROLLBAR_STYLES = `
   }
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: ${SIDEBAR_COLORS.primaryLight};
+  }
+
+  /* ── Firefox (standard W3C) ── */
+  /* scrollbar-color: couleur-du-pouce couleur-du-rail */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: ${SIDEBAR_COLORS.primary} #1a1a1a;
   }
 `;
 

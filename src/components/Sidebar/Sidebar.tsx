@@ -32,6 +32,7 @@ interface SidebarProps {
   toggleSystemCategories: (systemId: string) => void;
   allThemes?: Array<{ id: number; system: string; category: string; [key: string]: any }>;
   isDarkMode: boolean;
+  onCollapsedChange?: (collapsed: boolean) => void;
 }
 
 // ── Icônes de section ─────────────────────────────────────────────────────────
@@ -52,13 +53,14 @@ const SECTION_ICONS: Record<string, SectionIconDef> = {
   magazines:   { type: 'svg',   component: <BookOpen className="w-6 h-6" style={{ stroke: '#00A3FF', fill: 'none' }} /> },
 };
 
-const SectionIcon: React.FC<{ section: string; size?: number }> = ({ section, size = 24 }) => {
+const SectionIcon: React.FC<{ section: string; size?: number; imgSize?: number }> = ({ section, size = 24, imgSize }) => {
   const icon = SECTION_ICONS[section];
   if (!icon) return null;
+  const pngSize = imgSize ?? size;
   if (icon.type === 'img') {
     return (
       <img src={icon.src} alt={section}
-        style={{ width: size, height: size, objectFit: 'contain', mixBlendMode: 'screen', flexShrink: 0 }} />
+        style={{ width: pngSize, height: pngSize, minWidth: pngSize, minHeight: pngSize, objectFit: 'contain', mixBlendMode: 'screen', flexShrink: 0 }} />
     );
   }
   if (icon.type === 'emoji') {
@@ -84,7 +86,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   systems, sidebarSearch, setSidebarSearch, selectedSystem, selectedCategory,
   handleSystemSelect, setSelectedCategory, expandedSections, toggleSection,
   expandedSubsections, toggleSubsection, expandedSystems, toggleSystemCategories,
-  allThemes = [], isDarkMode
+  allThemes = [], isDarkMode, onCollapsedChange
 }) => {
   const { links, isLoading: isLoadingLinks } = useLinksLoader();
 
@@ -92,6 +94,10 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     try { return localStorage.getItem(LS_KEY) === 'true'; } catch { return false; }
   });
+
+  useEffect(() => {
+    onCollapsedChange?.(collapsed);
+  }, [collapsed]);
 
   const toggleCollapsed = () => {
     setCollapsed(prev => {
@@ -101,7 +107,6 @@ const Sidebar: React.FC<SidebarProps> = ({
     });
   };
 
-  // Clic icône en mode réduit → ouvre sidebar + déploie la section
   const handleCollapsedSectionClick = (sectionKey: string) => {
     setCollapsed(false);
     try { localStorage.setItem(LS_KEY, 'false'); } catch {}
@@ -233,12 +238,12 @@ const Sidebar: React.FC<SidebarProps> = ({
         <button
           onClick={() => handleCollapsedSectionClick(sectionKey)}
           title={label}
-          className={`w-full flex items-center justify-center py-2 px-1 rounded transition ${
+          className={`w-full flex items-center justify-center py-1 px-0 rounded transition ${
             isExpanded ? 'bg-orange-500/20' : isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-200'
           }`}
           style={{ borderLeft: isExpanded ? '2px solid #FF8C00' : '2px solid transparent' }}
         >
-          <SectionIcon section={sectionKey} size={28} />
+          <SectionIcon section={sectionKey} size={34} imgSize={46} />
         </button>
       );
     }
@@ -252,7 +257,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         aria-expanded={isExpanded}
       >
         <h4 className="font-bold text-sm tracking-wider flex items-center gap-2 min-w-0" style={{ color: '#FFD700' }}>
-          <SectionIcon section={sectionKey} size={22} />
+          <SectionIcon section={sectionKey} size={32} />
           <span className="truncate">{label}</span>
           {sectionCount > 0 && (
             <span className="text-xs opacity-80 font-normal flex-shrink-0" style={{ color: 'rgba(255,215,0,0.85)' }}>
@@ -293,7 +298,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const renderSystem = (system: SystemRow) => {
-    if (collapsed && !TOP_BUTTON_IDS.includes(system.id as any)) return null;
+    if (collapsed) return null;
     if (!isSearchActive) {
       if (system.section && !expandedSections[system.section]) return null;
       if (
@@ -481,7 +486,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className={`rounded-lg border-4 sticky top-4 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}
         style={{ borderColor: '#FF8C00', height: 'calc(100vh - 2rem)', display: 'flex', flexDirection: 'column' }}>
 
-        {/* Header titre + Discord/ARRM */}
+        {/* Header titre + Discord/ARRM — mode étendu */}
         {!collapsed && (
           <div className="flex items-center justify-between p-4 pb-2 flex-shrink-0">
             <h3 className="text-xl font-black" style={{ color: '#FF8C00' }}>SYSTÈMES</h3>
@@ -523,6 +528,51 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </>
               )}
             </div>
+          </div>
+        )}
+
+        {/* Discord + ARRM — mode réduit */}
+        {collapsed && (
+          <div className="flex flex-col items-center gap-2 pt-3 pb-2 flex-shrink-0">
+            {isLoadingLinks ? null : headerLinks.length > 0 ? (
+              headerLinks.map(link => {
+                const isARRM = link.name.toLowerCase().includes('arrm');
+                return (
+                  <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer"
+                    title={link.name}
+                    className={`flex items-center justify-center rounded-lg transition-all duration-200 hover:brightness-125 focus:outline-none focus:ring-2
+                      ${isARRM ? 'bg-yellow-500 hover:bg-yellow-600 focus:ring-yellow-400' : 'bg-[#5865F2] hover:bg-[#4752C4] focus:ring-blue-400'}`}
+                    style={{ width: 36, height: isARRM ? 28 : 36 }}>
+                    {isARRM ? (
+                      <span className="text-xs font-black" style={{ color: '#0091bd' }}>ARRM</span>
+                    ) : (
+                      <svg width="20" height="20" fill="#FFFFFF" viewBox="0 0 24 24">
+                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+                      </svg>
+                    )}
+                  </a>
+                );
+              })
+            ) : (
+              <>
+                <a href={EXTERNAL_LINKS.discord} target="_blank" rel="noopener noreferrer"
+                  title="Rejoindre notre Discord"
+                  className="flex items-center justify-center rounded-lg bg-[#5865F2] hover:bg-[#4752C4] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  style={{ width: 36, height: 36 }}>
+                  <svg width="20" height="20" fill="#FFFFFF" viewBox="0 0 24 24">
+                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+                  </svg>
+                </a>
+                <a href={EXTERNAL_LINKS.arrm} target="_blank" rel="noopener noreferrer"
+                  title="ARRM"
+                  className="flex items-center justify-center rounded-lg bg-yellow-500 hover:bg-yellow-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                  style={{ width: 36, height: 28 }}>
+                  <span className="text-xs font-black" style={{ color: '#0091bd' }}>ARRM</span>
+                </a>
+              </>
+            )}
+            {/* Séparateur */}
+            <div style={{ width: 36, height: 1, background: '#374151', marginTop: 2 }} />
           </div>
         )}
 
