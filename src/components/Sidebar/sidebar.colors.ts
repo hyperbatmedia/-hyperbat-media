@@ -115,7 +115,7 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
  * Couleurs par défaut pour les systèmes non configurés
  */
 export const DEFAULT_COLORS: SystemColorConfig = { 
-  keywords: [], 
+  keywords: [],  // non utilisé pour le fallback, requis par l'interface
   bg: '#FF8C00',        // Orange
   border: '#FFD700',    // Or
   hover: '#E67E00', 

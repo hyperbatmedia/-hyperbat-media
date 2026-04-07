@@ -1,12 +1,12 @@
 // Fichier: src/components/ThemeList/ThemeList.tsx
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Download, X, ShoppingCart, Trash2, CheckSquare, Square } from 'lucide-react';
+import { Download, ShoppingCart } from 'lucide-react';
 import { ThemeItem, SystemRow } from '../../types';
 import { getThemeKey } from '../../utils/themeUtils';
 import Lightbox from '../Lightbox/Lightbox';
 import ScreenScraperBadge from '../ScreenScraperBadge';
 
-const CART_MAX = 10;
+import { CART_MAX } from '../../constants';
 
 interface ThemeListProps {
   viewMode: 'grid' | 'list';
@@ -17,8 +17,6 @@ interface ThemeListProps {
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   themesPerPage: number;
-  isAuthenticated: boolean;
-  handleDeleteTheme: (themeKey: string) => Promise<void>;
   systems: SystemRow[];
   // Panier — état géré dans HyperBatMediaSite et passé en props
   cart: ThemeItem[];
@@ -31,7 +29,7 @@ interface ThemeListProps {
 const ThemeList: React.FC<ThemeListProps> = ({
   viewMode, themes, allFilteredThemes, filteredThemesLength,
   totalPages, currentPage, setCurrentPage, themesPerPage,
-  isAuthenticated, handleDeleteTheme, systems,
+  systems,
   cart, onCartAdd, onCartRemove, onCartOpen, sidebarCollapsed = false
 }) => {
   const [selectedTheme, setSelectedTheme] = useState<ThemeItem | null>(null);
@@ -180,13 +178,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
                 card.style.transform = 'translateY(0) scale(1)';
               }}
             >
-              {isAuthenticated && (
-                <button onClick={() => handleDeleteTheme(key)}
-                  className="absolute top-2 right-2 z-10 bg-red-600 p-1 rounded opacity-0 group-hover:opacity-100 transition">
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-
               {/* Image */}
               <div
                 className="bg-gradient-to-br from-gray-800 to-black flex items-center justify-center border-b-2 border-gray-700 cursor-pointer relative overflow-hidden"

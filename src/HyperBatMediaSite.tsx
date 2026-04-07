@@ -1,9 +1,9 @@
 // Fichier: src/HyperBatMediaSite.tsx 
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, ShoppingCart } from 'lucide-react';
 
 import { NewThemeForm, ThemeItem } from './types';
-import { categories } from './constants';
+import { categories, CART_MAX } from './constants';
 import { useThemeStorage } from './hooks/useThemeStorage';
 import { useSystemsLogic } from './hooks/useSystemsLogic';
 import { getThemeKey } from './utils/themeUtils';
@@ -13,7 +13,6 @@ import ThemeList from './components/ThemeList/ThemeList';
 import CartPanel from './components/CartPanel/CartPanel';
 
 const THEMES_PER_PAGE = 20;
-const CART_MAX = 10;
 
 const convertGoogleDriveUrl = (url: string, isImage: boolean = false): string => {
   if (!url || typeof url !== 'string') return url;
@@ -25,7 +24,7 @@ const convertGoogleDriveUrl = (url: string, isImage: boolean = false): string =>
   if (!fileId) { match = url.match(/[?&]id=([a-zA-Z0-9_-]{25,})/); if (match) fileId = match[1]; }
   if (!fileId) { match = url.match(/open\?id=([a-zA-Z0-9_-]{25,})/); if (match) fileId = match[1]; }
   if (!fileId && /^[a-zA-Z0-9_-]{25,40}$/.test(url.trim())) fileId = url.trim();
-  if (!fileId) { console.warn('⚠️ Impossible d\'extraire l\'ID Google Drive de:', url); return url; }
+  if (!fileId) return url;
   if (isImage) return `https://lh3.googleusercontent.com/d/${fileId}=w400`;
   return `https://drive.google.com/uc?id=${fileId}&export=download`;
 };
@@ -186,7 +185,10 @@ export default function HyperBatMediaSite(): JSX.Element {
     return filteredThemes.slice(startIndex, startIndex + THEMES_PER_PAGE);
   }, [filteredThemes, currentPage]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredThemes.length / THEMES_PER_PAGE));
+  const totalPages = useMemo(
+    () => Math.max(1, Math.ceil(filteredThemes.length / THEMES_PER_PAGE)),
+    [filteredThemes.length]
+  );
 
   useEffect(() => { setCurrentPage(1); }, [searchTerm, systemsLogic.selectedSystem, systemsLogic.selectedCategory, sortBy]);
 
@@ -204,11 +206,6 @@ export default function HyperBatMediaSite(): JSX.Element {
   return (
     <div className="min-h-screen relative overflow-hidden transition-colors duration-300" style={{ backgroundColor: colors.bg, color: colors.text }}>
       <div className="relative" style={{ zIndex: 1 }}>
-        <style>{`
-          .custom-scrollbar::-webkit-scrollbar { width: 0px; }
-          .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-          .custom-scrollbar::-webkit-scrollbar-thumb { background: transparent; }
-        `}</style>
 
         <header className={`bg-gradient-to-b ${colors.headerBg} to-transparent border-b-4`} style={{ borderColor: '#FF8C00' }}>
           <div className="container mx-auto px-4 py-6">
@@ -360,7 +357,7 @@ export default function HyperBatMediaSite(): JSX.Element {
             {!showAdminPanel && (
               <div style={{ paddingTop: '52px' }}>
                 <Sidebar
-                  systems={systemsLogic.systems} categories={categories}
+                  systems={systemsLogic.systems}
                   sidebarSearch={sidebarSearch} setSidebarSearch={setSidebarSearch}
                   selectedSystem={systemsLogic.selectedSystem} selectedCategory={systemsLogic.selectedCategory}
                   handleSystemSelect={systemsLogic.handleSystemSelect} setSelectedCategory={systemsLogic.setSelectedCategory}
@@ -419,8 +416,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                   viewMode={viewMode} themes={paginatedThemes}
                   allFilteredThemes={filteredThemes} filteredThemesLength={filteredThemes.length}
                   totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage}
-                  themesPerPage={THEMES_PER_PAGE} isAuthenticated={showAdminPanel}
-                  handleDeleteTheme={handleDeleteTheme} systems={systemsLogic.systems}
+                  themesPerPage={THEMES_PER_PAGE} systems={systemsLogic.systems}
                   cart={cart} onCartAdd={handleCartAdd} onCartRemove={handleCartRemove} onCartOpen={() => setCartOpen(true)}
                   sidebarCollapsed={sidebarCollapsed}
                 />

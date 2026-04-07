@@ -147,8 +147,7 @@ const AddTab: React.FC<AddTabProps> = ({
       setImagePreview('');
 
       setTimeout(() => setShowSuccess(false), 3000);
-    } catch (error) {
-      console.error("Erreur lors de l'ajout du thème:", error);
+    } catch {
       alert("Une erreur est survenue lors de l'ajout.");
     } finally {
       setIsSubmitting(false);

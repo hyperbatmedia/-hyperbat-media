@@ -185,10 +185,7 @@ export default function Lightbox({
               }}
               referrerPolicy="no-referrer"
               onLoad={() => setImageLoaded(true)} // 🆕 Marque comme chargée
-              onError={(e) => {
-                setImageLoaded(true);
-                console.error('Erreur chargement image Lightbox:', theme.imageUrl);
-              }}
+              onError={() => setImageLoaded(true)}
             />
           </div>
         ) : (

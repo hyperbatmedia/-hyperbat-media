@@ -1,6 +1,9 @@
 // Fichier: src/constants.ts
 import { Category, SystemsDataStructure, SectionIconsStructure } from './types';
 
+// --- constante partagée panier
+export const CART_MAX = 10;
+
 // --- categories (statique) - EXPORTÉ pour utilisation dans Lightbox
 export const categories: Category[] = [
     { id: 'collection', name: 'Collections Personnalisées' },
@@ -145,7 +148,7 @@ export const systemsData: SystemsDataStructure = {
         nokia: { label: 'NOKIA', systems: ['N-Gage', 'N-Gage QD'] },
         mobile: { label: 'MOBILE', systems: ['J2ME (Java Mobile)'] },
         watara: { label: 'WATARA', systems: ['Supervision'] },
-        lcd: { label: 'LCD GAMES', systems: ['Game & Watch', 'Tiger LCD', 'LCD Handhelds', 'Elektronika-Handheld'] },
+        lcd: { label: 'LCD GAMES', systems: ['Game & Watch', 'Tiger LCD', 'LCD Handhelds', 'Konami LCD', 'Elektronika-Handheld'] },
         dingoo: { label: 'DINGOO', systems: ['Dingoo A320'] },
         openpandora: { label: 'OPEN PANDORA', systems: ['Pandora'] },
         arduboy: { label: 'ARDUBOY', systems: ['Arduboy'] },

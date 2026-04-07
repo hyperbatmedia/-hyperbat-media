@@ -21,10 +21,7 @@ export const SEARCH_CONFIG = {
 export const SIDEBAR_COLORS = {
   primary: '#FF8C00',           // Orange principal
   primaryLight: '#FFA500',      // Orange clair
-  primaryGold: '#FFD700',       // Or
-  headerGold: '#FFD700',        // Or pour les headers (sections principales)
-  subHeaderOrange: '#FF8C00',   // Orange pour les sous-headers
-  sectionYellow: '#FFD700',     // JAUNE pour les sections (comme dans l'original)
+  primaryGold: '#FFD700',       // Or (aussi utilisé pour les headers et sections)
   discord: '#5865F2',           // Bleu Discord
   discordHover: '#4752C4',      // Bleu Discord hover
   arrm: '#0091bd',              // Bleu ARRM
