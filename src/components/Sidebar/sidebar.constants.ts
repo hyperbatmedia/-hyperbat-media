@@ -3,7 +3,7 @@
 /**
  * IDs des boutons spéciaux affichés en haut de la sidebar
  */
-export const TOP_BUTTON_IDS = ['all', 'tools', 'tutorials', 'main-themes'] as const;
+export const TOP_BUTTON_IDS = ['all', 'tools', 'tutorials', 'main-themes', 'other-themes'] as const;
 
 /**
  * Configuration de la position de la barre de recherche

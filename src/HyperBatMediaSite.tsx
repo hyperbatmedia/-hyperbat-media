@@ -31,7 +31,7 @@ const convertGoogleDriveUrl = (url: string, isImage: boolean = false): string =>
 
 const matchSystemId = (themeSystem: string, selectedSystemId: string): boolean => {
   if (selectedSystemId === 'all') return true;
-  if (['tools', 'tutorials', 'main-themes'].includes(selectedSystemId)) return false;
+  if (['tools', 'tutorials', 'main-themes', 'other-themes'].includes(selectedSystemId)) return false;
   const parts = selectedSystemId.split('-');
   const systemIdPart = parts[parts.length - 1];
   const normalizedSelected = systemIdPart.toLowerCase().replace(/[^a-z0-9]+/g, '');

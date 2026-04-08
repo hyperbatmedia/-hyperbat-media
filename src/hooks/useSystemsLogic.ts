@@ -19,7 +19,8 @@ export const generateSystems = (cats: Category[], data: SystemsDataStructure, ic
     { id: 'all', name: 'Tous les systèmes', categories: [] },
     { id: 'tools', name: 'Outils', categories: [] },
     { id: 'tutorials', name: 'Tutoriels', categories: [] },
-    { id: 'main-themes', name: 'THÈMES HYPERBAT', categories: [] }
+    { id: 'main-themes', name: 'THÈMES HYPERBAT', categories: [] },
+    { id: 'other-themes', name: 'AUTRES THÈMES DE BOB', categories: [] }
   ];
 
   const usedSystemNames = new Set<string>();
@@ -133,7 +134,7 @@ export function useSystemsLogic(): UseSystemsLogicResult {
     const system = systems.find(s => s.id === systemId);
     if (!system) return;
 
-    if (['all', 'tools', 'tutorials', 'main-themes'].includes(systemId)) {
+    if (['all', 'tools', 'tutorials', 'main-themes', 'other-themes'].includes(systemId)) {
       setSelectedSystem(systemId);
       setSelectedCategory('all');
       setExpandedSystems({});

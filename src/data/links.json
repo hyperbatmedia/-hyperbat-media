@@ -2,7 +2,7 @@
   {
     "id": "discord",
     "name": "Discord",
-    "url": " https://discord.com/invite/msnaz7Kev7",
+    "url": "https://discord.com/invite/msnaz7Kev7",
     "location": "header",
     "position": 1
   },
@@ -16,16 +16,107 @@
   {
     "id": "tutoriels",
     "name": "Tutoriels",
-    "url": "https://example.com/tutoriel",
+    "url": "",
     "location": "list",
-    "position": 1
+    "position": 1,
+    "modal": {
+      "title": "TUTORIELS",
+      "type": "youtube",
+      "items": [
+        {
+          "id": "tuto-001",
+          "name": "Ajouter une animation shader à HyperBat Theme Creator",
+          "creator": "Dav",
+          "youtubeUrl": "https://www.youtube.com/watch?v=r6XBg6UJFuU",
+          "youtubeId": "r6XBg6UJFuU"
+        },
+        {
+          "id": "tuto-002",
+          "name": "Ajouter une rotation",
+          "creator": "Dav",
+          "youtubeUrl": "https://www.youtube.com/watch?v=OXR7BnThdE8",
+          "youtubeId": "OXR7BnThdE8"
+        },
+        {
+          "id": "tuto-003",
+          "name": "Ajout Bump infini à une animation",
+          "creator": "Dav",
+          "youtubeUrl": "https://www.youtube.com/watch?v=rTDPcupb5ds",
+          "youtubeId": "rTDPcupb5ds"
+        },
+        {
+          "id": "tuto-004",
+          "name": "Mode création d'animation",
+          "creator": "Dav",
+          "youtubeUrl": "https://www.youtube.com/watch?v=iN3s_WHYFFI",
+          "youtubeId": "iN3s_WHYFFI"
+        },
+        {
+          "id": "tuto-005",
+          "name": "Créer un thème système",
+          "creator": "Dav",
+          "youtubeUrl": "https://www.youtube.com/watch?v=4cUMQkFhIz8",
+          "youtubeId": "4cUMQkFhIz8"
+        },
+        {
+          "id": "tuto-006",
+          "name": "Créer un thème défaut",
+          "creator": "Dav",
+          "youtubeUrl": "https://www.youtube.com/watch?v=UqHmNIkddyI",
+          "youtubeId": "UqHmNIkddyI"
+        },
+        {
+          "id": "tuto-007",
+          "name": "Création du thème jeu Art Of Fighting",
+          "creator": "Roni",
+          "youtubeUrl": "https://youtu.be/rtZhzeMmPNg",
+          "youtubeId": "rtZhzeMmPNg"
+        },
+        {
+          "id": "tuto-008",
+          "name": "Création du thème jeu NaughtyBoy",
+          "creator": "Roni",
+          "youtubeUrl": "https://youtu.be/6t2iGCIpv38",
+          "youtubeId": "6t2iGCIpv38"
+        },
+        {
+          "id": "tuto-009",
+          "name": "Présentation vitrine HyperBat Media",
+          "creator": "KevoBato",
+          "youtubeUrl": "https://www.youtube.com/watch?v=wxJ23CkBESY",
+          "youtubeId": "wxJ23CkBESY"
+        }
+      ]
+    }
   },
   {
     "id": "outils",
     "name": "Outils",
-    "url": "https://drive.google.com/drive/folders/1Wbv0OszKq2h6F2QHY1nNW-p64cvBHEpR?usp=sharing",
+    "url": "",
     "location": "list",
-    "position": 2
+    "position": 2,
+    "modal": {
+      "title": "OUTILS",
+      "type": "download",
+      "items": [
+        {
+          "id": "tool-001",
+          "name": "HyperBat Theme Creator",
+          "description": "L'outil officiel pour créer et éditer vos thèmes HyperBat. Animations, shaders, rotations — tout se configure ici.",
+          "imageUrl": "",
+          "downloadUrl": "https://drive.google.com/drive/u/5/folders/1cro2FsXYj0AzjX8AfA6y3YnexCxtCoEd",
+          "creator": "Dav"
+        },
+        {
+          "id": "tool-arrm",
+          "name": "ARRM",
+          "description": "Another Recalbox Roms Manager — scraper et gestionnaire de médias pour RetroBat, Batocera, Recalbox et Retropie.",
+          "imageUrl": "",
+          "downloadUrl": "http://www.jujuvincebros.fr/wiki/arrm/doku.php?id=arrm_relooked_fr:download-fr_relooked",
+          "creator": "Nexusone13"
+        }
+      ]
+    }
   },
   {
     "id": "themes-hyperbat",
@@ -33,5 +124,17 @@
     "url": "https://github.com/BobMoraneRetro/one4all4one-hyperbat-bobmorane",
     "location": "list",
     "position": 3
+  },
+  {
+    "id": "autres-themes-bob",
+    "name": "AUTRES THÈMES DE BOB",
+    "url": "",
+    "location": "list",
+    "position": 4,
+    "modal": {
+      "title": "AUTRES THÈMES DE BOB",
+      "type": "download",
+      "items": []
+    }
   }
 ]

@@ -8,6 +8,8 @@ import {
   SIDEBAR_INLINE_STYLES,
 } from './sidebar.constants';
 import { useLinksLoader } from '../../hooks/useLinksLoader';
+import type { ModalConfig } from '../../hooks/useLinksLoader';
+import ContentModal from '../ContentModal/ContentModal';
 
 import arcadeImg from '../../assets/icons/arcade.png';
 import portableImg from '../../assets/icons/console_portable.png';
@@ -96,6 +98,15 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const { links, isLoading: isLoadingLinks } = useLinksLoader();
 
+  // ── Modal ──────────────────────────────────────────────────────────────────
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [modalConfig, setModalConfig] = useState<ModalConfig | null>(null);
+
+  const openModal = (config: ModalConfig) => {
+    setModalConfig(config);
+    setModalOpen(true);
+  };
+
   // ── Rétractable ───────────────────────────────────────────────────────────
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     try { return localStorage.getItem(LS_KEY) === 'true'; } catch { return false; }
@@ -130,9 +141,10 @@ const Sidebar: React.FC<SidebarProps> = ({
   );
   const linksBySystemId = useMemo(() => {
     const map: Record<string, typeof links[0] | undefined> = {};
-    map['tools']       = listLinks.find(l => l.id === 'outils'          || l.name.toLowerCase().includes('outil'));
-    map['tutorials']   = listLinks.find(l => l.id === 'tutoriels'       || l.name.toLowerCase().includes('tutoriel'));
-    map['main-themes'] = listLinks.find(l => l.id === 'themes-hyperbat' || l.name.toLowerCase().includes('theme'));
+    map['tools']        = listLinks.find(l => l.id === 'outils'            || l.name.toLowerCase().includes('outil'));
+    map['tutorials']    = listLinks.find(l => l.id === 'tutoriels'         || l.name.toLowerCase().includes('tutoriel'));
+    map['main-themes']  = listLinks.find(l => l.id === 'themes-hyperbat'   || l.name.toLowerCase().includes('theme'));
+    map['other-themes'] = listLinks.find(l => l.id === 'autres-themes-bob' || l.name.toLowerCase().includes('autres thèmes'));
     return map;
   }, [listLinks]);
 
@@ -367,12 +379,26 @@ const Sidebar: React.FC<SidebarProps> = ({
           }}
         >
           {correspondingLink ? (
-            <a href={correspondingLink.url} target="_blank" rel="noopener noreferrer"
-              className={`flex-1 text-left text-sm min-w-0 pr-2 focus:outline-none rounded
-                ${isSelected || isTopButton ? 'text-white' : `${defaultTextColor} ${defaultHoverText}`}`}
-              style={textStyle} aria-label={system.name}>
-              <span className="truncate block">{system.name}</span>
-            </a>
+            correspondingLink.modal ? (
+              // ── Bouton modal (Tutoriels, Outils, Autres thèmes Bob) ──
+              <button
+                onClick={() => openModal(correspondingLink.modal!)}
+                className={`flex-1 text-left text-sm min-w-0 pr-2 focus:outline-none rounded
+                  ${isSelected || isTopButton ? 'text-white' : `${defaultTextColor} ${defaultHoverText}`}`}
+                style={textStyle}
+                aria-label={system.name}
+              >
+                <span className="truncate block">{system.name}</span>
+              </button>
+            ) : (
+              // ── Lien externe classique (Thèmes HyperBat → GitHub) ──
+              <a href={correspondingLink.url} target="_blank" rel="noopener noreferrer"
+                className={`flex-1 text-left text-sm min-w-0 pr-2 focus:outline-none rounded
+                  ${isSelected || isTopButton ? 'text-white' : `${defaultTextColor} ${defaultHoverText}`}`}
+                style={textStyle} aria-label={system.name}>
+                <span className="truncate block">{system.name}</span>
+              </a>
+            )
           ) : (
             <button
               ref={el => { if (el) systemButtonsRef.current.set(system.id, el); else systemButtonsRef.current.delete(system.id); }}
@@ -590,10 +616,10 @@ const Sidebar: React.FC<SidebarProps> = ({
           ) : (
             <>
               {visibleSystems.map((system, index) => {
-                const showSearchAfter = !collapsed && index === 3 && system.id === 'main-themes';
+                const showSearchAfter = !collapsed && index === 4 && system.id === 'other-themes';
                 const isTopBtn  = TOP_BUTTON_IDS.includes(system.id as any);
                 const hasLink   = isTopBtn && system.id !== 'all' && linksBySystemId[system.id];
-                const uniqueKey = hasLink ? `${system.id}-link-${linksBySystemId[system.id]?.url}` : system.id;
+                const uniqueKey = hasLink ? `${system.id}-link-${linksBySystemId[system.id]?.id}` : system.id;
 
                 return (
                   <React.Fragment key={uniqueKey}>
@@ -628,6 +654,16 @@ const Sidebar: React.FC<SidebarProps> = ({
           )}
         </div>
       </div>
+
+      {/* ── Modal contenu ── */}
+      {modalConfig && (
+        <ContentModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          config={modalConfig}
+          isDarkMode={isDarkMode}
+        />
+      )}
     </aside>
   );
 };

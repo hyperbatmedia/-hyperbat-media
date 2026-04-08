@@ -1,12 +1,30 @@
 import * as React from 'react';
 import linksData from '../data/links.json';
 
-interface Link {
+export interface ModalItem {
+  id: string;
+  name: string;
+  creator: string;
+  youtubeUrl?: string;
+  youtubeId?: string;
+  description?: string;
+  imageUrl?: string;
+  downloadUrl?: string;
+}
+
+export interface ModalConfig {
+  title: string;
+  type: 'youtube' | 'download';
+  items: ModalItem[];
+}
+
+export interface Link {
   id: string;
   name: string;
   url: string;
   location: 'header' | 'list';
   position?: number;
+  modal?: ModalConfig;
 }
 
 /**
