@@ -252,7 +252,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                   { id: 'all', label: 'Total global', count: themeStats.total, Icon: BarChart3 },
                 ].map(({ id, label, count, special, icon, Icon }) => (
                   <button key={id}
-                    onClick={() => systemsLogic.setSelectedCategory(id)}
+                    onClick={() => { systemsLogic.handleSystemSelect('all'); systemsLogic.setSelectedCategory(id); }}
                     className="px-7 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
                     style={{
                       background: special ? '#2a2a2a' : '#D97706',

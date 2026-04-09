@@ -2,6 +2,22 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { X, Search, Play, Download, ExternalLink } from 'lucide-react';
 
+// ── Conversion URL Google Drive ───────────────────────────────────────────────
+const convertGoogleDriveUrl = (url: string, isImage: boolean = false): string => {
+  if (!url || typeof url !== 'string') return url;
+  if (url.includes('/thumbnail?') || url.includes('/uc?') || url.includes('lh3.googleusercontent.com')) return url;
+  let fileId = '';
+  let match = url.match(/\/file\/d\/([a-zA-Z0-9_-]{25,})/);
+  if (match) fileId = match[1];
+  if (!fileId) { match = url.match(/\/(?:folders|d)\/([a-zA-Z0-9_-]{25,})/); if (match) fileId = match[1]; }
+  if (!fileId) { match = url.match(/[?&]id=([a-zA-Z0-9_-]{25,})/); if (match) fileId = match[1]; }
+  if (!fileId) { match = url.match(/open\?id=([a-zA-Z0-9_-]{25,})/); if (match) fileId = match[1]; }
+  if (!fileId && /^[a-zA-Z0-9_-]{25,40}$/.test(url.trim())) fileId = url.trim();
+  if (!fileId) return url;
+  if (isImage) return `https://lh3.googleusercontent.com/d/${fileId}=w400`;
+  return `https://drive.google.com/uc?id=${fileId}&export=download`;
+};
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 export interface ModalItem {
   id: string;
@@ -56,7 +72,8 @@ const YoutubeThumbnail: React.FC<{ youtubeId: string; name: string }> = ({ youtu
 // ── Carte outil/thème ─────────────────────────────────────────────────────────
 const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean }> = ({ item, isDarkMode }) => {
   const [imgError, setImgError] = useState(false);
-  const hasImage = item.imageUrl && !imgError;
+  const convertedImageUrl = item.imageUrl ? convertGoogleDriveUrl(item.imageUrl, true) : '';
+  const hasImage = !!convertedImageUrl && !imgError;
 
   const handleDownload = () => {
     if (item.downloadUrl) {
@@ -77,8 +94,8 @@ const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean }> = ({ item
       {/* Image ou visuel titre */}
       <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', background: '#0f0f1a', overflow: 'hidden', flexShrink: 0 }}>
         {hasImage ? (
-          <img src={item.imageUrl} alt={item.name} onError={() => setImgError(true)}
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          <img src={convertedImageUrl} alt={item.name} onError={() => setImgError(true)}
+            style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }} />
         ) : item.id === 'tool-arrm' ? (
           /* Visuel ARRM — effet glace bleu */
           <div style={{
@@ -177,7 +194,7 @@ const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean }> = ({ item
             </p>
           )}
           {item.id === 'tool-arrm' && (
-            <p style={{ margin: 0, fontSize: 14, fontWeight: 600, lineHeight: 1.3, color: '#4fc3f7' }}>
+            <p style={{ margin: 0, fontSize: 14, fontWeight: 600, lineHeight: 1.3, color: isDarkMode ? '#ffffff' : '#1a1a1a' }}>
               {item.name}
             </p>
           )}
