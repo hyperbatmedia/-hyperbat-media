@@ -61,14 +61,14 @@ const SECTION_ICONS: Record<string, SectionIconDef> = {
   magazines:   { type: 'svg',   component: <BookOpen className="w-6 h-6" style={{ stroke: '#00A3FF', fill: 'none' }} /> },
 };
 
-const SectionIcon: React.FC<{ section: string; size?: number; imgSize?: number }> = ({ section, size = 24, imgSize }) => {
+const SectionIcon: React.FC<{ section: string; size?: number; imgSize?: number; isDarkMode?: boolean }> = ({ section, size = 24, imgSize, isDarkMode = true }) => {
   const icon = SECTION_ICONS[section];
   if (!icon) return null;
   const pngSize = imgSize ?? size;
   if (icon.type === 'img') {
     return (
       <img src={icon.src} alt={section}
-        style={{ width: pngSize, height: pngSize, minWidth: pngSize, minHeight: pngSize, objectFit: 'contain', mixBlendMode: 'screen', flexShrink: 0 }} />
+        style={{ width: pngSize, height: pngSize, minWidth: pngSize, minHeight: pngSize, objectFit: 'contain', mixBlendMode: isDarkMode ? 'screen' : 'normal', flexShrink: 0 }} />
     );
   }
   if (icon.type === 'emoji') {
@@ -261,7 +261,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           }`}
           style={{ borderLeft: isExpanded ? '2px solid #FF8C00' : '2px solid transparent' }}
         >
-          <SectionIcon section={sectionKey} size={34} imgSize={46} />
+          <SectionIcon section={sectionKey} size={34} imgSize={46} isDarkMode={isDarkMode} />
         </button>
       );
     }
@@ -275,7 +275,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         aria-expanded={isExpanded}
       >
         <h4 className="font-bold text-sm tracking-wider flex items-center gap-2 min-w-0" style={{ color: '#FFD700' }}>
-          <SectionIcon section={sectionKey} size={32} />
+          <SectionIcon section={sectionKey} size={32} isDarkMode={isDarkMode} />
           <span className="truncate">{label}</span>
           {sectionCount > 0 && (
             <span className="text-xs opacity-80 font-normal flex-shrink-0" style={{ color: 'rgba(255,215,0,0.85)' }}>

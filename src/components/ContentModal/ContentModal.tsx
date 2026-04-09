@@ -176,6 +176,11 @@ const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean }> = ({ item
               {item.name}
             </p>
           )}
+          {item.id === 'tool-arrm' && (
+            <p style={{ margin: 0, fontSize: 14, fontWeight: 600, lineHeight: 1.3, color: '#4fc3f7' }}>
+              {item.name}
+            </p>
+          )}
           <p style={{ margin: item.id !== 'tool-arrm' ? '4px 0 0' : 0, fontSize: 12, color: '#FF8C00' }}>
             par {item.creator}
           </p>
