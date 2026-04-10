@@ -325,6 +325,7 @@ export const findMatchingSystem = (
     'cps1': { id: 'cps1', name: 'CPS1' },
     'cps2': { id: 'cps2', name: 'CPS2' },
     'cps3': { id: 'cps3', name: 'CPS3' },
+	'aae': { id: 'aae', name: 'AAE' },
   };
   
   const cleanArcade = cleanName.replace(/[^a-z0-9]/g, '');

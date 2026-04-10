@@ -73,7 +73,7 @@ export const systemsData: SystemsDataStructure = {
         tecmo: { label: 'TECMO', systems: ['Tecmo'] },
         rawthrills: { label: 'RAW THRILLS', systems: ['Raw Thrills'] },
         igt: { label: 'IGT SLOTS', systems: ['IGT Slots'] },
-        'autres-arcade': { label: 'AUTRES CONSTRUCTEURS', systems: ['AAE ', 'Daphne (LaserDisc)', 'Singe (LaserDisc)', 'American Laser Games', 'Gaelco', 'IGS', 'Technos', 'Midway', 'FBNeo'] }
+        'autres-arcade': { label: 'AUTRES CONSTRUCTEURS', systems: ['AAE', 'Daphne (LaserDisc)', 'Singe (LaserDisc)', 'American Laser Games', 'Gaelco', 'IGS', 'Technos', 'Midway', 'FBNeo'] }
     },
     home: {
         magnavox: { label: 'MAGNAVOX', systems: ['Odyssey', 'Odyssey 2 / Videopac'] },
