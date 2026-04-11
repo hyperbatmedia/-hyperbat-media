@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hyperbatmedia.github.io/-hyperbat-media/sitemap.xml
