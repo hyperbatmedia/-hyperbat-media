@@ -1,4 +1,4 @@
-import React from 'react';
+import { Dispatch, SetStateAction, FC } from 'react';
 import {
   Plus,
   Edit2,
@@ -21,14 +21,14 @@ export type AdminTab = 'add' | 'manage' | 'import' | 'drive-import' | 'sync' | '
 
 interface AdminPanelProps {
   themes: ThemeItem[];
-  setThemes: React.Dispatch<React.SetStateAction<ThemeItem[]>>;
+  setThemes: Dispatch<SetStateAction<ThemeItem[]>>;
   saveThemes: (themes: ThemeItem[]) => Promise<void>;
   systems: SystemRow[];
   categories: Category[];
   adminTab: AdminTab;
-  setAdminTab: React.Dispatch<React.SetStateAction<AdminTab>>;
+  setAdminTab: Dispatch<SetStateAction<AdminTab>>;
   newTheme: NewThemeForm;
-  setNewTheme: React.Dispatch<React.SetStateAction<NewThemeForm>>;
+  setNewTheme: Dispatch<SetStateAction<NewThemeForm>>;
   handleAddTheme: () => Promise<void>;
   handleDeleteTheme: (themeKey: string) => Promise<void>;
   convertGoogleDriveUrl: (url: string, isImage?: boolean) => string;
@@ -37,12 +37,12 @@ interface AdminPanelProps {
 interface TabButtonProps {
   tab: AdminTab;
   currentTab: AdminTab;
-  setAdminTab: React.Dispatch<React.SetStateAction<AdminTab>>;
+  setAdminTab: Dispatch<SetStateAction<AdminTab>>;
   icon: LucideIcon;
   label: string;
 }
 
-const TabButton: React.FC<TabButtonProps> = ({
+const TabButton: FC<TabButtonProps> = ({
   tab,
   currentTab,
   setAdminTab,
@@ -66,7 +66,7 @@ const TabButton: React.FC<TabButtonProps> = ({
   </button>
 );
 
-const AdminPanel: React.FC<AdminPanelProps> = ({
+const AdminPanel: FC<AdminPanelProps> = ({
   themes,
   setThemes,
   saveThemes,
@@ -77,7 +77,6 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
   newTheme,
   setNewTheme,
   handleAddTheme,
-  handleDeleteTheme,
   convertGoogleDriveUrl
 }) => {
 
@@ -100,35 +99,19 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
       idMap.set(theme.id, theme);
     }
 
-    let newCount = 0;
-    let deduplicatedCount = 0;
-    let enrichedCount = 0;
-    let preservedCount = 0;
-    let conflictCount = 0;
 
     for (const incoming of newThemes) {
       const key = makeKey(incoming);
       const existing = themeMap.get(key);
 
       if (existing) {
-        deduplicatedCount++;
-
         const existingIsValid = !isUnknownCreator(existing.creator);
         const incomingIsValid = !isUnknownCreator(incoming.creator);
 
         let finalCreator = existing.creator;
 
-        if (existingIsValid && !incomingIsValid) {
-          preservedCount++;
-        } else if (!existingIsValid && incomingIsValid) {
+        if (!existingIsValid && incomingIsValid) {
           finalCreator = incoming.creator;
-          enrichedCount++;
-        } else if (
-          existingIsValid &&
-          incomingIsValid &&
-          existing.creator.toLowerCase().trim() !== incoming.creator.toLowerCase().trim()
-        ) {
-          conflictCount++;
         }
 
         const merged: ThemeItem = {
@@ -156,7 +139,6 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
 
       themeMap.set(key, newTheme);
       idMap.set(safeId, newTheme);
-      newCount++;
     }
 
     const updatedThemes = Array.from(themeMap.values());

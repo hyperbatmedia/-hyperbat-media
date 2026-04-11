@@ -1,6 +1,6 @@
 // Fichier: src/HyperBatMediaSite.tsx 
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, ShoppingCart } from 'lucide-react';
+import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download } from 'lucide-react';
 
 import { NewThemeForm, ThemeItem } from './types';
 import { categories, CART_MAX } from './constants';
@@ -311,7 +311,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                       color: cart.length > 0 ? 'white' : '#FFA500'
                     }}
                     title="Ouvrir le panier">
-                    <ShoppingCart className="w-5 h-5" />
+                    <Download className="w-5 h-5" />
                     {cart.length > 0 && (
                       <>
                         <span className="text-xs font-bold">{cart.length}/{CART_MAX}</span>

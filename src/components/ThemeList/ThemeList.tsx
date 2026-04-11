@@ -1,6 +1,6 @@
 // Fichier: src/components/ThemeList/ThemeList.tsx
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Download, ShoppingCart } from 'lucide-react';
+import { Download, Plus } from 'lucide-react';
 import { ThemeItem, SystemRow } from '../../types';
 import { getThemeKey } from '../../utils/themeUtils';
 import Lightbox from '../Lightbox/Lightbox';
@@ -30,7 +30,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
   viewMode, themes, allFilteredThemes, filteredThemesLength,
   totalPages, currentPage, setCurrentPage, themesPerPage,
   systems,
-  cart, onCartAdd, onCartRemove, onCartOpen, sidebarCollapsed = false
+  cart, onCartAdd, onCartRemove, sidebarCollapsed = false
 }) => {
   const [selectedTheme, setSelectedTheme] = useState<ThemeItem | null>(null);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
@@ -102,8 +102,14 @@ const ThemeList: React.FC<ThemeListProps> = ({
 
   const getCategoryName = (categoryId: string) => {
     const categoryMap: Record<string, string> = {
-      'game-themes': 'Jeu', 'default-themes': 'Défaut',
-      'main-themes': 'Principal', 'tools': 'Outil', 'tutorials': 'Tutoriel'
+      'game-themes':    'Jeu',
+      'default-themes': 'Défaut',
+      'system-themes':  'Système',
+      'artwork':        'Artwork',
+      'collection':     'Collection',
+      'main-themes':    'Principal',
+      'tools':          'Outil',
+      'tutorials':      'Tutoriel'
     };
     return categoryMap[categoryId] || categoryId;
   };
@@ -142,7 +148,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
       {cartFullMsg && (
         <div className="cart-full-msg fixed top-6 left-1/2 z-50 px-5 py-3 rounded-lg border-2 font-bold text-sm shadow-lg"
           style={{ transform: 'translateX(-50%)', backgroundColor: '#1a1a1a', borderColor: '#FF8C00', color: '#FF8C00' }}>
-          🛒 Panier plein — maximum {CART_MAX} thèmes
+          Sélection pleine — maximum {CART_MAX} thèmes
         </div>
       )}
 
@@ -268,7 +274,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
 
                   <button
                     onClick={() => handleCartToggle(theme)}
-                    title={inCart ? 'Retirer du panier' : cart.length >= CART_MAX ? 'Panier plein' : 'Ajouter au panier'}
+                    title={inCart ? 'Retirer de la sélection' : cart.length >= CART_MAX ? 'Sélection pleine' : 'Ajouter à la sélection'}
                     className="px-3 py-2 rounded border-2 transition hover:brightness-110 active:scale-95 flex items-center justify-center gap-1 text-xs font-bold"
                     style={{
                       backgroundColor: inCart ? 'rgba(34,197,94,0.15)' : cart.length >= CART_MAX && !inCart ? 'rgba(255,140,0,0.05)' : '#1a1a1a',
@@ -276,7 +282,10 @@ const ThemeList: React.FC<ThemeListProps> = ({
                       color: inCart ? '#22c55e' : '#888',
                       cursor: cart.length >= CART_MAX && !inCart ? 'not-allowed' : 'pointer'
                     }}>
-                    {inCart ? '✓' : <ShoppingCart className="w-4 h-4" />}
+                    {inCart
+                      ? <><span>✓</span><span>Ajouté</span></>
+                      : <><Plus className="w-4 h-4" style={{ color: '#FFD700' }} /><span>Ajouter</span></>
+                    }
                   </button>
                 </div>
               </div>
@@ -347,7 +356,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
       <Lightbox
         theme={selectedTheme}
         onClose={() => setSelectedTheme(null)}
-        systems={systems}
         allThemes={allFilteredThemes}
         onNavigate={setSelectedTheme}
       />

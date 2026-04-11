@@ -1,6 +1,6 @@
 // ManageTab.tsx 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Search, Download, Edit2, Trash2, Eye, X, AlertCircle, ImageOff, User, CheckSquare, Square, Upload, Filter, ArrowUpDown, Zap, ChevronDown, Users, Database } from 'lucide-react';
+import { Search, Download, Edit2, Trash2, Eye, X, AlertCircle, ImageOff, User, CheckSquare, Square, Upload, ArrowUpDown, Zap, ChevronDown, Users, Database } from 'lucide-react';
 import { ensureDisplayableUrl, reverseConvertUrl, isUnknownCreator, formatDateFR } from './DriveTab/DriveHelpers';
 
 interface ThemeItem {

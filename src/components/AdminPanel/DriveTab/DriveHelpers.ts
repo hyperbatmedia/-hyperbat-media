@@ -299,7 +299,7 @@ export const generateSystemMapping = (): Record<string, string> => {
 export const findMatchingSystem = (
   folderName: string,
   systemMapping: Record<string, string>,
-  addLog: (message: string) => void
+  _addLog: (message: string) => void
 ): { systemId: string; systemName: string } => {
   const cleanName = folderName.toLowerCase().trim();
   
@@ -623,7 +623,7 @@ export const extractFolderId = (url: string): string | null => {
 // ===== CONVERSION LIEN DIRECT =====
 export const convertToDirectLink = (
   fileId: string,
-  key: string,
+  _key: string,
   isImage = false
 ): string => {
   if (isImage) {

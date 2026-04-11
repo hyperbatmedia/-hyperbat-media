@@ -1,6 +1,6 @@
 // ScreenScraperSyncTab.tsx - VERSION AVEC VALIDATION MANUELLE
 import React, { useState, useMemo } from 'react';
-import { Upload, CheckCircle, AlertCircle, ChevronDown, ChevronUp, Loader2, Check, X, Filter } from 'lucide-react';
+import { Upload, CheckCircle, ChevronDown, ChevronUp, Loader2, Check, Filter } from 'lucide-react';
 import { ThemeItem } from '../../types';
 import {
   parseScreenScraperCSV,
@@ -9,7 +9,6 @@ import {
   calculateStats,
   MatchResult,
   SyncStats,
-  ScreenScraperTheme
 } from './utils/screenScraperUtils';
 
 interface ScreenScraperSyncTabProps {

@@ -1,10 +1,10 @@
 // Fichier: src/components/CartPanel/CartPanel.tsx
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback, FC } from 'react';
 import { X, Trash2, Download, CheckSquare, Square } from 'lucide-react';
 import { ThemeItem, SystemRow } from '../../types';
 import { getThemeKey } from '../../utils/themeUtils';
 
-const CART_MAX = 10;
+import { CART_MAX } from '../../constants';
 
 interface CartPanelProps {
   cart: ThemeItem[];
@@ -15,8 +15,8 @@ interface CartPanelProps {
   isDarkMode: boolean;
 }
 
-const CartPanel: React.FC<CartPanelProps> = ({
-  cart, onRemove, onClear, onClose, systems, isDarkMode
+const CartPanel: FC<CartPanelProps> = ({
+  cart, onRemove, onClear, onClose, systems
 }) => {
   const [checked, setChecked] = useState<Set<string>>(
     () => new Set(cart.map(t => getThemeKey(t)))
@@ -116,7 +116,7 @@ const CartPanel: React.FC<CartPanelProps> = ({
         <div className="flex items-center justify-between px-5 py-4 border-b flex-shrink-0"
           style={{ borderColor: '#1f2937', backgroundColor: '#0f172a', borderRadius: '12px 12px 0 0' }}>
           <h2 className="font-black text-lg" style={{ color: '#FF8C00' }}>
-            🛒 Mon Panier
+            Ma Sélection
             <span className="ml-2 text-sm font-normal" style={{ color: '#6b7280' }}>
               {cart.length}/{CART_MAX} thèmes
             </span>

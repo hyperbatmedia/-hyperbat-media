@@ -206,7 +206,10 @@ const Sidebar: React.FC<SidebarProps> = ({
       const count = themeCountBySystem[k] || 0;
       if (system.section) sectionCounts[system.section] = (sectionCounts[system.section] || 0) + count;
       if (system.subsection && system.subsection !== 'collections') {
-        subsectionCounts[system.subsection] = (subsectionCounts[system.subsection] || 0) + count;
+        // ✅ FIX : inclure la section dans la clé pour éviter les collisions
+        // ex: "arcade-snk" et "home-snk" étaient tous deux stockés sous "snk"
+        const subKey = `${system.section}-${system.subsection}`;
+        subsectionCounts[subKey] = (subsectionCounts[subKey] || 0) + count;
       }
     });
     return { sectionCounts, subsectionCounts };
@@ -293,7 +296,10 @@ const Sidebar: React.FC<SidebarProps> = ({
     if (isSearchActive || !system.name?.trim()) return null;
     if (system.section && !expandedSections[system.section]) return null;
     const isExpanded      = expandedSubsections[system.subsection || ''];
-    const subsectionCount = themeCountBySection.subsectionCounts[system.subsection || ''] || 0;
+    // ✅ FIX : utiliser la clé composite "section-subsection" pour éviter les collisions
+    // ex: "arcade-snk" au lieu de "snk" seul
+    const subKey          = `${system.section || ''}-${system.subsection || ''}`;
+    const subsectionCount = themeCountBySection.subsectionCounts[subKey] || 0;
     return (
       <button
         onClick={() => toggleSubsection(system.subsection || '')}

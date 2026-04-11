@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { Upload, AlertCircle, CheckCircle, X, ImageOff, Eye, Edit2, Trash2, Save, Search, FileJson, Copy, Grid3x3, List, Download, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { Upload, AlertCircle, X, ImageOff, Eye, Edit2, Trash2, Save, Search, FileJson, Copy, Grid3x3, List, Download, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { AdminTab } from './AdminPanel';
 
 // ============================================================================
@@ -62,8 +62,7 @@ interface ParsedJsonItem {
  * Détecte le format de l'URL et la normalise intelligemment
  */
 const smartConvertUrl = (
-  url: string, 
-  convertGoogleDriveUrl: (url: string, isImage?: boolean) => string, 
+  url: string,
   isImage: boolean = false
 ): string => {
   if (!url?.trim()) return '';
@@ -297,8 +296,6 @@ ThemeCard.displayName = 'ThemeCard';
 // ============================================================================
 const ImportTab: React.FC<ImportTabProps> = ({ 
   themes, 
-  setThemes, 
-  saveThemes, 
   systems, 
   categories, 
   setAdminTab, 
@@ -419,8 +416,8 @@ const ImportTab: React.FC<ImportTabProps> = ({
         creator: item.creator || '',
         system: item.system || 'mame',
         category: item.category || 'game-themes',
-        imageUrl: smartConvertUrl(item.imageUrl || '', convertGoogleDriveUrl, true),
-        downloadUrl: smartConvertUrl(item.downloadUrl || '', convertGoogleDriveUrl, false),
+        imageUrl: smartConvertUrl(item.imageUrl || '', true),
+        downloadUrl: smartConvertUrl(item.downloadUrl || '', false),
         size: item.size || '0 MB'
       }));
 
@@ -511,8 +508,8 @@ const ImportTab: React.FC<ImportTabProps> = ({
     // ✅ Reconvertir les URLs si elles ont été modifiées
     const updatedTheme = {
       ...editingTheme,
-      imageUrl: smartConvertUrl(editingTheme.imageUrl, convertGoogleDriveUrl, true),
-      downloadUrl: smartConvertUrl(editingTheme.downloadUrl, convertGoogleDriveUrl, false)
+      imageUrl: smartConvertUrl(editingTheme.imageUrl, true),
+      downloadUrl: smartConvertUrl(editingTheme.downloadUrl, false)
     };
     
     setImportPreview(importPreview.map(t => t.id === updatedTheme.id ? updatedTheme : t));
@@ -757,7 +754,7 @@ const ImportTab: React.FC<ImportTabProps> = ({
                   onView={() => setLightboxTheme(theme)}
                   onEdit={() => setEditingTheme(theme)}
                   onDelete={() => handleDeleteFromPreview(theme.id)}
-                  onSelect={(checked) => toggleSelect(theme.id)}
+                  onSelect={(_checked) => toggleSelect(theme.id)}
                   isSelected={selectedIds.has(theme.id)}
                 />
               ))}
