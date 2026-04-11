@@ -616,6 +616,17 @@
     "date": "2026-01-02"
   },
   {
+    "id": 42340,
+    "name": "_default",
+    "creator": "Roni",
+    "system": "aae",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1tJEr0dsUrpv_Z4sVZ8ny9xrQH9twb0vR/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1o02tXuVaKmBbctgM2Io9EOmJcv8o-tdS/view?usp=sharing",
+    "size": "685.5 KB",
+    "date": "2026-01-15"
+  },
+  {
     "id": 21468,
     "name": "_default V1",
     "creator": "Akeshi",

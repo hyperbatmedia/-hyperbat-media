@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { 
   FolderOpen, Zap, Activity, CheckCircle, Play, StopCircle, Download, 
   FileArchive, Clock, Layers, Filter, ArrowUpDown, Pause, PlayCircle, AlertTriangle 
@@ -22,10 +22,12 @@ interface ThemeItem {
   date?: string;
 }
 
+import { AdminTab } from '../AdminPanel';
+
 interface DriveTabProps {
   onImportThemes?: (themes: ThemeItem[]) => Promise<void>;
   existingThemes?: ThemeItem[];
-  setAdminTab?: (tab: string) => void;
+  setAdminTab?: (tab: AdminTab) => void;
 }
 
 type SortOption = 'name' | 'system' | 'size';
@@ -53,7 +55,7 @@ const parseSize = (sizeStr: string): number => {
 };
 
 const ThemeCard = ({ theme, isSelected, onToggleSelect }: any) => {
-  const [imageError, setImageError] = React.useState(false);
+  const [imageError, setImageError] = useState(false);
   return (
     <div
       onClick={onToggleSelect}
@@ -216,16 +218,16 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     }].slice(-100));
   };
 
-  const getDetectedSystems = (): string[] => {
+  const detectedSystems = useMemo((): string[] => {
     const systems = new Set(themes.map(t => t.systemDisplayName));
     return Array.from(systems).sort();
-  };
+  }, [themes]);
 
-  const getFilteredAndSortedThemes = (): DriveTheme[] => {
-    let filtered = selectedSystemFilter !== 'all' 
-      ? themes.filter(t => t.systemDisplayName === selectedSystemFilter) 
+  const filteredThemes = useMemo((): DriveTheme[] => {
+    let filtered = selectedSystemFilter !== 'all'
+      ? themes.filter(t => t.systemDisplayName === selectedSystemFilter)
       : themes;
-    
+
     return [...filtered].sort((a, b) => {
       let comparison = 0;
       switch (sortBy) {
@@ -241,7 +243,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       }
       return sortAsc ? comparison : -comparison;
     });
-  };
+  }, [themes, selectedSystemFilter, sortBy, sortAsc]);
 
   const waitIfPaused = async (): Promise<void> => {
     if (!isPausedRef.current) return;
@@ -528,7 +530,8 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
         
         for (let i = pathParts.length - 1; i >= 0; i--) {
           const segment = pathParts[i];
-          if (!segment.toLowerCase().includes('theme') && !segment.toLowerCase().includes('artwork')) {
+          const segmentNormalized = segment.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+          if (!segmentNormalized.includes('theme') && !segmentNormalized.includes('artwork') && !segmentNormalized.includes('defaut') && !segmentNormalized.includes('default')) {
             const match = findMatchingSystem(segment, systemMapping, addLog);
             if (match.systemId !== 'unknown') {
               systemName = match.systemName;
@@ -791,19 +794,15 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     }
   };
 
-  const toggleSelectAll = () => {
-    const filtered = getFilteredAndSortedThemes();
-    const filteredIds = new Set(filtered.map(t => t.id));
-    const allSelected = filtered.every(t => selectedThemes.has(t.id)) && selectedThemes.size === filtered.length;
-    
+  const toggleSelectAll = useCallback(() => {
+    const filteredIds = new Set(filteredThemes.map(t => t.id));
+    const allSelected = filteredThemes.every(t => selectedThemes.has(t.id)) && selectedThemes.size === filteredThemes.length;
     if (allSelected) {
-      const newSelection = new Set(Array.from(selectedThemes).filter(id => !filteredIds.has(id)));
-      setSelectedThemes(newSelection);
+      setSelectedThemes(new Set(Array.from(selectedThemes).filter(id => !filteredIds.has(id))));
     } else {
-      const newSelection = new Set([...Array.from(selectedThemes), ...filtered.map(t => t.id)]);
-      setSelectedThemes(newSelection);
+      setSelectedThemes(new Set([...Array.from(selectedThemes), ...filteredThemes.map(t => t.id)]));
     }
-  };
+  }, [filteredThemes, selectedThemes]);
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -814,9 +813,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
   const getQuotaPercentage = (): number => {
     return (quotaManagerRef.current.requestCount / quotaManagerRef.current.maxRequestsPerMinute) * 100;
   };
-
-  const filteredThemes = getFilteredAndSortedThemes();
-  const detectedSystems = getDetectedSystems();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black p-6">
@@ -852,7 +848,10 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-400 mb-2">📂 URLS GOOGLE DRIVE</label>
+            <label className="block text-xs font-bold text-gray-400 mb-2">
+              📂 URLS GOOGLE DRIVE
+              <span className="ml-2 text-gray-600 font-normal">({driveUrls.filter(u => u.trim()).length}/{driveUrls.length} renseignées — max 4)</span>
+            </label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {driveUrls.slice(0, 4).map((url, i) => (
                 <input
@@ -963,7 +962,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
               )}
             </div>
             <div className="text-right">
-              <div className="text-white font-black text-lg">{quotaManagerRef.current.requestCount}/60</div>
+              <div className="text-white font-black text-lg">{quotaManagerRef.current.requestCount}/80</div>
               <div className="text-gray-400 text-xs">Requêtes totales: {stats.totalRequests}</div>
             </div>
           </div>
