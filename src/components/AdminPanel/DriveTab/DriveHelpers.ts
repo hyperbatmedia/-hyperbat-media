@@ -113,14 +113,7 @@ export const detectCategoryFromPath = (folderPath: string): string => {
   
   const lastSegment = pathSegments[pathSegments.length - 1];
   const normalized = normalizeForComparison(lastSegment);
-  
-  console.log('🔍 Détection catégorie:', {
-    chemin: folderPath,
-    segments: pathSegments,
-    dernierSegment: lastSegment,
-    normalisé: normalized
-  });
-  
+
   const systemPatterns = [
     'systemthemes',
     'systemtheme',
@@ -133,7 +126,6 @@ export const detectCategoryFromPath = (folderPath: string): string => {
   
   for (const pattern of systemPatterns) {
     if (normalized === pattern || normalized.includes(pattern)) {
-      console.log('✅ MATCH system-themes:', lastSegment, '→', pattern);
       return 'system-themes';
     }
   }
@@ -149,7 +141,6 @@ export const detectCategoryFromPath = (folderPath: string): string => {
   
   for (const pattern of defaultPatterns) {
     if (normalized === pattern || normalized.includes(pattern)) {
-      console.log('✅ MATCH default-themes:', lastSegment, '→', pattern);
       return 'default-themes';
     }
   }
@@ -167,7 +158,6 @@ export const detectCategoryFromPath = (folderPath: string): string => {
   
   for (const pattern of artworkPatterns) {
     if (normalized === pattern || normalized.includes(pattern)) {
-      console.log('✅ MATCH artwork:', lastSegment, '→', pattern);
       return 'artwork';
     }
   }
@@ -189,12 +179,10 @@ export const detectCategoryFromPath = (folderPath: string): string => {
   
   for (const pattern of gamePatterns) {
     if (normalized === pattern || normalized.includes(pattern)) {
-      console.log('✅ MATCH game-themes:', lastSegment, '→', pattern);
       return 'game-themes';
     }
   }
-  
-  console.log('⚠️ Aucun pattern trouvé pour:', lastSegment, '→ défaut: game-themes');
+
   return 'game-themes';
 };
 

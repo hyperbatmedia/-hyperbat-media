@@ -44,7 +44,6 @@ export function useLinksLoader() {
         if (storedLinks) {
           const parsedLinks: Link[] = JSON.parse(storedLinks);
           setLinks(parsedLinks);
-          console.log(`📦 ${parsedLinks.length} lien(s) chargé(s) depuis localStorage`);
           setIsLoading(false);
           return;
         }
@@ -53,10 +52,8 @@ export function useLinksLoader() {
         if (linksData && Array.isArray(linksData)) {
           const typedLinks = linksData as Link[];
           setLinks(typedLinks);
-          console.log(`⚡ ${typedLinks.length} lien(s) chargé(s) depuis links.json (instantané)`);
         } else {
           setLinks([]);
-          console.log('ℹ️ Aucun lien trouvé dans links.json');
         }
 
       } catch (error) {

@@ -172,6 +172,11 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
   const [sortAsc, setSortAsc] = useState(true);
   const [creatorExtractionMode, setCreatorExtractionMode] = useState<CreatorExtractionMode>('never');
   
+  /** Total requêtes API pendant l’analyse en cours (pour logs finaux, évite state périmé) */
+  const analysisTotalRequestsRef = useRef(0);
+  const analysisQuotaErrorsRef = useRef(0);
+  const analysisCreatorsRef = useRef(0);
+
   const abortControllerRef = useRef<AbortController | null>(null);
   const isPausedRef = useRef(false);
   const pauseResolversRef = useRef<Set<() => void>>(new Set());
@@ -273,17 +278,17 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       if (!quota.isThrottled) {
         quota.isThrottled = true;
         addLog(`⚠️ Quota élevé (${quota.requestCount}/${quota.maxRequestsPerMinute})`, 'warning');
-        addLog(`⏸️ Pause courte 5s...`, 'warning');
+        addLog(`⏸️ Pause courte 3s...`, 'warning');
       }
-      
+
       await new Promise(resolve => setTimeout(resolve, 3000));
       quota.isThrottled = false;
       return;
     }
-    
+
     if (quota.requestCount > 0) {
       const usageRate = quota.requestCount / quota.maxRequestsPerMinute;
-      
+
       if (usageRate < 0.5) {
         await new Promise(resolve => setTimeout(resolve, 0));
       } else if (usageRate < 0.7) {
@@ -294,8 +299,9 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
     }
-    
+
     quota.requestCount++;
+    analysisTotalRequestsRef.current += 1;
     setStats(prev => ({ ...prev, totalRequests: prev.totalRequests + 1 }));
   };
 
@@ -329,6 +335,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
         const waitSec = waitTime % 60;
         
         setStats(prev => ({ ...prev, quotaErrors: prev.quotaErrors + 1 }));
+        analysisQuotaErrorsRef.current += 1;
         addLog(`🚫 Erreur Google Drive #${quotaManagerRef.current.consecutiveErrors}`, 'error');
         addLog(`⏰ Attente ${waitMin}min ${waitSec}s...`, 'error');
         
@@ -470,6 +477,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
         
         if (creator !== 'Unknown') {
           setStats(prev => ({ ...prev, creatorsExtracted: prev.creatorsExtracted + 1 }));
+          analysisCreatorsRef.current += 1;
           addLog(`✅ Créateur: ${name} → ${creator}`, 'success');
         }
         
@@ -479,6 +487,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
         if (errorMsg.includes('429') || errorMsg.includes('quota')) {
           addLog(`🚫 QUOTA sur ${name}`, 'error');
           setStats(prev => ({ ...prev, quotaErrors: prev.quotaErrors + 1 }));
+          analysisQuotaErrorsRef.current += 1;
         } else {
           addLog(`⚠️ Err ${name}: ${error.message}`, 'error');
         }
@@ -656,20 +665,24 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     creatorCacheRef.current.clear();
     downloadQueueRef.current = [];
     isProcessingQueueRef.current = false;
-    
+
+    analysisTotalRequestsRef.current = 0;
+    analysisQuotaErrorsRef.current = 0;
+    analysisCreatorsRef.current = 0;
+
     quotaManagerRef.current = {
       requestCount: 0,
       startTime: Date.now(),
       quotaResetTime: Date.now() + 60000,
-      maxRequestsPerMinute: 80, 
+      maxRequestsPerMinute: 80,
       isThrottled: false,
       consecutiveErrors: 0,
       lastErrorTime: 0
     };
-    
+
     addLog('🚀 Démarrage analyse', 'info');
-    addLog('📊 Optimisations: ⚡ Délai adaptatif + 🔀 3 dossiers parallèles', 'info');
-    addLog('🎯 Quota: 60 req/min avec délai intelligent', 'info');
+    addLog('📊 Délais adaptatifs + 4 sous-dossiers en parallèle (comportement stable)', 'info');
+    addLog('🎯 Quota: 80 requêtes / min (fenêtre 60s)', 'info');
     addLog('🏷️ Détection automatique des catégories activée', 'success');
     addLog('📅 Récupération des dates de fichiers activée', 'success');
     
@@ -679,29 +692,35 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     };
     addLog(`📋 ${modeLabels[creatorExtractionMode]}`, 'info');
     
+    let grandTotalThemes = 0;
+
     try {
       for (const url of urls) {
         if (controller.signal.aborted) break;
-        
+
         const folderId = extractFolderId(url);
         if (!folderId) {
           addLog(`❌ URL invalide: ${url}`, 'error');
           continue;
         }
-        
+
         addLog(`\n📂 Analyse: ${url}`, 'info');
         const result = await analyzeFolder(folderId, apiKey, controller.signal);
-        
+
         if (!controller.signal.aborted) {
-          addLog(`✅ ${result.themes.length} thèmes trouvés`, 'success');
+          grandTotalThemes += result.themes.length;
+          addLog(`✅ ${result.themes.length} thème(s) dans cet arbre`, 'success');
         }
       }
-      
+
       if (!controller.signal.aborted) {
-        addLog(`\n🎉 Terminé: ${themes.length} thèmes`, 'success');
-        addLog(`📊 Total requêtes: ${stats.totalRequests} • Erreurs: ${stats.quotaErrors}`, 'info');
+        addLog(`\n🎉 Terminé: ${grandTotalThemes} thème(s) au total`, 'success');
+        addLog(
+          `📊 Requêtes API: ${analysisTotalRequestsRef.current} • Erreurs quota: ${analysisQuotaErrorsRef.current}`,
+          'info'
+        );
         if (creatorExtractionMode !== 'never') {
-          addLog(`👤 ${stats.creatorsExtracted} créateurs extraits`, 'success');
+          addLog(`👤 ${analysisCreatorsRef.current} créateur(s) extrait(s)`, 'success');
         }
       }
     } catch (error: any) {
@@ -812,7 +831,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
             </div>
             <div>
               <h1 className="text-4xl font-black text-white mb-1">Analyseur Google Drive</h1>
-              <p className="text-gray-400 text-sm font-semibold">⚡ Délai adaptatif • 🔀 3x parallèle • ✅ ZIP/7Z/RAR • 🏷️ Catégories auto • 📅 Dates • 🆔 IDs Fixes</p>
+              <p className="text-gray-400 text-sm font-semibold">⚡ 4 dossiers parallèles • 80 req/min • ZIP/7Z/RAR • Catégories auto • Dates</p>
             </div>
           </div>
         </div>

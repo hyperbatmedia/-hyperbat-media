@@ -86,7 +86,6 @@ export function loadImageWithRetry(
       retryCount++;
       if (retryCount < maxRetries && currentIndex < urlVariants.length - 1) {
         currentIndex++;
-        console.log(`⏱️ Timeout, essai avec une autre URL (${currentIndex + 1}/${urlVariants.length})...`);
         setTimeout(() => tryLoadImage(urlVariants[currentIndex]), 100);
       } else {
         console.error(`❌ Timeout après ${retryCount} tentatives`);
@@ -96,7 +95,6 @@ export function loadImageWithRetry(
     
     img.onload = () => {
       clearTimeout(timeout);
-      console.log(`✅ Image chargée avec succès: ${url.substring(0, 60)}...`);
       onSuccess(url);
     };
     
@@ -107,7 +105,6 @@ export function loadImageWithRetry(
       if (retryCount < maxRetries && currentIndex < urlVariants.length - 1) {
         // Essayer l'URL suivante
         currentIndex++;
-        console.log(`⚠️ Échec, essai avec une autre URL (${currentIndex + 1}/${urlVariants.length})...`);
         setTimeout(() => tryLoadImage(urlVariants[currentIndex]), 100);
       } else {
         // Toutes les tentatives ont échoué

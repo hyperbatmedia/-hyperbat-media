@@ -145,7 +145,7 @@ const generateSystemMapping = (): Record<string, string> => {
   
   // Parcourir toutes les sections de systemsData
   for (const section of Object.values(systemsData)) {
-    for (const [subsectionKey, subsectionData] of Object.entries(section)) {
+    for (const subsectionData of Object.values(section)) {
       // Pour chaque système dans la subsection
       for (const systemName of subsectionData.systems) {
         // Créer l'ID normalisé SANS TIRETS (comme dans votre base réelle)

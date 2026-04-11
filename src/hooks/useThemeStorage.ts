@@ -38,9 +38,6 @@ export function useThemeStorage(): UseThemeStorageResult {
       
       // Sauvegarde dans localStorage (temporaire pour tests admin)
       localStorage.setItem('hyperbat_themes', JSON.stringify(clonedThemes));
-      
-      console.log('✅ Thèmes sauvegardés dans localStorage (temporaire admin)');
-      console.log('💡 Pour mettre à jour le site, téléchargez le JSON et remplacez src/data/themes.json');
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error);
       alert('Erreur lors de la sauvegarde');
@@ -59,18 +56,9 @@ export function useThemeStorage(): UseThemeStorageResult {
           // 🔴 CLONER pour éviter les mutations du JSON importé
           const clonedThemes = deepCloneThemes(typedThemes);
           setThemes(clonedThemes);
-          console.log(`⚡ ${clonedThemes.length} thème(s) chargé(s) depuis themes.json (source officielle)`);
-          
-          // 🔄 Nettoyer localStorage si thèmes obsolètes
-          // Cela force les visiteurs à toujours voir la version officielle
-          const storedThemes = localStorage.getItem('hyperbat_themes');
-          if (storedThemes) {
-            console.log('🧹 localStorage détecté (probablement admin) - themes.json reste la source');
-          }
         } else {
           // Fichier vide ou invalide
           setThemes([]);
-          console.log('ℹ️ Aucun thème trouvé dans themes.json (fichier vide ou invalide)');
         }
 
       } catch (error) {
