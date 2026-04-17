@@ -728,16 +728,15 @@
     "date": "2026-01-17"
   },
   {
-    "id": 3987,
+    "id": 43834,
     "name": "10-Yard Fight",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1ghtrZDM_db0HTIO_IBq3LMcPv6_7xRhi/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1xlwmrju0nzdaBIlrrK9QEafewVyo0Hk-/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1tWL_M-x_y0z-q9goCBjBc648lXKIi1PU/view?usp=sharing",
     "size": "1.8 MB",
-    "date": "2026-01-04",
-    "onScreenScraper": true
+    "date": "2026-01-04"
   },
   {
     "id": 1000,
@@ -840,18 +839,6 @@
     "date": "2026-03-10"
   },
   {
-    "id": 31188,
-    "name": "1942",
-    "creator": "Huhe-8554",
-    "system": "nes",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1-q0VCDyqxzVc7NRTQuIjsrAlivWEmnJ6/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/13KhHtfqnDA15FAfB3M8HKSb3ZZPGcWjS/view?usp=sharing",
-    "size": "1.4 MB",
-    "date": "2026-03-05",
-    "onScreenScraper": true
-  },
-  {
     "id": 547,
     "name": "1942",
     "creator": "Roni",
@@ -872,6 +859,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1FFmqX3exTF0tKFofNfCdSHfEP9jDc1iW/view?usp=sharing",
     "size": "739.0 KB",
     "date": "2026-01-05"
+  },
+  {
+    "id": 43797,
+    "name": "1942",
+    "creator": "huhe-8554",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1-q0VCDyqxzVc7NRTQuIjsrAlivWEmnJ6/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1YWJ-lPDYVZZTRnb6a8C0npvtp2rbKpej/view?usp=sharing",
+    "size": "1.6 MB",
+    "date": "2026-04-16"
   },
   {
     "id": 546,
@@ -896,16 +894,15 @@
     "date": "2026-01-05"
   },
   {
-    "id": 733,
+    "id": 43760,
     "name": "1943 - The Battle of Midway (USA)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1Mrnq3xve8CAbYdypz_vMFqxkQ9fi1Ls9/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1pnIgmbQzwA35Jk3tlOQ0xnWhrSFQH7yS/view?usp=sharing",
-    "size": "3.7 MB",
-    "date": "2025-11-07",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1e_FDWO46tmUdmynHTmDZr96irSh4B45J/view?usp=sharing",
+    "size": "6.4 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 545,
@@ -1266,16 +1263,15 @@
     "date": "2026-01-02"
   },
   {
-    "id": 3989,
+    "id": 43836,
     "name": "720 Degrees",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1qU7CPNr8SCH9f9b2huDm-UVlNN1GXWwv/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1HKFIFepoQglI04qvY5p6me8dXGIsVw1T/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1qUGYh3Zip_fjmzNU8md3arEUX7eMmOYW/view?usp=sharing",
     "size": "1.6 MB",
-    "date": "2026-01-04",
-    "onScreenScraper": true
+    "date": "2026-01-04"
   },
   {
     "id": 1015,
@@ -1519,16 +1515,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 731,
+    "id": 43759,
     "name": "Addams Family, The (Europe) (En,Fr,De)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1DewctFaNHMAqIboRaVK7kS-ajxokPRaq/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1fwtJiFRHQAncBT363mvnQQgqyBcgy63a/view?usp=sharing",
-    "size": "4.0 MB",
-    "date": "2025-11-07",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1JV4AIooZZbZ46-encyLSRY4wk_z3rK3R/view?usp=sharing",
+    "size": "5.8 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 15059,
@@ -1566,124 +1561,114 @@
     "onScreenScraper": true
   },
   {
-    "id": 3981,
+    "id": 43831,
     "name": "Advanced Dungeons & Dragons - Dragons of Flame",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1n9Wp9TGEX1PJheyh_jJn6ais9S9ZcZwR/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1Jkj8gard0zSHVMtOonGXXhBAlvUVQtqE/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1hsd0Txzp1Z4aqUV1kAj6wWKl9Y7-2sBc/view?usp=sharing",
     "size": "3.9 MB",
-    "date": "2026-01-06",
-    "onScreenScraper": true
+    "date": "2026-01-06"
   },
   {
-    "id": 697,
+    "id": 43783,
     "name": "Adventure Island 3",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/13XmTb7U35NtoievBuoP23VMafpZJzuua/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/15Sf0zj458obJpsE7Jfh8RxrSXmp4gLeb/view?usp=sharing",
-    "size": "5.1 MB",
-    "date": "2026-01-02",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1KxaFIufEvK9rhjdow7teGNU0DUZWbwkn/view?usp=sharing",
+    "size": "10.2 MB",
+    "date": "2026-04-16"
   },
   {
-    "id": 10279,
+    "id": 43818,
     "name": "Adventures in the Magic Kingdom",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/19sgKX9VHxrZ5a9eVZirky2Fhh9mICzyS/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1HI_27EExczkPzN9L1Qx0rW_kNNHtYCdS/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1urccEC-_9yvG342WFFyiNw5mu4UNMtTy/view?usp=sharing",
     "size": "4.6 MB",
-    "date": "2026-01-16",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
-    "id": 754,
+    "id": 43763,
     "name": "Adventures in the Magic Kingdom (Europe)",
     "creator": "Christophe",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/10hcVzpobHWz4wjnZzSKwoj_yhy6d7qDD/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1lZTEGZzdzwf9UG5H-cNOgyOJup7FFiu_/view?usp=sharing",
-    "size": "9.5 MB",
-    "date": "2025-11-03",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1rwKN-bQGU6cS8bKycf_F6C6dKoEKGm-Z/view?usp=sharing",
+    "size": "5.6 MB",
+    "date": "2026-04-17"
   },
   {
-    "id": 730,
+    "id": 43762,
     "name": "Adventures of Bayou Billy, The (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1mQ4ZYU9eGa5hrOljVKVQ9AmsQSy29kUS/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1QaYO5kzsMQINsC6-BVlx-fjaOH1cOoDi/view?usp=sharing",
-    "size": "4.0 MB",
-    "date": "2025-11-08",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1PuauspZrayd-VlwGQulKW4iRm5RV8ll8/view?usp=sharing",
+    "size": "6.3 MB",
+    "date": "2026-04-17"
   },
   {
-    "id": 23275,
+    "id": 43823,
     "name": "Adventures of Dr. Franken, The",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1qegGs1eOZnHTfsRcoW7ahdiaymLco-cV/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1mJHkDqQNQMSmLRbS0kQKBx2aQALdHzt4/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1wHgM6bobRXpjJsfyts6DHlYsVtZeSIaW/view?usp=sharing",
     "size": "4.0 MB",
-    "date": "2026-02-02",
-    "onScreenScraper": true
+    "date": "2026-02-02"
   },
   {
-    "id": 23274,
-    "name": "Adventures of Gilligan's Island, The",
-    "creator": "Huhe-8554",
+    "id": 43822,
+    "name": "Adventures of Gilligan_s Island, The",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1MUqRA7aMJ8UcMnc6EgAk9FJlETqjYyEA/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1a4vk7wieVi0Uh-u3bwG9dyXVnVN6BfaS/view?usp=sharing",
+    "imageUrl": "",
+    "downloadUrl": "https://drive.google.com/file/d/1500n1pqMUjMlUge0meyTWm4DtjHJMZiw/view?usp=sharing",
     "size": "3.8 MB",
-    "date": "2026-02-02",
-    "onScreenScraper": true
+    "date": "2026-02-02"
   },
   {
-    "id": 23273,
+    "id": 43796,
     "name": "Adventures of Lolo",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1qQGofaWA8KLFilwVhZPGoLR8jYSEbrlO/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/13u_qasmwJpSsBhf_Xd2mlgnPn-P0hUIB/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1vz1qBuvokKQMhWERvLDcRUcAF2RU7aWg/view?usp=sharing",
     "size": "5.7 MB",
-    "date": "2026-02-03",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
-    "id": 736,
+    "id": 43761,
     "name": "Adventures of Lolo 3 (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1uL0XZfR3Hff9pRTHqa3bC6TJh-J9n9t-/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1YzP7zmTwtoa5lmp1hdbZn_5FuskIyXna/view?usp=sharing",
-    "size": "3.2 MB",
-    "date": "2025-11-05",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1hUdIbL2REAhxOB-iy8dfM9yJ1Pubh2Tk/view?usp=sharing",
+    "size": "4.9 MB",
+    "date": "2026-04-17"
   },
   {
-    "id": 23272,
+    "id": 43795,
     "name": "Adventures of Rad Gravity, The",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1S64iY-t9_CBR8IJl6Ec1u6YzMu_A0dGW/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1HW22GoWbGeo5KCZmPYwjV-cys19H-_sO/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1kmwyqcLVHFc8K4Q1gHrhwmPG4GsRwYKD/view?usp=sharing",
     "size": "1.7 MB",
-    "date": "2026-02-03",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 1191,
@@ -1768,18 +1753,6 @@
     "date": "2026-04-05"
   },
   {
-    "id": 717,
-    "name": "After Burner (USA)",
-    "creator": "huhe-8554",
-    "system": "nes",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1B3Hc-cJTm_UwVHAIOhaEYSrh8rfGogK4/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1NQG2DNgLRPqOTDCNJbWcoqNdovT6Wxof/view?usp=sharing",
-    "size": "3.1 MB",
-    "date": "2025-11-23",
-    "onScreenScraper": true
-  },
-  {
     "id": 1135,
     "name": "After Burner (USA)",
     "creator": "Mrfomt",
@@ -1789,6 +1762,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1aiV8vvsF-_QyzUHSYCDpnCJ0rtvBmzUd/view?usp=sharing",
     "size": "2.5 MB",
     "date": "2026-01-02"
+  },
+  {
+    "id": 43758,
+    "name": "After Burner (USA)",
+    "creator": "huhe-8554",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1B3Hc-cJTm_UwVHAIOhaEYSrh8rfGogK4/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1F0OFuj0DRm964XCy2ui3mFEG6H0qCtl7/view?usp=sharing",
+    "size": "4.3 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 1190,
@@ -1908,18 +1892,6 @@
     "date": "2026-02-03"
   },
   {
-    "id": 696,
-    "name": "Airwolf",
-    "creator": "huhe-8554",
-    "system": "nes",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1bUwnb63ELK6Zc0WWxiARH5lSHOCV0QzD/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1UTWZedEDUDIGsykovFrNHwO-fFlK6Trg/view?usp=sharing",
-    "size": "1.3 MB",
-    "date": "2026-01-02",
-    "onScreenScraper": true
-  },
-  {
     "id": 532,
     "name": "airwolf",
     "creator": "Roni",
@@ -1930,6 +1902,17 @@
     "size": "2.4 MB",
     "date": "2025-11-13",
     "onScreenScraper": true
+  },
+  {
+    "id": 43782,
+    "name": "Airwolf",
+    "creator": "huhe-8554",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1bUwnb63ELK6Zc0WWxiARH5lSHOCV0QzD/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1NVGOq2MopNSTPaHWg5hSSUll06Iv4iX5/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-04-16"
   },
   {
     "id": 30122,
@@ -2025,16 +2008,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 3986,
+    "id": 43794,
     "name": "Aladdin",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1BVLhU36SPV6TYyoHbSEyrQ7LoD7og3sC/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/16hHgx7ElHY2iZaMeEVgtU9tHdHGFa0SY/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1LhcYyMjfEyQthJ9TMIjxlPYp3S77oiun/view?usp=sharing",
     "size": "6.5 MB",
-    "date": "2026-01-04",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 1188,
@@ -2164,16 +2146,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 695,
+    "id": 43781,
     "name": "Alfred Chicken",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1EWv6L-dKzuqVoIvNPzMlFAzna-6vwN7b/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/18hc-xvbUOPpj9zdr13Gsuf44P1Kpklav/view?usp=sharing",
-    "size": "2.0 MB",
-    "date": "2026-01-02",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1YcjYXGBufili6gRDCD4l0ov3cPnm4Jz3/view?usp=sharing",
+    "size": "4.1 MB",
+    "date": "2026-04-16"
   },
   {
     "id": 993,
@@ -2198,16 +2179,15 @@
     "date": "2026-04-03"
   },
   {
-    "id": 694,
+    "id": 43784,
     "name": "Alien 3",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1-4lMtAwvgiTlm7UvYDkdbRXQuliz1SXM/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1GUDG9aOctPiF1-uls8DEJ-p_RtyQMOwH/view?usp=sharing",
-    "size": "1.8 MB",
-    "date": "2026-01-02",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1vZcG8HXYRgU43sIeKQPvsmtnox8Ubnl-/view?usp=sharing",
+    "size": "3.6 MB",
+    "date": "2026-04-16"
   },
   {
     "id": 1182,
@@ -2393,16 +2373,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 32556,
+    "id": 43764,
     "name": "Alpha Mission",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1FumWtpAcnX1_PqWHdh74JY4cm3cRPFss/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1Sy3MkIOtjli3jTwyXmfniwuIUgn-aijN/view?usp=sharing",
-    "size": "844.8 KB",
-    "date": "2026-04-03",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1xtdXIK2k1Mhv-EbUDgR5nlEKtfJCAC2O/view?usp=sharing",
+    "size": "2.4 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 42195,
@@ -2530,16 +2509,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 715,
+    "id": 43780,
     "name": "American Gladiators (USA)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/11SApJscRzmUP_Vw_BBaqdpehWNMj4AfX/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1BDzkUhm6ecdzUqI4Jjpo3IQGYNUCKs_J/view?usp=sharing",
-    "size": "1.7 MB",
-    "date": "2025-11-25",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1IE8_uhZWqjAgq6R_N-TBILQtRfCvbXfu/view?usp=sharing",
+    "size": "3.4 MB",
+    "date": "2026-04-16"
   },
   {
     "id": 5549,
@@ -2977,16 +2955,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 3988,
+    "id": 43835,
     "name": "Arkanoid",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1UccOrUXOLtO1WXC32m-MNoFdQxG1HaPf/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1hAhtLD54-jJTTpapMJXFTkUdMBlwcYEI/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/17P9vMLko_m0bdF39339df1r7XYG8Lk_L/view?usp=sharing",
     "size": "1.5 MB",
-    "date": "2026-01-04",
-    "onScreenScraper": true
+    "date": "2026-01-04"
   },
   {
     "id": 1098,
@@ -3150,30 +3127,6 @@
     "date": "2025-11-13"
   },
   {
-    "id": 703,
-    "name": "Asterix (Europe)",
-    "creator": "huhe-8554",
-    "system": "nes",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1UmFTuH5Zr7TF9g7jkduf3KFErzglUArs/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1NcGG_Gklq85lJUBzEny8hAvBmRAfAMr9/view?usp=sharing",
-    "size": "2.5 MB",
-    "date": "2025-12-01",
-    "onScreenScraper": true
-  },
-  {
-    "id": 728,
-    "name": "Asterix (Europe)",
-    "creator": "huhe-8554",
-    "system": "nes",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1UmFTuH5Zr7TF9g7jkduf3KFErzglUArs/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1IeRFbuup4OVwv6zLf7yiYxqpXmPVX8PS/view?usp=sharing",
-    "size": "2.6 MB",
-    "date": "2025-11-13",
-    "onScreenScraper": true
-  },
-  {
     "id": 1178,
     "name": "Asterix (Europe)",
     "creator": "Mrfomt",
@@ -3184,6 +3137,17 @@
     "size": "1.2 MB",
     "date": "2025-10-28",
     "onScreenScraper": true
+  },
+  {
+    "id": 43757,
+    "name": "Asterix (Europe)",
+    "creator": "huhe-8554",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1UmFTuH5Zr7TF9g7jkduf3KFErzglUArs/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1NduTvWELMnM7UJOBGG9ddAUHFYG5n1d1/view?usp=sharing",
+    "size": "3.9 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 4545,
@@ -3600,16 +3564,15 @@
     "date": "2026-01-14"
   },
   {
-    "id": 3985,
+    "id": 43793,
     "name": "Attack of the Killer Tomatoes",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1FKjiJszeFzD8IrXLJ2ElhZiIrX2_W616/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1z1Ww9EDQBaRZc1_DfQa8jFfxESYU9oAb/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/182iAySFd19fC_7M1BPCt0mttcJbYrBsy/view?usp=sharing",
     "size": "3.2 MB",
-    "date": "2026-01-04",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 19445,
@@ -3886,16 +3849,15 @@
     "date": "2026-01-21"
   },
   {
-    "id": 714,
+    "id": 43755,
     "name": "Bad Dudes vs. Dragon Ninja (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1C1JsOi1bZn_fuLvV4a_JBkARa-rsLYn5/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1AAd1_FqUbNtsn-xREAKa3J59-NIHX939/view?usp=sharing",
-    "size": "1.2 MB",
-    "date": "2025-11-25",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1NorFDYOUgudYs2VDShkJBb8o1-gyWXyR/view?usp=sharing",
+    "size": "2.0 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 508,
@@ -4102,16 +4064,15 @@
     "date": "2026-01-17"
   },
   {
-    "id": 26566,
+    "id": 43786,
     "name": "Bard's Tale, The - Tales of the Unknown",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1K-0Nk0WZr8fnqHXhwL4miPczG8ixEOKS/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1s5Rl_udk_LsQxlxl4cWlAvR-u6OInUiq/view?usp=sharing",
-    "size": "380.3 KB",
-    "date": "2026-02-08",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1uUxM9EY4yCJzad-SMhmhmq8wPijhhfs3/view?usp=sharing",
+    "size": "1.7 MB",
+    "date": "2026-04-16"
   },
   {
     "id": 1175,
@@ -4160,16 +4121,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 3976,
+    "id": 43828,
     "name": "Batman - Return of the Joker",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1p_Gt-aJUwZg5vWyem0Jaa26WbuV2gaW9/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1ix_tB8GT8zmPgJILnUoqMyCAEipn_7dK/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1jB8PbXbMuAZmFsxD-mD3mY_-euW0t3G5/view?usp=sharing",
     "size": "4.0 MB",
-    "date": "2026-01-09",
-    "onScreenScraper": true
+    "date": "2026-01-09"
   },
   {
     "id": 1024,
@@ -4183,16 +4143,15 @@
     "date": "2025-11-30"
   },
   {
-    "id": 738,
+    "id": 43754,
     "name": "Batman - The Video Game (USA)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1-8VKPVXPxrcJZzDfdpXlUCiKNVaDuZp0/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1_AQvi1AJItqjzHmyITpCUpRdZFAtQM1R/view?usp=sharing",
-    "size": "1.4 MB",
-    "date": "2025-11-05",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/111TM9XIjOlmubMcc3IURyy94MnkzV5MI/view?usp=sharing",
+    "size": "2.1 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 26504,
@@ -4207,16 +4166,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 10274,
+    "id": 43792,
     "name": "Batman Returns",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1LiZR7HO22rlFMGDTn3JUfvBM-nmzXj3L/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1ThBo26tU_6cnMGxVjaxCcwkcJIwVqUaT/view?usp=sharing",
-    "size": "953.2 KB",
-    "date": "2026-01-16",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1sS7eP1Crt_DUqYeASIGMqJHdgSr60GvV/view?usp=sharing",
+    "size": "952.5 KB",
+    "date": "2026-04-16"
   },
   {
     "id": 1126,
@@ -4384,16 +4342,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 737,
+    "id": 43723,
     "name": "Battletoads (USA)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1wq1RMmZbHCpnxlbV_a-ZIfPsUQFqfSXW/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1wkGBbB6ovbK9HZIEydANpbRuwnm_jILK/view?usp=sharing",
-    "size": "4.9 MB",
-    "date": "2025-11-05",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1TbvmuHaoI53yhIIwnT5k3QT3Xs0rrcqd/view?usp=sharing",
+    "size": "7.6 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 502,
@@ -4462,16 +4419,15 @@
     "date": "2025-11-15"
   },
   {
-    "id": 699,
+    "id": 43838,
     "name": "Beetlejuice (USA)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1SXHrEjpWqLWJUL5CK605oX0VaoLXIjX7/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1xu9aX6TwULSXFVzg_f2tcsu7BYApbIt2/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1wasPZ23bEH8C4vHL28fWoR5rKDCwCihB/view?usp=sharing",
     "size": "3.8 MB",
-    "date": "2025-12-06",
-    "onScreenScraper": true
+    "date": "2025-12-06"
   },
   {
     "id": 500,
@@ -4509,16 +4465,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 753,
+    "id": 43753,
     "name": "Best of the Best - Championship Karate (Europe)",
     "creator": "Christophe",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1youzIB7qR2nX8NK6f7NiEKj5CIGeRrRT/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1OwwluZPZWtr8Hj2vPe472EOd-BJyVhEr/view?usp=sharing",
-    "size": "6.7 MB",
-    "date": "2025-11-03",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1Ij5O1bnjJde-Jm5ZKg2_fJdww_PET7RT/view?usp=sharing",
+    "size": "3.8 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 499,
@@ -4634,16 +4589,15 @@
     "date": "2026-02-10"
   },
   {
-    "id": 23270,
-    "name": "Bill & Ted's Excellent Video Game Adventure",
-    "creator": "Huhe-8554",
+    "id": 43791,
+    "name": "Bill & Ted_s Excellent Video Game Adventure",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/14NzyI-NS6aauM51qXNgrFoBVaLWI3gk6/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1Ly-XqvYy82xmBf2beW9Wp00RfMJ_5bAq/view?usp=sharing",
+    "imageUrl": "",
+    "downloadUrl": "https://drive.google.com/file/d/1iqQgneoJMsgiEuhaoN1iZAqevdP_TRvh/view?usp=sharing",
     "size": "2.9 MB",
-    "date": "2026-02-04",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 6423,
@@ -4725,16 +4679,15 @@
     "date": "2025-11-14"
   },
   {
-    "id": 752,
+    "id": 43752,
     "name": "Black Bass, The (USA)",
     "creator": "Christophe",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1Ktx7kOocHMee-Cb1HG5Mphag6pWiFAqq/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1g8yRztQ2POJT-mu4pNv26gS8nuAS-Yit/view?usp=sharing",
-    "size": "4.9 MB",
-    "date": "2025-11-03",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1Ea3ncfF4LeMjpSnhDvW0d4ser02BUZJG/view?usp=sharing",
+    "size": "7.3 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 1127,
@@ -4806,16 +4759,15 @@
     "date": "2026-01-05"
   },
   {
-    "id": 3980,
+    "id": 43800,
     "name": "Blaster Master",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1K1SojZeJ5FDEnfDkkip0ULPoT9x1aUdP/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1Lzj6rvaZy2ltPKXCLJVMJCRj0ykx2wph/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1gmLSugOw1ChRCkR15PEuRbLc70mBDm3r/view?usp=sharing",
     "size": "2.6 MB",
-    "date": "2026-01-06",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 494,
@@ -4991,28 +4943,26 @@
     "onScreenScraper": true
   },
   {
-    "id": 751,
+    "id": 43751,
     "name": "Blue Marlin, The (USA)",
     "creator": "Christophe",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1lz-83DzUE53gRj7an9CoF_zVfXWuniZU/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1ytX2WB59LKH9PAqBasjcqdcdWoXMm-BK/view?usp=sharing",
-    "size": "3.2 MB",
-    "date": "2025-11-03",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/16sJ_H7aVsDOU7RFT7xn8iK6VbA3wVTBl/view?usp=sharing",
+    "size": "4.9 MB",
+    "date": "2026-04-17"
   },
   {
-    "id": 23269,
+    "id": 43801,
     "name": "Blue Shadow",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1cWGr1ksJ7-EzOsaPUzbUEQPsOFv9DZEv/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/10I1-mgiP2OyiHnpIWmDcC-cETrVJNFwa/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1trhXk2iO2_jAs96vYHojDDZrF5zJkP7j/view?usp=sharing",
     "size": "5.7 MB",
-    "date": "2026-02-04",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 490,
@@ -5038,16 +4988,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 3984,
+    "id": 43833,
     "name": "Blues Brothers, The",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1LBWya5qH6izy4Y7gGvIMY-PvUFZtOpjf/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1CotRekWPbcnJ5r3aYiV0j3dhu97NOFT0/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1WwIo3nLf-DHIUGzqEdSMyWlMnVJLvdvU/view?usp=sharing",
     "size": "904.5 KB",
-    "date": "2026-01-04",
-    "onScreenScraper": true
+    "date": "2026-01-04"
   },
   {
     "id": 489,
@@ -5202,16 +5151,15 @@
     "date": "2026-01-15"
   },
   {
-    "id": 3978,
+    "id": 43830,
     "name": "Boy and His Blob, A - Trouble on Blobolonia",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1sDK87sVLwda_PI_zzSjvhelnUfJMDZCv/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1_AfDna7wu8nfULhVRsGL_INIAxT9F1c3/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/12DWyIyV2iUBlNJZrwabIyoo3YOIVE59o/view?usp=sharing",
     "size": "2.0 MB",
-    "date": "2026-01-09",
-    "onScreenScraper": true
+    "date": "2026-01-09"
   },
   {
     "id": 1095,
@@ -5238,16 +5186,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 3977,
+    "id": 43829,
     "name": "Bram Stoker_s Dracula",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1g8aaLj7QOOi4myQVi88f6JfL_BdprzbU/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/16QSXAmK_Q625NCsjbeojigqyqHfIENwV/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1QGi5kBH1PCn2nfqmAojRe-5H6YxR-DeN/view?usp=sharing",
     "size": "3.1 MB",
-    "date": "2026-01-09",
-    "onScreenScraper": true
+    "date": "2026-01-09"
   },
   {
     "id": 5541,
@@ -5353,18 +5300,6 @@
     "date": "2025-11-14"
   },
   {
-    "id": 710,
-    "name": "Bubble Bobble (Europe)",
-    "creator": "huhe-8554",
-    "system": "nes",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1gwiE4sKxoiKpXHCmY7LPwFjYTfHBTpIm/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1b2QN8-J75JiWzZsb2NEm76Qd15cETgZI/view?usp=sharing",
-    "size": "3.3 MB",
-    "date": "2025-11-26",
-    "onScreenScraper": true
-  },
-  {
     "id": 1131,
     "name": "Bubble Bobble (Europe)",
     "creator": "Mrfomt",
@@ -5375,6 +5310,17 @@
     "size": "1.5 MB",
     "date": "2026-01-02",
     "onScreenScraper": true
+  },
+  {
+    "id": 43765,
+    "name": "Bubble Bobble (Europe)",
+    "creator": "huhe-8554",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1gwiE4sKxoiKpXHCmY7LPwFjYTfHBTpIm/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1dxC2nO0xnjUJ0OUtXHR-WaTagA8CaGqg/view?usp=sharing",
+    "size": "3.2 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 16752,
@@ -5422,16 +5368,15 @@
     "date": "2025-11-13"
   },
   {
-    "id": 7712,
+    "id": 43827,
     "name": "Bucky O_Hare",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/17SzqRz0TDdevr19MSWhd6g4vx_8ud_b0/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1EDJYi86dBDF62c2b3bAXBHwZYCwzlUcx/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1_WtkD9SbjIgO1FojUlswEslqk1D41npE/view?usp=sharing",
     "size": "6.4 MB",
-    "date": "2026-01-10",
-    "onScreenScraper": true
+    "date": "2026-01-10"
   },
   {
     "id": 1132,
@@ -5446,40 +5391,37 @@
     "onScreenScraper": true
   },
   {
-    "id": 23268,
+    "id": 43820,
     "name": "Bugs Bunny Birthday Blowout, The",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1sAxbCU2UzCDd7656Pb1VtJuMcBVZdSeo/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1CaYn-QqDBkqiCjDmXiV9PIFiKrcfRvDS/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/11mcyPLW5y2eA0slf2aN1WwGT9tlDFexg/view?usp=sharing",
     "size": "4.6 MB",
-    "date": "2026-02-04",
-    "onScreenScraper": true
+    "date": "2026-02-04"
   },
   {
-    "id": 750,
+    "id": 43750,
     "name": "Burai Fighter (Europe)",
     "creator": "Christophe",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1GjPuUgIYRGK5mjNYF-smauzzPA0luSuE/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1n9RH4Q1KVuJmOX0t-Rne0onIAZMX6-Id/view?usp=sharing",
-    "size": "4.4 MB",
-    "date": "2025-11-03",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1TjVyoPPGjyeEk4MdGIwoAOi1uxmGOygd/view?usp=sharing",
+    "size": "6.3 MB",
+    "date": "2026-04-17"
   },
   {
-    "id": 29098,
+    "id": 43785,
     "name": "BurgerTime",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/19KlCWkKgKa31DAw7HpjFdTe9Tnntr6r2/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1Jg-dXz-GLcN5DfNr_GGDRsTTnfbKj4xF/view?usp=sharing",
-    "size": "205.5 KB",
-    "date": "2026-02-25",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1vpjJDgb77KRkagpY2tOLzTkmBlaeymDx/view?usp=sharing",
+    "size": "747.3 KB",
+    "date": "2026-04-16"
   },
   {
     "id": 485,
@@ -5539,18 +5481,6 @@
     "date": "2026-01-18"
   },
   {
-    "id": 3979,
-    "name": "Cabal",
-    "creator": "huhe-8554",
-    "system": "nes",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1COXIrk5GvtY_4Vk11l4flKNFTCiFwObJ/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1tZ-b3oqxBnF3G1ueatScXlnXh3I_kLcF/view?usp=sharing",
-    "size": "4.6 MB",
-    "date": "2026-01-06",
-    "onScreenScraper": true
-  },
-  {
     "id": 483,
     "name": "cabal",
     "creator": "Sk0ney",
@@ -5561,6 +5491,17 @@
     "size": "5.0 MB",
     "date": "2025-11-13",
     "onScreenScraper": true
+  },
+  {
+    "id": 43802,
+    "name": "Cabal",
+    "creator": "huhe-8554",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1COXIrk5GvtY_4Vk11l4flKNFTCiFwObJ/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1IOzn6h0BvryBSc7q7reBCo_iWE2YbQeN/view?usp=sharing",
+    "size": "4.6 MB",
+    "date": "2026-04-16"
   },
   {
     "id": 482,
@@ -5585,16 +5526,15 @@
     "date": "2025-11-13"
   },
   {
-    "id": 7711,
+    "id": 43826,
     "name": "California Games",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/13aT23gHFhVyh0WWQ9dE5_d91fZmrKUny/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1K7WG_v-FxmzXXyUA2PT0lXIyffy5V6I1/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/14LywSmJELSNS6feYHgp-Rl2JCPKIN2Up/view?usp=sharing",
     "size": "3.5 MB",
-    "date": "2026-01-10",
-    "onScreenScraper": true
+    "date": "2026-01-10"
   },
   {
     "id": 6571,
@@ -5792,16 +5732,15 @@
     "date": "2026-01-20"
   },
   {
-    "id": 10273,
+    "id": 43803,
     "name": "Captain America and the Avengers",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1KGDGOBRuUzDOUNu0JEwtqJEec0PncLIP/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1l3VWOpgBeoQ7DKh8nQpiQUBWY_JgNbDY/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ejTovhbpQJb__enbgGggCBoZAGAM24hJ/view?usp=sharing",
     "size": "2.1 MB",
-    "date": "2026-01-16",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 23929,
@@ -5827,16 +5766,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 29095,
+    "id": 43804,
     "name": "Captain Skyhawk",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1FSnzCr_iQTw06Rny0mzXx6jyyPppHCp-/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1rrkxsn-ZdWiQV_9h-uvW6tvMdJd4V1JF/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1VfQ8e8fd4hucVa9W89RHOLIXEYG0VkEL/view?usp=sharing",
     "size": "2.2 MB",
-    "date": "2026-03-03",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 479,
@@ -5940,28 +5878,26 @@
     "onScreenScraper": true
   },
   {
-    "id": 742,
+    "id": 43749,
     "name": "Casino Kid (USA)",
     "creator": "Christophe",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1WJ5qQGQScQvMnHDZIvmQApAGdLcgLUKC/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1s8xQbL_x9FGdymNBPs7bYqABS8LqY-8M/view?usp=sharing",
-    "size": "1.6 MB",
-    "date": "2025-11-03",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1S2UW6rIs44DAsR5qIMly7VRm3Gx7U2gU/view?usp=sharing",
+    "size": "3.2 MB",
+    "date": "2026-04-17"
   },
   {
-    "id": 741,
+    "id": 43748,
     "name": "Casino Kid II (USA)",
     "creator": "Christophe",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1titgIOJVcLgrzZLRv-9fhmmUCkrtUF2o/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1wJabIJJFVw5yQJGocIvvjvfswLhgR3Va/view?usp=sharing",
-    "size": "1.9 MB",
-    "date": "2025-11-03",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/16A3VyP0oGj7njPmMpYDslqO81IXjC6VV/view?usp=sharing",
+    "size": "3.8 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 23926,
@@ -5988,16 +5924,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 3983,
+    "id": 43832,
     "name": "Castlevania",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1m6lFYA7RYPN2uxxOEJoaZ0kewy5vNNcC/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/12R55RlLNqI05FiPIkWOQbhR8IlwI9GVC/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1p-hSiCol2abAruDeExdQ_4DoJbMT2Zqa/view?usp=sharing",
     "size": "5.8 MB",
-    "date": "2026-01-04",
-    "onScreenScraper": true
+    "date": "2026-01-04"
   },
   {
     "id": 1120,
@@ -6048,16 +5983,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 23271,
-    "name": "Castlevania 2 - Simon's Quest",
-    "creator": "Huhe-8554",
+    "id": 43821,
+    "name": "Castlevania 2 - Simon_s Quest",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1AhgG5LavFoObVnNGwZJjDFCAroUYRoNv/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1gab4zSOUNp96mvNOlpGjDIU3SBBdIBEe/view?usp=sharing",
+    "imageUrl": "",
+    "downloadUrl": "https://drive.google.com/file/d/1ppbdsk4R-Y8H8XgGYT6W9E3sybsDR-Ac/view?usp=sharing",
     "size": "3.8 MB",
-    "date": "2026-02-03",
-    "onScreenScraper": true
+    "date": "2026-02-02"
   },
   {
     "id": 37173,
@@ -6072,16 +6006,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 735,
-    "name": "Castlevania III - Dracula's Curse (USA)",
+    "id": 43724,
+    "name": "Castlevania III - Dracula_s Curse (USA)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1XBL9jF--ol5-Vt0Vr7ep1ck4ARHjf2tM/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1lQrms3ZaP0hfbOCSFSeD2CrqeolLnSyi/view?usp=sharing",
-    "size": "5.4 MB",
-    "date": "2025-11-05",
-    "onScreenScraper": true
+    "imageUrl": "",
+    "downloadUrl": "https://drive.google.com/file/d/1Ykv26avDVeShuJKtJCKAo0eGtggDUMlD/view?usp=sharing",
+    "size": "8.4 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 2982,
@@ -6095,16 +6028,15 @@
     "date": "2026-01-05"
   },
   {
-    "id": 23266,
+    "id": 43805,
     "name": "Caveman Games",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1gKNYuAWShsyM9liPrVwGBUBu4FXd_7ED/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1FLiv8vrOrzoxn7I2U0b7b2WXWhYEKMNE/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1gQ5UhQBO9FiTZiLiOif7TBYUBj9H9aK_/view?usp=sharing",
     "size": "8.4 MB",
-    "date": "2026-02-05",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 476,
@@ -6307,16 +6239,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 23267,
+    "id": 43806,
     "name": "Championship Bowling",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/19jMkleDNim5Eg9m9r1rG41viJzc9cRrB/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1y6e1A2Dx_l8twPW1jA4eep50mY_1Et5h/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1dS4xk1t92i_Lb17tpOPDD-sXtt2E8Lz5/view?usp=sharing",
     "size": "4.0 MB",
-    "date": "2026-02-05",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 6570,
@@ -6411,16 +6342,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 25196,
+    "id": 43807,
     "name": "Chiller",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/16jBMN3GmQa1ueqEu3-RDDzdbaYKytFP2/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1lvGRqi44FLkVrrSuLzQLCqp7vYZBDerk/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1R6xuWS-g9UN6teGpw2rsxRWFGM5f3aIV/view?usp=sharing",
     "size": "3.6 MB",
-    "date": "2026-02-07",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 25743,
@@ -6479,28 +6409,26 @@
     "date": "2025-11-13"
   },
   {
-    "id": 10272,
-    "name": "Chip 'n Dale Rescue Rangers",
+    "id": 43825,
+    "name": "Chip _n Dale Rescue Rangers",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/14mZJbidTP3M-mjXoHQPAa48wsJJiC5xo/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1XBElrti5mzVvrsblSbtbyPy6QGaAcy5Y/view?usp=sharing",
+    "imageUrl": "",
+    "downloadUrl": "https://drive.google.com/file/d/1osA7H6cfhUR-v_YBlBhogc8CKygQkFu7/view?usp=sharing",
     "size": "8.3 MB",
-    "date": "2026-01-16",
-    "onScreenScraper": true
+    "date": "2026-01-16"
   },
   {
-    "id": 25197,
+    "id": 43819,
     "name": "Choplifter",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1xuCY9gwun8kRCVNagv-rrkptF9u1FNC-/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1YVch9j1O3ZlECbxGW2wmBP_ppUhCBqFR/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1HVKMtl4ilwhnNCWkWRC0xUnwiYtMPgSa/view?usp=sharing",
     "size": "1.7 MB",
-    "date": "2026-02-07",
-    "onScreenScraper": true
+    "date": "2026-02-07"
   },
   {
     "id": 6568,
@@ -6539,16 +6467,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 747,
+    "id": 43747,
     "name": "Chubby Cherub (USA)",
     "creator": "Christophe",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1KvnlZTeG2Rb7n_9jkkcSaySIguq1BKHe/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1Qc3iHCSwgU0XVq2adDdiOXGhm-OddMFg/view?usp=sharing",
-    "size": "927.9 KB",
-    "date": "2025-11-03",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/18SNkkmZ5CDDpxaZd5Z9q-u6zvw2yxYj-/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 6567,
@@ -6575,16 +6502,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 743,
+    "id": 43746,
     "name": "Circus Caper (USA)",
     "creator": "Christophe",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1_IbGmBVN4pgU7VG9gq_FTeiQQ7MAddVB/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1r8boJQfeMepSIbZNlOxojpKg2nDTO2E5/view?usp=sharing",
-    "size": "2.1 MB",
-    "date": "2025-11-03",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1R7u8aFNDRpJlu1x37KSAQ8--hkH2gbOy/view?usp=sharing",
+    "size": "4.8 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 28245,
@@ -6767,16 +6693,15 @@
     "date": "2025-11-04"
   },
   {
-    "id": 744,
+    "id": 43742,
     "name": "Code Name - Viper (Trad FR)",
     "creator": "Christophe",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1mkrMXMihgyNoBCXDxUM2n0SbT9i-t20k/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1rkcTjC3UPSPdItQG5DXtOg_9Z_grwBUG/view?usp=sharing",
-    "size": "5.0 MB",
-    "date": "2025-11-03",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1Kwh5NH-tU5qgOS1sG7DhrSKoLFXIJn65/view?usp=sharing",
+    "size": "8.5 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 10976,
@@ -6801,16 +6726,15 @@
     "date": "2026-01-18"
   },
   {
-    "id": 746,
+    "id": 43743,
     "name": "Color a Dinosaur",
     "creator": "Christophe",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1t_8bta6_K_8baj9lm5arquSaVq4NDR7_/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1HdsgmxdjLpcIqJzIl2CLhhQ7GdgNvSol/view?usp=sharing",
-    "size": "2.7 MB",
-    "date": "2025-11-03",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/13pA3zs8tMCmb2f7rM5yyrnCQr0EqATud/view?usp=sharing",
+    "size": "5.0 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 9040,
@@ -6858,28 +6782,26 @@
     "date": "2025-11-13"
   },
   {
-    "id": 729,
+    "id": 43732,
     "name": "Commando (USA)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1FZljZLgVrpiHPy29XzGJGzFJQcR6Az_j/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/129Kf1WthmH99RhWToQpHqjG3LDmD7zG3/view?usp=sharing",
-    "size": "3.6 MB",
-    "date": "2025-11-09",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1T1BDMI2pccdNYt7yHsYF9X_WlwvT7YCa/view?usp=sharing",
+    "size": "4.3 MB",
+    "date": "2026-04-17"
   },
   {
-    "id": 745,
+    "id": 43741,
     "name": "Conflict",
     "creator": "Christophe",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1gATPFhg5dpLcKcN-B3LOuL4LVuEzDQq9/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1rVMZ8_YKiKqQNYmuL0Mq5xLT5lgaw6Tu/view?usp=sharing",
-    "size": "5.3 MB",
-    "date": "2025-11-03",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1W4B5Hb6ySh96GU_idMLUgmTkyiY1whV0/view?usp=sharing",
+    "size": "8.4 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 19439,
@@ -6916,16 +6838,15 @@
     "date": "2026-01-05"
   },
   {
-    "id": 719,
+    "id": 43737,
     "name": "Contra (USA)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1vM67HtW-_RZoxiBwJWx1Xp0wUzRi9Vg2/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1LErioVJ6qsH2J-53KWxq1lYT3cJ9a3tv/view?usp=sharing",
-    "size": "4.1 MB",
-    "date": "2025-11-22",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1tc89vV_oiGudC9XjUE6nX_oPXipiHvhs/view?usp=sharing",
+    "size": "7.2 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 1002,
@@ -7426,16 +7347,15 @@
     "date": "2026-02-03"
   },
   {
-    "id": 29097,
+    "id": 43766,
     "name": "Cyberball",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1QZlKug0IQ2Jaage5jAtMFdmvxuOnYTyw/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1UpmKUy-JRasoxoVZUQO2lcesntOFWVin/view?usp=sharing",
-    "size": "419.9 KB",
-    "date": "2026-02-25",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1qkPncP8AGbwJsMvlfmwHsPkW27DJhbuh/view?usp=sharing",
+    "size": "421.2 KB",
+    "date": "2026-04-17"
   },
   {
     "id": 42181,
@@ -7552,16 +7472,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 724,
+    "id": 43740,
     "name": "Dance Aerobics (USA)",
     "creator": "Christophe",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1yP815cEM-zMsehcWIn5XdQU65KgAZ7BS/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1okLY2ah_l3ytpmddBPs1VT9bDLH6YyTX/view?usp=sharing",
-    "size": "2.1 MB",
-    "date": "2025-11-14",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1aOmk3zGHsrtetrV03NjbYBP_AvVulQ7C/view?usp=sharing",
+    "size": "4.3 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 1022,
@@ -7642,40 +7561,37 @@
     "onScreenScraper": true
   },
   {
-    "id": 722,
+    "id": 43736,
     "name": "Darkman (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1IzcBEHisumuHtio7WPDyiB3DaITpBVAp/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1I4HDr_deaseoNgh3dYdKRck_5O7KA09z/view?usp=sharing",
-    "size": "4.3 MB",
-    "date": "2025-11-17",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/15pYp86E5yMNh7Ax7FxydxJMKuV4N_14b/view?usp=sharing",
+    "size": "6.5 MB",
+    "date": "2026-04-17"
   },
   {
-    "id": 10280,
+    "id": 43817,
     "name": "Darkwing Duck",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1s9BTyFtu7GJ3qHJEeCTPQ8tEyw0mvAew/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1eysyAznPQ4rJu_A7dRsWdhWSEnjrnd8s/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1R6ZIH9qHMaudxkJFiwRTk17tKZVzGtj7/view?usp=sharing",
     "size": "2.9 MB",
-    "date": "2026-01-16",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
-    "id": 740,
+    "id": 43739,
     "name": "Dash Galaxy in the Alien Asylum (USA)",
     "creator": "Christophe",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1VSYz0cRZXGdU3LqZpBBTZ__w6c_8QKww/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1VWyjjrg9MAPCfvZE0XnSvSS-DJbE2bOY/view?usp=sharing",
-    "size": "3.6 MB",
-    "date": "2025-11-03",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1djEnCmbVMRPZm5KjRW4B57abS7kVH2q_/view?usp=sharing",
+    "size": "6.4 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 6306,
@@ -7733,28 +7649,26 @@
     "date": "2025-11-30"
   },
   {
-    "id": 739,
-    "name": "Day Dreamin' Davey (USA)",
-    "creator": "Christophe",
+    "id": 43738,
+    "name": "Day Dreamin_ Davey (USA)",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/11uyoE93Z7s0FYyEYHR4Qfw-zR8z6J2aW/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1SAlUyHxdDDFUSIvaRDEe_8JbGW0fZoRl/view?usp=sharing",
-    "size": "4.5 MB",
-    "date": "2025-11-03",
-    "onScreenScraper": true
+    "imageUrl": "",
+    "downloadUrl": "https://drive.google.com/file/d/1485AZrTapn-fZEqh6_eEZWxv6EWwszR6/view?usp=sharing",
+    "size": "7.8 MB",
+    "date": "2026-04-17"
   },
   {
-    "id": 689,
+    "id": 43767,
     "name": "Days of Thunder (Europe)",
     "creator": "Alain",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1dAiVlijS-qkzVHCR1pF_JRi9G9RhO8uf/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1Xi610N4816B92frVirPgBdg8-gItmqy3/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/18HCWIi16kH4uC3yUGNYCDJ3mW6F6xWtX/view?usp=sharing",
     "size": "6.5 MB",
-    "date": "2026-01-02",
-    "onScreenScraper": true
+    "date": "2026-04-17"
   },
   {
     "id": 450,
@@ -8256,16 +8170,15 @@
     "date": "2026-01-11"
   },
   {
-    "id": 26563,
+    "id": 43768,
     "name": "Defenders of Dynatron City",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1gAd9fO9qMjH8wV88371qtEYf8lurAL_Z/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1grvq8WwZzVxxRHuc4DXLmdSZXKuk3s6K/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Yy8pteNULXjHs1ValxfnBXPvOvvvtGoP/view?usp=sharing",
     "size": "1.1 MB",
-    "date": "2026-02-11",
-    "onScreenScraper": true
+    "date": "2026-04-17"
   },
   {
     "id": 930,
@@ -8448,16 +8361,15 @@
     "date": "2026-01-05"
   },
   {
-    "id": 10277,
+    "id": 43816,
     "name": "Dick Tracy",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1gEWI1hRAKO58P8-1J1KLWOU1YMqDvZAm/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/12yeIIfgQrIiK5L0TiKzrNAl7AKSXThou/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1NEFdWUULrPeiVQumQz5Z1ZDgr9f5kk56/view?usp=sharing",
     "size": "5.8 MB",
-    "date": "2026-01-16",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 16606,
@@ -8506,16 +8418,15 @@
     "date": "2025-11-13"
   },
   {
-    "id": 26565,
+    "id": 43787,
     "name": "Digger T. Rock - The Legend of the Lost City",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1AvqS0FeN7_SKsQgI9rmDML-HMSmteqQ3/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1kU_ey4RVRjZzOpTkJy7_RhRf7kLLEpLh/view?usp=sharing",
-    "size": "1.2 MB",
-    "date": "2026-02-08",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/11qFSyU3tX10ueA86j_7CA6-WYlnqSBSM/view?usp=sharing",
+    "size": "6.2 MB",
+    "date": "2026-04-16"
   },
   {
     "id": 1068,
@@ -8667,16 +8578,15 @@
     "date": "2025-11-30"
   },
   {
-    "id": 26564,
+    "id": 43769,
     "name": "Dirty Harry",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/161FPTg8TzIzK1zGM6JHuxrOnTZbd0WZl/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1e0Wzm21UlP4yOSwPFS3jTKvVotTxmYG-/view?usp=sharing",
-    "size": "243.7 KB",
-    "date": "2026-02-11",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1eU4RDpVSw3fT3iNqRWxTZR-rIlCEsi2S/view?usp=sharing",
+    "size": "244.6 KB",
+    "date": "2026-04-17"
   },
   {
     "id": 668,
@@ -8974,28 +8884,26 @@
     "date": "2026-01-05"
   },
   {
-    "id": 23276,
+    "id": 43824,
     "name": "Double Dragon",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1pvXIpavTBj3J6Pqr-Z2cBiGtTF__TwnI/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1nhMHZ52N1Cw6eub3kxAEDnapQFy6r8Kj/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/19VkeSVjGEMANo-xLnLbyv_SeHXTd3V4K/view?usp=sharing",
     "size": "7.7 MB",
-    "date": "2026-02-02",
-    "onScreenScraper": true
+    "date": "2026-02-02"
   },
   {
-    "id": 732,
+    "id": 43731,
     "name": "Double Dragon II - The Revenge (USA) (Rev A)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1K8UQAsE1NVqxO_MdGlbzKNOjZNqe9W1W/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1wpzIZfuRMR7hvvk5gICaVTtUfYzsrB6q/view?usp=sharing",
-    "size": "9.4 MB",
-    "date": "2025-11-07",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1JPfei4jwKtQeTGyDagNCIGuuGtMp5I3T/view?usp=sharing",
+    "size": "10.5 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 4534,
@@ -9043,16 +8951,15 @@
     "date": "2025-11-13"
   },
   {
-    "id": 727,
+    "id": 43727,
     "name": "Dr. Mario (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/10v1xCMHg2dXqzetUsFkEJKDnybu-bGhj/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1Vrm6JULU1ZBuaNJlcqrO6NLbMrXboI1q/view?usp=sharing",
-    "size": "766.5 KB",
-    "date": "2025-11-13",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1vCh4o9qxAxoN2DmTBdjwq-Gkb7GHo5EF/view?usp=sharing",
+    "size": "1.4 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 1073,
@@ -9137,16 +9044,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 29103,
+    "id": 43788,
     "name": "Dragon Quest",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/10PLX4-dsG35ERFEB0kB_tjfRnBNGXjno/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1vTybY6Vr2vnC9EONnL_OzOM0H9ZazssU/view?usp=sharing",
-    "size": "1.5 MB",
-    "date": "2026-02-11",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/14shoXPBU6MBK0VtTOdFJlx_wfVDrvhTS/view?usp=sharing",
+    "size": "6.4 MB",
+    "date": "2026-04-16"
   },
   {
     "id": 945,
@@ -9365,28 +9271,26 @@
     "date": "2025-11-13"
   },
   {
-    "id": 713,
+    "id": 43728,
     "name": "Duck Hunt (World)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1iX7cIQqrIy2_M69yt68hJqEFwgJ41tug/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/10vARA0BRK2B0dPdvmY5tTzxAvW019dpQ/view?usp=sharing",
-    "size": "2.7 MB",
-    "date": "2025-11-25",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1N-qUPB4W6oM3P0zCGEKEi7I5fyL84K2R/view?usp=sharing",
+    "size": "3.8 MB",
+    "date": "2026-04-17"
   },
   {
-    "id": 734,
+    "id": 43725,
     "name": "DuckTales 2 (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1BZ6_aJlHp57DST414msSGfbGn2kUicEr/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1_3oEh-EKXHSGXYl7vq6wol1aY90XW97c/view?usp=sharing",
-    "size": "3.7 MB",
-    "date": "2025-11-05",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/17HpQZ6czUk2YdTbIJiT4q02K0vdRgxB0/view?usp=sharing",
+    "size": "6.3 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 1057,
@@ -9582,16 +9486,15 @@
     "date": "2025-11-13"
   },
   {
-    "id": 29100,
+    "id": 43770,
     "name": "Elite",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1b0AuYrJCJ7-OFGbzOkTNgk-MmHXvB4GC/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1rJuyjt1eroTyBdOMzZJR0dttsaCkb-Oq/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1HchQrzDgz6GnZzmwk_543MMKPXWYYpB4/view?usp=sharing",
     "size": "1.3 MB",
-    "date": "2026-02-22",
-    "onScreenScraper": true
+    "date": "2026-04-17"
   },
   {
     "id": 1096,
@@ -10133,16 +10036,15 @@
     "date": "2025-11-30"
   },
   {
-    "id": 10276,
+    "id": 43815,
     "name": "Felix the Cat",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1SyAOkJ36GNo5xvyEJV4N6HrmVVYoygO9/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/152hdyB0LDwaQk0fYK22DWkBpdsraRerS/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1GdZFQRBkhtJW6_NyWJc_wZzE2neeKu_4/view?usp=sharing",
     "size": "1.8 MB",
-    "date": "2026-01-16",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 404,
@@ -10270,16 +10172,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 29099,
+    "id": 43771,
     "name": "Final Fantasy",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1J9ydB1XYxO0ZwCq4mTv9_9ee9e_T6REb/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1T9Ee12SmTCEjgVfojDVR_lbsrjJv4XQz/view?usp=sharing",
-    "size": "900.3 KB",
-    "date": "2026-02-22",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/13vwzcRPs8cXKwuedM8hbYMziDMrdu9Kn/view?usp=sharing",
+    "size": "901.9 KB",
+    "date": "2026-04-17"
   },
   {
     "id": 990,
@@ -10624,16 +10525,15 @@
     "date": "2025-11-01"
   },
   {
-    "id": 29096,
-    "name": "Fox's Peter Pan & the Pirates  The Revenge of Captain Hook",
-    "creator": "Huhe-8554",
+    "id": 43772,
+    "name": "Fox_s Peter Pan & the Pirates  The Revenge of Captain Hook",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1xykJaVqOOQlFtlZp9C8SwU_ACWFZb-Pz/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1751dslrFhRcT05k-Ad_rzu4bK0QQRGEm/view?usp=sharing",
+    "imageUrl": "",
+    "downloadUrl": "https://drive.google.com/file/d/1Zwksk9qC585ppemcwZbIdKQK7wp90xM8/view?usp=sharing",
     "size": "1.2 MB",
-    "date": "2026-02-26",
-    "onScreenScraper": true
+    "date": "2026-04-17"
   },
   {
     "id": 6911,
@@ -10681,16 +10581,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 712,
+    "id": 43726,
     "name": "Friday the 13th (USA)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1Uyo1kPJiPSZhZI3s7aI-8aQbSaFE2R7f/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1XKPrw_PGy97byThfBSkHSPmcAcmwnmVY/view?usp=sharing",
-    "size": "2.4 MB",
-    "date": "2025-11-26",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1SLGGUw8uW7DefamRPBZ7xl8V5JW7KFL4/view?usp=sharing",
+    "size": "4.6 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 397,
@@ -11208,16 +11107,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 706,
+    "id": 43844,
     "name": "Gauntlet II (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1rk9cK4_oC7saCzSILFP4tHQpubMxk8rY/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1YtlOaa64TZ69_dzPIU1fMR43__THCDgV/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1OGinje-mK5P6UrdA-AV9IqjJDM7OiTvk/view?usp=sharing",
     "size": "869.8 KB",
-    "date": "2025-11-28",
-    "onScreenScraper": true
+    "date": "2025-11-28"
   },
   {
     "id": 8836,
@@ -12492,16 +12390,15 @@
     "date": "2026-01-03"
   },
   {
-    "id": 31185,
+    "id": 43814,
     "name": "Godzilla - Monster of Monsters!",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1pE8o3GEuSxq542aR8C3dgW-aknqhjshM/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1GiLh3FU-wrLyHzNJZDexGp99m2GE9mLu/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1XX_Aj0xxgjYJiATUN1-qyD6dxgc5T5U_/view?usp=sharing",
     "size": "4.9 MB",
-    "date": "2026-03-07",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 988,
@@ -12869,16 +12766,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 10275,
+    "id": 43813,
     "name": "Gremlins 2 - The New Batch",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1LjEDU8IvtqC2J2EsE9iyVW4bb3sRHyAq/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1DQ48k93Su7sXugOjVNnvgPSalnajB95B/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Wa4vTVCC_-OgtZcaAvfkxHskmRHTrAfG/view?usp=sharing",
     "size": "4.1 MB",
-    "date": "2026-01-16",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 11778,
@@ -13522,28 +13418,26 @@
     "onScreenScraper": true
   },
   {
-    "id": 31187,
+    "id": 43812,
     "name": "Home Alone 2 - Lost in New York",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1wQyArz4N2CtSKw-PaTLpdUo6JaPNXHSF/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1vzeW2lsOanzEWmdbDof7ldSisawyadqK/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1VUILeLlaLN0-Q1X1QFQ0oiFum5oAHMTd/view?usp=sharing",
     "size": "3.8 MB",
-    "date": "2026-03-06",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
-    "id": 726,
+    "id": 43729,
     "name": "Hook (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1JvgBCCQlZbkmj4UjPaf15Wc8ujAIF3b1/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1X65RN0UtHw2tV9eixaXkYz-Li3QSAVux/view?usp=sharing",
-    "size": "5.8 MB",
-    "date": "2025-11-14",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1XsvHff4DvM9m4-0ZmJSN4JUpJLwGCexP/view?usp=sharing",
+    "size": "7.3 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 1111,
@@ -13670,16 +13564,15 @@
     "date": "2025-11-13"
   },
   {
-    "id": 29094,
+    "id": 43789,
     "name": "Hudson Hawk",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1rQBFX3FI8tcpZ38BRIQQ4GcHlHv8uvX9/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1pgUahbHs1ln5ByiZsTr6BhDrBJORr8gL/view?usp=sharing",
-    "size": "1.9 MB",
-    "date": "2026-03-03",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1LL5QplvCFvUSc4k_xPBkevwYVPuO63kB/view?usp=sharing",
+    "size": "3.9 MB",
+    "date": "2026-04-16"
   },
   {
     "id": 12564,
@@ -13704,16 +13597,15 @@
     "date": "2026-01-17"
   },
   {
-    "id": 31186,
+    "id": 43811,
     "name": "Hunt for Red October, The",
-    "creator": "Huhe-8554",
+    "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1IB5f7QnE6a9spcZTjws4n8uEDxNC6Zds/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1lv5Zkch1xGqHWdoIM9yPyssIDlVB-SEi/view?usp=sharing",
-    "size": "884.0 KB",
-    "date": "2026-03-06",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/15v33BuQ_2JX7BHv9iaNOyHNxGJcvJyVk/view?usp=sharing",
+    "size": "887.1 KB",
+    "date": "2026-04-16"
   },
   {
     "id": 355,
@@ -13806,16 +13698,15 @@
     "date": "2025-11-14"
   },
   {
-    "id": 32559,
+    "id": 43810,
     "name": "Ice Hockey",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1cj_WcZrBiSjpP77Y41EsKSpFxLp13X_l/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1n_Y2r1GfLnXDPS16zOkIOeAXIuGad4Eg/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/17faT1Wh8dMwKyYHUfcxLbnoGELaibNqi/view?usp=sharing",
     "size": "4.7 MB",
-    "date": "2026-04-03",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 351,
@@ -13862,16 +13753,15 @@
     "date": "2025-11-13"
   },
   {
-    "id": 707,
+    "id": 43845,
     "name": "Ikari Warriors (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1hkYkL_qvU5W4TCqz0JV1ZBgFvGMI1oOt/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/13nFnREovaMtxr7Kyg8Dvku8nkmWLoiK2/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1l128cmocuHU71-EfgTTHqM0uMWh86x3N/view?usp=sharing",
     "size": "4.1 MB",
-    "date": "2025-11-28",
-    "onScreenScraper": true
+    "date": "2025-11-28"
   },
   {
     "id": 348,
@@ -14419,16 +14309,15 @@
     "date": "2026-01-02"
   },
   {
-    "id": 10278,
+    "id": 43790,
     "name": "Jaws",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1xm4oU-SSKN7e5UvyfgRiyTe0eXl8cp3O/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/15d1qU_q_Y1FxNOrgCN54M1OXhJxA1s37/view?usp=sharing",
-    "size": "3.7 MB",
-    "date": "2026-01-16",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1WkOF2RjWEoptC4z5-1WDDurYCJiZ-yEJ/view?usp=sharing",
+    "size": "3.9 MB",
+    "date": "2026-04-16"
   },
   {
     "id": 343,
@@ -14498,16 +14387,15 @@
     "date": "2025-11-13"
   },
   {
-    "id": 705,
+    "id": 43843,
     "name": "Joe & Mac - Caveman Ninja (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/19td7p_6w3fXUBMog5MJX274ftZisjjyU/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1n5s-MKJ0N5jmtqstoWaXz8ONmWznWYHl/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/16IQzXS7R-A50y5RBOO07gXEFa1iE-7cT/view?usp=sharing",
     "size": "2.3 MB",
-    "date": "2025-11-29",
-    "onScreenScraper": true
+    "date": "2025-11-29"
   },
   {
     "id": 56,
@@ -14598,16 +14486,15 @@
     "date": "2026-01-02"
   },
   {
-    "id": 704,
+    "id": 43842,
     "name": "Jungle Book, The (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1FumqtBlDiSgQWNFwmRjryR_-ZbO2M22N/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1NHOWRJx2GWeRgSP5WWaDNSyQV5GoKRyH/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1QahKZGICAvogleX5lzbKxzRIKEn4c0tT/view?usp=sharing",
     "size": "1.2 MB",
-    "date": "2025-11-29",
-    "onScreenScraper": true
+    "date": "2025-11-29"
   },
   {
     "id": 339,
@@ -14878,16 +14765,15 @@
     "date": "2025-11-13"
   },
   {
-    "id": 32558,
+    "id": 43799,
     "name": "Kid Icarus",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1dYpI78-b5mluCgWFp-j9G26j_XyYLs6F/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1bwwONVVf4XeWcMTtjoCoRKh5ZBVo-wzq/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Rr6mdKJztqSd1VzKtxzb5YRtWr0cemvV/view?usp=sharing",
     "size": "4.6 MB",
-    "date": "2026-04-03",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 916,
@@ -15733,16 +15619,15 @@
     "date": "2026-01-02"
   },
   {
-    "id": 725,
+    "id": 43730,
     "name": "Legend of Zelda, The (France)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1x4VWIUQC9N323RgrKQuCFTj7337oTKzh/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1jhph8njJcaKX_8hY73eepDDcAfJFov5F/view?usp=sharing",
-    "size": "3.1 MB",
-    "date": "2025-11-14",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1ETu3OFCBYp8ovAME0oYQ0zvTcuiy81Av/view?usp=sharing",
+    "size": "4.1 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 898,
@@ -15822,28 +15707,26 @@
     "date": "2025-11-13"
   },
   {
-    "id": 723,
+    "id": 43773,
     "name": "Lion King, The (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1-dmdB1Hi-7wZSJmYBeapA7EVuVPHEcVK/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1ANY-eKiglpB6A1k9fRtpWe1pdpNUJScS/view?usp=sharing",
-    "size": "1.1 MB",
-    "date": "2025-11-15",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1T9ewefJaqom_PAut1FRHDKVwEVYkO6OT/view?usp=sharing",
+    "size": "1.0 MB",
+    "date": "2026-04-17"
   },
   {
-    "id": 32557,
+    "id": 43798,
     "name": "Little Nemo - The Dream Master",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1nmWhWwByKd3qQdNXvf18crdybEh4kBwm/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1bAQFKfCmSD3ZSWnkjrU62Kab290flKXA/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ukL39buTheuB35jZjMKsXy6-EbfRiar3/view?usp=sharing",
     "size": "2.8 MB",
-    "date": "2026-04-03",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 316,
@@ -16407,16 +16290,15 @@
     "date": "2025-11-13"
   },
   {
-    "id": 721,
+    "id": 43774,
     "name": "Mega Man (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1EOuBmECDUoM8zXkfalPd0VDREXehnTVj/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1M_UjVK9R-K6jgfzuWzB9WYYxV_h5sTxI/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1kzlDjGY24ylN5QhJ411qRCuIgW_CySPE/view?usp=sharing",
     "size": "2.1 MB",
-    "date": "2025-11-17",
-    "onScreenScraper": true
+    "date": "2026-04-17"
   },
   {
     "id": 9037,
@@ -16640,16 +16522,15 @@
     "date": "2025-11-13"
   },
   {
-    "id": 3982,
+    "id": 43808,
     "name": "Metroid",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1FtntbgYyhUsV9iorVtCIAmQaXQOkKnsN/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1zLnsegJ5px4iHEAvndaCUlyIXUfOZ4BP/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1A80k3la4KNy1CK0Pz89UkuAbPI5v_jRH/view?usp=sharing",
     "size": "3.1 MB",
-    "date": "2026-01-04",
-    "onScreenScraper": true
+    "date": "2026-04-16"
   },
   {
     "id": 303,
@@ -18942,16 +18823,15 @@
     "date": "2026-01-02"
   },
   {
-    "id": 708,
+    "id": 43809,
     "name": "Paperboy (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1KPpw_AM1gtt_snuiHgsu1YpZswfW5vXJ/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1FxerS0OcG8NJjplF9zY9CIOExWZY11Bf/view?usp=sharing",
-    "size": "1.3 MB",
-    "date": "2025-11-26",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/14UOtXTVvGOxSvDOXog43_5rUaeW8Wh8e/view?usp=sharing",
+    "size": "1.2 MB",
+    "date": "2026-04-16"
   },
   {
     "id": 29619,
@@ -20656,16 +20536,15 @@
     "date": "2025-12-07"
   },
   {
-    "id": 709,
+    "id": 43775,
     "name": "Renegade (USA)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1_9UHSsybH0c9MyfM98vgrGn-fNFMYv53/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1-4i63YdnnDa9RjTc53KeRlqVsad2X5AB/view?usp=sharing",
-    "size": "2.9 MB",
-    "date": "2025-11-26",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1f0W2w5-jTCEmVOpJl7dwdvak9OLMV23N/view?usp=sharing",
+    "size": "2.8 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 4537,
@@ -20850,16 +20729,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 698,
+    "id": 43837,
     "name": "RoboCop 2 (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1y0676ThA2sV7xi7BVU0luq8p_ZZMSZTI/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1ZqpqPoqTm9v94aDn9zc6EXXRjpbkKRL9/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1fHouymhUOjDf3j6VVVOiHXs6ARP1PBnh/view?usp=sharing",
     "size": "2.2 MB",
-    "date": "2025-12-07",
-    "onScreenScraper": true
+    "date": "2025-12-07"
   },
   {
     "id": 29625,
@@ -22603,16 +22481,15 @@
     "date": "2025-11-13"
   },
   {
-    "id": 718,
+    "id": 43735,
     "name": "Spider-Man - Return of the Sinister Six (USA)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1S8UOILZX1IldDvv05SkHGTviyNSZ45xR/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1YZHBGKoDIECQgUbCCq7Oz1cvPhUpAyeM/view?usp=sharing",
-    "size": "2.8 MB",
-    "date": "2025-11-22",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1pCAxL82mBUCboIER9jT9jbCvkBlNL3G1/view?usp=sharing",
+    "size": "4.8 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 31475,
@@ -23192,16 +23069,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 690,
+    "id": 43776,
     "name": "Super Mario Bros. 3 (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1ZeumN4WoM_bFEEb7U5SX2_oBY-B38ekl/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1grZnhZ6j_wVAZErhhIIrY3Sc5YuoEMVW/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ViNbQRbpG8TR0uM8Dp9ZlJGUWas8f5KA/view?usp=sharing",
     "size": "2.0 MB",
-    "date": "2026-01-02",
-    "onScreenScraper": true
+    "date": "2026-04-17"
   },
   {
     "id": 14381,
@@ -23385,16 +23261,15 @@
     "date": "2026-01-16"
   },
   {
-    "id": 691,
+    "id": 43777,
     "name": "T2  Terminator 2 - Judgment Day",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1-AJGWKLmrcu1QTQHsmzbNbYGjTob4JAW/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1vTJS2xxfPVJP5MKSROvNJ1oADAJZXSPH/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1RP8t2BXDyLHIzX5Ou56YyP9OLy15rG_C/view?usp=sharing",
     "size": "1.1 MB",
-    "date": "2026-01-02",
-    "onScreenScraper": true
+    "date": "2026-04-17"
   },
   {
     "id": 34705,
@@ -23419,16 +23294,15 @@
     "date": "2026-01-17"
   },
   {
-    "id": 692,
+    "id": 43779,
     "name": "TaleSpin",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1bLR5f_KBgxy42H_UiPt8mUpmw5CMXcpS/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1YElQtf1hpS70LrxJsLY4Ov-sDLsc0Wy5/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1cK9xcmXMR7w0ABGMe48sg_Gk1FDD4VcV/view?usp=sharing",
     "size": "3.6 MB",
-    "date": "2026-01-02",
-    "onScreenScraper": true
+    "date": "2026-04-17"
   },
   {
     "id": 34704,
@@ -23596,16 +23470,15 @@
     "date": "2026-01-27"
   },
   {
-    "id": 702,
+    "id": 43841,
     "name": "Teenage Mutant Hero Turtles (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/12wuh0KByIloJINLiGyuCV4ipv1rDyTlM/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1ZK2KX4mvSIq553UxJ4xM8OVr0-zvdNX-/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1n4D9dnWq-9aSsngH7ja3G6UbEulMZYoi/view?usp=sharing",
     "size": "1.7 MB",
-    "date": "2025-12-01",
-    "onScreenScraper": true
+    "date": "2025-12-01"
   },
   {
     "id": 19670,
@@ -23951,16 +23824,15 @@
     "date": "2025-12-07"
   },
   {
-    "id": 693,
+    "id": 43778,
     "name": "Tiny Toon Adventures",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1XtA0crLOIdc9O4Pavyfhdpagzumx6ikQ/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/16fIUWmZ6Gygq1F3Yqq3olOQ8sXBqYnjx/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1aPt7PYNxCM5xIFjaDulFJrB_Bbnfm-Su/view?usp=sharing",
     "size": "4.8 MB",
-    "date": "2026-01-02",
-    "onScreenScraper": true
+    "date": "2026-04-17"
   },
   {
     "id": 4514,
@@ -24294,16 +24166,15 @@
     "onScreenScraper": true
   },
   {
-    "id": 720,
+    "id": 43734,
     "name": "Trojan (USA)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1-Rweo74frXW8CTYn6Ygf9m8rvA58R5Gw/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1vjAEPVFXsTwEbq86iPcrFBZrTbK6AsVB/view?usp=sharing",
-    "size": "6.0 MB",
-    "date": "2025-11-17",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1Dprw5pIpVlbba7bmId16bw4xkU8wrHRv/view?usp=sharing",
+    "size": "9.4 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 186,
@@ -25231,16 +25102,15 @@
     "date": "2026-01-20"
   },
   {
-    "id": 700,
-    "name": "Wario's Woods (Europe)",
+    "id": 43839,
+    "name": "Wario_s Woods (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1ufAXTzzELLXoH2IiLs3f1Tj8KVBKQM9i/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1yBiSUrDo_RByu8-FOEdAgnw0Lbq-eVtw/view?usp=sharing",
+    "imageUrl": "",
+    "downloadUrl": "https://drive.google.com/file/d/1TLQ1RvIXsWH5Y8LMM-w1FCLx7eJss2o7/view?usp=sharing",
     "size": "2.2 MB",
-    "date": "2025-12-04",
-    "onScreenScraper": true
+    "date": "2025-12-04"
   },
   {
     "id": 35645,
@@ -25460,16 +25330,15 @@
     "date": "2025-11-13"
   },
   {
-    "id": 716,
+    "id": 43733,
     "name": "Willow (USA)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1NvinBioZ99D_Ht7PvTJT9RYakS6duo3t/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1y7RoPGTECfoSXqI8KZrZtfPUX2Hm8r-s/view?usp=sharing",
-    "size": "3.0 MB",
-    "date": "2025-11-23",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1kvvph4jV_q5fTiD2cSyHU1NJGRKKTOtE/view?usp=sharing",
+    "size": "6.0 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 25419,
@@ -25551,16 +25420,15 @@
     "date": "2025-11-13"
   },
   {
-    "id": 701,
+    "id": 43840,
     "name": "Wolverine (USA)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/16nlGwb0ZwoyTIQ66eNHKl4g0CawnGFaB/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1LNNse8pyihB6n4G9X5eIML90y71sT-yb/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Hj1-tx4E-SqodbFoz8wUF6NfKHnk3XD1/view?usp=sharing",
     "size": "3.1 MB",
-    "date": "2025-12-04",
-    "onScreenScraper": true
+    "date": "2025-12-04"
   },
   {
     "id": 1145,
@@ -25641,16 +25509,15 @@
     "date": "2026-01-17"
   },
   {
-    "id": 749,
+    "id": 43745,
     "name": "WWF WrestleMania (Europe)",
     "creator": "Christophe",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1Ezp20lKXv0TftI6NKe3DjnDdzSX33PPy/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1Gda2fJDjWdfSuWaaMcdgIQL4aBCsTkF_/view?usp=sharing",
-    "size": "6.0 MB",
-    "date": "2025-11-03",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/19PYUZOZ7d7JcuoObjm4IhQDmjyyJ8myw/view?usp=sharing",
+    "size": "9.1 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 21340,
@@ -25742,16 +25609,15 @@
     "date": "2025-11-13"
   },
   {
-    "id": 748,
-    "name": "Yoshi's Cookie (Europe)",
+    "id": 43744,
+    "name": "Yoshi_s Cookie (Europe)",
     "creator": "Christophe",
     "system": "nes",
     "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1bAsvmFXTYl7AWWRGNnxMStiV3NDEeV04/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1Xd8QmxbxevBi2YfCJR1Njs8WnEfxEpoO/view?usp=sharing",
-    "size": "2.8 MB",
-    "date": "2025-11-03",
-    "onScreenScraper": true
+    "imageUrl": "",
+    "downloadUrl": "https://drive.google.com/file/d/1O-zrZ-ydkBz4wJ09fLr5oDU3oo8Yi8-h/view?usp=sharing",
+    "size": "5.3 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 6415,
@@ -25788,16 +25654,15 @@
     "date": "2026-04-03"
   },
   {
-    "id": 711,
+    "id": 43756,
     "name": "Zelda II -The Adventure of Link (Europe)",
     "creator": "huhe-8554",
     "system": "nes",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1ktpg4bEQeUQT6wwWOVxp5BX9pzLmZO5x/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1NIaeOA7mRIgSG5izQT805lefHPPiSMuM/view?usp=sharing",
-    "size": "1.9 MB",
-    "date": "2025-11-26",
-    "onScreenScraper": true
+    "downloadUrl": "https://drive.google.com/file/d/1snTu5kVam_H2ngzfGYE-_HOSifUV4odS/view?usp=sharing",
+    "size": "3.1 MB",
+    "date": "2026-04-17"
   },
   {
     "id": 161,
