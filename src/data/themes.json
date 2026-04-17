@@ -736,7 +736,8 @@
     "imageUrl": "https://drive.google.com/file/d/1ghtrZDM_db0HTIO_IBq3LMcPv6_7xRhi/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1tWL_M-x_y0z-q9goCBjBc648lXKIi1PU/view?usp=sharing",
     "size": "1.8 MB",
-    "date": "2026-01-04"
+    "date": "2026-01-04",
+    "onScreenScraper": true
   },
   {
     "id": 1000,
@@ -869,7 +870,8 @@
     "imageUrl": "https://drive.google.com/file/d/1-q0VCDyqxzVc7NRTQuIjsrAlivWEmnJ6/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1YWJ-lPDYVZZTRnb6a8C0npvtp2rbKpej/view?usp=sharing",
     "size": "1.6 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 546,
@@ -902,7 +904,8 @@
     "imageUrl": "https://drive.google.com/file/d/1Mrnq3xve8CAbYdypz_vMFqxkQ9fi1Ls9/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1e_FDWO46tmUdmynHTmDZr96irSh4B45J/view?usp=sharing",
     "size": "6.4 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 545,
@@ -1271,7 +1274,8 @@
     "imageUrl": "https://drive.google.com/file/d/1qU7CPNr8SCH9f9b2huDm-UVlNN1GXWwv/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1qUGYh3Zip_fjmzNU8md3arEUX7eMmOYW/view?usp=sharing",
     "size": "1.6 MB",
-    "date": "2026-01-04"
+    "date": "2026-01-04",
+    "onScreenScraper": true
   },
   {
     "id": 1015,
@@ -1523,7 +1527,8 @@
     "imageUrl": "https://drive.google.com/file/d/1DewctFaNHMAqIboRaVK7kS-ajxokPRaq/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1JV4AIooZZbZ46-encyLSRY4wk_z3rK3R/view?usp=sharing",
     "size": "5.8 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 15059,
@@ -1569,7 +1574,8 @@
     "imageUrl": "https://drive.google.com/file/d/1n9Wp9TGEX1PJheyh_jJn6ais9S9ZcZwR/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1hsd0Txzp1Z4aqUV1kAj6wWKl9Y7-2sBc/view?usp=sharing",
     "size": "3.9 MB",
-    "date": "2026-01-06"
+    "date": "2026-01-06",
+    "onScreenScraper": true
   },
   {
     "id": 43783,
@@ -1580,7 +1586,8 @@
     "imageUrl": "https://drive.google.com/file/d/13XmTb7U35NtoievBuoP23VMafpZJzuua/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1KxaFIufEvK9rhjdow7teGNU0DUZWbwkn/view?usp=sharing",
     "size": "10.2 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 43818,
@@ -1591,7 +1598,8 @@
     "imageUrl": "https://drive.google.com/file/d/19sgKX9VHxrZ5a9eVZirky2Fhh9mICzyS/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1urccEC-_9yvG342WFFyiNw5mu4UNMtTy/view?usp=sharing",
     "size": "4.6 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 43763,
@@ -1602,7 +1610,8 @@
     "imageUrl": "https://drive.google.com/file/d/10hcVzpobHWz4wjnZzSKwoj_yhy6d7qDD/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1rwKN-bQGU6cS8bKycf_F6C6dKoEKGm-Z/view?usp=sharing",
     "size": "5.6 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 43762,
@@ -1613,7 +1622,8 @@
     "imageUrl": "https://drive.google.com/file/d/1mQ4ZYU9eGa5hrOljVKVQ9AmsQSy29kUS/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1PuauspZrayd-VlwGQulKW4iRm5RV8ll8/view?usp=sharing",
     "size": "6.3 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 43823,
@@ -1624,7 +1634,20 @@
     "imageUrl": "https://drive.google.com/file/d/1qegGs1eOZnHTfsRcoW7ahdiaymLco-cV/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1wHgM6bobRXpjJsfyts6DHlYsVtZeSIaW/view?usp=sharing",
     "size": "4.0 MB",
-    "date": "2026-02-02"
+    "date": "2026-02-02",
+    "onScreenScraper": true
+  },
+  {
+    "id": 45236,
+    "name": "Adventures of Gilligan's Island, The",
+    "creator": "huhe-8554",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1MUqRA7aMJ8UcMnc6EgAk9FJlETqjYyEA/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1500n1pqMUjMlUge0meyTWm4DtjHJMZiw/view?usp=sharing",
+    "size": "3.8 MB",
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 43796,
@@ -1635,7 +1658,8 @@
     "imageUrl": "https://drive.google.com/file/d/1qQGofaWA8KLFilwVhZPGoLR8jYSEbrlO/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1vz1qBuvokKQMhWERvLDcRUcAF2RU7aWg/view?usp=sharing",
     "size": "5.7 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 43761,
@@ -1646,7 +1670,8 @@
     "imageUrl": "https://drive.google.com/file/d/1uL0XZfR3Hff9pRTHqa3bC6TJh-J9n9t-/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1hUdIbL2REAhxOB-iy8dfM9yJ1Pubh2Tk/view?usp=sharing",
     "size": "4.9 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 43795,
@@ -1657,7 +1682,8 @@
     "imageUrl": "https://drive.google.com/file/d/1S64iY-t9_CBR8IJl6Ec1u6YzMu_A0dGW/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1kmwyqcLVHFc8K4Q1gHrhwmPG4GsRwYKD/view?usp=sharing",
     "size": "1.7 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 1191,
@@ -1761,7 +1787,8 @@
     "imageUrl": "https://drive.google.com/file/d/1B3Hc-cJTm_UwVHAIOhaEYSrh8rfGogK4/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1F0OFuj0DRm964XCy2ui3mFEG6H0qCtl7/view?usp=sharing",
     "size": "4.3 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 1190,
@@ -1901,7 +1928,8 @@
     "imageUrl": "https://drive.google.com/file/d/1bUwnb63ELK6Zc0WWxiARH5lSHOCV0QzD/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1NVGOq2MopNSTPaHWg5hSSUll06Iv4iX5/view?usp=sharing",
     "size": "2.6 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 30122,
@@ -2005,7 +2033,8 @@
     "imageUrl": "https://drive.google.com/file/d/1BVLhU36SPV6TYyoHbSEyrQ7LoD7og3sC/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1LhcYyMjfEyQthJ9TMIjxlPYp3S77oiun/view?usp=sharing",
     "size": "6.5 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 1188,
@@ -2143,7 +2172,8 @@
     "imageUrl": "https://drive.google.com/file/d/1EWv6L-dKzuqVoIvNPzMlFAzna-6vwN7b/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1YcjYXGBufili6gRDCD4l0ov3cPnm4Jz3/view?usp=sharing",
     "size": "4.1 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 993,
@@ -2176,7 +2206,8 @@
     "imageUrl": "https://drive.google.com/file/d/1-4lMtAwvgiTlm7UvYDkdbRXQuliz1SXM/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1vZcG8HXYRgU43sIeKQPvsmtnox8Ubnl-/view?usp=sharing",
     "size": "3.6 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 1182,
@@ -2370,7 +2401,8 @@
     "imageUrl": "https://drive.google.com/file/d/1FumWtpAcnX1_PqWHdh74JY4cm3cRPFss/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1xtdXIK2k1Mhv-EbUDgR5nlEKtfJCAC2O/view?usp=sharing",
     "size": "2.4 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 42195,
@@ -2506,7 +2538,8 @@
     "imageUrl": "https://drive.google.com/file/d/11SApJscRzmUP_Vw_BBaqdpehWNMj4AfX/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1IE8_uhZWqjAgq6R_N-TBILQtRfCvbXfu/view?usp=sharing",
     "size": "3.4 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 5549,
@@ -2952,7 +2985,8 @@
     "imageUrl": "https://drive.google.com/file/d/1UccOrUXOLtO1WXC32m-MNoFdQxG1HaPf/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/17P9vMLko_m0bdF39339df1r7XYG8Lk_L/view?usp=sharing",
     "size": "1.5 MB",
-    "date": "2026-01-04"
+    "date": "2026-01-04",
+    "onScreenScraper": true
   },
   {
     "id": 1098,
@@ -3136,7 +3170,8 @@
     "imageUrl": "https://drive.google.com/file/d/1UmFTuH5Zr7TF9g7jkduf3KFErzglUArs/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1NduTvWELMnM7UJOBGG9ddAUHFYG5n1d1/view?usp=sharing",
     "size": "3.9 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 4545,
@@ -3561,7 +3596,8 @@
     "imageUrl": "https://drive.google.com/file/d/1FKjiJszeFzD8IrXLJ2ElhZiIrX2_W616/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/182iAySFd19fC_7M1BPCt0mttcJbYrBsy/view?usp=sharing",
     "size": "3.2 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 19445,
@@ -3846,7 +3882,8 @@
     "imageUrl": "https://drive.google.com/file/d/1C1JsOi1bZn_fuLvV4a_JBkARa-rsLYn5/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1NorFDYOUgudYs2VDShkJBb8o1-gyWXyR/view?usp=sharing",
     "size": "2.0 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 508,
@@ -4061,7 +4098,8 @@
     "imageUrl": "https://drive.google.com/file/d/1K-0Nk0WZr8fnqHXhwL4miPczG8ixEOKS/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1uUxM9EY4yCJzad-SMhmhmq8wPijhhfs3/view?usp=sharing",
     "size": "1.7 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 1175,
@@ -4118,7 +4156,8 @@
     "imageUrl": "https://drive.google.com/file/d/1p_Gt-aJUwZg5vWyem0Jaa26WbuV2gaW9/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1jB8PbXbMuAZmFsxD-mD3mY_-euW0t3G5/view?usp=sharing",
     "size": "4.0 MB",
-    "date": "2026-01-09"
+    "date": "2026-01-09",
+    "onScreenScraper": true
   },
   {
     "id": 1024,
@@ -4140,7 +4179,8 @@
     "imageUrl": "https://drive.google.com/file/d/1-8VKPVXPxrcJZzDfdpXlUCiKNVaDuZp0/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/111TM9XIjOlmubMcc3IURyy94MnkzV5MI/view?usp=sharing",
     "size": "2.1 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 26504,
@@ -4163,7 +4203,8 @@
     "imageUrl": "https://drive.google.com/file/d/1LiZR7HO22rlFMGDTn3JUfvBM-nmzXj3L/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1sS7eP1Crt_DUqYeASIGMqJHdgSr60GvV/view?usp=sharing",
     "size": "952.5 KB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 1126,
@@ -4339,7 +4380,8 @@
     "imageUrl": "https://drive.google.com/file/d/1wq1RMmZbHCpnxlbV_a-ZIfPsUQFqfSXW/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1TbvmuHaoI53yhIIwnT5k3QT3Xs0rrcqd/view?usp=sharing",
     "size": "7.6 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 502,
@@ -4416,7 +4458,8 @@
     "imageUrl": "https://drive.google.com/file/d/1SXHrEjpWqLWJUL5CK605oX0VaoLXIjX7/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1wasPZ23bEH8C4vHL28fWoR5rKDCwCihB/view?usp=sharing",
     "size": "3.8 MB",
-    "date": "2025-12-06"
+    "date": "2025-12-06",
+    "onScreenScraper": true
   },
   {
     "id": 500,
@@ -4462,7 +4505,8 @@
     "imageUrl": "https://drive.google.com/file/d/1youzIB7qR2nX8NK6f7NiEKj5CIGeRrRT/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Ij5O1bnjJde-Jm5ZKg2_fJdww_PET7RT/view?usp=sharing",
     "size": "3.8 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 499,
@@ -4578,6 +4622,18 @@
     "date": "2026-02-10"
   },
   {
+    "id": 45235,
+    "name": "Bill & Ted's Excellent Video Game Adventure",
+    "creator": "huhe-8554",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/14NzyI-NS6aauM51qXNgrFoBVaLWI3gk6/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1iqQgneoJMsgiEuhaoN1iZAqevdP_TRvh/view?usp=sharing",
+    "size": "2.9 MB",
+    "date": "2026-04-17",
+    "onScreenScraper": true
+  },
+  {
     "id": 6423,
     "name": "Bio F.R.E.A.K.S. (USA)",
     "creator": "Finch",
@@ -4665,7 +4721,8 @@
     "imageUrl": "https://drive.google.com/file/d/1Ktx7kOocHMee-Cb1HG5Mphag6pWiFAqq/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Ea3ncfF4LeMjpSnhDvW0d4ser02BUZJG/view?usp=sharing",
     "size": "7.3 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 1127,
@@ -4745,7 +4802,8 @@
     "imageUrl": "https://drive.google.com/file/d/1K1SojZeJ5FDEnfDkkip0ULPoT9x1aUdP/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1gmLSugOw1ChRCkR15PEuRbLc70mBDm3r/view?usp=sharing",
     "size": "2.6 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 494,
@@ -4929,7 +4987,8 @@
     "imageUrl": "https://drive.google.com/file/d/1lz-83DzUE53gRj7an9CoF_zVfXWuniZU/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/16sJ_H7aVsDOU7RFT7xn8iK6VbA3wVTBl/view?usp=sharing",
     "size": "4.9 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 43801,
@@ -4940,7 +4999,8 @@
     "imageUrl": "https://drive.google.com/file/d/1cWGr1ksJ7-EzOsaPUzbUEQPsOFv9DZEv/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1trhXk2iO2_jAs96vYHojDDZrF5zJkP7j/view?usp=sharing",
     "size": "5.7 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 490,
@@ -4974,7 +5034,8 @@
     "imageUrl": "https://drive.google.com/file/d/1LBWya5qH6izy4Y7gGvIMY-PvUFZtOpjf/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1WwIo3nLf-DHIUGzqEdSMyWlMnVJLvdvU/view?usp=sharing",
     "size": "904.5 KB",
-    "date": "2026-01-04"
+    "date": "2026-01-04",
+    "onScreenScraper": true
   },
   {
     "id": 489,
@@ -5137,7 +5198,8 @@
     "imageUrl": "https://drive.google.com/file/d/1sDK87sVLwda_PI_zzSjvhelnUfJMDZCv/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/12DWyIyV2iUBlNJZrwabIyoo3YOIVE59o/view?usp=sharing",
     "size": "2.0 MB",
-    "date": "2026-01-09"
+    "date": "2026-01-09",
+    "onScreenScraper": true
   },
   {
     "id": 1095,
@@ -5172,7 +5234,8 @@
     "imageUrl": "https://drive.google.com/file/d/1g8aaLj7QOOi4myQVi88f6JfL_BdprzbU/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1QGi5kBH1PCn2nfqmAojRe-5H6YxR-DeN/view?usp=sharing",
     "size": "3.1 MB",
-    "date": "2026-01-09"
+    "date": "2026-01-09",
+    "onScreenScraper": true
   },
   {
     "id": 5541,
@@ -5298,7 +5361,8 @@
     "imageUrl": "https://drive.google.com/file/d/1gwiE4sKxoiKpXHCmY7LPwFjYTfHBTpIm/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1dxC2nO0xnjUJ0OUtXHR-WaTagA8CaGqg/view?usp=sharing",
     "size": "3.2 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 16752,
@@ -5354,7 +5418,8 @@
     "imageUrl": "https://drive.google.com/file/d/17SzqRz0TDdevr19MSWhd6g4vx_8ud_b0/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1_WtkD9SbjIgO1FojUlswEslqk1D41npE/view?usp=sharing",
     "size": "6.4 MB",
-    "date": "2026-01-10"
+    "date": "2026-01-10",
+    "onScreenScraper": true
   },
   {
     "id": 1132,
@@ -5377,7 +5442,8 @@
     "imageUrl": "https://drive.google.com/file/d/1sAxbCU2UzCDd7656Pb1VtJuMcBVZdSeo/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/11mcyPLW5y2eA0slf2aN1WwGT9tlDFexg/view?usp=sharing",
     "size": "4.6 MB",
-    "date": "2026-02-04"
+    "date": "2026-02-04",
+    "onScreenScraper": true
   },
   {
     "id": 43750,
@@ -5388,7 +5454,8 @@
     "imageUrl": "https://drive.google.com/file/d/1GjPuUgIYRGK5mjNYF-smauzzPA0luSuE/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1TjVyoPPGjyeEk4MdGIwoAOi1uxmGOygd/view?usp=sharing",
     "size": "6.3 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 43785,
@@ -5399,7 +5466,8 @@
     "imageUrl": "https://drive.google.com/file/d/19KlCWkKgKa31DAw7HpjFdTe9Tnntr6r2/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1vpjJDgb77KRkagpY2tOLzTkmBlaeymDx/view?usp=sharing",
     "size": "747.3 KB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 485,
@@ -5479,7 +5547,8 @@
     "imageUrl": "https://drive.google.com/file/d/1COXIrk5GvtY_4Vk11l4flKNFTCiFwObJ/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1IOzn6h0BvryBSc7q7reBCo_iWE2YbQeN/view?usp=sharing",
     "size": "4.6 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 482,
@@ -5512,7 +5581,8 @@
     "imageUrl": "https://drive.google.com/file/d/13aT23gHFhVyh0WWQ9dE5_d91fZmrKUny/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/14LywSmJELSNS6feYHgp-Rl2JCPKIN2Up/view?usp=sharing",
     "size": "3.5 MB",
-    "date": "2026-01-10"
+    "date": "2026-01-10",
+    "onScreenScraper": true
   },
   {
     "id": 6571,
@@ -5718,7 +5788,8 @@
     "imageUrl": "https://drive.google.com/file/d/1KGDGOBRuUzDOUNu0JEwtqJEec0PncLIP/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1ejTovhbpQJb__enbgGggCBoZAGAM24hJ/view?usp=sharing",
     "size": "2.1 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 23929,
@@ -5752,7 +5823,8 @@
     "imageUrl": "https://drive.google.com/file/d/1FSnzCr_iQTw06Rny0mzXx6jyyPppHCp-/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1VfQ8e8fd4hucVa9W89RHOLIXEYG0VkEL/view?usp=sharing",
     "size": "2.2 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 479,
@@ -5864,7 +5936,8 @@
     "imageUrl": "https://drive.google.com/file/d/1WJ5qQGQScQvMnHDZIvmQApAGdLcgLUKC/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1S2UW6rIs44DAsR5qIMly7VRm3Gx7U2gU/view?usp=sharing",
     "size": "3.2 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 43748,
@@ -5875,7 +5948,8 @@
     "imageUrl": "https://drive.google.com/file/d/1titgIOJVcLgrzZLRv-9fhmmUCkrtUF2o/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/16A3VyP0oGj7njPmMpYDslqO81IXjC6VV/view?usp=sharing",
     "size": "3.8 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 23926,
@@ -5910,7 +5984,8 @@
     "imageUrl": "https://drive.google.com/file/d/1m6lFYA7RYPN2uxxOEJoaZ0kewy5vNNcC/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1p-hSiCol2abAruDeExdQ_4DoJbMT2Zqa/view?usp=sharing",
     "size": "5.8 MB",
-    "date": "2026-01-04"
+    "date": "2026-01-04",
+    "onScreenScraper": true
   },
   {
     "id": 1120,
@@ -5961,6 +6036,18 @@
     "onScreenScraper": true
   },
   {
+    "id": 45234,
+    "name": "Castlevania 2 - Simon's Quest",
+    "creator": "huhe-8554",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1AhgG5LavFoObVnNGwZJjDFCAroUYRoNv/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ppbdsk4R-Y8H8XgGYT6W9E3sybsDR-Ac/view?usp=sharing",
+    "size": "3.8 MB",
+    "date": "2026-04-17",
+    "onScreenScraper": true
+  },
+  {
     "id": 37173,
     "name": "Castlevania Chronicles (USA)",
     "creator": "KittieKatie",
@@ -5970,6 +6057,18 @@
     "downloadUrl": "https://drive.google.com/file/d/1x6QH_vFuQWk_JLOPH37noVG2F9GSqoiR/view?usp=sharing",
     "size": "2.7 MB",
     "date": "2026-04-06",
+    "onScreenScraper": true
+  },
+  {
+    "id": 45237,
+    "name": "Castlevania III - Dracula's Curse (USA)",
+    "creator": "huhe-8554",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1XBL9jF--ol5-Vt0Vr7ep1ck4ARHjf2tM/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Ykv26avDVeShuJKtJCKAo0eGtggDUMlD/view?usp=sharing",
+    "size": "8.4 MB",
+    "date": "2026-04-17",
     "onScreenScraper": true
   },
   {
@@ -5992,7 +6091,8 @@
     "imageUrl": "https://drive.google.com/file/d/1gKNYuAWShsyM9liPrVwGBUBu4FXd_7ED/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1gQ5UhQBO9FiTZiLiOif7TBYUBj9H9aK_/view?usp=sharing",
     "size": "8.4 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 476,
@@ -6203,7 +6303,8 @@
     "imageUrl": "https://drive.google.com/file/d/19jMkleDNim5Eg9m9r1rG41viJzc9cRrB/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1dS4xk1t92i_Lb17tpOPDD-sXtt2E8Lz5/view?usp=sharing",
     "size": "4.0 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 6570,
@@ -6306,7 +6407,8 @@
     "imageUrl": "https://drive.google.com/file/d/16jBMN3GmQa1ueqEu3-RDDzdbaYKytFP2/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1R6xuWS-g9UN6teGpw2rsxRWFGM5f3aIV/view?usp=sharing",
     "size": "3.6 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 25743,
@@ -6365,6 +6467,18 @@
     "date": "2025-11-13"
   },
   {
+    "id": 45233,
+    "name": "Chip 'n Dale Rescue Rangers",
+    "creator": "huhe-8554",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/14mZJbidTP3M-mjXoHQPAa48wsJJiC5xo/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1osA7H6cfhUR-v_YBlBhogc8CKygQkFu7/view?usp=sharing",
+    "size": "8.3 MB",
+    "date": "2026-04-17",
+    "onScreenScraper": true
+  },
+  {
     "id": 43819,
     "name": "Choplifter",
     "creator": "huhe-8554",
@@ -6373,7 +6487,8 @@
     "imageUrl": "https://drive.google.com/file/d/1xuCY9gwun8kRCVNagv-rrkptF9u1FNC-/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1HVKMtl4ilwhnNCWkWRC0xUnwiYtMPgSa/view?usp=sharing",
     "size": "1.7 MB",
-    "date": "2026-02-07"
+    "date": "2026-02-07",
+    "onScreenScraper": true
   },
   {
     "id": 6568,
@@ -6420,7 +6535,8 @@
     "imageUrl": "https://drive.google.com/file/d/1KvnlZTeG2Rb7n_9jkkcSaySIguq1BKHe/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/18SNkkmZ5CDDpxaZd5Z9q-u6zvw2yxYj-/view?usp=sharing",
     "size": "2.6 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 6567,
@@ -6455,7 +6571,8 @@
     "imageUrl": "https://drive.google.com/file/d/1_IbGmBVN4pgU7VG9gq_FTeiQQ7MAddVB/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1R7u8aFNDRpJlu1x37KSAQ8--hkH2gbOy/view?usp=sharing",
     "size": "4.8 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 28245,
@@ -6646,7 +6763,8 @@
     "imageUrl": "https://drive.google.com/file/d/1mkrMXMihgyNoBCXDxUM2n0SbT9i-t20k/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Kwh5NH-tU5qgOS1sG7DhrSKoLFXIJn65/view?usp=sharing",
     "size": "8.5 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 10976,
@@ -6679,7 +6797,8 @@
     "imageUrl": "https://drive.google.com/file/d/1t_8bta6_K_8baj9lm5arquSaVq4NDR7_/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/13pA3zs8tMCmb2f7rM5yyrnCQr0EqATud/view?usp=sharing",
     "size": "5.0 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 9040,
@@ -6735,7 +6854,8 @@
     "imageUrl": "https://drive.google.com/file/d/1FZljZLgVrpiHPy29XzGJGzFJQcR6Az_j/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1T1BDMI2pccdNYt7yHsYF9X_WlwvT7YCa/view?usp=sharing",
     "size": "4.3 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 43741,
@@ -6746,7 +6866,8 @@
     "imageUrl": "https://drive.google.com/file/d/1gATPFhg5dpLcKcN-B3LOuL4LVuEzDQq9/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1W4B5Hb6ySh96GU_idMLUgmTkyiY1whV0/view?usp=sharing",
     "size": "8.4 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 19439,
@@ -6791,7 +6912,8 @@
     "imageUrl": "https://drive.google.com/file/d/1vM67HtW-_RZoxiBwJWx1Xp0wUzRi9Vg2/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1tc89vV_oiGudC9XjUE6nX_oPXipiHvhs/view?usp=sharing",
     "size": "7.2 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 1002,
@@ -7300,7 +7422,8 @@
     "imageUrl": "https://drive.google.com/file/d/1QZlKug0IQ2Jaage5jAtMFdmvxuOnYTyw/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1qkPncP8AGbwJsMvlfmwHsPkW27DJhbuh/view?usp=sharing",
     "size": "421.2 KB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 42181,
@@ -7425,7 +7548,8 @@
     "imageUrl": "https://drive.google.com/file/d/1yP815cEM-zMsehcWIn5XdQU65KgAZ7BS/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1aOmk3zGHsrtetrV03NjbYBP_AvVulQ7C/view?usp=sharing",
     "size": "4.3 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 1022,
@@ -7514,7 +7638,8 @@
     "imageUrl": "https://drive.google.com/file/d/1IzcBEHisumuHtio7WPDyiB3DaITpBVAp/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/15pYp86E5yMNh7Ax7FxydxJMKuV4N_14b/view?usp=sharing",
     "size": "6.5 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 43817,
@@ -7525,7 +7650,8 @@
     "imageUrl": "https://drive.google.com/file/d/1s9BTyFtu7GJ3qHJEeCTPQ8tEyw0mvAew/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1R6ZIH9qHMaudxkJFiwRTk17tKZVzGtj7/view?usp=sharing",
     "size": "2.9 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 43739,
@@ -7536,7 +7662,8 @@
     "imageUrl": "https://drive.google.com/file/d/1VSYz0cRZXGdU3LqZpBBTZ__w6c_8QKww/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1djEnCmbVMRPZm5KjRW4B57abS7kVH2q_/view?usp=sharing",
     "size": "6.4 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 6306,
@@ -7594,6 +7721,18 @@
     "date": "2025-11-30"
   },
   {
+    "id": 45232,
+    "name": "Day Dreamin' Davey (USA)",
+    "creator": "Christophe",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/11uyoE93Z7s0FYyEYHR4Qfw-zR8z6J2aW/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1485AZrTapn-fZEqh6_eEZWxv6EWwszR6/view?usp=sharing",
+    "size": "7.8 MB",
+    "date": "2026-04-17",
+    "onScreenScraper": true
+  },
+  {
     "id": 43767,
     "name": "Days of Thunder (Europe)",
     "creator": "Alain",
@@ -7602,7 +7741,8 @@
     "imageUrl": "https://drive.google.com/file/d/1dAiVlijS-qkzVHCR1pF_JRi9G9RhO8uf/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/18HCWIi16kH4uC3yUGNYCDJ3mW6F6xWtX/view?usp=sharing",
     "size": "6.5 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 450,
@@ -8112,7 +8252,8 @@
     "imageUrl": "https://drive.google.com/file/d/1gAd9fO9qMjH8wV88371qtEYf8lurAL_Z/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Yy8pteNULXjHs1ValxfnBXPvOvvvtGoP/view?usp=sharing",
     "size": "1.1 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 930,
@@ -8303,7 +8444,8 @@
     "imageUrl": "https://drive.google.com/file/d/1gEWI1hRAKO58P8-1J1KLWOU1YMqDvZAm/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1NEFdWUULrPeiVQumQz5Z1ZDgr9f5kk56/view?usp=sharing",
     "size": "5.8 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 16606,
@@ -8360,7 +8502,8 @@
     "imageUrl": "https://drive.google.com/file/d/1AvqS0FeN7_SKsQgI9rmDML-HMSmteqQ3/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/11qFSyU3tX10ueA86j_7CA6-WYlnqSBSM/view?usp=sharing",
     "size": "6.2 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 1068,
@@ -8520,7 +8663,8 @@
     "imageUrl": "https://drive.google.com/file/d/161FPTg8TzIzK1zGM6JHuxrOnTZbd0WZl/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1eU4RDpVSw3fT3iNqRWxTZR-rIlCEsi2S/view?usp=sharing",
     "size": "244.6 KB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 668,
@@ -8826,7 +8970,8 @@
     "imageUrl": "https://drive.google.com/file/d/1pvXIpavTBj3J6Pqr-Z2cBiGtTF__TwnI/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/19VkeSVjGEMANo-xLnLbyv_SeHXTd3V4K/view?usp=sharing",
     "size": "7.7 MB",
-    "date": "2026-02-02"
+    "date": "2026-02-02",
+    "onScreenScraper": true
   },
   {
     "id": 43731,
@@ -8837,7 +8982,8 @@
     "imageUrl": "https://drive.google.com/file/d/1K8UQAsE1NVqxO_MdGlbzKNOjZNqe9W1W/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1JPfei4jwKtQeTGyDagNCIGuuGtMp5I3T/view?usp=sharing",
     "size": "10.5 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 4534,
@@ -8893,7 +9039,8 @@
     "imageUrl": "https://drive.google.com/file/d/10v1xCMHg2dXqzetUsFkEJKDnybu-bGhj/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1vCh4o9qxAxoN2DmTBdjwq-Gkb7GHo5EF/view?usp=sharing",
     "size": "1.4 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 1073,
@@ -8986,7 +9133,8 @@
     "imageUrl": "https://drive.google.com/file/d/10PLX4-dsG35ERFEB0kB_tjfRnBNGXjno/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/14shoXPBU6MBK0VtTOdFJlx_wfVDrvhTS/view?usp=sharing",
     "size": "6.4 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 945,
@@ -9213,7 +9361,8 @@
     "imageUrl": "https://drive.google.com/file/d/1iX7cIQqrIy2_M69yt68hJqEFwgJ41tug/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1N-qUPB4W6oM3P0zCGEKEi7I5fyL84K2R/view?usp=sharing",
     "size": "3.8 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 43725,
@@ -9224,7 +9373,8 @@
     "imageUrl": "https://drive.google.com/file/d/1BZ6_aJlHp57DST414msSGfbGn2kUicEr/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/17HpQZ6czUk2YdTbIJiT4q02K0vdRgxB0/view?usp=sharing",
     "size": "6.3 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 1057,
@@ -9428,7 +9578,8 @@
     "imageUrl": "https://drive.google.com/file/d/1b0AuYrJCJ7-OFGbzOkTNgk-MmHXvB4GC/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1HchQrzDgz6GnZzmwk_543MMKPXWYYpB4/view?usp=sharing",
     "size": "1.3 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 1096,
@@ -9978,7 +10129,8 @@
     "imageUrl": "https://drive.google.com/file/d/1SyAOkJ36GNo5xvyEJV4N6HrmVVYoygO9/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1GdZFQRBkhtJW6_NyWJc_wZzE2neeKu_4/view?usp=sharing",
     "size": "1.8 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 404,
@@ -10114,7 +10266,8 @@
     "imageUrl": "https://drive.google.com/file/d/1J9ydB1XYxO0ZwCq4mTv9_9ee9e_T6REb/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/13vwzcRPs8cXKwuedM8hbYMziDMrdu9Kn/view?usp=sharing",
     "size": "901.9 KB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 990,
@@ -10459,6 +10612,18 @@
     "date": "2025-11-01"
   },
   {
+    "id": 45231,
+    "name": "Fox's Peter Pan & the Pirates  The Revenge of Captain Hook",
+    "creator": "huhe-8554",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1xykJaVqOOQlFtlZp9C8SwU_ACWFZb-Pz/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Zwksk9qC585ppemcwZbIdKQK7wp90xM8/view?usp=sharing",
+    "size": "1.2 MB",
+    "date": "2026-04-17",
+    "onScreenScraper": true
+  },
+  {
     "id": 6911,
     "name": "fpinball",
     "creator": "Finch",
@@ -10512,7 +10677,8 @@
     "imageUrl": "https://drive.google.com/file/d/1Uyo1kPJiPSZhZI3s7aI-8aQbSaFE2R7f/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1SLGGUw8uW7DefamRPBZ7xl8V5JW7KFL4/view?usp=sharing",
     "size": "4.6 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 397,
@@ -11038,7 +11204,8 @@
     "imageUrl": "https://drive.google.com/file/d/1rk9cK4_oC7saCzSILFP4tHQpubMxk8rY/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1OGinje-mK5P6UrdA-AV9IqjJDM7OiTvk/view?usp=sharing",
     "size": "869.8 KB",
-    "date": "2025-11-28"
+    "date": "2025-11-28",
+    "onScreenScraper": true
   },
   {
     "id": 8836,
@@ -12321,7 +12488,8 @@
     "imageUrl": "https://drive.google.com/file/d/1pE8o3GEuSxq542aR8C3dgW-aknqhjshM/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1XX_Aj0xxgjYJiATUN1-qyD6dxgc5T5U_/view?usp=sharing",
     "size": "4.9 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 988,
@@ -12697,7 +12865,8 @@
     "imageUrl": "https://drive.google.com/file/d/1LjEDU8IvtqC2J2EsE9iyVW4bb3sRHyAq/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Wa4vTVCC_-OgtZcaAvfkxHskmRHTrAfG/view?usp=sharing",
     "size": "4.1 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 11778,
@@ -13349,7 +13518,8 @@
     "imageUrl": "https://drive.google.com/file/d/1wQyArz4N2CtSKw-PaTLpdUo6JaPNXHSF/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1VUILeLlaLN0-Q1X1QFQ0oiFum5oAHMTd/view?usp=sharing",
     "size": "3.8 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 43729,
@@ -13360,7 +13530,8 @@
     "imageUrl": "https://drive.google.com/file/d/1JvgBCCQlZbkmj4UjPaf15Wc8ujAIF3b1/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1XsvHff4DvM9m4-0ZmJSN4JUpJLwGCexP/view?usp=sharing",
     "size": "7.3 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 1111,
@@ -13495,7 +13666,8 @@
     "imageUrl": "https://drive.google.com/file/d/1rQBFX3FI8tcpZ38BRIQQ4GcHlHv8uvX9/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1LL5QplvCFvUSc4k_xPBkevwYVPuO63kB/view?usp=sharing",
     "size": "3.9 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 12564,
@@ -13528,7 +13700,8 @@
     "imageUrl": "https://drive.google.com/file/d/1IB5f7QnE6a9spcZTjws4n8uEDxNC6Zds/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/15v33BuQ_2JX7BHv9iaNOyHNxGJcvJyVk/view?usp=sharing",
     "size": "887.1 KB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 355,
@@ -13629,7 +13802,8 @@
     "imageUrl": "https://drive.google.com/file/d/1cj_WcZrBiSjpP77Y41EsKSpFxLp13X_l/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/17faT1Wh8dMwKyYHUfcxLbnoGELaibNqi/view?usp=sharing",
     "size": "4.7 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 351,
@@ -13684,7 +13858,8 @@
     "imageUrl": "https://drive.google.com/file/d/1hkYkL_qvU5W4TCqz0JV1ZBgFvGMI1oOt/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1l128cmocuHU71-EfgTTHqM0uMWh86x3N/view?usp=sharing",
     "size": "4.1 MB",
-    "date": "2025-11-28"
+    "date": "2025-11-28",
+    "onScreenScraper": true
   },
   {
     "id": 348,
@@ -14240,7 +14415,8 @@
     "imageUrl": "https://drive.google.com/file/d/1xm4oU-SSKN7e5UvyfgRiyTe0eXl8cp3O/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1WkOF2RjWEoptC4z5-1WDDurYCJiZ-yEJ/view?usp=sharing",
     "size": "3.9 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 343,
@@ -14318,7 +14494,8 @@
     "imageUrl": "https://drive.google.com/file/d/19td7p_6w3fXUBMog5MJX274ftZisjjyU/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/16IQzXS7R-A50y5RBOO07gXEFa1iE-7cT/view?usp=sharing",
     "size": "2.3 MB",
-    "date": "2025-11-29"
+    "date": "2025-11-29",
+    "onScreenScraper": true
   },
   {
     "id": 56,
@@ -14417,7 +14594,8 @@
     "imageUrl": "https://drive.google.com/file/d/1FumqtBlDiSgQWNFwmRjryR_-ZbO2M22N/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1QahKZGICAvogleX5lzbKxzRIKEn4c0tT/view?usp=sharing",
     "size": "1.2 MB",
-    "date": "2025-11-29"
+    "date": "2025-11-29",
+    "onScreenScraper": true
   },
   {
     "id": 339,
@@ -14696,7 +14874,8 @@
     "imageUrl": "https://drive.google.com/file/d/1dYpI78-b5mluCgWFp-j9G26j_XyYLs6F/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Rr6mdKJztqSd1VzKtxzb5YRtWr0cemvV/view?usp=sharing",
     "size": "4.6 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 916,
@@ -15550,7 +15729,8 @@
     "imageUrl": "https://drive.google.com/file/d/1x4VWIUQC9N323RgrKQuCFTj7337oTKzh/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1ETu3OFCBYp8ovAME0oYQ0zvTcuiy81Av/view?usp=sharing",
     "size": "4.1 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 898,
@@ -15638,7 +15818,8 @@
     "imageUrl": "https://drive.google.com/file/d/1-dmdB1Hi-7wZSJmYBeapA7EVuVPHEcVK/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1T9ewefJaqom_PAut1FRHDKVwEVYkO6OT/view?usp=sharing",
     "size": "1.0 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 43798,
@@ -15649,7 +15830,8 @@
     "imageUrl": "https://drive.google.com/file/d/1nmWhWwByKd3qQdNXvf18crdybEh4kBwm/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1ukL39buTheuB35jZjMKsXy6-EbfRiar3/view?usp=sharing",
     "size": "2.8 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 316,
@@ -15795,6 +15977,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1aFuZRBwXml6naTU0QI5v8HcC58dTCPk2/view?usp=sharing",
     "size": "1.0 MB",
     "date": "2026-01-20"
+  },
+  {
+    "id": 46058,
+    "name": "lutro",
+    "creator": "Finch",
+    "system": "lutro",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1mM7sbxDNyr9VqW4FopSh1BTk3NuUjqdl/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ijhxYdyqtAH1YlnwP_rNzBFTFapxVGXT/view?usp=sharing",
+    "size": "800.7 KB",
+    "date": "2026-04-17"
   },
   {
     "id": 314,
@@ -16221,7 +16414,8 @@
     "imageUrl": "https://drive.google.com/file/d/1EOuBmECDUoM8zXkfalPd0VDREXehnTVj/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1kzlDjGY24ylN5QhJ411qRCuIgW_CySPE/view?usp=sharing",
     "size": "2.1 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 9037,
@@ -16453,7 +16647,8 @@
     "imageUrl": "https://drive.google.com/file/d/1FtntbgYyhUsV9iorVtCIAmQaXQOkKnsN/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1A80k3la4KNy1CK0Pz89UkuAbPI5v_jRH/view?usp=sharing",
     "size": "3.1 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 303,
@@ -18754,7 +18949,8 @@
     "imageUrl": "https://drive.google.com/file/d/1KPpw_AM1gtt_snuiHgsu1YpZswfW5vXJ/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/14UOtXTVvGOxSvDOXog43_5rUaeW8Wh8e/view?usp=sharing",
     "size": "1.2 MB",
-    "date": "2026-04-16"
+    "date": "2026-04-16",
+    "onScreenScraper": true
   },
   {
     "id": 29619,
@@ -20467,7 +20663,8 @@
     "imageUrl": "https://drive.google.com/file/d/1_9UHSsybH0c9MyfM98vgrGn-fNFMYv53/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1f0W2w5-jTCEmVOpJl7dwdvak9OLMV23N/view?usp=sharing",
     "size": "2.8 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 4537,
@@ -20660,7 +20857,8 @@
     "imageUrl": "https://drive.google.com/file/d/1y0676ThA2sV7xi7BVU0luq8p_ZZMSZTI/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1fHouymhUOjDf3j6VVVOiHXs6ARP1PBnh/view?usp=sharing",
     "size": "2.2 MB",
-    "date": "2025-12-07"
+    "date": "2025-12-07",
+    "onScreenScraper": true
   },
   {
     "id": 29625,
@@ -22412,7 +22610,8 @@
     "imageUrl": "https://drive.google.com/file/d/1S8UOILZX1IldDvv05SkHGTviyNSZ45xR/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1pCAxL82mBUCboIER9jT9jbCvkBlNL3G1/view?usp=sharing",
     "size": "4.8 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 31475,
@@ -23000,7 +23199,8 @@
     "imageUrl": "https://drive.google.com/file/d/1ZeumN4WoM_bFEEb7U5SX2_oBY-B38ekl/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1ViNbQRbpG8TR0uM8Dp9ZlJGUWas8f5KA/view?usp=sharing",
     "size": "2.0 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 14381,
@@ -23192,7 +23392,8 @@
     "imageUrl": "https://drive.google.com/file/d/1-AJGWKLmrcu1QTQHsmzbNbYGjTob4JAW/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1RP8t2BXDyLHIzX5Ou56YyP9OLy15rG_C/view?usp=sharing",
     "size": "1.1 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 34705,
@@ -23225,7 +23426,8 @@
     "imageUrl": "https://drive.google.com/file/d/1bLR5f_KBgxy42H_UiPt8mUpmw5CMXcpS/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1cK9xcmXMR7w0ABGMe48sg_Gk1FDD4VcV/view?usp=sharing",
     "size": "3.6 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 34704,
@@ -23401,7 +23603,8 @@
     "imageUrl": "https://drive.google.com/file/d/12wuh0KByIloJINLiGyuCV4ipv1rDyTlM/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1n4D9dnWq-9aSsngH7ja3G6UbEulMZYoi/view?usp=sharing",
     "size": "1.7 MB",
-    "date": "2025-12-01"
+    "date": "2025-12-01",
+    "onScreenScraper": true
   },
   {
     "id": 19670,
@@ -23755,7 +23958,8 @@
     "imageUrl": "https://drive.google.com/file/d/1XtA0crLOIdc9O4Pavyfhdpagzumx6ikQ/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1aPt7PYNxCM5xIFjaDulFJrB_Bbnfm-Su/view?usp=sharing",
     "size": "4.8 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 4514,
@@ -24097,7 +24301,8 @@
     "imageUrl": "https://drive.google.com/file/d/1-Rweo74frXW8CTYn6Ygf9m8rvA58R5Gw/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Dprw5pIpVlbba7bmId16bw4xkU8wrHRv/view?usp=sharing",
     "size": "9.4 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 186,
@@ -25025,6 +25230,18 @@
     "date": "2026-01-20"
   },
   {
+    "id": 45230,
+    "name": "Wario's Woods (Europe)",
+    "creator": "huhe-8554",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1ufAXTzzELLXoH2IiLs3f1Tj8KVBKQM9i/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1TLQ1RvIXsWH5Y8LMM-w1FCLx7eJss2o7/view?usp=sharing",
+    "size": "2.2 MB",
+    "date": "2026-04-17",
+    "onScreenScraper": true
+  },
+  {
     "id": 35645,
     "name": "wasm4",
     "creator": "Finch",
@@ -25250,7 +25467,8 @@
     "imageUrl": "https://drive.google.com/file/d/1NvinBioZ99D_Ht7PvTJT9RYakS6duo3t/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1kvvph4jV_q5fTiD2cSyHU1NJGRKKTOtE/view?usp=sharing",
     "size": "6.0 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 25419,
@@ -25340,7 +25558,8 @@
     "imageUrl": "https://drive.google.com/file/d/16nlGwb0ZwoyTIQ66eNHKl4g0CawnGFaB/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Hj1-tx4E-SqodbFoz8wUF6NfKHnk3XD1/view?usp=sharing",
     "size": "3.1 MB",
-    "date": "2025-12-04"
+    "date": "2025-12-04",
+    "onScreenScraper": true
   },
   {
     "id": 1145,
@@ -25429,7 +25648,8 @@
     "imageUrl": "https://drive.google.com/file/d/1Ezp20lKXv0TftI6NKe3DjnDdzSX33PPy/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/19PYUZOZ7d7JcuoObjm4IhQDmjyyJ8myw/view?usp=sharing",
     "size": "9.1 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 21340,
@@ -25521,6 +25741,18 @@
     "date": "2025-11-13"
   },
   {
+    "id": 45229,
+    "name": "Yoshi's Cookie (Europe)",
+    "creator": "Christophe",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1bAsvmFXTYl7AWWRGNnxMStiV3NDEeV04/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1O-zrZ-ydkBz4wJ09fLr5oDU3oo8Yi8-h/view?usp=sharing",
+    "size": "5.3 MB",
+    "date": "2026-04-17",
+    "onScreenScraper": true
+  },
+  {
     "id": 6415,
     "name": "Yoshi's Story (USA) (En,Ja)",
     "creator": "Finch",
@@ -25563,7 +25795,8 @@
     "imageUrl": "https://drive.google.com/file/d/1ktpg4bEQeUQT6wwWOVxp5BX9pzLmZO5x/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1snTu5kVam_H2ngzfGYE-_HOSifUV4odS/view?usp=sharing",
     "size": "3.1 MB",
-    "date": "2026-04-17"
+    "date": "2026-04-17",
+    "onScreenScraper": true
   },
   {
     "id": 161,
