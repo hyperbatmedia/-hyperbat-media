@@ -134,7 +134,32 @@
     "modal": {
       "title": "AUTRES THÈMES DE BOB",
       "type": "download",
-      "items": []
+      "items": [
+        {
+          "id": "bob-theme-001",
+          "name": "FanartStar",
+          "description": "Thème RetroBat / Batocera créé par Bob Morane.",
+          "imageUrl": "https://drive.google.com/file/d/1CK1IFGq-6sVIm_JDGjWynlPdMGpB19WY/view?usp=sharing",
+          "downloadUrl": "https://github.com/BobMoraneRetro/one4all4one-fanartstar-bobmorane",
+          "creator": "Bob Morane"
+        },
+        {
+          "id": "bob-theme-002",
+          "name": "Coinops Unofficial",
+          "description": "Thème RetroBat / Batocera créé par Bob Morane.",
+          "imageUrl": "https://drive.google.com/file/d/1lQgf6gaTbsxHqXviD7Ef8mqeDFn_-mGr/view?usp=sharing",
+          "downloadUrl": "https://github.com/BobMoraneRetro/one4all4one-coinopsfriends-bobmorane",
+          "creator": "Bob Morane"
+        },
+		{
+          "id": "bob-theme-003",
+          "name": "NESiCAxLive",
+          "description": "Thème RetroBat / Batocera créé par Bob Morane.",
+          "imageUrl": "https://drive.google.com/file/d/1wbi7HgKTycYtFLMk6L7oHzpvAVtlacSD/view?usp=drive_link",
+          "downloadUrl": "https://github.com/BobMoraneRetro/one4all4one-NESiCAxLive-bobmorane",
+          "creator": "Bob Morane"
+        }
+      ]
     }
   }
 ]

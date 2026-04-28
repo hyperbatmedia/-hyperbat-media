@@ -2198,6 +2198,17 @@
     "date": "2026-04-03"
   },
   {
+    "id": 46066,
+    "name": "alien",
+    "creator": "Christophe",
+    "system": "collectionspersonnalises",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1PE5QmdP4vkj9wVGGH9qNVacaOg9EwBse/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1HYZoUQ7McMHEmRp0_UwqTtBuZSk2SfxM/view?usp=sharing",
+    "size": "5.6 MB",
+    "date": "2026-04-28"
+  },
+  {
     "id": 43784,
     "name": "Alien 3",
     "creator": "huhe-8554",
@@ -6330,6 +6341,28 @@
     "date": "2025-11-13"
   },
   {
+    "id": 46219,
+    "name": "chanbara",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Y-IqpbRom5jvBo32TY0y8BalZK5cUa8r/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/18hsCO6aPKMT5LRzL-Z94RkbmI-drt_bs/view?usp=sharing",
+    "size": "3.8 MB",
+    "date": "2026-04-17"
+  },
+  {
+    "id": 46430,
+    "name": "chanbara",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1lLugTDhtQihnTTm7a4R6wE_-0YAXv-zb/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1_LGv5vZkPrwb-gS1GzZdi_T80I5dYir_/view?usp=sharing",
+    "size": "3.8 MB",
+    "date": "2026-04-17"
+  },
+  {
     "id": 469,
     "name": "chasehq",
     "creator": "Roni",
@@ -6385,6 +6418,17 @@
     "size": "10.9 MB",
     "date": "2025-11-30",
     "onScreenScraper": true
+  },
+  {
+    "id": 47320,
+    "name": "Chihiro",
+    "creator": "Finch",
+    "system": "chihiro",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1SiH09PMdAvuc1lw4hSOBUr9XQNiFgJo0/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Lb9xakepHfMJXadOJbN9n_cr0XWQI6jC/view?usp=sharing",
+    "size": "1.1 MB",
+    "date": "2026-04-28"
   },
   {
     "id": 1028,
@@ -6454,6 +6498,28 @@
     "size": "2.5 MB",
     "date": "2026-01-15",
     "onScreenScraper": true
+  },
+  {
+    "id": 46215,
+    "name": "chinatwn",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1JBmmL1pQEy7RSmDF8YmqZSFVmRcJlUnN/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1u7KZQmmqGSFCIMR9io2ebQi4OsVgzVjP/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-04-23"
+  },
+  {
+    "id": 46425,
+    "name": "chinatwn",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1jyTMGpqZhp5QWqp4HN4W-ilWYFA7HHYx/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1OcqATfOL6M39mha2FisLYpWvypFjIPiV/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-04-23"
   },
   {
     "id": 466,
@@ -6856,6 +6922,28 @@
     "size": "4.3 MB",
     "date": "2026-04-17",
     "onScreenScraper": true
+  },
+  {
+    "id": 46217,
+    "name": "compgolf",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1_LPwsX9yJ5Mgt3OI825dnlCo8-8nQS4Z/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1P2ynSyeKm333aP5rYBDDUeM75zNTNR8R/view?usp=sharing",
+    "size": "1.2 MB",
+    "date": "2026-04-20"
+  },
+  {
+    "id": 46428,
+    "name": "compgolf",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1kUl1_MQu3-JhJ6pT63RsRNGlxocTvMsR/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1wpofZMU7L8ANhyjgETr_eKHxUOu67phG/view?usp=sharing",
+    "size": "1.2 MB",
+    "date": "2026-04-20"
   },
   {
     "id": 43741,
@@ -10268,6 +10356,17 @@
     "size": "901.9 KB",
     "date": "2026-04-17",
     "onScreenScraper": true
+  },
+  {
+    "id": 46065,
+    "name": "final fantasy",
+    "creator": "Christophe",
+    "system": "collectionspersonnalises",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1L8odRUGL2jTVS_uX81VRJbXNjSYPqTvn/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1btMtPDcqrR8Tff6qIePK98wNQ2Jd_BgI/view?usp=sharing",
+    "size": "5.7 MB",
+    "date": "2026-04-28"
   },
   {
     "id": 990,
@@ -14498,6 +14597,28 @@
     "onScreenScraper": true
   },
   {
+    "id": 46218,
+    "name": "joemacr",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Wo3t-ee68FyImDRUFvAvmCZKotpO1p7N/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Ab4MHySu8QLkRk2LjkIpE2YZAhnQaSFW/view?usp=sharing",
+    "size": "3.6 MB",
+    "date": "2026-04-17"
+  },
+  {
+    "id": 46429,
+    "name": "joemacr",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1y5ZjZlIindVBa3EqQDPNrqOFS0atuN8g/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Th4R17rLyO4MSMLuBJpylYNVNXt_11DQ/view?usp=sharing",
+    "size": "3.6 MB",
+    "date": "2026-04-17"
+  },
+  {
     "id": 56,
     "name": "johnnyrock-hd",
     "creator": "pento5185",
@@ -16189,6 +16310,17 @@
     "date": "2025-11-13"
   },
   {
+    "id": 46062,
+    "name": "mario",
+    "creator": "Christophe",
+    "system": "collectionspersonnalises",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1M2Sfyc4f2nkTE3oQ5iGFmvCViZb0uYhR/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1MTdBzh1phnLKzPijhjwysuOsU1C7VxM0/view?usp=sharing",
+    "size": "4.2 MB",
+    "date": "2026-04-28"
+  },
+  {
     "id": 34838,
     "name": "Mario Clash (Japan, USA)",
     "creator": "Finch",
@@ -16199,6 +16331,17 @@
     "size": "570.9 KB",
     "date": "2026-04-03",
     "onScreenScraper": true
+  },
+  {
+    "id": 46063,
+    "name": "mario kart",
+    "creator": "Christophe",
+    "system": "collectionspersonnalises",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Q3pk4yDkxrmRl3oi1j43q9-n0roEoHg9/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1I1QF64kMi4FcuaV2vxMwQ0VEpo3sSWzr/view?usp=sharing",
+    "size": "6.9 MB",
+    "date": "2026-04-28"
   },
   {
     "id": 643,
@@ -16493,6 +16636,17 @@
     "downloadUrl": "https://drive.google.com/file/d/1gRWthDNwm1So_Hv4qBPn6JXMflVphs9Y/view?usp=sharing",
     "size": "2.5 MB",
     "date": "2025-11-13"
+  },
+  {
+    "id": 46067,
+    "name": "megaman",
+    "creator": "Christophe",
+    "system": "collectionspersonnalises",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1m04o6M1PfST07lS2lSqSbdt4GFSrBQ3O/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1bW7JHR1WGD-8cqBnNUNQsH1lN7H5y2jr/view?usp=sharing",
+    "size": "6.1 MB",
+    "date": "2026-04-28"
   },
   {
     "id": 99,
@@ -20896,6 +21050,28 @@
     "onScreenScraper": true
   },
   {
+    "id": 46424,
+    "name": "rodland",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1S6hyh3vKM91eEo36to-Kak_vU68FG3_s/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1mqfzzZ0qmE6YhZ_PyEVpL9bvVUCuM613/view?usp=sharing",
+    "size": "2.8 MB",
+    "date": "2026-04-24"
+  },
+  {
+    "id": 47001,
+    "name": "rodland",
+    "creator": "Roni",
+    "system": "jaleco",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/138spYkUgcJvZTzvJ5asbVZJi_HDPq96O/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/18dSj0NJYvbqTqRxQJRvZBOe823ERi5zM/view?usp=sharing",
+    "size": "2.8 MB",
+    "date": "2026-04-24"
+  },
+  {
     "id": 42102,
     "name": "rotd",
     "creator": "Dav",
@@ -21285,6 +21461,28 @@
     "size": "6.0 MB",
     "date": "2026-01-24",
     "onScreenScraper": true
+  },
+  {
+    "id": 46216,
+    "name": "secretag",
+    "creator": "Roni",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1UlUtHONIguNfvH2Zpv8xPnUmgOYKkkw2/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/14_eJPg0LRCsVdcwkPfJYlNvYUS_vJPgg/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-04-21"
+  },
+  {
+    "id": 46427,
+    "name": "secretag",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1-M8nFKqH5liHopbYpNSn0AqIDjDMbHXp/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/12Z-kUmfoadvB1tEZ3krndQZq694XyBv5/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-04-21"
   },
   {
     "id": 239,
@@ -22535,6 +22733,28 @@
     "onScreenScraper": true
   },
   {
+    "id": 46426,
+    "name": "sparkz",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/13FNOaZ1p-Z52WASiJ641gHGbeYf0Vd68/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ohbls2-Rk2Rdlf3igYfGvWbE0jTCCBiS/view?usp=sharing",
+    "size": "1.8 MB",
+    "date": "2026-04-23"
+  },
+  {
+    "id": 46985,
+    "name": "sparkz",
+    "creator": "Roni",
+    "system": "atariclassique",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1qDKgaHfWadfefBC4gqeQslLlvHaO1MAi/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ummOLpYSd3JcCadT3lmSYjF2qo-STe82/view?usp=sharing",
+    "size": "1.8 MB",
+    "date": "2026-04-23"
+  },
+  {
     "id": 22253,
     "name": "spbactn",
     "creator": "Roni",
@@ -23046,6 +23266,17 @@
     "date": "2026-04-03"
   },
   {
+    "id": 46064,
+    "name": "streets of rage",
+    "creator": "Christophe",
+    "system": "collectionspersonnalises",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1AkXVNXjEOPPmMM3-isMUTli8dk_-r0xo/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1twVoOV3rCzMeGRZb38L2KNVjDe3bBx0M/view?usp=sharing",
+    "size": "7.8 MB",
+    "date": "2026-04-28"
+  },
+  {
     "id": 4536,
     "name": "Streets of Rage 4",
     "creator": "huhe-8554",
@@ -23201,6 +23432,17 @@
     "size": "2.0 MB",
     "date": "2026-04-17",
     "onScreenScraper": true
+  },
+  {
+    "id": 46061,
+    "name": "Super Mario Galaxy",
+    "creator": "Christophe",
+    "system": "collectionspersonnalises",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1sY6rBlfbu3ewo6f-6G3MwFKLd67lCd_N/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1FX8sEy8dMyPHbcmgXwPyUlwLdI3yJy7I/view?usp=sharing",
+    "size": "5.5 MB",
+    "date": "2026-04-28"
   },
   {
     "id": 14381,
