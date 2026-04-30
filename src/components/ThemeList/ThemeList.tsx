@@ -235,7 +235,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                   {theme.isMulti && (
                     <span className="px-2 py-1 rounded-full text-xs font-semibold"
                       style={{ background: 'linear-gradient(to right, #9333ea, #ec4899)', color: 'white' }}>
-                      🌍 Multi
+                      🌍 Multi-region
                     </span>
                   )}
                 </div>
