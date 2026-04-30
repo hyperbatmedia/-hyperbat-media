@@ -35,7 +35,6 @@ interface ImportTabProps {
   systems: SystemRow[];
   categories: Category[];
   setAdminTab: React.Dispatch<React.SetStateAction<AdminTab>>;
-  convertGoogleDriveUrl: (url: string, isImage?: boolean) => string;
   onImportThemes: (themes: ThemeItem[]) => Promise<void>;
 }
 
@@ -299,7 +298,6 @@ const ImportTab: React.FC<ImportTabProps> = ({
   systems, 
   categories, 
   setAdminTab, 
-  convertGoogleDriveUrl,
   onImportThemes 
 }) => { 
   const [jsonInput, setJsonInput] = useState('');
@@ -392,11 +390,14 @@ const ImportTab: React.FC<ImportTabProps> = ({
     try {
       await new Promise(resolve => setTimeout(resolve, 0));
       
-      let cleanedJson = rawText
-        .replace(/,\s*([\]}])/g, '$1')
-        .replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2":');
-
-      const parsed = JSON.parse(cleanedJson);
+      let parsed: ParsedJsonItem[];
+      try {
+        parsed = JSON.parse(rawText);
+      } catch {
+        // Fallback minimal: supprime seulement les virgules finales
+        const cleanedJson = rawText.replace(/,\s*([\]}])/g, '$1');
+        parsed = JSON.parse(cleanedJson);
+      }
       
       if (!Array.isArray(parsed)) {
         setImportError("Le JSON doit être un tableau d'objets.");
@@ -438,7 +439,7 @@ const ImportTab: React.FC<ImportTabProps> = ({
     } finally {
       setIsParsing(false);
     }
-  }, [existingThemesIndex, convertGoogleDriveUrl, lastIdRef]);
+  }, [existingThemesIndex, lastIdRef]);
 
   // Drag & Drop
   const handleFileDrop = useCallback((e: React.DragEvent) => {
@@ -514,7 +515,7 @@ const ImportTab: React.FC<ImportTabProps> = ({
     
     setImportPreview(importPreview.map(t => t.id === updatedTheme.id ? updatedTheme : t));
     setEditingTheme(null);
-  }, [editingTheme, importPreview, convertGoogleDriveUrl]);
+  }, [editingTheme, importPreview]);
 
   const handleBulkEdit = useCallback(() => {
     if (selectedIds.size === 0) return;
@@ -612,7 +613,10 @@ const ImportTab: React.FC<ImportTabProps> = ({
 
   const copyToClipboard = useCallback(() => {
     if (!importPreview) return;
-    const data: Omit<ThemeItem, 'id'>[] = importPreview.map(({ id, ...rest }) => rest);
+    const data: Omit<ThemeItem, 'id'>[] = importPreview.map(({ id, ...rest }) => {
+      void id;
+      return rest;
+    });
     navigator.clipboard.writeText(JSON.stringify(data, null, 2));
     alert('✅ JSON copié dans le presse-papier !');
   }, [importPreview]);
@@ -754,7 +758,7 @@ const ImportTab: React.FC<ImportTabProps> = ({
                   onView={() => setLightboxTheme(theme)}
                   onEdit={() => setEditingTheme(theme)}
                   onDelete={() => handleDeleteFromPreview(theme.id)}
-                  onSelect={(_checked) => toggleSelect(theme.id)}
+                  onSelect={() => toggleSelect(theme.id)}
                   isSelected={selectedIds.has(theme.id)}
                 />
               ))}

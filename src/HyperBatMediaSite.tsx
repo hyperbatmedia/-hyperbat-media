@@ -1,16 +1,18 @@
 // Fichier: src/HyperBatMediaSite.tsx 
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { lazy, Suspense, useState, useMemo, useEffect, useCallback } from 'react';
 import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download } from 'lucide-react';
 
-import { NewThemeForm, ThemeItem } from './types';
+import { ThemeItem } from './types';
 import { categories, CART_MAX } from './constants';
 import { useThemeStorage } from './hooks/useThemeStorage';
 import { useSystemsLogic } from './hooks/useSystemsLogic';
 import { getThemeKey } from './utils/themeUtils';
 import Sidebar from './components/Sidebar/Sidebar';
-import AdminPanel, { AdminTab } from './components/AdminPanel/AdminPanel'; 
+import type { AdminTab } from './components/AdminPanel/AdminPanel';
 import ThemeList from './components/ThemeList/ThemeList';
 import CartPanel from './components/CartPanel/CartPanel';
+
+const AdminPanel = lazy(() => import('./components/AdminPanel/AdminPanel'));
 
 const THEMES_PER_PAGE = 20;
 
@@ -57,7 +59,7 @@ export default function HyperBatMediaSite(): JSX.Element {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [sortBy, setSortBy] = useState<'name' | 'date'>('name');
   const [showAdminPanel, setShowAdminPanel] = useState<boolean>(false);
-  const [adminTab, setAdminTab] = useState<AdminTab>('add');
+  const [adminTab, setAdminTab] = useState<AdminTab>('manage');
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
     try { return localStorage.getItem('sidebar-collapsed') === 'true'; } catch { return false; }
   });
@@ -86,13 +88,6 @@ export default function HyperBatMediaSite(): JSX.Element {
   // ── Thèmes ────────────────────────────────────────────────────────────────
   const { themes: rawThemes, setThemes, isLoading, saveThemes } = useThemeStorage();
   const systemsLogic = useSystemsLogic();
-
-  const [newTheme, setNewTheme] = useState<NewThemeForm>({
-    name: '', system: 'mame', category: 'game-themes',
-    imageUrl: '', downloadUrl: '', creator: '', size: '',
-    onScreenScraper: false,
-    isMulti: false
-  });
 
   const colors = useMemo(() => getThemeColors(isDarkMode), [isDarkMode]);
 
@@ -124,31 +119,6 @@ export default function HyperBatMediaSite(): JSX.Element {
   const handleSearchChange = (value: string) => {
     if (value.toLowerCase() === 'canafloche') { setShowAdminPanel(true); setSearchTerm(''); }
     else setSearchTerm(value);
-  };
-
-  const handleAddTheme = async () => {
-    if (!newTheme.name || !newTheme.creator) { alert('Veuillez remplir les champs obligatoires'); return; }
-    const theme: ThemeItem = {
-      id: Date.now(), ...newTheme,
-      imageUrl: convertGoogleDriveUrl(newTheme.imageUrl, true),
-      downloadUrl: convertGoogleDriveUrl(newTheme.downloadUrl, false),
-      size: newTheme.size || 'N/A'
-    };
-    const updatedThemes = [...rawThemes, theme];
-    setThemes(updatedThemes);
-    await saveThemes(updatedThemes);
-    setNewTheme({ name: '', system: 'mame', category: 'game-themes', imageUrl: '', downloadUrl: '', creator: '', size: '', onScreenScraper: false, isMulti: false });
-    alert('Thème ajouté !');
-  };
-
-  const handleDeleteTheme = async (themeKey: string) => {
-    if (window.confirm('Supprimer ce thème ?')) {
-      const themeToDelete = rawThemes.find(t => getThemeKey(t) === themeKey);
-      if (!themeToDelete) return;
-      const updatedThemes = rawThemes.filter(t => getThemeKey(t) !== themeKey);
-      setThemes(updatedThemes);
-      await saveThemes(updatedThemes);
-    }
   };
 
   const filteredThemes = useMemo(() => {
@@ -412,14 +382,19 @@ export default function HyperBatMediaSite(): JSX.Element {
               )}
 
               {showAdminPanel && (
-                <AdminPanel
-                  themes={rawThemes} setThemes={setThemes} saveThemes={saveThemes}
-                  systems={systemsLogic.systems} categories={categories}
-                  adminTab={adminTab} setAdminTab={setAdminTab}
-                  newTheme={newTheme} setNewTheme={setNewTheme}
-                  handleAddTheme={handleAddTheme} handleDeleteTheme={handleDeleteTheme}
-                  convertGoogleDriveUrl={convertGoogleDriveUrl}
-                />
+                <Suspense
+                  fallback={(
+                    <div className="min-h-[320px] flex items-center justify-center rounded-xl border border-gray-700 bg-gray-900/70">
+                      <p className="text-lg font-bold" style={{ color: '#FF8C00' }}>Chargement admin...</p>
+                    </div>
+                  )}
+                >
+                  <AdminPanel
+                    themes={rawThemes} setThemes={setThemes} saveThemes={saveThemes}
+                    systems={systemsLogic.systems} categories={categories}
+                    adminTab={adminTab} setAdminTab={setAdminTab}
+                  />
+                </Suspense>
               )}
 
               {!showAdminPanel && (

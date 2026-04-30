@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction, FC } from 'react';
 import {
-  Plus,
   Edit2,
   FileJson,
   FolderOpen,
@@ -8,8 +7,7 @@ import {
   Database,
   LucideIcon
 } from 'lucide-react';
-import { ThemeItem, SystemRow, Category, NewThemeForm } from '../../types';
-import AddTab from './AddTab';
+import { ThemeItem, SystemRow, Category } from '../../types';
 import ManageTab from './ManageTab';
 import ImportTab from './ImportTab';
 import DriveTab from './DriveTab';
@@ -17,7 +15,7 @@ import SyncTab from './SyncTab';
 import ScreenScraperSyncTab from './ScreenScraperSyncTab';
 import { extractDriveFileId, isUnknownCreator } from './DriveTab/DriveHelpers';
 
-export type AdminTab = 'add' | 'manage' | 'import' | 'drive-import' | 'sync' | 'screenscraper-sync';
+export type AdminTab = 'manage' | 'import' | 'drive-import' | 'sync' | 'screenscraper-sync';
 
 interface AdminPanelProps {
   themes: ThemeItem[];
@@ -27,11 +25,6 @@ interface AdminPanelProps {
   categories: Category[];
   adminTab: AdminTab;
   setAdminTab: Dispatch<SetStateAction<AdminTab>>;
-  newTheme: NewThemeForm;
-  setNewTheme: Dispatch<SetStateAction<NewThemeForm>>;
-  handleAddTheme: () => Promise<void>;
-  handleDeleteTheme: (themeKey: string) => Promise<void>;
-  convertGoogleDriveUrl: (url: string, isImage?: boolean) => string;
 }
 
 interface TabButtonProps {
@@ -74,10 +67,6 @@ const AdminPanel: FC<AdminPanelProps> = ({
   categories,
   adminTab,
   setAdminTab,
-  newTheme,
-  setNewTheme,
-  handleAddTheme,
-  convertGoogleDriveUrl
 }) => {
 
   const handleImportThemes = async (newThemes: ThemeItem[]): Promise<void> => {
@@ -122,7 +111,8 @@ const AdminPanel: FC<AdminPanelProps> = ({
           category: incoming.category || existing.category,
           downloadUrl: incoming.downloadUrl || existing.downloadUrl,
           date: incoming.date || existing.date,
-          onScreenScraper: incoming.onScreenScraper || existing.onScreenScraper  // ← NOUVEAU
+          onScreenScraper: incoming.onScreenScraper ?? existing.onScreenScraper ?? false,
+          isMulti: incoming.isMulti ?? existing.isMulti ?? false,
         };
 
         themeMap.set(key, merged);
@@ -161,24 +151,12 @@ const AdminPanel: FC<AdminPanelProps> = ({
         </h1>
 
         <div className="flex flex-wrap gap-2 mb-8 border-b border-gray-700 pb-4">
-          <TabButton tab="add" currentTab={adminTab} setAdminTab={setAdminTab} icon={Plus} label="Ajouter" />
           <TabButton tab="manage" currentTab={adminTab} setAdminTab={setAdminTab} icon={Edit2} label="Gérer" />
           <TabButton tab="import" currentTab={adminTab} setAdminTab={setAdminTab} icon={FileJson} label="Importer JSON" />
           <TabButton tab="drive-import" currentTab={adminTab} setAdminTab={setAdminTab} icon={FolderOpen} label="Import Drive" />
           <TabButton tab="sync" currentTab={adminTab} setAdminTab={setAdminTab} icon={RefreshCw} label="Synchronisation" />
           <TabButton tab="screenscraper-sync" currentTab={adminTab} setAdminTab={setAdminTab} icon={Database} label="ScreenScraper Sync" />
         </div>
-
-        {adminTab === 'add' && (
-          <AddTab
-            newTheme={newTheme}
-            setNewTheme={setNewTheme}
-            handleAddTheme={handleAddTheme}
-            systems={systems}
-            categories={categories}
-            convertGoogleDriveUrl={convertGoogleDriveUrl}
-          />
-        )}
 
         {adminTab === 'manage' && (
           <ManageTab
@@ -222,7 +200,6 @@ const AdminPanel: FC<AdminPanelProps> = ({
             systems={systems}
             categories={categories}
             setAdminTab={setAdminTab}
-            convertGoogleDriveUrl={convertGoogleDriveUrl}
             onImportThemes={handleImportThemes}
           />
         )}

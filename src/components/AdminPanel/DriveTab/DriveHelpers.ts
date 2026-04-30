@@ -286,8 +286,7 @@ export const generateSystemMapping = (): Record<string, string> => {
 // ===== MATCHING SYSTÈME INTELLIGENT =====
 export const findMatchingSystem = (
   folderName: string,
-  systemMapping: Record<string, string>,
-  _addLog: (message: string) => void
+  systemMapping: Record<string, string>
 ): { systemId: string; systemName: string } => {
   const cleanName = folderName.toLowerCase().trim();
   
@@ -505,7 +504,7 @@ export const extractCreatorFromArchive = async (
       return { creator: 'Unknown', format: 'ZIP' };
     }
     
-    let creator = creatorText
+    const creator = creatorText
       .replace(/^Theme by\s*:\s*/i, '')
       .replace(/^System Theme By\s*:\s*/i, '')
       .replace(/^By\s*:\s*/i, '')

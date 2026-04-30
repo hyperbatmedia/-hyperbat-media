@@ -224,7 +224,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
   }, [themes]);
 
   const filteredThemes = useMemo((): DriveTheme[] => {
-    let filtered = selectedSystemFilter !== 'all'
+    const filtered = selectedSystemFilter !== 'all'
       ? themes.filter(t => t.systemDisplayName === selectedSystemFilter)
       : themes;
 
@@ -532,7 +532,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
           const segment = pathParts[i];
           const segmentNormalized = segment.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
           if (!segmentNormalized.includes('theme') && !segmentNormalized.includes('artwork') && !segmentNormalized.includes('defaut') && !segmentNormalized.includes('default')) {
-            const match = findMatchingSystem(segment, systemMapping, addLog);
+            const match = findMatchingSystem(segment, systemMapping);
             if (match.systemId !== 'unknown') {
               systemName = match.systemName;
               break;
@@ -540,7 +540,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
           }
         }
         
-        const matchedSystem = findMatchingSystem(systemName, systemMapping, addLog);
+        const matchedSystem = findMatchingSystem(systemName, systemMapping);
         addLog(`🎮 ${archives.length} → ${matchedSystem.systemName}`, 'info');
         
         const detectedCategory = detectCategoryFromPath(path);

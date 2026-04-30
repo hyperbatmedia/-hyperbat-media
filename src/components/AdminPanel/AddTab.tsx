@@ -91,7 +91,6 @@ const AddTab: React.FC<AddTabProps> = ({
     imageUrl: '', downloadUrl: '', size: '',
     onScreenScraper: false, isMulti: false
   };
-  const safeSystems = systems || [];
   const safeCategories = categories || [];
 
   React.useEffect(() => {
@@ -101,11 +100,11 @@ const AddTab: React.FC<AddTabProps> = ({
   }, [newTheme]);
 
   const finalSystems = React.useMemo(() => {
-    const defaultSystems = safeSystems.length > 0 
-      ? safeSystems.filter(s => !s.isHeader && !s.isSubHeader) 
+    const defaultSystems = systems.length > 0 
+      ? systems.filter(s => !s.isHeader && !s.isSubHeader) 
       : CONSTANTS_SYSTEMS.map(s => ({ id: s.id, name: s.name }));
     return defaultSystems.filter(s => s.name?.toLowerCase().includes(systemSearch.toLowerCase()));
-  }, [safeSystems, systemSearch]);
+  }, [systems, systemSearch]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

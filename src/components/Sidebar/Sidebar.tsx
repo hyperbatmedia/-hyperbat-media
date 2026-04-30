@@ -119,14 +119,14 @@ const Sidebar: React.FC<SidebarProps> = ({
   const toggleCollapsed = () => {
     setCollapsed(prev => {
       const next = !prev;
-      try { localStorage.setItem(LS_KEY, String(next)); } catch {}
+      try { localStorage.setItem(LS_KEY, String(next)); } catch { return next; }
       return next;
     });
   };
 
   const handleCollapsedSectionClick = (sectionKey: string) => {
     setCollapsed(false);
-    try { localStorage.setItem(LS_KEY, 'false'); } catch {}
+    try { localStorage.setItem(LS_KEY, 'false'); } catch { return; }
     toggleSection(sectionKey);
   };
 
@@ -224,8 +224,8 @@ const Sidebar: React.FC<SidebarProps> = ({
       const nameLower       = system.name?.toLowerCase()       || '';
       const labelLower      = system.label?.toLowerCase()      || '';
       const subsectionLower = system.subsection?.toLowerCase() || '';
-      const nameWords  = nameLower.split(/[\s\-\/&()]+/).filter(w => w.length > 0);
-      const labelWords = labelLower.split(/[\s\-\/&()]+/).filter(w => w.length > 0);
+      const nameWords  = nameLower.split(/[\s/&()-]+/).filter(w => w.length > 0);
+      const labelWords = labelLower.split(/[\s/&()-]+/).filter(w => w.length > 0);
       return nameLower.startsWith(normalizedSearch) ||
         nameWords.some(w => w.startsWith(normalizedSearch)) ||
         labelLower.includes(normalizedSearch) ||
@@ -238,8 +238,8 @@ const Sidebar: React.FC<SidebarProps> = ({
       const aExact = aName.startsWith(normalizedSearch);
       const bExact = bName.startsWith(normalizedSearch);
       if (aExact !== bExact) return aExact ? -1 : 1;
-      const aWord = aName.split(/[\s\-\/]+/).some(w => w.startsWith(normalizedSearch));
-      const bWord = bName.split(/[\s\-\/]+/).some(w => w.startsWith(normalizedSearch));
+      const aWord = aName.split(/[\s/-]+/).some(w => w.startsWith(normalizedSearch));
+      const bWord = bName.split(/[\s/-]+/).some(w => w.startsWith(normalizedSearch));
       if (aWord !== bWord) return aWord ? -1 : 1;
       return aName.localeCompare(bName);
     });
