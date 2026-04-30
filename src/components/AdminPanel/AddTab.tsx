@@ -10,7 +10,8 @@ interface NewThemeForm {
   downloadUrl: string;
   creator: string;
   size: string;
-  onScreenScraper?: boolean;  // ← NOUVEAU
+  onScreenScraper?: boolean;
+  isMulti?: boolean;  // ← NOUVEAU
 }
 
 interface SystemRow {
@@ -73,12 +74,7 @@ interface AddTabProps {
 }
 
 const AddTab: React.FC<AddTabProps> = ({ 
-  newTheme, 
-  setNewTheme, 
-  handleAddTheme, 
-  systems, 
-  categories, 
-  convertGoogleDriveUrl 
+  newTheme, setNewTheme, handleAddTheme, systems, categories, convertGoogleDriveUrl 
 }) => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [showSuccess, setShowSuccess] = React.useState(false);
@@ -86,20 +82,14 @@ const AddTab: React.FC<AddTabProps> = ({
   const [systemSearch, setSystemSearch] = React.useState('');
   const [showSystemDropdown, setShowSystemDropdown] = React.useState(false);
   const [imageLoading, setImageLoading] = React.useState(false);
-  
   const [rawImageUrlInput, setRawImageUrlInput] = React.useState(newTheme.imageUrl);
   const [rawDownloadUrlInput, setRawDownloadUrlInput] = React.useState(newTheme.downloadUrl);
   const [imagePreview, setImagePreview] = React.useState(newTheme.imageUrl);
 
   const safeNewTheme = newTheme || { 
-    name: '', 
-    creator: '', 
-    system: '', 
-    category: '', 
-    imageUrl: '', 
-    downloadUrl: '', 
-    size: '',
-    onScreenScraper: false  // ← NOUVEAU
+    name: '', creator: '', system: '', category: '', 
+    imageUrl: '', downloadUrl: '', size: '',
+    onScreenScraper: false, isMulti: false
   };
   const safeSystems = systems || [];
   const safeCategories = categories || [];
@@ -114,10 +104,7 @@ const AddTab: React.FC<AddTabProps> = ({
     const defaultSystems = safeSystems.length > 0 
       ? safeSystems.filter(s => !s.isHeader && !s.isSubHeader) 
       : CONSTANTS_SYSTEMS.map(s => ({ id: s.id, name: s.name }));
-
-    return defaultSystems.filter(s => 
-      s.name?.toLowerCase().includes(systemSearch.toLowerCase())
-    );
+    return defaultSystems.filter(s => s.name?.toLowerCase().includes(systemSearch.toLowerCase()));
   }, [safeSystems, systemSearch]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -126,26 +113,18 @@ const AddTab: React.FC<AddTabProps> = ({
       alert("Le nom et le système sont obligatoires.");
       return;
     }
-
     try {
       setIsSubmitting(true);
       await handleAddTheme();
       setShowSuccess(true);
-      
       setNewTheme({
-        name: '',
-        system: safeNewTheme.system, 
-        category: safeNewTheme.category, 
-        imageUrl: '',
-        downloadUrl: '',
-        creator: safeNewTheme.creator, 
-        size: '',
-        onScreenScraper: false  // ← NOUVEAU
+        name: '', system: safeNewTheme.system, category: safeNewTheme.category,
+        imageUrl: '', downloadUrl: '', creator: safeNewTheme.creator, size: '',
+        onScreenScraper: false, isMulti: false
       });
       setRawImageUrlInput('');
       setRawDownloadUrlInput('');
       setImagePreview('');
-
       setTimeout(() => setShowSuccess(false), 3000);
     } catch {
       alert("Une erreur est survenue lors de l'ajout.");
@@ -156,35 +135,27 @@ const AddTab: React.FC<AddTabProps> = ({
 
   const handleInputChange = (field: keyof NewThemeForm, value: string | boolean) => {
     if (field === 'imageUrl' && typeof value === 'string') {
-      setRawImageUrlInput(value);
-      setImagePreview(''); 
-      setImageError(false);
+      setRawImageUrlInput(value); setImagePreview(''); setImageError(false);
     } else if (field === 'downloadUrl' && typeof value === 'string') {
       setRawDownloadUrlInput(value);
     } else {
       setNewTheme((prev: NewThemeForm) => ({ ...prev, [field]: value }));
     }
   };
-  
+
   const handleInputBlur = (field: keyof NewThemeForm, rawValue: string) => {
     let convertedValue = rawValue;
-
     if (rawValue.trim()) {
       if (field === 'imageUrl') {
         convertedValue = convertGoogleDriveUrl(rawValue, true);
-        setImagePreview(convertedValue); 
-        setImageError(false);
+        setImagePreview(convertedValue); setImageError(false);
       } else if (field === 'downloadUrl') {
         convertedValue = convertGoogleDriveUrl(rawValue);
       }
     } else {
       convertedValue = '';
-      if (field === 'imageUrl') {
-        setImagePreview('');
-        setImageError(false);
-      }
+      if (field === 'imageUrl') { setImagePreview(''); setImageError(false); }
     }
-
     setNewTheme((prev: NewThemeForm) => ({ ...prev, [field]: convertedValue }));
   };
 
@@ -196,7 +167,6 @@ const AddTab: React.FC<AddTabProps> = ({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black p-6">
-      {/* HEADER MODERNE (Style DriveTab) */}
       <div className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-1">
         <div className="bg-gray-900 rounded-[22px] p-6">
           <div className="flex items-center gap-5">
@@ -214,7 +184,6 @@ const AddTab: React.FC<AddTabProps> = ({
         </div>
       </div>
 
-      {/* MESSAGE DE SUCCÈS */}
       {showSuccess && (
         <div className="mb-6 p-4 bg-green-900/30 border-2 border-green-500 text-green-300 rounded-xl flex items-center gap-3 animate-pulse">
           <CheckCircle className="w-6 h-6" />
@@ -222,10 +191,8 @@ const AddTab: React.FC<AddTabProps> = ({
         </div>
       )}
 
-      {/* FORMULAIRE MODERNE */}
       <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700 shadow-xl">
         <form onSubmit={handleSubmit}>
-          {/* SECTION: Informations Principales */}
           <div className="mb-6">
             <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
               <svg className="w-5 h-5 text-orange-400" fill="currentColor" viewBox="0 0 20 20">
@@ -238,47 +205,47 @@ const AddTab: React.FC<AddTabProps> = ({
                 <label className="block text-sm font-bold text-gray-300 mb-2" htmlFor="name">
                   Nom du Thème <span className="text-red-500">*</span>
                 </label>
-                <input 
-                  type="text" 
-                  id="name"
-                  value={safeNewTheme.name}
+                <input type="text" id="name" value={safeNewTheme.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  placeholder="Nom du Thème"
-                  required
-                  className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition"
-                />
+                  placeholder="Nom du Thème" required
+                  className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition" />
               </div>
-              
               <div>
-                <label className="block text-sm font-bold text-gray-300 mb-2" htmlFor="creator">
-                  Créateur
-                </label>
-                <input 
-                  type="text" 
-                  id="creator"
-                  value={safeNewTheme.creator}
+                <label className="block text-sm font-bold text-gray-300 mb-2" htmlFor="creator">Créateur</label>
+                <input type="text" id="creator" value={safeNewTheme.creator}
                   onChange={(e) => handleInputChange('creator', e.target.value)}
                   placeholder="Créateur du Thème"
-                  className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition"
-                />
+                  className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition" />
               </div>
 
-              {/* ← NOUVEAU: Checkbox ScreenScraper */}
+              {/* Checkbox ScreenScraper */}
               <div className="md:col-span-2">
                 <label className="flex items-center gap-3 p-4 bg-gray-950 border border-gray-700 rounded-xl cursor-pointer hover:border-blue-500 transition">
-                  <input 
-                    type="checkbox" 
-                    checked={safeNewTheme.onScreenScraper || false}
+                  <input type="checkbox" checked={safeNewTheme.onScreenScraper || false}
                     onChange={(e) => handleInputChange('onScreenScraper', e.target.checked)}
-                    className="w-5 h-5 rounded border-gray-600 text-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-0 bg-gray-800 cursor-pointer"
-                  />
+                    className="w-5 h-5 rounded border-gray-600 text-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-0 bg-gray-800 cursor-pointer" />
                   <div className="flex items-center gap-2">
                     <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                       <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
                     </svg>
-                    <span className="text-sm font-bold text-gray-300">
-                      Disponible sur ScreenScraper
+                    <span className="text-sm font-bold text-gray-300">Disponible sur ScreenScraper</span>
+                  </div>
+                </label>
+              </div>
+
+              {/* ── Checkbox Multi ── */}
+              <div className="md:col-span-2">
+                <label className="flex items-center gap-3 p-4 bg-gray-950 border border-gray-700 rounded-xl cursor-pointer hover:border-purple-500 transition">
+                  <input type="checkbox" checked={safeNewTheme.isMulti || false}
+                    onChange={(e) => handleInputChange('isMulti', e.target.checked)}
+                    className="w-5 h-5 rounded border-gray-600 text-purple-600 focus:ring-2 focus:ring-purple-500/20 focus:ring-offset-0 bg-gray-800 cursor-pointer" />
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">🌍</span>
+                    <span className="text-sm font-bold text-gray-300">Thème Multi-région (PAL, USA, JAP, etc.)</span>
+                    <span className="px-2 py-0.5 rounded-full text-xs font-semibold"
+                      style={{ background: 'linear-gradient(to right, #9333ea, #ec4899)', color: 'white' }}>
+                      Multi
                     </span>
                   </div>
                 </label>
@@ -286,7 +253,6 @@ const AddTab: React.FC<AddTabProps> = ({
             </div>
           </div>
 
-          {/* SECTION: Configuration Système */}
           <div className="mb-6">
             <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
               <svg className="w-5 h-5 text-orange-400" fill="currentColor" viewBox="0 0 20 20">
@@ -300,84 +266,51 @@ const AddTab: React.FC<AddTabProps> = ({
                   Système <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <input 
-                    type="text" 
-                    id="system"
+                  <input type="text" id="system"
                     value={showSystemDropdown ? systemSearch : finalSystems.find(s => s.id === safeNewTheme.system)?.name || safeNewTheme.system}
-                    onChange={(e) => {
-                      setSystemSearch(e.target.value);
-                      setShowSystemDropdown(true);
-                    }}
+                    onChange={(e) => { setSystemSearch(e.target.value); setShowSystemDropdown(true); }}
                     onFocus={() => setShowSystemDropdown(true)}
-                    placeholder="Rechercher un système..."
-                    required
-                    className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition"
-                  />
+                    placeholder="Rechercher un système..." required
+                    className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition" />
                   {showSystemDropdown && (
-                    <button
-                      type="button"
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
-                      onClick={() => {
-                        setSystemSearch('');
-                        setShowSystemDropdown(false);
-                      }}
-                    >
+                    <button type="button" className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                      onClick={() => { setSystemSearch(''); setShowSystemDropdown(false); }}>
                       <X className="w-5 h-5" />
                     </button>
                   )}
                 </div>
-                
                 {showSystemDropdown && (
-                  <div 
-                    className="absolute z-10 w-full mt-1 bg-gray-900 border border-orange-500 rounded-xl max-h-60 overflow-y-auto shadow-2xl"
-                    onMouseLeave={() => setShowSystemDropdown(false)}
-                  >
+                  <div className="absolute z-10 w-full mt-1 bg-gray-900 border border-orange-500 rounded-xl max-h-60 overflow-y-auto shadow-2xl"
+                    onMouseLeave={() => setShowSystemDropdown(false)}>
                     {finalSystems.map((system) => (
-                      <div
-                        key={system.id}
-                        className="p-3 text-gray-300 hover:bg-orange-600 hover:text-white cursor-pointer transition"
-                        onClick={() => handleSystemSelect(system.id)}
-                      >
+                      <div key={system.id} className="p-3 text-gray-300 hover:bg-orange-600 hover:text-white cursor-pointer transition"
+                        onClick={() => handleSystemSelect(system.id)}>
                         {system.name}
                       </div>
                     ))}
                   </div>
                 )}
               </div>
-              
               <div>
-                <label className="block text-sm font-bold text-gray-300 mb-2" htmlFor="category">
-                  Catégorie
-                </label>
-                <select
-                  id="category"
-                  value={safeNewTheme.category}
+                <label className="block text-sm font-bold text-gray-300 mb-2" htmlFor="category">Catégorie</label>
+                <select id="category" value={safeNewTheme.category}
                   onChange={(e) => handleInputChange('category', e.target.value)}
-                  className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition appearance-none"
-                >
+                  className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition appearance-none">
                   {safeCategories.map((category) => (
                     <option key={category.id} value={category.id}>{category.name}</option>
                   ))}
                 </select>
               </div>
-
               <div>
-                <label className="block text-sm font-bold text-gray-300 mb-2" htmlFor="size">
-                  Taille
-                </label>
-                <input 
-                  type="text" 
-                  id="size"
-                  value={safeNewTheme.size}
+                <label className="block text-sm font-bold text-gray-300 mb-2" htmlFor="size">Taille</label>
+                <input type="text" id="size" value={safeNewTheme.size}
                   onChange={(e) => handleInputChange('size', e.target.value)}
                   placeholder="50 MB"
-                  className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition"
-                />
+                  className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition" />
               </div>
             </div>
           </div>
 
-          {/* SECTION: URLs et Médias */}
           <div className="mb-6">
             <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
               <svg className="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -387,41 +320,28 @@ const AddTab: React.FC<AddTabProps> = ({
             </h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-bold text-gray-300 mb-2">
-                  URL de l'image (Google Drive)
-                </label>
-                <input 
-                  type="url" 
-                  value={rawImageUrlInput} 
-                  onChange={(e) => handleInputChange('imageUrl', e.target.value)} 
+                <label className="block text-sm font-bold text-gray-300 mb-2">URL de l'image (Google Drive)</label>
+                <input type="url" value={rawImageUrlInput}
+                  onChange={(e) => handleInputChange('imageUrl', e.target.value)}
                   onBlur={(e) => handleInputBlur('imageUrl', e.target.value)}
-                  placeholder="https://drive.google.com/file/d/..." 
-                  className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition" 
-                />
+                  placeholder="https://drive.google.com/file/d/..."
+                  className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition" />
               </div>
-
               <div>
-                <label className="block text-sm font-bold text-gray-300 mb-2">
-                  URL de téléchargement (Google Drive)
-                </label>
-                <input 
-                  type="url" 
-                  value={rawDownloadUrlInput} 
-                  onChange={(e) => handleInputChange('downloadUrl', e.target.value)} 
+                <label className="block text-sm font-bold text-gray-300 mb-2">URL de téléchargement (Google Drive)</label>
+                <input type="url" value={rawDownloadUrlInput}
+                  onChange={(e) => handleInputChange('downloadUrl', e.target.value)}
                   onBlur={(e) => handleInputBlur('downloadUrl', e.target.value)}
-                  placeholder="https://drive.google.com/file/d/..." 
-                  className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition" 
-                />
+                  placeholder="https://drive.google.com/file/d/..."
+                  className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition" />
               </div>
             </div>
           </div>
 
-          {/* SECTION: Prévisualisation */}
           {(imagePreview || imageError) && (
             <div className="mb-6 p-6 bg-gray-900 rounded-xl border border-gray-700 shadow-inner">
               <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                <Eye className="w-5 h-5 text-orange-400" />
-                Prévisualisation
+                <Eye className="w-5 h-5 text-orange-400" />Prévisualisation
               </h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="relative w-full h-64 bg-gray-950 rounded-xl overflow-hidden flex items-center justify-center border-2 border-gray-700">
@@ -436,36 +356,18 @@ const AddTab: React.FC<AddTabProps> = ({
                       <p className="text-gray-400 text-sm font-semibold">Chargement...</p>
                     </div>
                   ) : (
-                    <img
-                      src={imagePreview}
-                      alt="Prévisualisation du thème"
-                      className="w-full h-full object-contain"
-                      onError={() => {
-                        setImageError(true);
-                        setImagePreview('');
-                        setImageLoading(false);
-                      }}
-                      onLoadStart={() => setImageLoading(true)}
-                      onLoad={() => setImageLoading(false)}
-                    />
+                    <img src={imagePreview} alt="Prévisualisation du thème" className="w-full h-full object-contain"
+                      onError={() => { setImageError(true); setImagePreview(''); setImageLoading(false); }}
+                      onLoadStart={() => setImageLoading(true)} onLoad={() => setImageLoading(false)} />
                   )}
                 </div>
                 <div className="flex flex-col gap-3 justify-center">
-                  <a 
-                    href={newTheme.imageUrl || '#'} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className={`py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg ${!newTheme.imageUrl ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  >
-                    <Image className="w-5 h-5" />
-                    Voir l'image (Convertie)
+                  <a href={newTheme.imageUrl || '#'} target="_blank" rel="noopener noreferrer"
+                    className={`py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg ${!newTheme.imageUrl ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <Image className="w-5 h-5" />Voir l'image (Convertie)
                   </a>
-                  <button
-                    type="button"
-                    onClick={() => window.open(newTheme.downloadUrl, '_blank')}
-                    disabled={!newTheme.downloadUrl}
-                    className={`py-3 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg ${!newTheme.downloadUrl ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  >
+                  <button type="button" onClick={() => window.open(newTheme.downloadUrl, '_blank')} disabled={!newTheme.downloadUrl}
+                    className={`py-3 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg ${!newTheme.downloadUrl ? 'opacity-50 cursor-not-allowed' : ''}`}>
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
@@ -476,22 +378,12 @@ const AddTab: React.FC<AddTabProps> = ({
             </div>
           )}
 
-          {/* BOUTON PRINCIPAL */}
-          <button 
-            type="submit"
-            disabled={isSubmitting} 
-            className="w-full py-4 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 disabled:from-gray-600 disabled:to-gray-700 text-white rounded-xl font-bold flex items-center justify-center gap-3 transition-all shadow-lg hover:shadow-xl active:scale-95 disabled:cursor-not-allowed text-lg"
-          >
+          <button type="submit" disabled={isSubmitting}
+            className="w-full py-4 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 disabled:from-gray-600 disabled:to-gray-700 text-white rounded-xl font-bold flex items-center justify-center gap-3 transition-all shadow-lg hover:shadow-xl active:scale-95 disabled:cursor-not-allowed text-lg">
             {isSubmitting ? (
-              <>
-                <Loader2 className="w-6 h-6 animate-spin" />
-                <span>Ajout en cours...</span>
-              </>
+              <><Loader2 className="w-6 h-6 animate-spin" /><span>Ajout en cours...</span></>
             ) : (
-              <>
-                <Save className="w-6 h-6" />
-                <span>Ajouter le thème</span>
-              </>
+              <><Save className="w-6 h-6" /><span>Ajouter le thème</span></>
             )}
           </button>
         </form>

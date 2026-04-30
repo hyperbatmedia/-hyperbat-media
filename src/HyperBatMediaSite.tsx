@@ -89,7 +89,9 @@ export default function HyperBatMediaSite(): JSX.Element {
 
   const [newTheme, setNewTheme] = useState<NewThemeForm>({
     name: '', system: 'mame', category: 'game-themes',
-    imageUrl: '', downloadUrl: '', creator: '', size: ''
+    imageUrl: '', downloadUrl: '', creator: '', size: '',
+    onScreenScraper: false,
+    isMulti: false
   });
 
   const colors = useMemo(() => getThemeColors(isDarkMode), [isDarkMode]);
@@ -107,6 +109,7 @@ export default function HyperBatMediaSite(): JSX.Element {
   }, [rawThemes]);
 
   const themeStats = useMemo(() => {
+    const multiThemes = themes.filter(t => t.isMulti === true).length;                                                           // ← NOUVEAU
     const collectionThemes = themes.filter(t => (t.system === 'collectionspersonnalises' || t.system === 'Collections Personnalisées') && t.category !== 'artwork').length;
     const artworkThemes = themes.filter(t => t.category === 'artwork').length;
     const gameThemes = themes.filter(t => t.category === 'game-themes').length;
@@ -115,7 +118,7 @@ export default function HyperBatMediaSite(): JSX.Element {
     const magazineThemes = themes.filter(t => t.system === 'magazines').length;
     const screenScraperThemes = themes.filter(t => t.onScreenScraper === true).length;
     const total = themes.length;
-    return { collectionThemes, artworkThemes, gameThemes, systemThemes, defaultThemes, magazineThemes, screenScraperThemes, total };
+    return { multiThemes, collectionThemes, artworkThemes, gameThemes, systemThemes, defaultThemes, magazineThemes, screenScraperThemes, total };
   }, [themes]);
 
   const handleSearchChange = (value: string) => {
@@ -134,7 +137,7 @@ export default function HyperBatMediaSite(): JSX.Element {
     const updatedThemes = [...rawThemes, theme];
     setThemes(updatedThemes);
     await saveThemes(updatedThemes);
-    setNewTheme({ name: '', system: 'mame', category: 'game-themes', imageUrl: '', downloadUrl: '', creator: '', size: '' });
+    setNewTheme({ name: '', system: 'mame', category: 'game-themes', imageUrl: '', downloadUrl: '', creator: '', size: '', onScreenScraper: false, isMulti: false });
     alert('Thème ajouté !');
   };
 
@@ -160,6 +163,7 @@ export default function HyperBatMediaSite(): JSX.Element {
         const matchesCategory = systemsLogic.selectedCategory === 'all' ? true
           : systemsLogic.selectedCategory === 'collection' ? (theme.system === 'collectionspersonnalises' && theme.category !== 'artwork')
           : systemsLogic.selectedCategory === 'screenscraper' ? theme.onScreenScraper === true
+          : systemsLogic.selectedCategory === 'multi' ? theme.isMulti === true          // ← NOUVEAU
           : systemsLogic.selectedCategory === 'magazines' ? (theme.system === 'magazines')
           : theme.category === systemsLogic.selectedCategory;
         return matchesSearch && matchesSystem && matchesCategory;
@@ -239,9 +243,11 @@ export default function HyperBatMediaSite(): JSX.Element {
         <div className="container mx-auto px-4 py-4">
           {!showAdminPanel && (
             <>
-              {/* Statistiques */}
+              {/* ── Statistiques / Filtres ── */}
               <div className="flex flex-wrap justify-center gap-3 mb-4">
                 {[
+                  // ── Multi en premier ──
+                  { id: 'multi', label: 'Multi-région', count: themeStats.multiThemes, icon: '🌍' },
                   { id: 'screenscraper', label: 'ScreenScraper', count: themeStats.screenScraperThemes, special: true },
                   { id: 'magazines', label: 'Magazines', count: themeStats.magazineThemes, icon: '📰' },
                   { id: 'collection', label: 'Collection', count: themeStats.collectionThemes, Icon: Package },
@@ -255,8 +261,12 @@ export default function HyperBatMediaSite(): JSX.Element {
                     onClick={() => { systemsLogic.handleSystemSelect('all'); systemsLogic.setSelectedCategory(id); }}
                     className="px-7 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
                     style={{
-                      background: special ? '#2a2a2a' : '#D97706',
-                      borderColor: systemsLogic.selectedCategory === id ? '#FFFF00' : '#FFD700',
+                      background: special ? '#2a2a2a' : id === 'multi'
+                        ? systemsLogic.selectedCategory === 'multi'
+                          ? 'linear-gradient(to right, #7e22ce, #be185d)'
+                          : 'linear-gradient(to right, #6b21a8, #9d174d)'
+                        : '#D97706',
+                      borderColor: systemsLogic.selectedCategory === id ? '#FFFF00' : id === 'multi' ? '#c084fc' : '#FFD700',
                       borderWidth: systemsLogic.selectedCategory === id ? '3px' : '2px',
                       boxShadow: systemsLogic.selectedCategory === id ? '0 0 10px rgba(255,215,0,0.3)' : 'none'
                     }}>
@@ -315,8 +325,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                     {cart.length > 0 && (
                       <>
                         <span className="text-xs font-bold">{cart.length}/{CART_MAX}</span>
-                        <span
-                          className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full text-xs font-black flex items-center justify-center"
+                        <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full text-xs font-black flex items-center justify-center"
                           style={{ backgroundColor: '#FFD700', color: '#1a1a1a' }}>
                           {cart.length}
                         </span>
@@ -384,7 +393,9 @@ export default function HyperBatMediaSite(): JSX.Element {
                   <div className="flex items-center gap-2">
                     <span style={{ color: colors.textSecondary }}>Catégorie:</span>
                     <span className="font-bold" style={{ color: '#FFA500' }}>
-                      {systemsLogic.selectedCategory === 'all' ? 'Toutes les catégories' : categories.find(c => c.id === systemsLogic.selectedCategory)?.name || systemsLogic.selectedCategory}
+                      {systemsLogic.selectedCategory === 'all' ? 'Toutes les catégories'
+                        : systemsLogic.selectedCategory === 'multi' ? '🌍 Multi-région'
+                        : categories.find(c => c.id === systemsLogic.selectedCategory)?.name || systemsLogic.selectedCategory}
                     </span>
                   </div>
                   <span style={{ color: colors.textSecondary }}>•</span>

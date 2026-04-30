@@ -18,7 +18,6 @@ interface ThemeListProps {
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   themesPerPage: number;
   systems: SystemRow[];
-  // Panier — état géré dans HyperBatMediaSite et passé en props
   cart: ThemeItem[];
   onCartAdd: (theme: ThemeItem) => void;
   onCartRemove: (key: string) => void;
@@ -144,7 +143,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
         .cart-full-msg { animation: popIn 0.2s ease-out; }
       `}</style>
 
-      {/* Message panier plein */}
       {cartFullMsg && (
         <div className="cart-full-msg fixed top-6 left-1/2 z-50 px-5 py-3 rounded-lg border-2 font-bold text-sm shadow-lg"
           style={{ transform: 'translateX(-50%)', backgroundColor: '#1a1a1a', borderColor: '#FF8C00', color: '#FF8C00' }}>
@@ -152,7 +150,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
         </div>
       )}
 
-      {/* Grille */}
       <div className={viewMode === 'grid'
         ? sidebarCollapsed
           ? 'grid grid-cols-2 md:grid-cols-5 gap-4'
@@ -184,7 +181,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
                 card.style.transform = 'translateY(0) scale(1)';
               }}
             >
-              {/* Image */}
               <div
                 className="bg-gradient-to-br from-gray-800 to-black flex items-center justify-center border-b-2 border-gray-700 cursor-pointer relative overflow-hidden"
                 style={{ height: '180px' }}
@@ -221,7 +217,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
                 )}
               </div>
 
-              {/* Infos */}
               <div className="p-3">
                 <h3 className="font-bold text-sm mb-2 text-white group-hover:text-orange-400 transition truncate">
                   {theme.name}
@@ -236,6 +231,13 @@ const ThemeList: React.FC<ThemeListProps> = ({
                     style={{ backgroundColor: 'rgba(59,130,246,0.3)', color: '#60A5FA', borderColor: 'rgba(59,130,246,0.5)' }}>
                     {getCategoryName(theme.category)}
                   </span>
+                  {/* ── Badge Multi ── */}
+                  {theme.isMulti && (
+                    <span className="px-2 py-1 rounded-full text-xs font-semibold"
+                      style={{ background: 'linear-gradient(to right, #9333ea, #ec4899)', color: 'white' }}>
+                      🌍 Multi
+                    </span>
+                  )}
                 </div>
 
                 <div className="flex gap-2 text-xs mb-2 flex-wrap items-center">
@@ -263,7 +265,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
 
                 {theme.onScreenScraper && <div className="mb-2"><ScreenScraperBadge /></div>}
 
-                {/* Boutons Télécharger + Panier */}
                 <div className="flex gap-2">
                   <a href={theme.downloadUrl} target="_blank" rel="noopener noreferrer"
                     className="flex-1 py-2 rounded flex items-center justify-center gap-2 font-bold text-xs border transition hover:brightness-110 active:scale-95"
@@ -271,7 +272,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
                     <Download className="w-4 h-4" />
                     Télécharger
                   </a>
-
                   <button
                     onClick={() => handleCartToggle(theme)}
                     title={inCart ? 'Retirer de la sélection' : cart.length >= CART_MAX ? 'Sélection pleine' : 'Ajouter à la sélection'}
@@ -294,7 +294,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
         })}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="mt-8 flex items-center justify-center gap-2 flex-wrap">
           <button onClick={() => setCurrentPage(Math.max(1, currentPage - 1))} disabled={currentPage === 1}
@@ -302,7 +301,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
             style={{ backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white' }}>
             ← Précédent
           </button>
-
           <div className="flex gap-1">
             {currentPage > 3 && (
               <>
@@ -336,7 +334,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
               </>
             )}
           </div>
-
           <button onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))} disabled={currentPage === totalPages}
             className="px-4 py-2 rounded-lg font-bold border-2 transition disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white' }}>

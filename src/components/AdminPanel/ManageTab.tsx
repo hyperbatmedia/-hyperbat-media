@@ -1,6 +1,6 @@
 // ManageTab.tsx 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Search, Download, Edit2, Trash2, Eye, X, AlertCircle, ImageOff, User, CheckSquare, Square, Upload, ArrowUpDown, Zap, ChevronDown, Users, Database } from 'lucide-react';
+import { Search, Download, Edit2, Trash2, Eye, X, AlertCircle, ImageOff, User, CheckSquare, Square, Upload, ArrowUpDown, Zap, ChevronDown, Users, Database, Globe } from 'lucide-react';
 import { ensureDisplayableUrl, reverseConvertUrl, isUnknownCreator, formatDateFR } from './DriveTab/DriveHelpers';
 
 interface ThemeItem {
@@ -14,6 +14,7 @@ interface ThemeItem {
   size: string;
   date?: string;
   onScreenScraper?: boolean;
+  isMulti?: boolean;  // ← NOUVEAU
 }
 
 interface SystemRow {
@@ -48,17 +49,11 @@ const isInvalidUrl = (url: string): boolean => {
 
 const matchSystemId = (themeSystem: string, selectedSystemId: string): boolean => {
   if (selectedSystemId === 'all' || selectedSystemId === '') return true;
-  
-  if (['tools', 'tutorials', 'main-themes'].includes(selectedSystemId)) {
-    return false;
-  }
-  
+  if (['tools', 'tutorials', 'main-themes'].includes(selectedSystemId)) return false;
   const parts = selectedSystemId.split('-');
   const systemIdPart = parts[parts.length - 1];
-  
   const normalizedSelected = systemIdPart.toLowerCase().replace(/[^a-z0-9]+/g, '');
   const normalizedTheme = themeSystem.toLowerCase().replace(/[^a-z0-9]+/g, '');
-  
   return normalizedTheme === normalizedSelected;
 };
 
@@ -70,19 +65,11 @@ const downloadJson = (data: any, filename: string) => {
   link.download = filename;
   document.body.appendChild(link);
   link.click();
-  setTimeout(() => {
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  }, 100);
+  setTimeout(() => { document.body.removeChild(link); URL.revokeObjectURL(url); }, 100);
 };
 
-const AutocompleteSelect = ({ 
-  options, 
-  value, 
-  onChange, 
-  placeholder = "Rechercher...",
-  emptyLabel = "Tous"
-}: {
+// ── AutocompleteSelect ────────────────────────────────────────────────────────
+const AutocompleteSelect = ({ options, value, onChange, placeholder = "Rechercher...", emptyLabel = "Tous" }: {
   options: SystemRow[];
   value: string;
   onChange: (value: string) => void;
@@ -97,9 +84,7 @@ const AutocompleteSelect = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) setIsOpen(false);
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -108,15 +93,10 @@ const AutocompleteSelect = ({
   const filteredOptions = useMemo(() => {
     if (!searchTerm.trim()) return options;
     const search = searchTerm.toLowerCase();
-    return options.filter(opt => 
-      opt.name.toLowerCase().includes(search) ||
-      opt.id.toLowerCase().includes(search)
-    );
+    return options.filter(opt => opt.name.toLowerCase().includes(search) || opt.id.toLowerCase().includes(search));
   }, [options, searchTerm]);
 
-  useEffect(() => {
-    setHighlightedIndex(0);
-  }, [searchTerm]);
+  useEffect(() => { setHighlightedIndex(0); }, [searchTerm]);
 
   const selectedName = useMemo(() => {
     if (!value) return emptyLabel;
@@ -126,101 +106,48 @@ const AutocompleteSelect = ({
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!isOpen) {
-      if (e.key === 'Enter' || e.key === 'ArrowDown') {
-        setIsOpen(true);
-        e.preventDefault();
-      }
+      if (e.key === 'Enter' || e.key === 'ArrowDown') { setIsOpen(true); e.preventDefault(); }
       return;
     }
-
     switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        setHighlightedIndex(prev => 
-          prev < filteredOptions.length - 1 ? prev + 1 : prev
-        );
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        setHighlightedIndex(prev => prev > 0 ? prev - 1 : 0);
-        break;
-      case 'Enter':
-        e.preventDefault();
-        if (filteredOptions[highlightedIndex]) {
-          handleSelect(filteredOptions[highlightedIndex].id);
-        }
-        break;
-      case 'Escape':
-        e.preventDefault();
-        setIsOpen(false);
-        setSearchTerm('');
-        break;
+      case 'ArrowDown': e.preventDefault(); setHighlightedIndex(prev => prev < filteredOptions.length - 1 ? prev + 1 : prev); break;
+      case 'ArrowUp': e.preventDefault(); setHighlightedIndex(prev => prev > 0 ? prev - 1 : 0); break;
+      case 'Enter': e.preventDefault(); if (filteredOptions[highlightedIndex]) handleSelect(filteredOptions[highlightedIndex].id); break;
+      case 'Escape': e.preventDefault(); setIsOpen(false); setSearchTerm(''); break;
     }
   };
 
-  const handleSelect = (optionId: string) => {
-    onChange(optionId);
-    setIsOpen(false);
-    setSearchTerm('');
-    inputRef.current?.blur();
-  };
-
-  const handleClear = () => {
-    onChange('');
-    setSearchTerm('');
-    setIsOpen(false);
-  };
+  const handleSelect = (optionId: string) => { onChange(optionId); setIsOpen(false); setSearchTerm(''); inputRef.current?.blur(); };
+  const handleClear = () => { onChange(''); setSearchTerm(''); setIsOpen(false); };
 
   return (
     <div ref={wrapperRef} className="relative">
       <div className="relative">
-        <input
-          ref={inputRef}
-          type="text"
+        <input ref={inputRef} type="text"
           value={isOpen ? searchTerm : selectedName}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            if (!isOpen) setIsOpen(true);
-          }}
-          onFocus={() => {
-            setIsOpen(true);
-            setSearchTerm('');
-          }}
+          onChange={(e) => { setSearchTerm(e.target.value); if (!isOpen) setIsOpen(true); }}
+          onFocus={() => { setIsOpen(true); setSearchTerm(''); }}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none cursor-pointer transition-all pr-20"
         />
         <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
           {value && (
-            <button
-              onClick={handleClear}
-              className="p-1.5 hover:bg-gray-700 rounded-lg transition-colors"
-              title="Réinitialiser"
-            >
+            <button onClick={handleClear} className="p-1.5 hover:bg-gray-700 rounded-lg transition-colors" title="Réinitialiser">
               <X className="w-4 h-4 text-gray-400" />
             </button>
           )}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="p-1.5 hover:bg-gray-700 rounded-lg transition-colors"
-          >
+          <button onClick={() => setIsOpen(!isOpen)} className="p-1.5 hover:bg-gray-700 rounded-lg transition-colors">
             <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
           </button>
         </div>
       </div>
-
       {isOpen && (
         <div className="absolute z-50 w-full mt-2 bg-gray-900 border-2 border-orange-500 rounded-xl shadow-2xl max-h-80 overflow-y-auto">
-          <div
-            onClick={() => handleSelect('')}
-            onMouseEnter={() => setHighlightedIndex(-1)}
-            className={`px-4 py-3 cursor-pointer transition-colors flex items-center gap-2 border-b border-gray-700 ${
-              highlightedIndex === -1 ? 'bg-orange-500/20' : 'hover:bg-gray-800'
-            }`}
-          >
+          <div onClick={() => handleSelect('')} onMouseEnter={() => setHighlightedIndex(-1)}
+            className={`px-4 py-3 cursor-pointer transition-colors flex items-center gap-2 border-b border-gray-700 ${highlightedIndex === -1 ? 'bg-orange-500/20' : 'hover:bg-gray-800'}`}>
             <span className="text-white font-semibold">🎮 {emptyLabel}</span>
           </div>
-
           {filteredOptions.length === 0 ? (
             <div className="px-4 py-6 text-center text-gray-400">
               <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
@@ -229,21 +156,11 @@ const AutocompleteSelect = ({
           ) : (
             <>
               {filteredOptions.map((option, index) => (
-                <div
-                  key={option.id}
-                  onClick={() => handleSelect(option.id)}
-                  onMouseEnter={() => setHighlightedIndex(index)}
-                  className={`px-4 py-3 cursor-pointer transition-colors ${
-                    highlightedIndex === index 
-                      ? 'bg-orange-500/20 border-l-4 border-orange-500' 
-                      : 'hover:bg-gray-800'
-                  } ${value === option.id ? 'bg-orange-500/10' : ''}`}
-                >
+                <div key={option.id} onClick={() => handleSelect(option.id)} onMouseEnter={() => setHighlightedIndex(index)}
+                  className={`px-4 py-3 cursor-pointer transition-colors ${highlightedIndex === index ? 'bg-orange-500/20 border-l-4 border-orange-500' : 'hover:bg-gray-800'} ${value === option.id ? 'bg-orange-500/10' : ''}`}>
                   <div className="flex items-center justify-between">
                     <span className="text-white font-medium">{option.name}</span>
-                    {value === option.id && (
-                      <span className="text-orange-400 text-xs font-bold">✓ Sélectionné</span>
-                    )}
+                    {value === option.id && <span className="text-orange-400 text-xs font-bold">✓ Sélectionné</span>}
                   </div>
                 </div>
               ))}
@@ -258,85 +175,43 @@ const AutocompleteSelect = ({
   );
 };
 
-const Toast = ({ message, type, onClose }: { 
-  message: string; 
-  type: 'success' | 'error'; 
-  onClose: () => void 
-}) => (
-  <div className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 border-2 ${
-    type === 'success' ? 'bg-green-600/95 border-green-400' : 'bg-red-600/95 border-red-400'
-  }`}>
-    {type === 'success' ? (
-      <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center text-green-600 font-bold">✓</div>
-    ) : (
-      <AlertCircle className="w-6 h-6 text-white" />
-    )}
+// ── Toast ─────────────────────────────────────────────────────────────────────
+const Toast = ({ message, type, onClose }: { message: string; type: 'success' | 'error'; onClose: () => void }) => (
+  <div className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 border-2 ${type === 'success' ? 'bg-green-600/95 border-green-400' : 'bg-red-600/95 border-red-400'}`}>
+    {type === 'success'
+      ? <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center text-green-600 font-bold">✓</div>
+      : <AlertCircle className="w-6 h-6 text-white" />}
     <span className="text-white font-bold">{message}</span>
-    <button onClick={onClose} className="ml-2 hover:opacity-70">
-      <X className="w-5 h-5 text-white" />
-    </button>
+    <button onClick={onClose} className="ml-2 hover:opacity-70"><X className="w-5 h-5 text-white" /></button>
   </div>
 );
 
-const BulkCreatorEditModal = ({ 
-  selectedThemes, 
-  onSave, 
-  onClose 
-}: {
+// ── BulkCreatorEditModal ──────────────────────────────────────────────────────
+const BulkCreatorEditModal = ({ selectedThemes, onSave, onClose }: {
   selectedThemes: ThemeItem[];
   onSave: (newCreator: string) => void;
   onClose: () => void;
 }) => {
   const [newCreator, setNewCreator] = useState('');
-  
-  const uniqueCreators = useMemo(() => {
-    const creators = new Set(selectedThemes.map(t => t.creator));
-    return Array.from(creators);
-  }, [selectedThemes]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newCreator.trim()) {
-      onSave(newCreator.trim());
-    }
-  };
+  const uniqueCreators = useMemo(() => Array.from(new Set(selectedThemes.map(t => t.creator))), [selectedThemes]);
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-purple-500 max-w-2xl w-full shadow-2xl" onClick={e => e.stopPropagation()}>
         <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 p-4 flex items-center justify-between">
-          <h2 className="text-2xl font-black text-white flex items-center gap-2">
-            <Users className="w-7 h-7" />
-            Édition en masse des créateurs
-          </h2>
-          <button onClick={onClose} className="text-white hover:text-gray-200">
-            <X className="w-6 h-6" />
-          </button>
+          <h2 className="text-2xl font-black text-white flex items-center gap-2"><Users className="w-7 h-7" />Édition en masse des créateurs</h2>
+          <button onClick={onClose} className="text-white hover:text-gray-200"><X className="w-6 h-6" /></button>
         </div>
-        
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <div className="p-6 space-y-6">
           <div className="bg-gray-950/50 rounded-xl p-4 border border-gray-700">
-            <div className="flex items-center gap-2 mb-3">
-              <AlertCircle className="w-5 h-5 text-blue-400" />
-              <span className="text-blue-400 font-bold">Thèmes sélectionnés</span>
-            </div>
-            <div className="text-white font-semibold mb-2">
-              {selectedThemes.length} thème{selectedThemes.length > 1 ? 's' : ''} sélectionné{selectedThemes.length > 1 ? 's' : ''}
-            </div>
-            
+            <div className="flex items-center gap-2 mb-3"><AlertCircle className="w-5 h-5 text-blue-400" /><span className="text-blue-400 font-bold">Thèmes sélectionnés</span></div>
+            <div className="text-white font-semibold mb-2">{selectedThemes.length} thème{selectedThemes.length > 1 ? 's' : ''} sélectionné{selectedThemes.length > 1 ? 's' : ''}</div>
             {uniqueCreators.length > 0 && (
               <div className="mt-3">
                 <div className="text-sm text-gray-400 mb-2">Créateurs actuels :</div>
                 <div className="flex flex-wrap gap-2">
                   {uniqueCreators.map((creator, idx) => (
-                    <span 
-                      key={idx}
-                      className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                        isUnknownCreator(creator) 
-                          ? 'bg-red-600/30 text-red-400 border border-red-500/50'
-                          : 'bg-gray-700 text-gray-300'
-                      }`}
-                    >
+                    <span key={idx} className={`px-3 py-1 rounded-full text-sm font-semibold ${isUnknownCreator(creator) ? 'bg-red-600/30 text-red-400 border border-red-500/50' : 'bg-gray-700 text-gray-300'}`}>
                       {creator || 'Vide'}
                     </span>
                   ))}
@@ -344,102 +219,46 @@ const BulkCreatorEditModal = ({
               </div>
             )}
           </div>
-
           <div>
-            <label className="block text-sm font-bold text-gray-300 mb-2">
-              Nouveau créateur *
-            </label>
-            <input 
-              type="text" 
-              required 
-              value={newCreator} 
-              onChange={e => setNewCreator(e.target.value)}
-              placeholder="Ex: John Doe"
-              className="w-full p-4 bg-gray-950 border border-gray-700 rounded-xl text-white text-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 focus:outline-none transition-all"
-              autoFocus
-            />
-            <p className="text-sm text-gray-400 mt-2">
-              Ce nom sera appliqué à tous les {selectedThemes.length} thèmes sélectionnés
-            </p>
+            <label className="block text-sm font-bold text-gray-300 mb-2">Nouveau créateur *</label>
+            <input type="text" required value={newCreator} onChange={e => setNewCreator(e.target.value)} placeholder="Ex: John Doe" autoFocus
+              className="w-full p-4 bg-gray-950 border border-gray-700 rounded-xl text-white text-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 focus:outline-none transition-all" />
           </div>
-
-          <div className="bg-orange-600/10 border border-orange-500/30 rounded-xl p-4">
-            <div className="flex items-start gap-2">
-              <AlertCircle className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
-              <div className="text-sm text-orange-300">
-                <p className="font-bold mb-1">Attention</p>
-                <p>Cette action modifiera le créateur de tous les thèmes sélectionnés. Cette modification est irréversible.</p>
-              </div>
-            </div>
-          </div>
-
           <div className="flex gap-3 pt-4 border-t border-gray-700">
-            <button 
-              type="button" 
-              onClick={onClose}
-              className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold transition-all"
-            >
-              Annuler
-            </button>
-            <button 
-              type="submit"
-              className="flex-1 py-3 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 hover:from-purple-700 hover:via-pink-700 hover:to-orange-700 text-white rounded-lg font-bold shadow-lg transition-all"
-            >
+            <button type="button" onClick={onClose} className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold transition-all">Annuler</button>
+            <button onClick={() => newCreator.trim() && onSave(newCreator.trim())}
+              className="flex-1 py-3 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 text-white rounded-lg font-bold shadow-lg transition-all">
               💾 Appliquer aux {selectedThemes.length} thème(s)
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
 };
 
-// NOUVELLE MODALE POUR SCREENSCRAPER
-const BulkScreenScraperEditModal = ({ 
-  selectedThemes, 
-  onSave, 
-  onClose 
-}: {
+// ── BulkScreenScraperEditModal ────────────────────────────────────────────────
+const BulkScreenScraperEditModal = ({ selectedThemes, onSave, onClose }: {
   selectedThemes: ThemeItem[];
   onSave: (isOnScreenScraper: boolean) => void;
   onClose: () => void;
 }) => {
   const [isOnScreenScraper, setIsOnScreenScraper] = useState(true);
-  
   const stats = useMemo(() => {
     const onSS = selectedThemes.filter(t => t.onScreenScraper).length;
-    const notOnSS = selectedThemes.length - onSS;
-    return { onSS, notOnSS };
+    return { onSS, notOnSS: selectedThemes.length - onSS };
   }, [selectedThemes]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave(isOnScreenScraper);
-  };
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-blue-500 max-w-lg w-full shadow-2xl" onClick={e => e.stopPropagation()}>
         <div className="bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 p-3 flex items-center justify-between">
-          <h2 className="text-xl font-black text-white flex items-center gap-2">
-            <Database className="w-6 h-6" />
-            ScreenScraper
-          </h2>
-          <button onClick={onClose} className="text-white hover:text-gray-200">
-            <X className="w-6 h-6" />
-          </button>
+          <h2 className="text-xl font-black text-white flex items-center gap-2"><Database className="w-6 h-6" />ScreenScraper</h2>
+          <button onClick={onClose} className="text-white hover:text-gray-200"><X className="w-6 h-6" /></button>
         </div>
-        
-        <form onSubmit={handleSubmit} className="p-4 space-y-3">
+        <div className="p-4 space-y-3">
           <div className="bg-gray-950/50 rounded-lg p-3 border border-gray-700">
-            <div className="flex items-center gap-2 mb-3">
-              <AlertCircle className="w-5 h-5 text-blue-400" />
-              <span className="text-blue-400 font-bold">Thèmes sélectionnés</span>
-            </div>
-            <div className="text-white font-semibold mb-1">
-              {selectedThemes.length} thème{selectedThemes.length > 1 ? 's' : ''} sélectionné{selectedThemes.length > 1 ? 's' : ''}
-            </div>
-            
+            <div className="text-white font-semibold mb-2">{selectedThemes.length} thème{selectedThemes.length > 1 ? 's' : ''} sélectionné{selectedThemes.length > 1 ? 's' : ''}</div>
             <div className="grid grid-cols-2 gap-2">
               <div className="bg-green-600/20 border border-green-500/50 rounded-lg p-2">
                 <div className="text-green-400 text-xs font-semibold mb-1">Sur ScreenScraper</div>
@@ -451,89 +270,95 @@ const BulkScreenScraperEditModal = ({
               </div>
             </div>
           </div>
-
-          <div>
-            <label className="block text-sm font-bold text-gray-300 mb-2">
-              Nouveau statut *
+          <div className="space-y-2">
+            <label className={`flex items-center gap-2 p-3 border-2 rounded-lg cursor-pointer transition-all ${isOnScreenScraper ? 'bg-green-600/20 border-green-500' : 'bg-gray-900 border-gray-700 hover:border-gray-600'}`}>
+              <input type="radio" name="screenscraper" checked={isOnScreenScraper} onChange={() => setIsOnScreenScraper(true)} className="w-4 h-4 text-green-600 cursor-pointer" />
+              <span className="text-white font-semibold text-sm">✅ Disponible</span>
             </label>
-            
-            <div className="space-y-2">
-              <label 
-                className={`flex items-center gap-2 p-3 border-2 rounded-lg cursor-pointer transition-all ${
-                  isOnScreenScraper 
-                    ? 'bg-green-600/20 border-green-500' 
-                    : 'bg-gray-900 border-gray-700 hover:border-gray-600'
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="screenscraper"
-                  checked={isOnScreenScraper}
-                  onChange={() => setIsOnScreenScraper(true)}
-                  className="w-4 h-4 text-green-600 cursor-pointer"
-                />
-                <div className="flex items-center gap-2 flex-1">
-                  <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                    <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-white font-semibold text-sm">Disponible</span>
-                </div>
-              </label>
-
-              <label 
-                className={`flex items-center gap-2 p-3 border-2 rounded-lg cursor-pointer transition-all ${
-                  !isOnScreenScraper 
-                    ? 'bg-orange-600/20 border-orange-500' 
-                    : 'bg-gray-900 border-gray-700 hover:border-gray-600'
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="screenscraper"
-                  checked={!isOnScreenScraper}
-                  onChange={() => setIsOnScreenScraper(false)}
-                  className="w-4 h-4 text-orange-600 cursor-pointer"
-                />
-                <div className="flex items-center gap-2 flex-1">
-                  <X className="w-5 h-5 text-orange-400" />
-                  <span className="text-white font-semibold text-sm">Pas disponible</span>
-                </div>
-              </label>
-            </div>
-            
+            <label className={`flex items-center gap-2 p-3 border-2 rounded-lg cursor-pointer transition-all ${!isOnScreenScraper ? 'bg-orange-600/20 border-orange-500' : 'bg-gray-900 border-gray-700 hover:border-gray-600'}`}>
+              <input type="radio" name="screenscraper" checked={!isOnScreenScraper} onChange={() => setIsOnScreenScraper(false)} className="w-4 h-4 text-orange-600 cursor-pointer" />
+              <span className="text-white font-semibold text-sm">❌ Pas disponible</span>
+            </label>
           </div>
-
-
           <div className="flex gap-2 pt-2 border-t border-gray-700">
-            <button 
-              type="button" 
-              onClick={onClose}
-              className="flex-1 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold text-sm transition-all"
-            >
-              Annuler
-            </button>
-            <button 
-              type="submit"
-              className="flex-1 py-2 bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 hover:from-blue-700 hover:via-cyan-700 hover:to-blue-700 text-white rounded-lg font-bold text-sm shadow-lg transition-all"
-            >
-              💾 Appliquer
-            </button>
+            <button onClick={onClose} className="flex-1 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold text-sm">Annuler</button>
+            <button onClick={() => onSave(isOnScreenScraper)} className="flex-1 py-2 bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 text-white rounded-lg font-bold text-sm shadow-lg">💾 Appliquer</button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
 };
 
-const ThemeCard = ({ 
-  theme, 
-  systemName, 
-  categoryName, 
-  onView, 
-  isSelected, 
-  onToggleSelect 
-}: {
+// ── BulkMultiEditModal ────────────────────────────────────────────────────────
+const BulkMultiEditModal = ({ selectedThemes, onSave, onClose }: {
+  selectedThemes: ThemeItem[];
+  onSave: (isMulti: boolean) => void;
+  onClose: () => void;
+}) => {
+  const [isMulti, setIsMulti] = useState(true);
+  const stats = useMemo(() => {
+    const multi = selectedThemes.filter(t => t.isMulti).length;
+    return { multi, notMulti: selectedThemes.length - multi };
+  }, [selectedThemes]);
+
+  return (
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onClose}>
+      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 max-w-lg w-full shadow-2xl"
+        style={{ borderColor: '#9333ea' }} onClick={e => e.stopPropagation()}>
+        <div className="p-3 flex items-center justify-between rounded-t-2xl"
+          style={{ background: 'linear-gradient(to right, #9333ea, #ec4899)' }}>
+          <h2 className="text-xl font-black text-white flex items-center gap-2">
+            <Globe className="w-6 h-6" />
+            Multi-région
+          </h2>
+          <button onClick={onClose} className="text-white hover:text-gray-200"><X className="w-6 h-6" /></button>
+        </div>
+        <div className="p-4 space-y-3">
+          <div className="bg-gray-950/50 rounded-lg p-3 border border-gray-700">
+            <div className="text-white font-semibold mb-2">
+              {selectedThemes.length} thème{selectedThemes.length > 1 ? 's' : ''} sélectionné{selectedThemes.length > 1 ? 's' : ''}
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="rounded-lg p-2" style={{ backgroundColor: 'rgba(147,51,234,0.2)', border: '1px solid rgba(147,51,234,0.5)' }}>
+                <div className="text-xs font-semibold mb-1" style={{ color: '#c084fc' }}>Multi-région</div>
+                <div className="text-white text-xl font-black">{stats.multi}</div>
+              </div>
+              <div className="bg-gray-700/40 border border-gray-600/50 rounded-lg p-2">
+                <div className="text-gray-400 text-xs font-semibold mb-1">Pas Multi</div>
+                <div className="text-white text-xl font-black">{stats.notMulti}</div>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <label className={`flex items-center gap-2 p-3 border-2 rounded-lg cursor-pointer transition-all ${isMulti ? 'border-purple-500' : 'bg-gray-900 border-gray-700 hover:border-gray-600'}`}
+              style={isMulti ? { backgroundColor: 'rgba(147,51,234,0.15)' } : {}}>
+              <input type="radio" name="multi" checked={isMulti} onChange={() => setIsMulti(true)} className="w-4 h-4 cursor-pointer" style={{ accentColor: '#9333ea' }} />
+              <span className="text-lg">🌍</span>
+              <span className="text-white font-semibold text-sm">Est Multi-région (PAL, USA, JAP…)</span>
+            </label>
+            <label className={`flex items-center gap-2 p-3 border-2 rounded-lg cursor-pointer transition-all ${!isMulti ? 'bg-gray-700/40 border-gray-500' : 'bg-gray-900 border-gray-700 hover:border-gray-600'}`}>
+              <input type="radio" name="multi" checked={!isMulti} onChange={() => setIsMulti(false)} className="w-4 h-4 cursor-pointer" />
+              <X className="w-5 h-5 text-gray-400" />
+              <span className="text-white font-semibold text-sm">Pas Multi-région</span>
+            </label>
+          </div>
+          <div className="flex gap-2 pt-2 border-t border-gray-700">
+            <button onClick={onClose} className="flex-1 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold text-sm">Annuler</button>
+            <button onClick={() => onSave(isMulti)}
+              className="flex-1 py-2 text-white rounded-lg font-bold text-sm shadow-lg"
+              style={{ background: 'linear-gradient(to right, #9333ea, #ec4899)' }}>
+              💾 Appliquer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── ThemeCard ─────────────────────────────────────────────────────────────────
+const ThemeCard = ({ theme, systemName, categoryName, onView, isSelected, onToggleSelect }: {
   theme: ThemeItem;
   systemName: string;
   categoryName: string;
@@ -548,16 +373,12 @@ const ThemeCard = ({
 
   return (
     <div className={`group relative bg-gradient-to-br from-gray-900 to-gray-950 rounded-xl overflow-hidden border-2 transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
-      isSelected ? 'border-orange-500 ring-4 ring-orange-500/30 shadow-lg shadow-orange-500/20' : 
+      isSelected ? 'border-orange-500 ring-4 ring-orange-500/30 shadow-lg shadow-orange-500/20' :
       hasProblem ? 'border-red-500/70' : 'border-gray-700/50 hover:border-orange-500/50'
     }`}>
       <div className="absolute top-2 left-2 z-10">
-        <button 
-          onClick={(e) => { e.stopPropagation(); onToggleSelect(); }}
-          className={`p-2 rounded-lg transition-all ${
-            isSelected ? 'bg-orange-500 text-white shadow-lg' : 'bg-gray-900/80 text-gray-400 hover:text-white hover:bg-gray-800'
-          }`}
-        >
+        <button onClick={(e) => { e.stopPropagation(); onToggleSelect(); }}
+          className={`p-2 rounded-lg transition-all ${isSelected ? 'bg-orange-500 text-white shadow-lg' : 'bg-gray-900/80 text-gray-400 hover:text-white hover:bg-gray-800'}`}>
           {isSelected ? <CheckSquare className="w-5 h-5" /> : <Square className="w-5 h-5" />}
         </button>
       </div>
@@ -567,31 +388,18 @@ const ThemeCard = ({
           <div className="w-full h-full flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-gray-900 to-gray-950">
             <ImageOff className="w-12 h-12 text-red-400" />
             <span className="text-red-400 text-xs font-bold">{invalidUrl ? 'URL invalide' : 'Erreur chargement'}</span>
-            {imageError && (
-              <button 
-                onClick={(e) => { e.stopPropagation(); setImageError(false); }}
-                className="text-xs text-blue-400 hover:text-blue-300 underline"
-              >
-                Réessayer
-              </button>
-            )}
           </div>
         ) : (
           <>
-            <img 
-              src={theme.imageUrl}
-              alt={theme.name} 
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-              onError={() => setImageError(true)}
-              referrerPolicy="no-referrer"
-            />
+            <img src={theme.imageUrl} alt={theme.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              onError={() => setImageError(true)} referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
               <Eye className="w-12 h-12 text-white" />
             </div>
           </>
         )}
       </div>
-      
+
       <div className="p-3 space-y-2">
         <h3 className="text-white font-bold text-base truncate">{theme.name}</h3>
         <p className={`text-sm font-bold flex items-center gap-1.5 ${missingCreator ? 'text-red-400' : 'text-gray-400'}`}>
@@ -606,15 +414,11 @@ const ThemeCard = ({
             {categoryName}
           </span>
           {theme.size && (
-            <span className="px-2 py-0.5 bg-gray-700 rounded-full text-gray-300 font-semibold">
-              {theme.size}
-            </span>
+            <span className="px-2 py-0.5 bg-gray-700 rounded-full text-gray-300 font-semibold">{theme.size}</span>
           )}
         </div>
         {theme.date && (
-          <div className="text-xs text-gray-400 flex items-center gap-1">
-            📅 {formatDateFR(theme.date)}
-          </div>
+          <div className="text-xs text-gray-400 flex items-center gap-1">📅 {formatDateFR(theme.date)}</div>
         )}
         {theme.onScreenScraper && (
           <div className="text-xs text-green-400 flex items-center gap-1 font-semibold">
@@ -625,11 +429,19 @@ const ThemeCard = ({
             ScreenScraper
           </div>
         )}
+        {/* ── Badge Multi ── */}
+        {theme.isMulti && (
+          <div className="text-xs flex items-center gap-1 font-semibold" style={{ color: '#c084fc' }}>
+            <Globe className="w-4 h-4" />
+            Multi-région
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
+// ── ManageTab ─────────────────────────────────────────────────────────────────
 export default function ManageTab({ themes, setThemes, saveThemes, systems, categories }: ManageTabProps) {
   const [filters, setFilters] = useState({
     search: '',
@@ -637,7 +449,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     system: '',
     onlyInvalidUrls: false,
     onlyMissingCreators: false,
-    onlyNotOnScreenScraper: false
+    onlyNotOnScreenScraper: false,
+    onlyMulti: false  // ← NOUVEAU
   });
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [sortBy, setSortBy] = useState<'name' | 'creator' | 'system'>('name');
@@ -647,7 +460,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const [viewTheme, setViewTheme] = useState<ThemeItem | null>(null);
   const [showImportModal, setShowImportModal] = useState(false);
   const [showBulkCreatorModal, setShowBulkCreatorModal] = useState(false);
-  const [showBulkScreenScraperModal, setShowBulkScreenScraperModal] = useState(false);  // NOUVEAU
+  const [showBulkScreenScraperModal, setShowBulkScreenScraperModal] = useState(false);
+  const [showBulkMultiModal, setShowBulkMultiModal] = useState(false);  // ← NOUVEAU
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [isCleaning, setIsCleaning] = useState(false);
 
@@ -663,14 +477,14 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     total: themes.length,
     invalidUrls: themes.filter(t => isInvalidUrl(t.imageUrl)).length,
     missingCreators: themes.filter(t => isUnknownCreator(t.creator)).length,
-    notOnScreenScraper: themes.filter(t => !t.onScreenScraper).length
+    notOnScreenScraper: themes.filter(t => !t.onScreenScraper).length,
+    multiCount: themes.filter(t => t.isMulti).length  // ← NOUVEAU
   }), [themes]);
 
   const themesWithConvertedUrls = useMemo(() => {
     return themes.map(theme => {
       const needsImageConversion = theme.imageUrl && !theme.imageUrl.includes('/thumbnail?');
       const needsDownloadConversion = theme.downloadUrl && !theme.downloadUrl.includes('/uc?');
-      
       return {
         ...theme,
         imageUrl: needsImageConversion ? ensureDisplayableUrl(theme.imageUrl, true) : theme.imageUrl,
@@ -687,6 +501,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       if (filters.onlyInvalidUrls && !isInvalidUrl(theme.imageUrl)) return false;
       if (filters.onlyMissingCreators && !isUnknownCreator(theme.creator)) return false;
       if (filters.onlyNotOnScreenScraper && theme.onScreenScraper) return false;
+      if (filters.onlyMulti && !theme.isMulti) return false;  // ← NOUVEAU
       return true;
     });
   }, [themesWithConvertedUrls, filters]);
@@ -694,11 +509,9 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
       let comparison = 0;
-      if (sortBy === 'name') {
-        comparison = a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-      } else if (sortBy === 'creator') {
-        comparison = a.creator.toLowerCase().localeCompare(b.creator.toLowerCase());
-      } else if (sortBy === 'system') {
+      if (sortBy === 'name') comparison = a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+      else if (sortBy === 'creator') comparison = a.creator.toLowerCase().localeCompare(b.creator.toLowerCase());
+      else if (sortBy === 'system') {
         const aName = availableSystems.find(s => s.id === a.system)?.name || a.system;
         const bName = availableSystems.find(s => s.id === b.system)?.name || b.system;
         comparison = aName.localeCompare(bName);
@@ -710,32 +523,24 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const totalPages = Math.ceil(sorted.length / itemsPerPage);
   const paginated = sorted.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  React.useEffect(() => {
-    setCurrentPage(1);
-  }, [filters, sortBy, sortAsc]);
+  React.useEffect(() => { setCurrentPage(1); }, [filters, sortBy, sortAsc]);
 
   const handleToggleSelect = (id: number) => {
-    setSelectedIds(prev => 
-      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
-    );
+    setSelectedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
   };
 
   const handleSelectAll = () => {
     const pageIds = paginated.map(t => t.id);
     const allPageSelected = pageIds.every(id => selectedIds.includes(id));
-    if (allPageSelected) {
-      setSelectedIds(prev => prev.filter(id => !pageIds.includes(id)));
-    } else {
-      setSelectedIds(prev => [...new Set([...prev, ...pageIds])]);
-    }
+    if (allPageSelected) setSelectedIds(prev => prev.filter(id => !pageIds.includes(id)));
+    else setSelectedIds(prev => [...new Set([...prev, ...pageIds])]);
   };
 
   const handleDelete = (themeId: number) => {
     const theme = themes.find(t => t.id === themeId);
     if (theme && confirm(`Supprimer "${theme.name}" ?`)) {
       const updated = themes.filter(t => t.id !== themeId);
-      setThemes(updated);
-      saveThemes(updated);
+      setThemes(updated); saveThemes(updated);
       showToast('🗑️ Thème supprimé', 'success');
       setViewTheme(null);
     }
@@ -745,183 +550,88 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     if (selectedIds.length === 0) return;
     if (confirm(`Supprimer ${selectedIds.length} thème(s) ?`)) {
       const updated = themes.filter(t => !selectedIds.includes(t.id));
-      setThemes(updated);
-      saveThemes(updated);
-      setSelectedIds([]);
+      setThemes(updated); saveThemes(updated); setSelectedIds([]);
       showToast(`🗑️ ${selectedIds.length} thème(s) supprimé(s)`, 'success');
     }
   };
 
   const handleBulkCreatorEdit = (newCreator: string) => {
-    const updated = themes.map(theme => 
-      selectedIds.includes(theme.id) 
-        ? { ...theme, creator: newCreator }
-        : theme
-    );
-    
-    setThemes(updated);
-    saveThemes(updated);
-    setSelectedIds([]);
-    setShowBulkCreatorModal(false);
+    const updated = themes.map(theme => selectedIds.includes(theme.id) ? { ...theme, creator: newCreator } : theme);
+    setThemes(updated); saveThemes(updated); setSelectedIds([]); setShowBulkCreatorModal(false);
     showToast(`✅ Créateur modifié pour ${selectedIds.length} thème(s)`, 'success');
   };
 
-  // NOUVELLE FONCTION POUR SCREENSCRAPER
   const handleBulkScreenScraperEdit = (isOnScreenScraper: boolean) => {
-    const updated = themes.map(theme => 
-      selectedIds.includes(theme.id) 
-        ? { ...theme, onScreenScraper: isOnScreenScraper }
-        : theme
-    );
-    
-    setThemes(updated);
-    saveThemes(updated);
-    setSelectedIds([]);
-    setShowBulkScreenScraperModal(false);
-    showToast(
-      `✅ Statut ScreenScraper modifié pour ${selectedIds.length} thème(s)`, 
-      'success'
-    );
+    const updated = themes.map(theme => selectedIds.includes(theme.id) ? { ...theme, onScreenScraper: isOnScreenScraper } : theme);
+    setThemes(updated); saveThemes(updated); setSelectedIds([]); setShowBulkScreenScraperModal(false);
+    showToast(`✅ Statut ScreenScraper modifié pour ${selectedIds.length} thème(s)`, 'success');
+  };
+
+  // ── NOUVEAU : handler Multi ──
+  const handleBulkMultiEdit = (isMulti: boolean) => {
+    const updated = themes.map(theme => selectedIds.includes(theme.id) ? { ...theme, isMulti } : theme);
+    setThemes(updated); saveThemes(updated); setSelectedIds([]); setShowBulkMultiModal(false);
+    showToast(`✅ Statut Multi modifié pour ${selectedIds.length} thème(s)`, 'success');
   };
 
   const handleSaveEdit = async (edited: ThemeItem) => {
     const updated = themes.map(t => t.id === edited.id ? edited : t);
-    setThemes(updated);
-    await saveThemes(updated);
-    setEditingTheme(null);
+    setThemes(updated); await saveThemes(updated); setEditingTheme(null);
     showToast('✅ Thème modifié', 'success');
   };
 
   const handleExport = () => {
     const toExport = selectedIds.length > 0 ? sorted.filter(t => selectedIds.includes(t.id)) : sorted;
-    
     const data = toExport.map(theme => ({
-      id: theme.id,
-      name: theme.name,
-      creator: theme.creator,
-      system: theme.system,
-      category: theme.category,
-      imageUrl: reverseConvertUrl(theme.imageUrl),
-      downloadUrl: reverseConvertUrl(theme.downloadUrl),
-      size: theme.size,
-      date: theme.date,
-      onScreenScraper: theme.onScreenScraper
+      id: theme.id, name: theme.name, creator: theme.creator, system: theme.system,
+      category: theme.category, imageUrl: reverseConvertUrl(theme.imageUrl),
+      downloadUrl: reverseConvertUrl(theme.downloadUrl), size: theme.size,
+      date: theme.date, onScreenScraper: theme.onScreenScraper, isMulti: theme.isMulti  // ← isMulti exporté
     }));
-    
     const filename = `themes_${selectedIds.length > 0 ? 'selection' : 'filtered'}_${new Date().toISOString().split('T')[0]}.json`;
     downloadJson(data, filename);
-    showToast(`✅ ${data.length} thème(s) exporté(s) avec IDs et dates`, 'success');
+    showToast(`✅ ${data.length} thème(s) exporté(s)`, 'success');
   };
 
   const handleImport = (imported: Omit<ThemeItem, 'id'>[]) => {
     const maxId = themes.length > 0 ? Math.max(...themes.map(t => t.id)) : 0;
     const newThemes = imported.map((t, i) => ({ ...t, id: maxId + i + 1 }));
     const updated = [...themes, ...newThemes];
-    setThemes(updated);
-    saveThemes(updated);
+    setThemes(updated); saveThemes(updated);
     showToast(`✅ ${newThemes.length} thème(s) importé(s)`, 'success');
   };
 
   const handleAutoCleanup = async () => {
-    if (!confirm('⚠️ ATTENTION : Cette fonction va vérifier si les fichiers ZIP existent toujours sur Google Drive.\n\nCela peut prendre du temps (plusieurs minutes).\n\nVoulez-vous continuer ?')) {
-      return;
-    }
-
-    // Backup automatique avant nettoyage
+    if (!confirm('⚠️ ATTENTION : Cette fonction va vérifier si les fichiers ZIP existent toujours sur Google Drive.\n\nCela peut prendre du temps.\n\nVoulez-vous continuer ?')) return;
     const backupFilename = `backup_avant_nettoyage_${new Date().toISOString().split('T')[0]}.json`;
     downloadJson(themes, backupFilename);
     showToast('💾 Backup créé : ' + backupFilename, 'success');
-    
     await new Promise(resolve => setTimeout(resolve, 1000));
-
-    if (!confirm('⚠️ DERNIÈRE CONFIRMATION\n\nLe backup a été téléchargé.\n\nNOTE : Google Drive peut bloquer certaines vérifications. Seuls les liens vraiment morts seront supprimés.\n\nContinuer ?')) {
-      return;
-    }
-
+    if (!confirm('⚠️ DERNIÈRE CONFIRMATION\n\nLe backup a été téléchargé. Continuer ?')) return;
     setIsCleaning(true);
     showToast('🔍 Vérification des fichiers ZIP...', 'success');
-    
     const validThemes: ThemeItem[] = [];
-    const suspiciousThemes: ThemeItem[] = [];
-    let deletedCount = 0;
-    let checkedCount = 0;
-
+    let deletedCount = 0; let checkedCount = 0;
     for (const theme of themes) {
       checkedCount++;
-      
       try {
-        // On essaie de charger juste les premiers bytes du fichier
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 8000);
-        
-        // Utiliser une requête GET avec Range pour tester sans tout télécharger
-        const response = await fetch(theme.downloadUrl, { 
-          method: 'GET',
-          headers: {
-            'Range': 'bytes=0-1' // Ne télécharge que 2 bytes
-          },
-          signal: controller.signal
-        });
-        
+        const response = await fetch(theme.downloadUrl, { method: 'GET', headers: { 'Range': 'bytes=0-1' }, signal: controller.signal });
         clearTimeout(timeoutId);
-        
-        // Si status 200 (OK) ou 206 (Partial Content) = fichier existe
-        if (response.ok || response.status === 206) {
-          validThemes.push(theme);
-        } else if (response.status === 404) {
-          // 404 = vraiment mort
-          deletedCount++;
-        } else {
-          // Autre erreur = on garde par sécurité
-          validThemes.push(theme);
-          suspiciousThemes.push(theme);
-        }
-      } catch (error: any) {
-        // En cas d'erreur réseau/timeout, on GARDE le thème par sécurité
-        validThemes.push(theme);
-        suspiciousThemes.push(theme);
-      }
-      
-      if (checkedCount % 5 === 0) {
-        showToast(`🔍 Vérification... ${checkedCount}/${themes.length}`, 'success');
-      }
+        if (response.ok || response.status === 206) validThemes.push(theme);
+        else if (response.status === 404) deletedCount++;
+        else validThemes.push(theme);
+      } catch { validThemes.push(theme); }
+      if (checkedCount % 5 === 0) showToast(`🔍 Vérification... ${checkedCount}/${themes.length}`, 'success');
     }
-
-    if (deletedCount > 0) {
-      setThemes(validThemes);
-      await saveThemes(validThemes);
-      showToast(`✅ Nettoyage terminé : ${deletedCount} thème(s) supprimé(s)`, 'success');
-      
-      if (suspiciousThemes.length > 0) {
-        setTimeout(() => {
-          showToast(`⚠️ ${suspiciousThemes.length} thème(s) non vérifiables conservés par sécurité`, 'success');
-        }, 2000);
-      }
-    } else {
-      showToast('✅ Aucun lien mort trouvé ! Tous les thèmes sont OK.', 'success');
-      
-      if (suspiciousThemes.length > 0) {
-        setTimeout(() => {
-          showToast(`ℹ️ ${suspiciousThemes.length} thème(s) non vérifiables (conservés)`, 'success');
-        }, 2000);
-      }
-    }
-    
+    if (deletedCount > 0) { setThemes(validThemes); await saveThemes(validThemes); showToast(`✅ Nettoyage terminé : ${deletedCount} thème(s) supprimé(s)`, 'success'); }
+    else showToast('✅ Aucun lien mort trouvé !', 'success');
     setIsCleaning(false);
   };
 
-  const resetFilters = () => {
-    setFilters({
-      search: '',
-      category: '',
-      system: '',
-      onlyInvalidUrls: false,
-      onlyMissingCreators: false,
-      onlyNotOnScreenScraper: false
-    });
-  };
-
-  const hasActiveFilters = filters.search || filters.category || filters.system || filters.onlyInvalidUrls || filters.onlyMissingCreators || filters.onlyNotOnScreenScraper;
+  const resetFilters = () => setFilters({ search: '', category: '', system: '', onlyInvalidUrls: false, onlyMissingCreators: false, onlyNotOnScreenScraper: false, onlyMulti: false });
+  const hasActiveFilters = filters.search || filters.category || filters.system || filters.onlyInvalidUrls || filters.onlyMissingCreators || filters.onlyNotOnScreenScraper || filters.onlyMulti;
   const selectedThemes = themes.filter(t => selectedIds.includes(t.id));
 
   if (themes.length === 0) {
@@ -929,9 +639,6 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       <div className="flex flex-col items-center justify-center min-h-[400px] text-gray-400">
         <AlertCircle className="w-12 h-12 mb-4 opacity-20" />
         <p className="text-xl font-medium">Aucun thème disponible</p>
-        <button onClick={() => setShowImportModal(true)} className="mt-4 text-orange-500 hover:underline">
-          Importer un fichier JSON
-        </button>
       </div>
     );
   }
@@ -940,6 +647,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black p-6">
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
+      {/* Header */}
       <div className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-1">
         <div className="bg-gray-900 rounded-[22px] p-6">
           <div className="flex items-center justify-between gap-4 flex-wrap">
@@ -963,27 +671,18 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
         </div>
       </div>
 
+      {/* Filtres */}
       <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 shadow-xl mb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div className="relative">
             <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input 
-              type="text" 
-              placeholder="Rechercher un thème..." 
-              value={filters.search}
+            <input type="text" placeholder="Rechercher un thème..." value={filters.search}
               onChange={e => setFilters({...filters, search: e.target.value})}
-              className="w-full pl-12 pr-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition-all" 
-            />
+              className="w-full pl-12 pr-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition-all" />
           </div>
-
-          <AutocompleteSelect
-            options={availableSystems}
-            value={filters.system}
+          <AutocompleteSelect options={availableSystems} value={filters.system}
             onChange={(value) => setFilters({...filters, system: value})}
-            placeholder="🎮 Rechercher un système..."
-            emptyLabel="Tous systèmes"
-          />
-
+            placeholder="🎮 Rechercher un système..." emptyLabel="Tous systèmes" />
           <select value={filters.category} onChange={e => setFilters({...filters, category: e.target.value})}
             className="px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none cursor-pointer transition-all">
             <option value="">🎨 Toutes catégories</option>
@@ -993,51 +692,30 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
 
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2 flex-wrap">
-            <button
-              onClick={() => setFilters({...filters, onlyInvalidUrls: !filters.onlyInvalidUrls})}
-              className={`px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${
-                filters.onlyInvalidUrls 
-                  ? 'bg-gradient-to-r from-red-600 to-pink-600 text-white shadow-lg' 
-                  : 'bg-gray-900 border border-gray-700 text-gray-300 hover:border-red-500'
-              }`}
-            >
-              <ImageOff className="w-4 h-4" />
-              URLs invalides
-              <span className={`px-2 py-0.5 rounded-full text-xs font-black ${
-                filters.onlyInvalidUrls ? 'bg-white text-red-600' : 'bg-gray-800 text-white'
-              }`}>{stats.invalidUrls}</span>
+            <button onClick={() => setFilters({...filters, onlyInvalidUrls: !filters.onlyInvalidUrls})}
+              className={`px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${filters.onlyInvalidUrls ? 'bg-gradient-to-r from-red-600 to-pink-600 text-white shadow-lg' : 'bg-gray-900 border border-gray-700 text-gray-300 hover:border-red-500'}`}>
+              <ImageOff className="w-4 h-4" />URLs invalides
+              <span className={`px-2 py-0.5 rounded-full text-xs font-black ${filters.onlyInvalidUrls ? 'bg-white text-red-600' : 'bg-gray-800 text-white'}`}>{stats.invalidUrls}</span>
             </button>
-
-            <button
-              onClick={() => setFilters({...filters, onlyMissingCreators: !filters.onlyMissingCreators})}
-              className={`px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${
-                filters.onlyMissingCreators 
-                  ? 'bg-gradient-to-r from-yellow-600 to-orange-600 text-white shadow-lg' 
-                  : 'bg-gray-900 border border-gray-700 text-gray-300 hover:border-yellow-500'
-              }`}
-            >
-              <User className="w-4 h-4" />
-              Créateurs manquants
-              <span className={`px-2 py-0.5 rounded-full text-xs font-black ${
-                filters.onlyMissingCreators ? 'bg-white text-yellow-600' : 'bg-gray-800 text-white'
-              }`}>{stats.missingCreators}</span>
+            <button onClick={() => setFilters({...filters, onlyMissingCreators: !filters.onlyMissingCreators})}
+              className={`px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${filters.onlyMissingCreators ? 'bg-gradient-to-r from-yellow-600 to-orange-600 text-white shadow-lg' : 'bg-gray-900 border border-gray-700 text-gray-300 hover:border-yellow-500'}`}>
+              <User className="w-4 h-4" />Créateurs manquants
+              <span className={`px-2 py-0.5 rounded-full text-xs font-black ${filters.onlyMissingCreators ? 'bg-white text-yellow-600' : 'bg-gray-800 text-white'}`}>{stats.missingCreators}</span>
             </button>
-            <button
-              onClick={() => setFilters({...filters, onlyNotOnScreenScraper: !filters.onlyNotOnScreenScraper})}
-              className={`px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${
-                filters.onlyNotOnScreenScraper 
-                  ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg' 
-                  : 'bg-gray-900 border border-gray-700 text-gray-300 hover:border-blue-500'
-              }`}
-            >
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-              </svg>
-              Pas sur ScreenScraper
-              <span className={`px-2 py-0.5 rounded-full text-xs font-black ${
-                filters.onlyNotOnScreenScraper ? 'bg-white text-blue-600' : 'bg-gray-800 text-white'
-              }`}>{stats.notOnScreenScraper}</span>
+            <button onClick={() => setFilters({...filters, onlyNotOnScreenScraper: !filters.onlyNotOnScreenScraper})}
+              className={`px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${filters.onlyNotOnScreenScraper ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg' : 'bg-gray-900 border border-gray-700 text-gray-300 hover:border-blue-500'}`}>
+              <Database className="w-4 h-4" />Pas sur ScreenScraper
+              <span className={`px-2 py-0.5 rounded-full text-xs font-black ${filters.onlyNotOnScreenScraper ? 'bg-white text-blue-600' : 'bg-gray-800 text-white'}`}>{stats.notOnScreenScraper}</span>
+            </button>
+            {/* ── Filtre Multi ── */}
+            <button onClick={() => setFilters({...filters, onlyMulti: !filters.onlyMulti})}
+              className={`px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${filters.onlyMulti ? 'text-white shadow-lg' : 'bg-gray-900 border border-gray-700 text-gray-300'}`}
+              style={filters.onlyMulti ? { background: 'linear-gradient(to right, #9333ea, #ec4899)' } : { borderColor: filters.onlyMulti ? '#9333ea' : undefined }}>
+              <Globe className="w-4 h-4" />Multi-région
+              <span className={`px-2 py-0.5 rounded-full text-xs font-black ${filters.onlyMulti ? 'bg-white' : 'bg-gray-800 text-white'}`}
+                style={filters.onlyMulti ? { color: '#9333ea' } : {}}>
+                {stats.multiCount}
+              </span>
             </button>
           </div>
 
@@ -1050,35 +728,24 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
                 <option value="creator">Par Créateur</option>
                 <option value="system">Par Système</option>
               </select>
-              
-              <button onClick={() => setSortAsc(!sortAsc)}
-                className="bg-gray-900 border border-gray-700 text-white rounded-lg px-3 py-2 hover:border-orange-500 transition-all">
+              <button onClick={() => setSortAsc(!sortAsc)} className="bg-gray-900 border border-gray-700 text-white rounded-lg px-3 py-2 hover:border-orange-500 transition-all">
                 <ArrowUpDown className={`w-4 h-4 transition-transform ${sortAsc ? '' : 'rotate-180'}`} />
               </button>
             </div>
-
-            <button onClick={() => setShowImportModal(true)}
-              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all">
-              <Upload className="w-4 h-4" />
-              Import
+            <button onClick={() => setShowImportModal(true)} className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all">
+              <Upload className="w-4 h-4" />Import
             </button>
-
-            <button onClick={handleExport}
-              className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all">
-              <Download className="w-4 h-4" />
-              Export ({selectedIds.length || sorted.length})
+            <button onClick={handleExport} className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all">
+              <Download className="w-4 h-4" />Export ({selectedIds.length || sorted.length})
             </button>
-
-            <button 
-              onClick={handleAutoCleanup}
-              disabled={isCleaning}
+            <button onClick={handleAutoCleanup} disabled={isCleaning}
               className="px-4 py-2 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all">
-              <Trash2 className="w-4 h-4" />
-              {isCleaning ? '🔍 Nettoyage...' : '🧹 Nettoyer liens morts'}
+              <Trash2 className="w-4 h-4" />{isCleaning ? '🔍 Nettoyage...' : '🧹 Nettoyer liens morts'}
             </button>
           </div>
         </div>
 
+        {/* Barre sélection bulk */}
         {selectedIds.length > 0 && (
           <div className="mt-4 flex items-center justify-between gap-3 p-4 bg-gradient-to-r from-orange-600/20 via-pink-600/20 to-purple-600/20 border border-orange-500/50 rounded-xl">
             <div className="flex items-center gap-2 text-orange-400 font-semibold">
@@ -1086,26 +753,24 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
               <span>{selectedIds.length} thème(s) sélectionné(s)</span>
             </div>
             <div className="flex gap-2 flex-wrap">
-              <button 
-                onClick={() => setShowBulkCreatorModal(true)}
+              <button onClick={() => setShowBulkCreatorModal(true)}
                 className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-semibold flex items-center gap-2 transition-all shadow-lg">
-                <Users className="w-4 h-4" />
-                Modifier créateurs
+                <Users className="w-4 h-4" />Modifier créateurs
               </button>
-              {/* NOUVEAU BOUTON SCREENSCRAPER */}
-              <button 
-                onClick={() => setShowBulkScreenScraperModal(true)}
+              <button onClick={() => setShowBulkScreenScraperModal(true)}
                 className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg font-semibold flex items-center gap-2 transition-all shadow-lg">
-                <Database className="w-4 h-4" />
-                Modifier ScreenScraper
+                <Database className="w-4 h-4" />Modifier ScreenScraper
               </button>
-              <button onClick={handleBulkDelete}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold flex items-center gap-2 transition-all">
-                <Trash2 className="w-4 h-4" />
-                Supprimer
+              {/* ── Bouton bulk Multi ── */}
+              <button onClick={() => setShowBulkMultiModal(true)}
+                className="px-4 py-2 text-white rounded-lg font-semibold flex items-center gap-2 transition-all shadow-lg hover:brightness-110"
+                style={{ background: 'linear-gradient(to right, #9333ea, #ec4899)' }}>
+                <Globe className="w-4 h-4" />Modifier Multi
               </button>
-              <button onClick={() => setSelectedIds([])}
-                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-semibold transition-all">
+              <button onClick={handleBulkDelete} className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold flex items-center gap-2 transition-all">
+                <Trash2 className="w-4 h-4" />Supprimer
+              </button>
+              <button onClick={() => setSelectedIds([])} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-semibold transition-all">
                 Désélectionner
               </button>
             </div>
@@ -1116,14 +781,12 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
           <div className="mt-4 flex items-center gap-2 text-sm text-gray-400 pt-3 border-t border-gray-700">
             <AlertCircle className="w-4 h-4" />
             <span>Filtres actifs - {filtered.length} sur {themes.length} thème(s)</span>
-            <button onClick={resetFilters}
-              className="ml-auto text-orange-400 hover:text-orange-300 font-semibold px-3 py-1 rounded hover:bg-orange-500/10 transition-all">
-              Réinitialiser
-            </button>
+            <button onClick={resetFilters} className="ml-auto text-orange-400 hover:text-orange-300 font-semibold px-3 py-1 rounded hover:bg-orange-500/10 transition-all">Réinitialiser</button>
           </div>
         )}
       </div>
 
+      {/* Grille */}
       {filtered.length === 0 ? (
         <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-12 border border-gray-700/50 text-center">
           <Search className="w-16 h-16 text-gray-600 mx-auto mb-4" />
@@ -1137,36 +800,22 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
               <Zap className="w-6 h-6 text-orange-400" />
               Résultats ({paginated.length} affichés sur {sorted.length})
             </h3>
-            
-            <button onClick={handleSelectAll}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-sm transition-all flex items-center gap-2">
-              {paginated.every(t => selectedIds.includes(t.id)) && paginated.length > 0 ? (
-                <>
-                  <Square className="w-4 h-4" />
-                  Tout désélectionner
-                </>
-              ) : (
-                <>
-                  <CheckSquare className="w-4 h-4" />
-                  Tout sélectionner
-                </>
-              )}
+            <button onClick={handleSelectAll} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-sm transition-all flex items-center gap-2">
+              {paginated.every(t => selectedIds.includes(t.id)) && paginated.length > 0
+                ? <><Square className="w-4 h-4" />Tout désélectionner</>
+                : <><CheckSquare className="w-4 h-4" />Tout sélectionner</>}
             </button>
           </div>
 
           {totalPages > 1 && (
             <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-700">
               <div className="text-sm text-gray-400">
-                Affichage <span className="text-white font-semibold">{((currentPage - 1) * itemsPerPage) + 1}</span> à{' '}
-                <span className="text-white font-semibold">{Math.min(currentPage * itemsPerPage, sorted.length)}</span> sur{' '}
-                <span className="text-white font-semibold">{sorted.length}</span>
+                Affichage <span className="text-white font-semibold">{((currentPage - 1) * itemsPerPage) + 1}</span> à <span className="text-white font-semibold">{Math.min(currentPage * itemsPerPage, sorted.length)}</span> sur <span className="text-white font-semibold">{sorted.length}</span>
               </div>
               <div className="flex gap-2">
                 <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1} className="px-3 py-1 bg-gray-900 rounded-lg text-white disabled:opacity-30">Premier</button>
                 <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="px-3 py-1 bg-gray-900 rounded-lg text-white disabled:opacity-30">Précédent</button>
-                <div className="px-4 py-2 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 text-white rounded-lg font-bold">
-                  Page {currentPage} / {totalPages}
-                </div>
+                <div className="px-4 py-2 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 text-white rounded-lg font-bold">Page {currentPage} / {totalPages}</div>
                 <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className="px-3 py-1 bg-gray-900 rounded-lg text-white disabled:opacity-30">Suivant</button>
                 <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages} className="px-3 py-1 bg-gray-900 rounded-lg text-white disabled:opacity-30">Dernier</button>
               </div>
@@ -1177,17 +826,10 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
             {paginated.map(theme => {
               const systemName = availableSystems.find(s => s.id === theme.system)?.name || theme.system;
               const categoryName = categories.find(c => c.id === theme.category)?.name || theme.category;
-              
               return (
-                <ThemeCard
-                  key={theme.id}
-                  theme={theme}
-                  systemName={systemName}
-                  categoryName={categoryName}
-                  onView={() => setViewTheme(theme)}
-                  isSelected={selectedIds.includes(theme.id)}
-                  onToggleSelect={() => handleToggleSelect(theme.id)}
-                />
+                <ThemeCard key={theme.id} theme={theme} systemName={systemName} categoryName={categoryName}
+                  onView={() => setViewTheme(theme)} isSelected={selectedIds.includes(theme.id)}
+                  onToggleSelect={() => handleToggleSelect(theme.id)} />
               );
             })}
           </div>
@@ -1195,17 +837,12 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
           {totalPages > 1 && (
             <div className="flex items-center justify-between pt-4 border-t border-gray-700">
               <div className="text-sm text-gray-400">
-                Affichage <span className="text-white font-semibold">{((currentPage - 1) * itemsPerPage) + 1}</span> à {' '}
-                <span className="text-white font-semibold">{Math.min(currentPage * itemsPerPage, sorted.length)}</span> sur{' '}
-                <span className="text-white font-semibold">{sorted.length}</span>
+                Affichage <span className="text-white font-semibold">{((currentPage - 1) * itemsPerPage) + 1}</span> à <span className="text-white font-semibold">{Math.min(currentPage * itemsPerPage, sorted.length)}</span> sur <span className="text-white font-semibold">{sorted.length}</span>
               </div>
-              
               <div className="flex gap-2">
                 <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1} className="px-3 py-1 bg-gray-900 rounded-lg text-white disabled:opacity-30">Premier</button>
                 <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="px-3 py-1 bg-gray-900 rounded-lg text-white disabled:opacity-30">Précédent</button>
-                <div className="px-4 py-2 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 text-white rounded-lg font-bold">
-                  Page {currentPage} / {totalPages}
-                </div>
+                <div className="px-4 py-2 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 text-white rounded-lg font-bold">Page {currentPage} / {totalPages}</div>
                 <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className="px-3 py-1 bg-gray-900 rounded-lg text-white disabled:opacity-30">Suivant</button>
                 <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages} className="px-3 py-1 bg-gray-900 rounded-lg text-white disabled:opacity-30">Dernier</button>
               </div>
@@ -1214,128 +851,71 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
         </div>
       )}
 
+      {/* Modales */}
       {viewTheme && (
-        <PreviewModal
-          theme={viewTheme}
-          onClose={() => setViewTheme(null)}
+        <PreviewModal theme={viewTheme} onClose={() => setViewTheme(null)}
           onEdit={() => { setEditingTheme(viewTheme); setViewTheme(null); }}
-          onDelete={() => handleDelete(viewTheme.id)}
-          systems={systems}
-          categories={categories}
-        />
+          onDelete={() => handleDelete(viewTheme.id)} systems={systems} categories={categories} />
       )}
-
       {editingTheme && (
-        <EditModal
-          theme={editingTheme}
-          onSave={handleSaveEdit}
-          onClose={() => setEditingTheme(null)}
-          systems={systems}
-          categories={categories}
-        />
+        <EditModal theme={editingTheme} onSave={handleSaveEdit} onClose={() => setEditingTheme(null)}
+          systems={systems} categories={categories} />
       )}
-
-      {showImportModal && (
-        <ImportModal
-          onImport={handleImport}
-          onClose={() => setShowImportModal(false)}
-        />
-      )}
-
+      {showImportModal && <ImportModal onImport={handleImport} onClose={() => setShowImportModal(false)} />}
       {showBulkCreatorModal && selectedThemes.length > 0 && (
-        <BulkCreatorEditModal
-          selectedThemes={selectedThemes}
-          onSave={handleBulkCreatorEdit}
-          onClose={() => setShowBulkCreatorModal(false)}
-        />
+        <BulkCreatorEditModal selectedThemes={selectedThemes} onSave={handleBulkCreatorEdit} onClose={() => setShowBulkCreatorModal(false)} />
       )}
-
-      {/* NOUVELLE MODALE SCREENSCRAPER */}
       {showBulkScreenScraperModal && selectedThemes.length > 0 && (
-        <BulkScreenScraperEditModal
-          selectedThemes={selectedThemes}
-          onSave={handleBulkScreenScraperEdit}
-          onClose={() => setShowBulkScreenScraperModal(false)}
-        />
+        <BulkScreenScraperEditModal selectedThemes={selectedThemes} onSave={handleBulkScreenScraperEdit} onClose={() => setShowBulkScreenScraperModal(false)} />
+      )}
+      {/* ── Modale Multi ── */}
+      {showBulkMultiModal && selectedThemes.length > 0 && (
+        <BulkMultiEditModal selectedThemes={selectedThemes} onSave={handleBulkMultiEdit} onClose={() => setShowBulkMultiModal(false)} />
       )}
     </div>
   );
 }
 
+// ── PreviewModal ──────────────────────────────────────────────────────────────
 const PreviewModal = ({ theme, onClose, onEdit, onDelete, systems, categories }: {
-  theme: ThemeItem;
-  onClose: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
-  systems: SystemRow[];
-  categories: Category[];
+  theme: ThemeItem; onClose: () => void; onEdit: () => void; onDelete: () => void;
+  systems: SystemRow[]; categories: Category[];
 }) => {
   const systemName = systems.find(s => s.id === theme.system)?.name || theme.system;
   const categoryName = categories.find(c => c.id === theme.category)?.name || theme.category;
-
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-orange-500 max-w-2xl w-full shadow-2xl" onClick={e => e.stopPropagation()}>
         <div className="bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-4 flex items-center justify-between rounded-t-2xl">
           <h2 className="text-2xl font-black text-white">👁️ Prévisualisation</h2>
-          <button onClick={onClose} className="text-white hover:text-gray-200">
-            <X className="w-6 h-6" />
-          </button>
+          <button onClick={onClose} className="text-white hover:text-gray-200"><X className="w-6 h-6" /></button>
         </div>
-        
         <div className="p-6 space-y-4">
           <div className="relative h-64 rounded-xl overflow-hidden bg-gray-950">
-            {theme.imageUrl && !isInvalidUrl(theme.imageUrl) ? (
-              <img src={theme.imageUrl} alt={theme.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <ImageOff className="w-16 h-16 text-red-400" />
-              </div>
-            )}
+            {theme.imageUrl && !isInvalidUrl(theme.imageUrl)
+              ? <img src={theme.imageUrl} alt={theme.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              : <div className="w-full h-full flex items-center justify-center"><ImageOff className="w-16 h-16 text-red-400" /></div>}
           </div>
-          
           <div className="space-y-3">
-            <div>
-              <span className="text-gray-400 text-sm">Nom:</span>
-              <p className="text-white font-bold text-xl">{theme.name}</p>
-            </div>
-            <div>
-              <span className="text-gray-400 text-sm">Créateur:</span>
-              <p className="text-orange-400 font-semibold">{theme.creator || 'Inconnu'}</p>
-            </div>
+            <div><span className="text-gray-400 text-sm">Nom:</span><p className="text-white font-bold text-xl">{theme.name}</p></div>
+            <div><span className="text-gray-400 text-sm">Créateur:</span><p className="text-orange-400 font-semibold">{theme.creator || 'Inconnu'}</p></div>
             <div className="flex gap-2 flex-wrap">
-              <span className="px-3 py-1 bg-blue-600 text-white text-sm font-semibold rounded-full">
-                🎮 {systemName}
-              </span>
-              <span className="px-3 py-1 bg-orange-600 text-white text-sm font-semibold rounded-full">
-                {categoryName}
-              </span>
-              <span className="px-3 py-1 bg-gray-700 text-gray-300 text-sm font-semibold rounded-full">
-                {theme.size}
-              </span>
-              {theme.date && (
-                <span className="px-3 py-1 bg-purple-600 text-white text-sm font-semibold rounded-full">
-                  📅 {formatDateFR(theme.date)}
-                </span>
-              )}
+              <span className="px-3 py-1 bg-blue-600 text-white text-sm font-semibold rounded-full">🎮 {systemName}</span>
+              <span className="px-3 py-1 bg-orange-600 text-white text-sm font-semibold rounded-full">{categoryName}</span>
+              <span className="px-3 py-1 bg-gray-700 text-gray-300 text-sm font-semibold rounded-full">{theme.size}</span>
+              {theme.date && <span className="px-3 py-1 bg-purple-600 text-white text-sm font-semibold rounded-full">📅 {formatDateFR(theme.date)}</span>}
+              {theme.isMulti && <span className="px-3 py-1 text-white text-sm font-semibold rounded-full" style={{ background: 'linear-gradient(to right, #9333ea, #ec4899)' }}>🌍 Multi-région</span>}
             </div>
           </div>
-          
           <div className="flex gap-3 pt-4">
-            <button onClick={onEdit}
-              className="flex-1 py-3 bg-gradient-to-r from-orange-600 to-pink-600 hover:from-orange-700 hover:to-pink-700 text-white rounded-lg font-bold flex items-center justify-center gap-2">
-              <Edit2 className="w-5 h-5" />
-              Modifier
+            <button onClick={onEdit} className="flex-1 py-3 bg-gradient-to-r from-orange-600 to-pink-600 hover:from-orange-700 hover:to-pink-700 text-white rounded-lg font-bold flex items-center justify-center gap-2">
+              <Edit2 className="w-5 h-5" />Modifier
             </button>
-            <button onClick={onDelete}
-              className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold flex items-center justify-center gap-2">
-              <Trash2 className="w-5 h-5" />
-              Supprimer
+            <button onClick={onDelete} className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold flex items-center justify-center gap-2">
+              <Trash2 className="w-5 h-5" />Supprimer
             </button>
-            <a href={theme.downloadUrl} target="_blank" rel="noopener noreferrer"
-              className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold flex items-center justify-center gap-2">
-              <Download className="w-5 h-5" />
-              Télécharger
+            <a href={theme.downloadUrl} target="_blank" rel="noopener noreferrer" className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold flex items-center justify-center gap-2">
+              <Download className="w-5 h-5" />Télécharger
             </a>
           </div>
         </div>
@@ -1344,26 +924,17 @@ const PreviewModal = ({ theme, onClose, onEdit, onDelete, systems, categories }:
   );
 };
 
+// ── EditModal ─────────────────────────────────────────────────────────────────
 const EditModal = ({ theme, onSave, onClose, systems, categories }: {
-  theme: ThemeItem;
-  onSave: (theme: ThemeItem) => void;
-  onClose: () => void;
-  systems: SystemRow[];
-  categories: Category[];
+  theme: ThemeItem; onSave: (theme: ThemeItem) => void; onClose: () => void;
+  systems: SystemRow[]; categories: Category[];
 }) => {
   const [editData, setEditData] = useState<ThemeItem>({ ...theme });
   const availableSystems = systems.filter(s => !s.isHeader && !s.isSubHeader);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({
-      ...editData,
-      name: editData.name.trim(),
-      creator: editData.creator.trim(),
-      imageUrl: editData.imageUrl.trim(),
-      downloadUrl: editData.downloadUrl.trim(),
-      size: editData.size.trim()
-    });
+    onSave({ ...editData, name: editData.name.trim(), creator: editData.creator.trim(), imageUrl: editData.imageUrl.trim(), downloadUrl: editData.downloadUrl.trim(), size: editData.size.trim() });
   };
 
   return (
@@ -1371,23 +942,18 @@ const EditModal = ({ theme, onSave, onClose, systems, categories }: {
       <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-orange-500 max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
         <div className="sticky top-0 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-4 flex items-center justify-between z-10">
           <h2 className="text-2xl font-black text-white">✏️ Modifier le thème</h2>
-          <button onClick={onClose} className="text-white hover:text-gray-200">
-            <X className="w-6 h-6" />
-          </button>
+          <button onClick={onClose} className="text-white hover:text-gray-200"><X className="w-6 h-6" /></button>
         </div>
-        
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-bold text-gray-300 mb-2">Nom du thème *</label>
-              <input type="text" required value={editData.name} 
-                onChange={e => setEditData({...editData, name: e.target.value})}
+              <input type="text" required value={editData.name} onChange={e => setEditData({...editData, name: e.target.value})}
                 className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
             </div>
             <div>
               <label className="block text-sm font-bold text-gray-300 mb-2">Créateur *</label>
-              <input type="text" required value={editData.creator} 
-                onChange={e => setEditData({...editData, creator: e.target.value})}
+              <input type="text" required value={editData.creator} onChange={e => setEditData({...editData, creator: e.target.value})}
                 className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
             </div>
             <div>
@@ -1409,7 +975,6 @@ const EditModal = ({ theme, onSave, onClose, systems, categories }: {
               <input type="text" value={editData.size} onChange={e => setEditData({...editData, size: e.target.value})}
                 className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
             </div>
-
             {editData.date && (
               <div>
                 <label className="block text-sm font-bold text-gray-300 mb-2">📅 Date</label>
@@ -1417,47 +982,53 @@ const EditModal = ({ theme, onSave, onClose, systems, categories }: {
                   className="w-full p-3 bg-gray-900 border border-gray-700 rounded-xl text-gray-400 cursor-not-allowed" />
               </div>
             )}
-            
+
+            {/* Checkbox ScreenScraper */}
             <div className="md:col-span-2">
               <label className="flex items-center gap-3 p-4 bg-gray-950 border border-gray-700 rounded-xl cursor-pointer hover:border-blue-500 transition">
-                <input 
-                  type="checkbox" 
-                  checked={editData.onScreenScraper || false}
+                <input type="checkbox" checked={editData.onScreenScraper || false}
                   onChange={e => setEditData({...editData, onScreenScraper: e.target.checked})}
-                  className="w-5 h-5 rounded border-gray-600 text-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-0 bg-gray-800 cursor-pointer"
-                />
+                  className="w-5 h-5 rounded border-gray-600 text-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-0 bg-gray-800 cursor-pointer" />
                 <div className="flex items-center gap-2">
                   <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                     <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-sm font-bold text-gray-300">
-                    Disponible sur ScreenScraper
-                  </span>
+                  <span className="text-sm font-bold text-gray-300">Disponible sur ScreenScraper</span>
+                </div>
+              </label>
+            </div>
+
+            {/* ── Checkbox Multi ── */}
+            <div className="md:col-span-2">
+              <label className="flex items-center gap-3 p-4 bg-gray-950 border border-gray-700 rounded-xl cursor-pointer hover:border-purple-500 transition">
+                <input type="checkbox" checked={editData.isMulti || false}
+                  onChange={e => setEditData({...editData, isMulti: e.target.checked})}
+                  className="w-5 h-5 rounded border-gray-600 focus:ring-2 focus:ring-purple-500/20 focus:ring-offset-0 bg-gray-800 cursor-pointer"
+                  style={{ accentColor: '#9333ea' }} />
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">🌍</span>
+                  <span className="text-sm font-bold text-gray-300">Thème Multi-région (PAL, USA, JAP, etc.)</span>
+                  <span className="px-2 py-0.5 rounded-full text-xs font-semibold" style={{ background: 'linear-gradient(to right, #9333ea, #ec4899)', color: 'white' }}>Multi</span>
                 </div>
               </label>
             </div>
           </div>
-          
+
           <div>
             <label className="block text-sm font-bold text-gray-300 mb-2">URL de l'image</label>
             <input type="url" value={editData.imageUrl} onChange={e => setEditData({...editData, imageUrl: e.target.value})}
               className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
           </div>
-          
           <div>
             <label className="block text-sm font-bold text-gray-300 mb-2">URL de téléchargement</label>
             <input type="url" value={editData.downloadUrl} onChange={e => setEditData({...editData, downloadUrl: e.target.value})}
               className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
           </div>
-          
+
           <div className="flex gap-3 pt-4 border-t border-gray-700">
-            <button type="button" onClick={onClose} className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold">
-              Annuler
-            </button>
-            <button type="submit" className="flex-1 py-3 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 text-white rounded-lg font-bold shadow-lg">
-              💾 Enregistrer
-            </button>
+            <button type="button" onClick={onClose} className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold">Annuler</button>
+            <button type="submit" className="flex-1 py-3 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 text-white rounded-lg font-bold shadow-lg">💾 Enregistrer</button>
           </div>
         </form>
       </div>
@@ -1465,10 +1036,8 @@ const EditModal = ({ theme, onSave, onClose, systems, categories }: {
   );
 };
 
-const ImportModal = ({ onImport, onClose }: {
-  onImport: (themes: Omit<ThemeItem, 'id'>[]) => void;
-  onClose: () => void;
-}) => {
+// ── ImportModal ───────────────────────────────────────────────────────────────
+const ImportModal = ({ onImport, onClose }: { onImport: (themes: Omit<ThemeItem, 'id'>[]) => void; onClose: () => void; }) => {
   const [jsonText, setJsonText] = useState('');
   const [error, setError] = useState('');
 
@@ -1476,25 +1045,17 @@ const ImportModal = ({ onImport, onClose }: {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (event) => {
-      setJsonText(event.target?.result as string);
-      setError('');
-    };
+    reader.onload = (event) => { setJsonText(event.target?.result as string); setError(''); };
     reader.readAsText(file);
   };
 
   const handleImport = () => {
     try {
       const parsed = JSON.parse(jsonText);
-      if (!Array.isArray(parsed)) {
-        setError('Le fichier doit contenir un tableau');
-        return;
-      }
+      if (!Array.isArray(parsed)) { setError('Le fichier doit contenir un tableau'); return; }
       onImport(parsed);
       onClose();
-    } catch (err) {
-      setError('JSON invalide : ' + (err as Error).message);
-    }
+    } catch (err) { setError('JSON invalide : ' + (err as Error).message); }
   };
 
   return (
@@ -1504,35 +1065,28 @@ const ImportModal = ({ onImport, onClose }: {
           <h2 className="text-2xl font-black text-white">📥 Importer des thèmes</h2>
           <button onClick={onClose} className="text-white"><X className="w-6 h-6" /></button>
         </div>
-        
         <div className="p-6 space-y-4">
           <div>
             <label className="block text-sm font-bold text-gray-300 mb-2">Charger un fichier JSON</label>
             <input type="file" accept=".json" onChange={handleFileUpload}
-              className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gradient-to-r file:from-orange-600 file:to-pink-600 file:text-white hover:file:from-orange-700 hover:file:to-pink-700 cursor-pointer" />
+              className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gradient-to-r file:from-orange-600 file:to-pink-600 file:text-white cursor-pointer" />
           </div>
-          
           <div>
             <label className="block text-sm font-bold text-gray-300 mb-2">Ou coller le JSON directement</label>
-            <textarea value={jsonText} onChange={e => { setJsonText(e.target.value); setError(''); }} rows={10} placeholder='[{"name":"Theme 1","creator":"John","system":"ps4","category":"gaming",...}]'
+            <textarea value={jsonText} onChange={e => { setJsonText(e.target.value); setError(''); }} rows={10}
+              placeholder='[{"name":"Theme 1","creator":"John","system":"ps4","category":"gaming",...}]'
               className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none font-mono text-sm" />
           </div>
-          
           {error && (
             <div className="p-3 bg-red-600/20 border border-red-500 rounded-xl flex items-center gap-2 text-red-400">
-              <AlertCircle className="w-5 h-5" />
-              <span className="font-semibold">{error}</span>
+              <AlertCircle className="w-5 h-5" /><span className="font-semibold">{error}</span>
             </div>
           )}
-          
           <div className="flex gap-3 pt-4 border-t border-gray-700">
-            <button onClick={onClose} className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold">
-              Annuler
-            </button>
-            <button onClick={handleImport} disabled={!jsonText} 
+            <button onClick={onClose} className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold">Annuler</button>
+            <button onClick={handleImport} disabled={!jsonText}
               className="flex-1 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold flex items-center justify-center gap-2">
-              <Upload className="w-5 h-5" />
-              Importer
+              <Upload className="w-5 h-5" />Importer
             </button>
           </div>
         </div>
