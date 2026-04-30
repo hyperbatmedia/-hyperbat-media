@@ -16582,6 +16582,18 @@
     "date": "2026-01-14"
   },
   {
+    "id": 51036,
+    "name": "megacd multi region",
+    "creator": "Roni et Dav",
+    "system": "megacd",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1mog-WN1WYh5mYBhnsXT58Yx6-ZX6YwG0/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/162dS5cjWFfXwjZ7xbZzGIUNXglVU9X6q/view?usp=sharing",
+    "size": "4.3 MB",
+    "date": "2026-04-30",
+    "isMulti": true
+  },
+  {
     "id": 8837,
     "name": "megadrive",
     "creator": "Dav",
@@ -21517,6 +21529,18 @@
     "size": "3.7 MB",
     "date": "2026-02-18",
     "onScreenScraper": true
+  },
+  {
+    "id": 51197,
+    "name": "sega32x",
+    "creator": "Roni et Dav",
+    "system": "32x",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/190U82OSAOotGx7uQe3iXs_QiHqF17hLK/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1oLcKKfx3WMGZk0XKP6dopklkiRqJRLcd/view?usp=sharing",
+    "size": "2.7 MB",
+    "date": "2026-04-29",
+    "isMulti": true
   },
   {
     "id": 20310,
