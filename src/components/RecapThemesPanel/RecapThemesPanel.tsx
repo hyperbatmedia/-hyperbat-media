@@ -21,6 +21,7 @@ interface SystemRow {
   inBatocera: boolean;
   systemThemes: number;
   defaultThemes: number;
+  gameThemes: number;
   total: number;
 }
 
@@ -40,7 +41,7 @@ const parseExistsOn = (existsOn: string) => {
 };
 
 const exportCSV = (rows: SystemRow[]) => {
-  const headers = ['Slug', 'Nom système', 'RetroBat', 'Batocera', 'Thèmes système', 'Thèmes défaut', 'Total'];
+  const headers = ['Slug', 'Nom système', 'RetroBat', 'Batocera', 'Thèmes système', 'Thèmes défaut', 'Thèmes jeu', 'Total'];
   const lines = [
     headers.join(';'),
     ...rows.map(r => [
@@ -50,10 +51,12 @@ const exportCSV = (rows: SystemRow[]) => {
       r.inBatocera ? 'OUI' : 'NON',
       r.systemThemes,
       r.defaultThemes,
+      r.gameThemes,
       r.total,
     ].join(';'))
   ];
-  const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  // BOM UTF-8 (\uFEFF) + CRLF pour compatibilité Excel / LibreOffice
+  const blob = new Blob(['\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -68,7 +71,7 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
   const [search, setSearch] = useState('');
   const [filterPlatform, setFilterPlatform] = useState<'all' | 'retrobat' | 'batocera' | 'both' | 'none'>('all');
   const [filterMissing, setFilterMissing] = useState<'all' | 'system' | 'default' | 'both-missing'>('all');
-  const [sortBy, setSortBy] = useState<'name' | 'system' | 'default' | 'total'>('name');
+  const [sortBy, setSortBy] = useState<'name' | 'system' | 'default' | 'game' | 'total'>('name');
   const [sortAsc, setSortAsc] = useState(true);
 
   // ── Calcul des compteurs ──────────────────────────────────────────────────
@@ -97,6 +100,10 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
         t => matchingSlugs.includes(t.system) && t.category === 'default-themes'
       ).length;
 
+      const gameThemes = themes.filter(
+        t => matchingSlugs.includes(t.system) && t.category === 'game-themes'
+      ).length;
+
       return {
         slug: sys.slug,
         fullname: sys.fullname,
@@ -104,7 +111,8 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
         inBatocera,
         systemThemes,
         defaultThemes,
-        total: systemThemes + defaultThemes,
+        gameThemes,
+        total: systemThemes + defaultThemes + gameThemes,
       };
     });
   }, [themes]);
@@ -114,7 +122,8 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
     total: rows.length,
     withSystem: rows.filter(r => r.systemThemes > 0).length,
     withDefault: rows.filter(r => r.defaultThemes > 0).length,
-    missingBoth: rows.filter(r => r.systemThemes === 0 && r.defaultThemes === 0).length,
+    withGame: rows.filter(r => r.gameThemes > 0).length,
+    missingBoth: rows.filter(r => r.systemThemes === 0 && r.defaultThemes === 0 && r.gameThemes === 0).length,
     retrobat: rows.filter(r => r.inRetrobat).length,
     batocera: rows.filter(r => r.inBatocera).length,
   }), [rows]);
@@ -137,7 +146,7 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
         filterMissing === 'all' ? true :
         filterMissing === 'system' ? r.systemThemes === 0 :
         filterMissing === 'default' ? r.defaultThemes === 0 :
-        filterMissing === 'both-missing' ? r.systemThemes === 0 && r.defaultThemes === 0 : true;
+        filterMissing === 'both-missing' ? r.systemThemes === 0 && r.defaultThemes === 0 && r.gameThemes === 0 : true;
 
       return matchSearch && matchPlatform && matchMissing;
     });
@@ -147,6 +156,7 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
       if (sortBy === 'name') cmp = a.fullname.localeCompare(b.fullname);
       else if (sortBy === 'system') cmp = a.systemThemes - b.systemThemes;
       else if (sortBy === 'default') cmp = a.defaultThemes - b.defaultThemes;
+      else if (sortBy === 'game') cmp = a.gameThemes - b.gameThemes;
       else if (sortBy === 'total') cmp = a.total - b.total;
       return sortAsc ? cmp : -cmp;
     });
@@ -219,6 +229,7 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
               { label: 'Total systèmes', value: stats.total, color: '#FFA500' },
               { label: 'Ont thème système', value: stats.withSystem, color: '#22c55e' },
               { label: 'Ont thème défaut', value: stats.withDefault, color: '#60A5FA' },
+              { label: 'Ont thème jeu', value: stats.withGame, color: '#f472b6' },
               { label: 'Aucun thème', value: stats.missingBoth, color: '#ef4444' },
               { label: 'RetroBat', value: stats.retrobat, color: '#a78bfa' },
               { label: 'Batocera', value: stats.batocera, color: '#34d399' },
@@ -331,6 +342,13 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
                     </div>
                   </th>
                   <th className="px-4 py-3 text-center font-bold border-b cursor-pointer select-none"
+                    style={{ borderColor, color: '#f472b6' }}
+                    onClick={() => handleSort('game')}>
+                    <div className="flex items-center justify-center gap-1">
+                      Thèmes jeu <SortIcon col="game" />
+                    </div>
+                  </th>
+                  <th className="px-4 py-3 text-center font-bold border-b cursor-pointer select-none"
                     style={{ borderColor, color: '#FFD700' }}
                     onClick={() => handleSort('total')}>
                     <div className="flex items-center justify-center gap-1">
@@ -392,6 +410,14 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
                       {row.defaultThemes === 0
                         ? <span style={{ color: '#ef4444' }}>0</span>
                         : <span style={{ color: '#60A5FA' }}>{row.defaultThemes}</span>
+                      }
+                    </td>
+
+                    {/* Thèmes jeu */}
+                    <td className="px-4 py-2.5 border-b text-center font-black text-base" style={{ borderColor }}>
+                      {row.gameThemes === 0
+                        ? <span style={{ color: '#ef4444' }}>0</span>
+                        : <span style={{ color: '#f472b6' }}>{row.gameThemes}</span>
                       }
                     </td>
 
