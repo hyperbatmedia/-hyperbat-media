@@ -1,6 +1,6 @@
 // Fichier: src/HyperBatMediaSite.tsx 
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download, TableProperties } from 'lucide-react';
+import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download } from 'lucide-react';
 
 import { ThemeItem } from './types';
 import { categories, CART_MAX } from './constants';
@@ -12,6 +12,8 @@ import AdminPanel, { AdminTab } from './components/AdminPanel/AdminPanel';
 import ThemeList from './components/ThemeList/ThemeList';
 import CartPanel from './components/CartPanel/CartPanel';
 import RecapThemesPanel from './components/RecapThemesPanel/RecapThemesPanel';
+import bobSystemsData from './data/bob-systems.json';
+import { resolveBobSlug } from './data/systemAliases';
 
 const THEMES_PER_PAGE = 20;
 
@@ -114,6 +116,23 @@ export default function HyperBatMediaSite(): JSX.Element {
     const screenScraperThemes = themes.filter(t => t.onScreenScraper === true).length;
     const total = themes.length;
     return { multiThemes, collectionThemes, artworkThemes, gameThemes, systemThemes, defaultThemes, magazineThemes, screenScraperThemes, total };
+  }, [themes]);
+
+  // ── Systèmes sans aucun thème (même logique que RecapThemesPanel) ──────────
+  const missingSystemsCount = useMemo(() => {
+    const bobSystems = bobSystemsData as { slug: string }[];
+    const allThemeSlugs = [...new Set(themes.map(t => t.system))];
+    const bobSlugToThemeSlugs = new Map<string, string[]>();
+    for (const themeSlug of allThemeSlugs) {
+      const bobSlug = resolveBobSlug(themeSlug);
+      if (!bobSlug) continue;
+      if (!bobSlugToThemeSlugs.has(bobSlug)) bobSlugToThemeSlugs.set(bobSlug, []);
+      bobSlugToThemeSlugs.get(bobSlug)!.push(themeSlug);
+    }
+    return bobSystems.filter(sys => {
+      const matchingSlugs = bobSlugToThemeSlugs.get(sys.slug) ?? [sys.slug];
+      return themes.filter(t => matchingSlugs.includes(t.system)).length === 0;
+    }).length;
   }, [themes]);
 
   const handleSearchChange = (value: string) => {
@@ -282,15 +301,6 @@ export default function HyperBatMediaSite(): JSX.Element {
                     {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                   </button>
 
-                  {/* ── Bouton Récap Thèmes ── */}
-                  <button
-                    onClick={() => setShowRecapPanel(true)}
-                    className="p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
-                    style={{ backgroundColor: colors.cardBg, borderColor: '#4b5563', color: '#FFA500' }}
-                    title="Récap des thèmes par système">
-                    <TableProperties className="w-5 h-5" />
-                  </button>
-
                   {/* ── Bouton Panier ── */}
                   <button
                     onClick={() => setCartOpen(true)}
@@ -328,6 +338,23 @@ export default function HyperBatMediaSite(): JSX.Element {
                     </button>
                   )}
                 </div>
+              </div>
+
+              {/* ── Bandeau manques ── */}
+              <div className="flex items-center justify-between px-3 py-2.5 rounded-lg mb-3 border mr-auto w-[360px]"
+                style={{ backgroundColor: isDarkMode ? '#0d0d1a' : '#fef2f2', borderColor: isDarkMode ? '#1f2937' : '#fecaca' }}>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-base font-black" style={{ color: '#ef4444' }}>{missingSystemsCount}</span>
+                  <span className="text-sm" style={{ color: isDarkMode ? '#9ca3af' : '#6b7280' }}>
+                    système{missingSystemsCount > 1 ? 's' : ''} sans thème
+                  </span>
+                </div>
+                <button
+                  onClick={() => setShowRecapPanel(true)}
+                  className="flex items-center gap-1 px-2 py-1 rounded-lg font-bold text-xs border-2 transition hover:brightness-110"
+                  style={{ backgroundColor: '#cc6f00', borderColor: '#b8960a', color: 'white' }}>
+                  Voir le récap
+                </button>
               </div>
             </>
           )}
