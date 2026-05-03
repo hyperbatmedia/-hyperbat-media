@@ -1,6 +1,6 @@
 // Fichier: src/HyperBatMediaSite.tsx 
-import { lazy, Suspense, useState, useMemo, useEffect, useCallback } from 'react';
-import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download } from 'lucide-react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
+import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download, TableProperties } from 'lucide-react';
 
 import { ThemeItem } from './types';
 import { categories, CART_MAX } from './constants';
@@ -8,11 +8,10 @@ import { useThemeStorage } from './hooks/useThemeStorage';
 import { useSystemsLogic } from './hooks/useSystemsLogic';
 import { getThemeKey } from './utils/themeUtils';
 import Sidebar from './components/Sidebar/Sidebar';
-import type { AdminTab } from './components/AdminPanel/AdminPanel';
+import AdminPanel, { AdminTab } from './components/AdminPanel/AdminPanel'; 
 import ThemeList from './components/ThemeList/ThemeList';
 import CartPanel from './components/CartPanel/CartPanel';
-
-const AdminPanel = lazy(() => import('./components/AdminPanel/AdminPanel'));
+import RecapThemesPanel from './components/RecapThemesPanel/RecapThemesPanel';
 
 const THEMES_PER_PAGE = 20;
 
@@ -59,6 +58,7 @@ export default function HyperBatMediaSite(): JSX.Element {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [sortBy, setSortBy] = useState<'name' | 'date'>('name');
   const [showAdminPanel, setShowAdminPanel] = useState<boolean>(false);
+  const [showRecapPanel, setShowRecapPanel] = useState<boolean>(false);
   const [adminTab, setAdminTab] = useState<AdminTab>('manage');
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
     try { return localStorage.getItem('sidebar-collapsed') === 'true'; } catch { return false; }
@@ -120,6 +120,7 @@ export default function HyperBatMediaSite(): JSX.Element {
     if (value.toLowerCase() === 'canafloche') { setShowAdminPanel(true); setSearchTerm(''); }
     else setSearchTerm(value);
   };
+
 
   const filteredThemes = useMemo(() => {
     const searchLower = searchTerm.toLowerCase();
@@ -281,6 +282,15 @@ export default function HyperBatMediaSite(): JSX.Element {
                     {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                   </button>
 
+                  {/* ── Bouton Récap Thèmes ── */}
+                  <button
+                    onClick={() => setShowRecapPanel(true)}
+                    className="p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
+                    style={{ backgroundColor: colors.cardBg, borderColor: '#4b5563', color: '#FFA500' }}
+                    title="Récap des thèmes par système">
+                    <TableProperties className="w-5 h-5" />
+                  </button>
+
                   {/* ── Bouton Panier ── */}
                   <button
                     onClick={() => setCartOpen(true)}
@@ -382,19 +392,11 @@ export default function HyperBatMediaSite(): JSX.Element {
               )}
 
               {showAdminPanel && (
-                <Suspense
-                  fallback={(
-                    <div className="min-h-[320px] flex items-center justify-center rounded-xl border border-gray-700 bg-gray-900/70">
-                      <p className="text-lg font-bold" style={{ color: '#FF8C00' }}>Chargement admin...</p>
-                    </div>
-                  )}
-                >
-                  <AdminPanel
-                    themes={rawThemes} setThemes={setThemes} saveThemes={saveThemes}
-                    systems={systemsLogic.systems} categories={categories}
-                    adminTab={adminTab} setAdminTab={setAdminTab}
-                  />
-                </Suspense>
+                <AdminPanel
+                  themes={rawThemes} setThemes={setThemes} saveThemes={saveThemes}
+                  systems={systemsLogic.systems} categories={categories}
+                  adminTab={adminTab} setAdminTab={setAdminTab}
+                />
               )}
 
               {!showAdminPanel && (
@@ -437,6 +439,15 @@ export default function HyperBatMediaSite(): JSX.Element {
           onClear={handleCartClear}
           onClose={() => setCartOpen(false)}
           systems={systemsLogic.systems}
+          isDarkMode={isDarkMode}
+        />
+      )}
+
+      {/* ── Récap Thèmes ── */}
+      {showRecapPanel && (
+        <RecapThemesPanel
+          themes={themes}
+          onClose={() => setShowRecapPanel(false)}
           isDarkMode={isDarkMode}
         />
       )}

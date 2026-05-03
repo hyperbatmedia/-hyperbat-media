@@ -1,0 +1,1512 @@
+[
+  {
+    "slug": "2ship",
+    "fullname": "2 Ship 2 Harkinian",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "3do",
+    "fullname": "3DO",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "3ds",
+    "fullname": "Nintendo 3DS",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "abuse",
+    "fullname": "Abuse",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "actionmax",
+    "fullname": "Actionmax",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "adam",
+    "fullname": "ADAM",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "advision",
+    "fullname": "Adventure Vision",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "amazon",
+    "fullname": "Amazon Prime Gaming",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "amiga1200",
+    "fullname": "Amiga AGA",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "amiga4000",
+    "fullname": "Amiga 4000",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "amiga500",
+    "fullname": "Amiga OCS/ECS",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "amigacd32",
+    "fullname": "Amiga CD32",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "amigacdtv",
+    "fullname": "Amiga CDTV",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "amstradcpc",
+    "fullname": "Amstrad CPC",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "apfm1000",
+    "fullname": "APF M-1000",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "apple2",
+    "fullname": "Apple II",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "apple2gs",
+    "fullname": "Apple IIGS",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "aquarius",
+    "fullname": "Mattel Aquarius",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "arcadia",
+    "fullname": "Arcadia 2001",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "archimedes",
+    "fullname": "Archimedes",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "arduboy",
+    "fullname": "Arduboy",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "astrocade",
+    "fullname": "Astrocade",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "atari2600",
+    "fullname": "Atari 2600",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "atari5200",
+    "fullname": "Atari 5200",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "atari7800",
+    "fullname": "Atari 7800",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "atari800",
+    "fullname": "Atari 800",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "atarijaguar",
+    "fullname": "Jaguar",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "atarijaguarcd",
+    "fullname": "Jaguar CD",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "atarilynx",
+    "fullname": "Lynx",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "atarist",
+    "fullname": "Atari ST",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "atom",
+    "fullname": "Atom",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "atomiswave",
+    "fullname": "Atomiswave",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "bbcmicro",
+    "fullname": "BBC Micro",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "beena",
+    "fullname": "Advanced Pico Beena",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "bennugd",
+    "fullname": "BennuGD",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "bk",
+    "fullname": "Elektronika BK",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "bstone",
+    "fullname": "Blake Stone",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "bsyndrome",
+    "fullname": "Bermuda Syndrome",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "c128",
+    "fullname": "Commodore 128",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "c16",
+    "fullname": "Commodore 16",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "c20",
+    "fullname": "VIC-20",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "c64",
+    "fullname": "Commodore 64",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "camplynx",
+    "fullname": "Camputers Lynx",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "cannonball",
+    "fullname": "Cannonball",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "cassettevision",
+    "fullname": "Cassette Vision",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "catacomb",
+    "fullname": "CatacombGL",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "cave",
+    "fullname": "CAVE",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "cave3rd",
+    "fullname": "Cave CV1000",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "cavestory",
+    "fullname": "Cavestory",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "cdi",
+    "fullname": "Philips CD-i",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "cdogs",
+    "fullname": "CDogs",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "cgenie",
+    "fullname": "Colour Genie",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "cgenius",
+    "fullname": "Commander Genius",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "channelf",
+    "fullname": "Fairchild Channel F",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "chihiro",
+    "fullname": "Chihiro",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "coco",
+    "fullname": "TRS-80 Color Computer",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "colecovision",
+    "fullname": "ColecoVision",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "commanderx16",
+    "fullname": "Commander X16",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "corsixth",
+    "fullname": "CorsixTH",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "cplus4",
+    "fullname": "Commodore Plus4",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "cps1",
+    "fullname": "CPS-I",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "cps2",
+    "fullname": "CPS-II",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "cps3",
+    "fullname": "CPS-III",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "creativision",
+    "fullname": "CreatiVision",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "ctvboy",
+    "fullname": "Compact Vision TV Boy",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "daphne",
+    "fullname": "Laserdisc",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "devilutionx",
+    "fullname": "DevilutionX - Diablo Open-Source Implementation",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "dice",
+    "fullname": "DICE",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "dinothawr",
+    "fullname": "Dinothawr",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "doom3",
+    "fullname": "Doom 3",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "dragon32",
+    "fullname": "Dragon 32/64",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "dragon64",
+    "fullname": "Dragon 64",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "dreamcast",
+    "fullname": "Dreamcast",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "dxx-rebirth",
+    "fullname": "DXX Rebirth",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "eagames",
+    "fullname": "EA Games",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "easyrpg",
+    "fullname": "EasyRPG - RPG Maker 2000/2003 player",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "ecwolf",
+    "fullname": "ECWolf",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "eduke32",
+    "fullname": "Duke Nukem 3D",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "electron",
+    "fullname": "Electron",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "enterprise",
+    "fullname": "Enterprise",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "epic",
+    "fullname": "EPIC",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "etlegacy",
+    "fullname": "Wolfenstein - Enemy Territory",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "exodos",
+    "fullname": "eXoDOS",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "fallout1-ce",
+    "fullname": "Fallout Community Edition",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "fallout2-ce",
+    "fullname": "Fallout 2 Community Edition",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "fbneo",
+    "fullname": "Final Burn",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "fds",
+    "fullname": "Nintendo Family Computer Disk System",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "flash",
+    "fullname": "flash",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "flatpak",
+    "fullname": "Applications",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "fm7",
+    "fullname": "FM-7",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "fmtowns",
+    "fullname": "FM Towns",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "fpinball",
+    "fullname": "Future Pinball",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "fury",
+    "fullname": "Ion Fury",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "gaelco",
+    "fullname": "Gaelco PowerVR",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "gamate",
+    "fullname": "Gamate",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "gameandwatch",
+    "fullname": "Game and Watch",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "gamecom",
+    "fullname": "Game.com",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "gamegear",
+    "fullname": "Game Gear",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "gamepock",
+    "fullname": "Game Pocket Computer",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "gb",
+    "fullname": "Game Boy",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "gb2players",
+    "fullname": "Game Boy 2 Players",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "gba",
+    "fullname": "Game Boy Advance",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "gba2players",
+    "fullname": "Game Boy Advance 2 Players",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "gbc",
+    "fullname": "Game Boy Color",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "gbc2players",
+    "fullname": "Game Boy Color 2 Players",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "gc",
+    "fullname": "GameCube",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "gemrb",
+    "fullname": "GemRB - Infinity Engine Open-Source Implementation",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "ghostship",
+    "fullname": "Ghostship",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "gmaster",
+    "fullname": "Game Master",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "gog",
+    "fullname": "GOG.com",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "gp32",
+    "fullname": "Game Park 32",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "gx4000",
+    "fullname": "Amstrad GX4000",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "gzdoom",
+    "fullname": "GZDoom",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "halflife",
+    "fullname": "Half-Life",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "hbmame",
+    "fullname": "MAME Homebrew",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "hcl",
+    "fullname": "Hydra Castle Labyrinth",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "hikaru",
+    "fullname": "Hikaru",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "hurrican",
+    "fullname": "Hurrican",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "ikemen",
+    "fullname": "IKEMEN",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "intellivision",
+    "fullname": "Mattel Intellivision",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "j2me",
+    "fullname": "Java 2 MicroEdition",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "jazz2",
+    "fullname": "Jazz Jackrabbit 2",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "jkdf2",
+    "fullname": "Jedi Knight - Dark Forces 2",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "jknight",
+    "fullname": "Star Wars - Jedi Academy",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "karaoke",
+    "fullname": "Karaoke",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "laser310",
+    "fullname": "Laser 310",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "laseractive",
+    "fullname": "Pioneer Laserdisc",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "lcdgames",
+    "fullname": "LCD Games",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "library",
+    "fullname": "Library",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "lindbergh",
+    "fullname": "Sega Lindbergh",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "loopy",
+    "fullname": "Casio Loopy",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "love",
+    "fullname": "LÖVE",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "lowresnx",
+    "fullname": "Lowres NX",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "lutro",
+    "fullname": "Lutro Lua Framework",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "macintosh",
+    "fullname": "Macintosh",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "mame",
+    "fullname": "MAME",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "mastersystem",
+    "fullname": "Master System - Mark III",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "mc10",
+    "fullname": "MC-10",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "megacd",
+    "fullname": "Mega CD",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "megadrive",
+    "fullname": "Megadrive - Genesis",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "megadrive-msu",
+    "fullname": "MD-MSU",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "megaduck",
+    "fullname": "Mega Duck",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "mess",
+    "fullname": "MESS",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "model2",
+    "fullname": "Model 2",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "model3",
+    "fullname": "Model 3",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "mohaa",
+    "fullname": "Medal Of Honor - Allied Assault",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "moonlight",
+    "fullname": "Moonlight",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "mrboom",
+    "fullname": "MrBoom",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "msx1",
+    "fullname": "MSX",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "msx2",
+    "fullname": "MSX2",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "msx2+",
+    "fullname": "MSX2+",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "msxturbor",
+    "fullname": "MSX turbo R",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "mugen",
+    "fullname": "MUGEN",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "multivision",
+    "fullname": "Multivision",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "mz2000",
+    "fullname": "Sharp MZ-2000",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "mz2500",
+    "fullname": "Sharp MZ-2500",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "mz700",
+    "fullname": "Sharp MZ-700",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "mz800",
+    "fullname": "Sharp MZ-800",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "mz80k",
+    "fullname": "Sharp MZ-80K",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "n64",
+    "fullname": "Nintendo 64",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "n64dd",
+    "fullname": "Nintendo 64 Disk Drive",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "namco22",
+    "fullname": "Namco System 22",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "namco2x6",
+    "fullname": "Namco 246/256",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "namco3xx",
+    "fullname": "Namco 357/369",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "naomi",
+    "fullname": "Naomi",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "naomi2",
+    "fullname": "Naomi 2",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "nds",
+    "fullname": "Nintendo DS",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "neogeo",
+    "fullname": "Neo Geo",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "neogeo64",
+    "fullname": "Hyper Neo Geo 64",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "neogeocd",
+    "fullname": "Neo Geo CD",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "nes",
+    "fullname": "Nintendo Entertainment System - Famicom",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "ngage",
+    "fullname": "N-Gage",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "ngp",
+    "fullname": "Neo Geo Pocket",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "ngpc",
+    "fullname": "Neo Geo Pocket Color",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "odcommander",
+    "fullname": "OD-Commander",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "odyssey2",
+    "fullname": "Odyssey² - Videopac",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "openbor",
+    "fullname": "Openbor",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "opengoal",
+    "fullname": "OpenGOAL",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "openjazz",
+    "fullname": "OpenJazz",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "openlara",
+    "fullname": "OpenLara",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "oric",
+    "fullname": "Oric/Atmos",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "p2000t",
+    "fullname": "P2000T",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "pc",
+    "fullname": "DOS",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "pc60",
+    "fullname": "PC-6000",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "pc80",
+    "fullname": "PC-8001",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "pc88",
+    "fullname": "PC-8800",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "pc98",
+    "fullname": "PC-9800",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "pce-cd",
+    "fullname": "PC Engine CD",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "pcengine",
+    "fullname": "PC Engine",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "pcfx",
+    "fullname": "PC-FX",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "pcw",
+    "fullname": "Amstrad PCW",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "pdark",
+    "fullname": "Perfect Dark",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "pdp1",
+    "fullname": "PDP-1",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "pegasus",
+    "fullname": "Pegasus",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "pet",
+    "fullname": "Commodore PET",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "pico",
+    "fullname": "Sega Pico",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "pico8",
+    "fullname": "PICO-8",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "pinballfx",
+    "fullname": "Pinball FX",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "pinballfx2",
+    "fullname": "Pinball FX2",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "pinballfx3",
+    "fullname": "Pinball FX3",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "pinballm",
+    "fullname": "Pinball M",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "pokemini",
+    "fullname": "Pokemon-Mini",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "ports",
+    "fullname": "Ports",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "powerbomberman",
+    "fullname": "Power Bomberman",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "prboom",
+    "fullname": "PrBoom",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "ps2",
+    "fullname": "Playstation 2",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "ps3",
+    "fullname": "Playstation 3",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "ps4",
+    "fullname": "Playstation 4",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "psp",
+    "fullname": "PlayStation Portable",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "psvita",
+    "fullname": "PlayStation Vita",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "psx",
+    "fullname": "PlayStation",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "pv1000",
+    "fullname": "PV-1000",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "pv2000",
+    "fullname": "PV-2000",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "pygame",
+    "fullname": "Pygame",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "pyxel",
+    "fullname": "pyxel",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "quake",
+    "fullname": "Quake",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "quake2",
+    "fullname": "Quake II",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "quake3",
+    "fullname": "Quake III",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "raze",
+    "fullname": "Raze",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "recordings",
+    "fullname": "Recordings",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "reminiscence",
+    "fullname": "REminiscence",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "retrobat",
+    "fullname": "RetroBat",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "rott",
+    "fullname": "Rise of the Triad",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "rtcw",
+    "fullname": "RealRTCW",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "rx78",
+    "fullname": "RX-78",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "samcoupe",
+    "fullname": "Samcoupé",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "satellaview",
+    "fullname": "Satellaview",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "saturn",
+    "fullname": "Saturn",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "sc-3000",
+    "fullname": "SC-3000",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "screenshots",
+    "fullname": "Screenshots",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "scummvm",
+    "fullname": "ScummVM",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "scv",
+    "fullname": "Super Cassette Vision",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "sdlpop",
+    "fullname": "SdlPop",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "sega32x",
+    "fullname": "32X",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "segaai",
+    "fullname": "Sega AI Computer",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "segastv",
+    "fullname": "ST-V",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "sg-1000",
+    "fullname": "SG-1000",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "sgb",
+    "fullname": "Super Game Boy",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "sgb-msu1",
+    "fullname": "GameBoy MSU",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "singe",
+    "fullname": "Singe",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "snes",
+    "fullname": "Super Nintendo Entertainment System",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "snes-msu1",
+    "fullname": "Super NES MSU-1",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "socrates",
+    "fullname": "Socrates",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "soh",
+    "fullname": "Ship of Harkinian",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "solarus",
+    "fullname": "Solarus",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "sonic3-air",
+    "fullname": "Sonic 3 AIR",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "sonic-mania",
+    "fullname": "Sonic Mania",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "sonicretro",
+    "fullname": "Sonic Retro",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "spectravideo",
+    "fullname": "Spectravideo SV-318",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "starship",
+    "fullname": "Starship",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "steam",
+    "fullname": "Steam",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "sufami",
+    "fullname": "SuFami Turbo",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "superbroswar",
+    "fullname": "Super Mario War",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "supergrafx",
+    "fullname": "SuperGrafx",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "supervision",
+    "fullname": "Watara SuperVision",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "supracan",
+    "fullname": "Super A'Can",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "sv8000",
+    "fullname": "Super Vision 8000",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "switch",
+    "fullname": "Switch",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "systemsp",
+    "fullname": "Sega System SP",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "teknoparrot",
+    "fullname": "TeknoParrot",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "theforceengine",
+    "fullname": "The Force Engine",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "thextech",
+    "fullname": "TheXTech",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "thomson",
+    "fullname": "Thomson - MO/TO",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "ti99",
+    "fullname": "TI-99/4A",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "tic80",
+    "fullname": "TIC-80",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "traider1",
+    "fullname": "Tomb Raider",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "traider2",
+    "fullname": "Tomb Raider 2",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "triforce",
+    "fullname": "Triforce",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "trs80",
+    "fullname": "TRS-80",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "tutor",
+    "fullname": "Tutor",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "tvc",
+    "fullname": "Videoton TVC",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "tvgames",
+    "fullname": "TV Games",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "tyrian",
+    "fullname": "Tyrian",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "uzebox",
+    "fullname": "Uzebox",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "vc4000",
+    "fullname": "VC4000",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "vectrex",
+    "fullname": "Vectrex",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "vg5k",
+    "fullname": "VG5000",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "vgmplay",
+    "fullname": "Video Game Music Player",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "videopacplus",
+    "fullname": "Videopac+ G7400",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "vircon32",
+    "fullname": "Vircon32",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "virtualboy",
+    "fullname": "Virtual Boy",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "vis",
+    "fullname": "Tandy Video Information System",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "vpinball",
+    "fullname": "Visual Pinball",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "vsmile",
+    "fullname": "V.Smile",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "wasm4",
+    "fullname": "WASM-4",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "wii",
+    "fullname": "Wii",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "wiiu",
+    "fullname": "Wii U",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "windows",
+    "fullname": "Windows",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "windows_installers",
+    "fullname": "Install a new Windows game",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "wonderswan",
+    "fullname": "WonderSwan",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "wonderswancolor",
+    "fullname": "WonderSwan Color",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "x1",
+    "fullname": "Sharp X1",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "x68000",
+    "fullname": "Sharp X68000",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "xbox",
+    "fullname": "Xbox",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "xbox360",
+    "fullname": "Xbox 360",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "xegs",
+    "fullname": "Atari XE Game System",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "xrick",
+    "fullname": "xrick",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "zaccariapinball",
+    "fullname": "Zaccaria Pinball",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "zeldac",
+    "fullname": "Zelda Classic",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "zinc",
+    "fullname": "Zinc",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "zx81",
+    "fullname": "ZX 81",
+    "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "zxspectrum",
+    "fullname": "ZX Spectrum",
+    "existsOn": "Batocera + Retrobat"
+  }
+]
