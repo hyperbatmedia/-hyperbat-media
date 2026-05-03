@@ -107,6 +107,14 @@
           "downloadUrl": "https://drive.google.com/drive/folders/1LYTtyc8I0LXbcSCeK_MwN-pWzt9_9N5m?usp=sharing",
           "creator": "Dav"
         },
+		{
+          "id": "tool-002",
+          "name": "HyperBat",
+          "description": "HyperBat est un éditeur visuel de thèmes pour RetroBat, pensé pour le thème HyperBat de Bob Morane (style HyperSpin). Composez, animez et exportez vos thèmes en quelques clics.",
+          "imageUrl": "https://drive.google.com/file/d/1rrYQi-WPO7tI4J3hXi7hfreTnEuX9n0H/view?usp=drive_link",
+          "downloadUrl": "https://hyperbat.phenix-dev.com/",
+          "creator": "Phenix"
+        },
         {
           "id": "tool-arrm",
           "name": "ARRM",
