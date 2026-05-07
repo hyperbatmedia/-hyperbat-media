@@ -788,7 +788,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
               <Upload className="w-4 h-4" />Import
             </button>
             <button onClick={handleExport} className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all">
-              <Download className="w-4 h-4" />Export ({selectedIds.length || sorted.length})
+              <Download className="w-4 h-4" />DL themes.json ({themes.length})
             </button>
             <button onClick={handleGithubButtonClick} disabled={isPushing}
               className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all">

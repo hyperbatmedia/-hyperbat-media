@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction, FC } from 'react';
 import {
   Edit2,
-  FileJson,
   FolderOpen,
   RefreshCw,
   Database,
@@ -9,13 +8,12 @@ import {
 } from 'lucide-react';
 import { ThemeItem, SystemRow, Category } from '../../types';
 import ManageTab from './ManageTab';
-import ImportTab from './ImportTab';
 import DriveTab from './DriveTab';
 import SyncTab from './SyncTab';
 import ScreenScraperSyncTab from './ScreenScraperSyncTab';
 import { extractDriveFileId, isUnknownCreator } from './DriveTab/DriveHelpers';
 
-export type AdminTab = 'manage' | 'import' | 'drive-import' | 'sync' | 'screenscraper-sync';
+export type AdminTab = 'manage' | 'drive-import' | 'sync' | 'screenscraper-sync';
 
 interface AdminPanelProps {
   themes: ThemeItem[];
@@ -88,7 +86,6 @@ const AdminPanel: FC<AdminPanelProps> = ({
       idMap.set(theme.id, theme);
     }
 
-
     for (const incoming of newThemes) {
       const key = makeKey(incoming);
       const existing = themeMap.get(key);
@@ -152,7 +149,6 @@ const AdminPanel: FC<AdminPanelProps> = ({
 
         <div className="flex flex-wrap gap-2 mb-8 border-b border-gray-700 pb-4">
           <TabButton tab="manage" currentTab={adminTab} setAdminTab={setAdminTab} icon={Edit2} label="Gérer" />
-          <TabButton tab="import" currentTab={adminTab} setAdminTab={setAdminTab} icon={FileJson} label="Importer JSON" />
           <TabButton tab="drive-import" currentTab={adminTab} setAdminTab={setAdminTab} icon={FolderOpen} label="Import Drive" />
           <TabButton tab="sync" currentTab={adminTab} setAdminTab={setAdminTab} icon={RefreshCw} label="Synchronisation" />
           <TabButton tab="screenscraper-sync" currentTab={adminTab} setAdminTab={setAdminTab} icon={Database} label="ScreenScraper Sync" />
@@ -189,18 +185,6 @@ const AdminPanel: FC<AdminPanelProps> = ({
               await saveThemes(updatedThemes);
               setThemes(updatedThemes);
             }}
-          />
-        )}
-
-        {adminTab === 'import' && (
-          <ImportTab
-            themes={themes}
-            setThemes={setThemes}
-            saveThemes={saveThemes}
-            systems={systems}
-            categories={categories}
-            setAdminTab={setAdminTab}
-            onImportThemes={handleImportThemes}
           />
         )}
       </div>
