@@ -464,6 +464,9 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const [showBulkMultiModal, setShowBulkMultiModal] = useState(false);  // ← NOUVEAU
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [isCleaning, setIsCleaning] = useState(false);
+  const [showGithubModal, setShowGithubModal] = useState(false);
+  const [githubTokenInput, setGithubTokenInput] = useState('');
+  const [isPushing, setIsPushing] = useState(false);
 
   const itemsPerPage = 52;
   const availableSystems = systems.filter(s => !s.isHeader && !s.isSubHeader);
@@ -581,16 +584,65 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   };
 
   const handleExport = () => {
-    const toExport = selectedIds.length > 0 ? sorted.filter(t => selectedIds.includes(t.id)) : sorted;
-    const data = toExport.map(theme => ({
+    const data = themes.map(theme => ({
       id: theme.id, name: theme.name, creator: theme.creator, system: theme.system,
       category: theme.category, imageUrl: reverseConvertUrl(theme.imageUrl),
       downloadUrl: reverseConvertUrl(theme.downloadUrl), size: theme.size,
-      date: theme.date, onScreenScraper: theme.onScreenScraper, isMulti: theme.isMulti  // ← isMulti exporté
+      date: theme.date, onScreenScraper: theme.onScreenScraper, isMulti: theme.isMulti
     }));
-    const filename = `themes_${selectedIds.length > 0 ? 'selection' : 'filtered'}_${new Date().toISOString().split('T')[0]}.json`;
+    const filename = `themes_${new Date().toISOString().split('T')[0]}.json`;
     downloadJson(data, filename);
     showToast(`✅ ${data.length} thème(s) exporté(s)`, 'success');
+  };
+
+  const handleGithubPush = async (token: string) => {
+    setIsPushing(true);
+    try {
+      const owner = 'hyperbatmedia';
+      const repo = '-hyperbat-media';
+      const branch = 'main';
+      const path = 'src/data/themes.json';
+
+      // Préparer le contenu complet (tous les thèmes, pas juste le filtre)
+      const allThemesData = themes.map(theme => ({
+        id: theme.id, name: theme.name, creator: theme.creator, system: theme.system,
+        category: theme.category, imageUrl: reverseConvertUrl(theme.imageUrl),
+        downloadUrl: reverseConvertUrl(theme.downloadUrl), size: theme.size,
+        date: theme.date, onScreenScraper: theme.onScreenScraper, isMulti: theme.isMulti
+      }));
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(allThemesData, null, 2))));
+
+      // 1. Récupérer le SHA du fichier existant
+      const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`, {
+        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
+      });
+      if (!getRes.ok) throw new Error(`Erreur récupération SHA: ${getRes.status}`);
+      const fileData = await getRes.json();
+      const sha = fileData.sha;
+
+      // 2. Pousser le nouveau contenu
+      const pushRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: `Update themes.json (${themes.length} thèmes) - ${new Date().toLocaleDateString('fr-FR')}`,
+          content,
+          sha,
+          branch
+        })
+      });
+      if (!pushRes.ok) throw new Error(`Erreur push: ${pushRes.status}`);
+      showToast(`✅ themes.json poussé sur GitHub (${themes.length} thèmes)`, 'success');
+      setShowGithubModal(false);
+    } catch (err) {
+      showToast(`❌ Erreur GitHub : ${err instanceof Error ? err.message : 'Inconnue'}`, 'error');
+    } finally {
+      setIsPushing(false);
+    }
+  };
+
+  const handleGithubButtonClick = () => {
+    setShowGithubModal(true);
   };
 
   const handleImport = (imported: Omit<ThemeItem, 'id'>[]) => {
@@ -738,6 +790,14 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
             <button onClick={handleExport} className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all">
               <Download className="w-4 h-4" />Export ({selectedIds.length || sorted.length})
             </button>
+            <button onClick={handleGithubButtonClick} disabled={isPushing}
+              className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all">
+              {isPushing ? (
+                <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />Push...</>
+              ) : (
+                <><Globe className="w-4 h-4" />Push GitHub</>
+              )}
+            </button>
             <button onClick={handleAutoCleanup} disabled={isCleaning}
               className="px-4 py-2 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all">
               <Trash2 className="w-4 h-4" />{isCleaning ? '🔍 Nettoyage...' : '🧹 Nettoyer liens morts'}
@@ -871,6 +931,49 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       {/* ── Modale Multi ── */}
       {showBulkMultiModal && selectedThemes.length > 0 && (
         <BulkMultiEditModal selectedThemes={selectedThemes} onSave={handleBulkMultiEdit} onClose={() => setShowBulkMultiModal(false)} />
+      )}
+
+      {/* ── Modale GitHub Token ── */}
+      {showGithubModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={() => setShowGithubModal(false)}>
+          <div className="bg-gray-800 rounded-2xl border-2 border-purple-500 max-w-md w-full shadow-2xl p-6" onClick={e => e.stopPropagation()}>
+            <h2 className="text-xl font-black text-purple-400 mb-2 flex items-center gap-2">
+              <Globe className="w-6 h-6" /> Push GitHub
+            </h2>
+            <p className="text-gray-400 text-sm mb-4">
+              Saisis ton token GitHub pour pousser <code className="text-orange-400">themes.json</code> directement sur le repo.
+              Le token ne sera pas sauvegardé.
+            </p>
+            <div className="mb-4">
+              <label className="block text-sm font-bold text-gray-300 mb-2">Personal Access Token</label>
+              <input
+                type="password"
+                value={githubTokenInput}
+                onChange={e => setGithubTokenInput(e.target.value)}
+                placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+                className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-purple-500 focus:outline-none font-mono text-sm"
+              />
+              <p className="text-xs text-gray-500 mt-1">GitHub → Settings → Developer settings → Tokens (classic) → scope: repo</p>
+            </div>
+            <div className="flex gap-3">
+              <button onClick={() => { setShowGithubModal(false); setGithubTokenInput(''); }}
+                className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold">
+                Annuler
+              </button>
+              <button
+                onClick={() => {
+                  if (!githubTokenInput.trim()) return;
+                  setShowGithubModal(false);
+                  handleGithubPush(githubTokenInput.trim());
+                  setGithubTokenInput('');
+                }}
+                disabled={!githubTokenInput.trim()}
+                className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold flex items-center justify-center gap-2">
+                <Globe className="w-4 h-4" /> Pousser
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
