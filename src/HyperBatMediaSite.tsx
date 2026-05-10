@@ -1,5 +1,5 @@
 // Fichier: src/HyperBatMediaSite.tsx 
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download } from 'lucide-react';
 
 import { ThemeItem } from './types';
@@ -56,11 +56,22 @@ const GITHUB_OWNER = 'hyperbatmedia';
 const GITHUB_REPO = '-hyperbat-media';
 const GITHUB_BRANCH = 'main';
 const LOCK_PATH = 'admin_lock.json';
+const COOLDOWN_CLOSE_SECONDS = 60;   // fermeture sans push
 
 // ── Helpers GitHub lock ───────────────────────────────────────────────────────
-const writeLock = async (token: string, adminName: string, isLocked: boolean): Promise<{ ok: boolean; error?: string }> => {
+const writeLock = async (
+  token: string,
+  adminName: string,
+  isLocked: boolean,
+  cooldownSeconds?: number
+): Promise<{ ok: boolean; error?: string }> => {
   try {
-    const lockData = { isLocked, adminName, lockedAt: Date.now() };
+    const lockData = {
+      isLocked,
+      adminName,
+      lockedAt: Date.now(),
+      cooldownUntil: cooldownSeconds ? Date.now() + cooldownSeconds * 1000 : undefined
+    };
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(lockData, null, 2))));
 
     // Toujours relire le SHA frais via l'API (jamais de cache)
@@ -102,7 +113,7 @@ const writeLock = async (token: string, adminName: string, isLocked: boolean): P
   }
 };
 
-const readLock = async (): Promise<{ isLocked: boolean; adminName: string; lockedAt: number } | null> => {
+const readLock = async (): Promise<{ isLocked: boolean; adminName: string; lockedAt: number; cooldownUntil?: number } | null> => {
   try {
     // API GitHub = toujours frais, pas de cache
     const res = await fetch(
@@ -124,6 +135,29 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
   const [token, setToken] = useState('');
   const [isChecking, setIsChecking] = useState(false);
   const [error, setError] = useState('');
+  const [countdown, setCountdown] = useState<number>(0);
+  const [countdownAdmin, setCountdownAdmin] = useState<string>('');
+  const [isPush, setIsPush] = useState<boolean>(false);
+  const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Décompte visible
+  useEffect(() => {
+    if (countdown > 0) {
+      countdownRef.current = setInterval(() => {
+        setCountdown(prev => {
+          if (prev <= 1) { clearInterval(countdownRef.current!); return 0; }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => { if (countdownRef.current) clearInterval(countdownRef.current); };
+  }, [countdown]);
+
+  const formatCountdown = (sec: number) => {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
 
   const handleSubmit = async () => {
     const trimmedName = name.trim();
@@ -134,6 +168,17 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
     try {
       // Vérifier si le lock est déjà pris
       const lock = await readLock();
+
+      // Cooldown actif (après push ou fermeture)
+      if (lock?.cooldownUntil && lock.cooldownUntil > Date.now()) {
+        const remaining = Math.ceil((lock.cooldownUntil - Date.now()) / 1000);
+        setCountdownAdmin(lock.adminName);
+        setIsPush(!lock.isLocked && !!lock.cooldownUntil);
+        setCountdown(remaining);
+        setIsChecking(false);
+        return;
+      }
+
       if (lock?.isLocked) {
         const elapsed = Math.floor((Date.now() - lock.lockedAt) / 60000);
         const elapsedStr = elapsed < 1 ? 'moins d\'1 minute' : `${elapsed} minute${elapsed > 1 ? 's' : ''}`;
@@ -213,6 +258,26 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
             className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none font-mono text-sm"
           />
         </div>
+        {/* Décompte cooldown */}
+        {countdown > 0 && (
+          <div className="mb-4 p-4 bg-gray-900 border-2 border-orange-500 rounded-xl text-center">
+            <div className="text-sm text-gray-400 mb-1">
+              {isPush
+                ? `⏳ ${countdownAdmin} vient de pusher — site en déploiement`
+                : `⏳ ${countdownAdmin} vient de quitter l'admin`}
+            </div>
+            <div className="text-4xl font-black mb-1" style={{
+              background: 'linear-gradient(180deg, #FF8C00 0%, #FFD700 100%)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
+            }}>
+              {formatCountdown(countdown)}
+            </div>
+            <div className="text-xs text-gray-500">
+              {isPush ? 'disponible dans...' : 'Réessaie dans...'}
+            </div>
+          </div>
+        )}
+
         {error && (
           <div className="mb-4 p-3 bg-red-900/40 border border-red-500 rounded-xl text-red-300 text-sm">
             {error}
@@ -355,7 +420,7 @@ export default function HyperBatMediaSite(): JSX.Element {
   // ── Fermeture admin : efface le lock ─────────────────────────────────────
   const releaseLock = async (token: string): Promise<boolean> => {
     const adminName = localStorage.getItem('hyperbat_admin_name') || 'Admin';
-    const result = await writeLock(token, adminName, false);
+    const result = await writeLock(token, adminName, false, COOLDOWN_CLOSE_SECONDS);
     if (!result.ok) {
       console.error('releaseLock failed:', result.error);
       alert(`⚠️ Impossible de libérer le verrou :\n${result.error}\n\nLe verrou restera actif sur GitHub.`);

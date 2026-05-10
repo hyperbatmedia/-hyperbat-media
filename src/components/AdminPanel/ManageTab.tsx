@@ -728,6 +728,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
         isLocked: false,
         adminName,
         pushedAt: Date.now(),
+        cooldownUntil: Date.now() + COOLDOWN_SECONDS * 1000,
         cooldownSeconds: COOLDOWN_SECONDS
       };
       const lockContent = btoa(unescape(encodeURIComponent(JSON.stringify(lockData, null, 2))));
