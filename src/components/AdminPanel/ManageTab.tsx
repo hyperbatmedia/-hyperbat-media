@@ -14,7 +14,7 @@ interface ThemeItem {
   size: string;
   date?: string;
   onScreenScraper?: boolean;
-  isMulti?: boolean;
+  isMulti?: boolean;  // ← NOUVEAU
 }
 
 interface SystemRow {
@@ -36,12 +36,6 @@ interface ManageTabProps {
   systems: SystemRow[];
   categories: Category[];
 }
-
-const GITHUB_OWNER = 'hyperbatmedia';
-const GITHUB_REPO = '-hyperbat-media';
-const GITHUB_BRANCH = 'main';
-const LOCK_PATH = 'admin_lock.json';
-const COOLDOWN_SECONDS = 180; // 3 minutes
 
 const isInvalidUrl = (url: string): boolean => {
   if (!url?.trim()) return true;
@@ -435,6 +429,7 @@ const ThemeCard = ({ theme, systemName, categoryName, onView, isSelected, onTogg
             ScreenScraper
           </div>
         )}
+        {/* ── Badge Multi ── */}
         {theme.isMulti && (
           <div className="text-xs flex items-center gap-1 font-semibold" style={{ color: '#c084fc' }}>
             <Globe className="w-4 h-4" />
@@ -455,7 +450,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     onlyInvalidUrls: false,
     onlyMissingCreators: false,
     onlyNotOnScreenScraper: false,
-    onlyMulti: false
+    onlyMulti: false  // ← NOUVEAU
   });
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [sortBy, setSortBy] = useState<'name' | 'creator' | 'system'>('name');
@@ -466,98 +461,12 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const [showImportModal, setShowImportModal] = useState(false);
   const [showBulkCreatorModal, setShowBulkCreatorModal] = useState(false);
   const [showBulkScreenScraperModal, setShowBulkScreenScraperModal] = useState(false);
-  const [showBulkMultiModal, setShowBulkMultiModal] = useState(false);
+  const [showBulkMultiModal, setShowBulkMultiModal] = useState(false);  // ← NOUVEAU
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [isCleaning, setIsCleaning] = useState(false);
   const [showGithubModal, setShowGithubModal] = useState(false);
   const [githubTokenInput, setGithubTokenInput] = useState('');
   const [isPushing, setIsPushing] = useState(false);
-
-  // ── Lock system ───────────────────────────────────────────────────────────
-  const [cooldownRemaining, setCooldownRemaining] = useState<number>(0);
-  const [cooldownAdmin, setCooldownAdmin] = useState<string>('');
-  const cooldownIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  // Écoute le push déclenché depuis la modale "Fermer Admin"
-  useEffect(() => {
-    const handlePushRequest = (e: Event) => {
-      const token = (e as CustomEvent).detail?.token;
-      if (token) handleGithubPush(token);
-    };
-    // Écoute la fermeture sans push → reset le cooldown
-    const handleCloseAdmin = () => {
-      if (cooldownIntervalRef.current) clearInterval(cooldownIntervalRef.current);
-      localStorage.removeItem('hyperbat_cooldown');
-      setCooldownRemaining(0);
-      setCooldownAdmin('');
-    };
-    window.addEventListener('hyperbat-push-request', handlePushRequest);
-    window.addEventListener('hyperbat-close-admin', handleCloseAdmin);
-    return () => {
-      window.removeEventListener('hyperbat-push-request', handlePushRequest);
-      window.removeEventListener('hyperbat-close-admin', handleCloseAdmin);
-    };
-  }, [themes]);
-
-  // Vérifie si un cooldown est actif au montage (depuis localStorage)
-  useEffect(() => {
-    const stored = localStorage.getItem('hyperbat_cooldown');
-    if (stored) {
-      try {
-        const { pushedAt, adminName } = JSON.parse(stored);
-        const elapsed = Math.floor((Date.now() - pushedAt) / 1000);
-        const remaining = COOLDOWN_SECONDS - elapsed;
-        if (remaining > 0) {
-          setCooldownRemaining(remaining);
-          setCooldownAdmin(adminName);
-        } else {
-          localStorage.removeItem('hyperbat_cooldown');
-        }
-      } catch {
-        localStorage.removeItem('hyperbat_cooldown');
-      }
-    }
-  }, []);
-
-  // Décompte du cooldown
-  useEffect(() => {
-    if (cooldownRemaining > 0) {
-      cooldownIntervalRef.current = setInterval(() => {
-        setCooldownRemaining(prev => {
-          if (prev <= 1) {
-            clearInterval(cooldownIntervalRef.current!);
-            localStorage.removeItem('hyperbat_cooldown');
-            setCooldownAdmin('');
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-    return () => {
-      if (cooldownIntervalRef.current) clearInterval(cooldownIntervalRef.current);
-    };
-  }, [cooldownRemaining]);
-
-  const formatCountdown = (seconds: number): string => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}:${s.toString().padStart(2, '0')}`;
-  };
-
-  const startCooldown = (adminName: string) => {
-    const pushedAt = Date.now();
-    localStorage.setItem('hyperbat_cooldown', JSON.stringify({ pushedAt, adminName }));
-    setCooldownRemaining(COOLDOWN_SECONDS);
-    setCooldownAdmin(adminName);
-  };
-
-  const forceCooldownSkip = () => {
-    localStorage.removeItem('hyperbat_cooldown');
-    setCooldownRemaining(0);
-    setCooldownAdmin('');
-  };
-  // ── Fin Lock system ───────────────────────────────────────────────────────
 
   const itemsPerPage = 52;
   const availableSystems = systems.filter(s => !s.isHeader && !s.isSubHeader);
@@ -572,7 +481,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     invalidUrls: themes.filter(t => isInvalidUrl(t.imageUrl)).length,
     missingCreators: themes.filter(t => isUnknownCreator(t.creator)).length,
     notOnScreenScraper: themes.filter(t => !t.onScreenScraper).length,
-    multiCount: themes.filter(t => t.isMulti).length
+    multiCount: themes.filter(t => t.isMulti).length  // ← NOUVEAU
   }), [themes]);
 
   const themesWithConvertedUrls = useMemo(() => {
@@ -595,7 +504,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       if (filters.onlyInvalidUrls && !isInvalidUrl(theme.imageUrl)) return false;
       if (filters.onlyMissingCreators && !isUnknownCreator(theme.creator)) return false;
       if (filters.onlyNotOnScreenScraper && theme.onScreenScraper) return false;
-      if (filters.onlyMulti && !theme.isMulti) return false;
+      if (filters.onlyMulti && !theme.isMulti) return false;  // ← NOUVEAU
       return true;
     });
   }, [themesWithConvertedUrls, filters]);
@@ -661,6 +570,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     showToast(`✅ Statut ScreenScraper modifié pour ${selectedIds.length} thème(s)`, 'success');
   };
 
+  // ── NOUVEAU : handler Multi ──
   const handleBulkMultiEdit = (isMulti: boolean) => {
     const updated = themes.map(theme => selectedIds.includes(theme.id) ? { ...theme, isMulti } : theme);
     setThemes(updated); saveThemes(updated); setSelectedIds([]); setShowBulkMultiModal(false);
@@ -686,14 +596,14 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   };
 
   const handleGithubPush = async (token: string) => {
-    // Récupérer le nom de l'admin depuis localStorage
-    const adminName = localStorage.getItem('hyperbat_admin_name') || 'Admin';
-
     setIsPushing(true);
     try {
+      const owner = 'hyperbatmedia';
+      const repo = '-hyperbat-media';
+      const branch = 'main';
       const path = 'src/data/themes.json';
 
-      // Préparer le contenu
+      // Préparer le contenu complet (tous les thèmes, pas juste le filtre)
       const allThemesData = themes.map(theme => ({
         id: theme.id, name: theme.name, creator: theme.creator, system: theme.system,
         category: theme.category, imageUrl: reverseConvertUrl(theme.imageUrl),
@@ -703,62 +613,26 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       const content = btoa(unescape(encodeURIComponent(JSON.stringify(allThemesData, null, 2))));
 
       // 1. Récupérer le SHA du fichier existant
-      const getRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}?ref=${GITHUB_BRANCH}`, {
+      const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`, {
         headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
       });
       if (!getRes.ok) throw new Error(`Erreur récupération SHA: ${getRes.status}`);
       const fileData = await getRes.json();
       const sha = fileData.sha;
 
-      // 2. Pousser le nouveau themes.json
-      const pushRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`, {
+      // 2. Pousser le nouveau contenu
+      const pushRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: `Update themes.json (${themes.length} thèmes) - ${new Date().toLocaleDateString('fr-FR')}`,
           content,
           sha,
-          branch: GITHUB_BRANCH
+          branch
         })
       });
       if (!pushRes.ok) throw new Error(`Erreur push: ${pushRes.status}`);
-
-      // 3. Écrire le lock avec cooldown sur GitHub (isLocked: false = libéré après push)
-      const lockData = {
-        isLocked: false,
-        adminName,
-        pushedAt: Date.now(),
-        cooldownSeconds: COOLDOWN_SECONDS
-      };
-      const lockContent = btoa(unescape(encodeURIComponent(JSON.stringify(lockData, null, 2))));
-
-      // Récupérer le SHA du lock si il existe déjà
-      let lockSha: string | undefined;
-      try {
-        const lockGetRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}?ref=${GITHUB_BRANCH}`, {
-          headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
-        });
-        if (lockGetRes.ok) {
-          const lockFileData = await lockGetRes.json();
-          lockSha = lockFileData.sha;
-        }
-      } catch { /* fichier n'existe pas encore, c'est OK */ }
-
-      await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`, {
-        method: 'PUT',
-        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: `Admin lock: push by ${adminName}`,
-          content: lockContent,
-          ...(lockSha ? { sha: lockSha } : {}),
-          branch: GITHUB_BRANCH
-        })
-      });
-
-      // 4. Démarrer le cooldown local
-      startCooldown(adminName);
-
-      showToast(`✅ Push réussi par ${adminName} — Admin bloqué 3 min`, 'success');
+      showToast(`✅ themes.json poussé sur GitHub (${themes.length} thèmes)`, 'success');
       setShowGithubModal(false);
     } catch (err) {
       showToast(`❌ Erreur GitHub : ${err instanceof Error ? err.message : 'Inconnue'}`, 'error');
@@ -817,32 +691,6 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       <div className="flex flex-col items-center justify-center min-h-[400px] text-gray-400">
         <AlertCircle className="w-12 h-12 mb-4 opacity-20" />
         <p className="text-xl font-medium">Aucun thème disponible</p>
-      </div>
-    );
-  }
-
-  // ── Écran cooldown ────────────────────────────────────────────────────────
-  if (cooldownRemaining > 0) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[500px] text-white">
-        <div className="bg-gray-800 border-2 border-orange-500 rounded-2xl p-10 max-w-md w-full text-center shadow-2xl">
-          <div className="text-6xl mb-4">⏳</div>
-          <h2 className="text-2xl font-black text-orange-400 mb-2">Push effectué par {cooldownAdmin}</h2>
-          <p className="text-gray-400 mb-6">Attente de la mise à jour GitHub...</p>
-          <div className="text-7xl font-black mb-2" style={{
-            background: 'linear-gradient(180deg, #FF8C00 0%, #FFD700 100%)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
-          }}>
-            {formatCountdown(cooldownRemaining)}
-          </div>
-          <p className="text-gray-500 text-sm mb-8">L'admin sera disponible dans quelques instants</p>
-          <button
-            onClick={forceCooldownSkip}
-            className="px-6 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white rounded-lg font-bold text-sm transition-all border border-gray-600"
-          >
-            Forcer l'accès
-          </button>
-        </div>
       </div>
     );
   }
@@ -911,6 +759,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
               <Database className="w-4 h-4" />Pas sur ScreenScraper
               <span className={`px-2 py-0.5 rounded-full text-xs font-black ${filters.onlyNotOnScreenScraper ? 'bg-white text-blue-600' : 'bg-gray-800 text-white'}`}>{stats.notOnScreenScraper}</span>
             </button>
+            {/* ── Filtre Multi ── */}
             <button onClick={() => setFilters({...filters, onlyMulti: !filters.onlyMulti})}
               className={`px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${filters.onlyMulti ? 'text-white shadow-lg' : 'bg-gray-900 border border-gray-700 text-gray-300'}`}
               style={filters.onlyMulti ? { background: 'linear-gradient(to right, #9333ea, #ec4899)' } : { borderColor: filters.onlyMulti ? '#9333ea' : undefined }}>
@@ -939,7 +788,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
               <Upload className="w-4 h-4" />Import
             </button>
             <button onClick={handleExport} className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all">
-              <Download className="w-4 h-4" />DL themes.json ({themes.length})
+            ({themes.length})
             </button>
             <button onClick={handleGithubButtonClick} disabled={isPushing}
               className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all">
@@ -972,6 +821,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
                 className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg font-semibold flex items-center gap-2 transition-all shadow-lg">
                 <Database className="w-4 h-4" />Modifier ScreenScraper
               </button>
+              {/* ── Bouton bulk Multi ── */}
               <button onClick={() => setShowBulkMultiModal(true)}
                 className="px-4 py-2 text-white rounded-lg font-semibold flex items-center gap-2 transition-all shadow-lg hover:brightness-110"
                 style={{ background: 'linear-gradient(to right, #9333ea, #ec4899)' }}>
@@ -1078,6 +928,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       {showBulkScreenScraperModal && selectedThemes.length > 0 && (
         <BulkScreenScraperEditModal selectedThemes={selectedThemes} onSave={handleBulkScreenScraperEdit} onClose={() => setShowBulkScreenScraperModal(false)} />
       )}
+      {/* ── Modale Multi ── */}
       {showBulkMultiModal && selectedThemes.length > 0 && (
         <BulkMultiEditModal selectedThemes={selectedThemes} onSave={handleBulkMultiEdit} onClose={() => setShowBulkMultiModal(false)} />
       )}
@@ -1089,12 +940,9 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
             <h2 className="text-xl font-black text-purple-400 mb-2 flex items-center gap-2">
               <Globe className="w-6 h-6" /> Push GitHub
             </h2>
-            <p className="text-gray-400 text-sm mb-1">
-              Connecté en tant que : <span className="text-orange-400 font-bold">{localStorage.getItem('hyperbat_admin_name') || 'Admin'}</span>
-            </p>
             <p className="text-gray-400 text-sm mb-4">
               Saisis ton token GitHub pour pousser <code className="text-orange-400">themes.json</code> directement sur le repo.
-              Le token ne sera pas sauvegardé. Un cooldown de 3 min démarrera après le push.
+              Le token ne sera pas sauvegardé.
             </p>
             <div className="mb-4">
               <label className="block text-sm font-bold text-gray-300 mb-2">Personal Access Token</label>
@@ -1151,20 +999,27 @@ const PreviewModal = ({ theme, onClose, onEdit, onDelete, systems, categories }:
               ? <img src={theme.imageUrl} alt={theme.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               : <div className="w-full h-full flex items-center justify-center"><ImageOff className="w-16 h-16 text-red-400" /></div>}
           </div>
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div><span className="text-gray-400">Nom :</span> <span className="text-white font-bold">{theme.name}</span></div>
-            <div><span className="text-gray-400">Créateur :</span> <span className={`font-bold ${isUnknownCreator(theme.creator) ? 'text-red-400' : 'text-white'}`}>{theme.creator}</span></div>
-            <div><span className="text-gray-400">Système :</span> <span className="text-white font-bold">{systemName}</span></div>
-            <div><span className="text-gray-400">Catégorie :</span> <span className="text-white font-bold">{categoryName}</span></div>
-            {theme.size && <div><span className="text-gray-400">Taille :</span> <span className="text-white font-bold">{theme.size}</span></div>}
-            {theme.date && <div><span className="text-gray-400">Date :</span> <span className="text-white font-bold">{formatDateFR(theme.date)}</span></div>}
-            <div><span className="text-gray-400">ScreenScraper :</span> <span className={`font-bold ${theme.onScreenScraper ? 'text-green-400' : 'text-gray-500'}`}>{theme.onScreenScraper ? '✅ Oui' : '❌ Non'}</span></div>
-            <div><span className="text-gray-400">Multi-région :</span> <span className={`font-bold ${theme.isMulti ? 'text-purple-400' : 'text-gray-500'}`}>{theme.isMulti ? '🌍 Oui' : '❌ Non'}</span></div>
+          <div className="space-y-3">
+            <div><span className="text-gray-400 text-sm">Nom:</span><p className="text-white font-bold text-xl">{theme.name}</p></div>
+            <div><span className="text-gray-400 text-sm">Créateur:</span><p className="text-orange-400 font-semibold">{theme.creator || 'Inconnu'}</p></div>
+            <div className="flex gap-2 flex-wrap">
+              <span className="px-3 py-1 bg-blue-600 text-white text-sm font-semibold rounded-full">🎮 {systemName}</span>
+              <span className="px-3 py-1 bg-orange-600 text-white text-sm font-semibold rounded-full">{categoryName}</span>
+              <span className="px-3 py-1 bg-gray-700 text-gray-300 text-sm font-semibold rounded-full">{theme.size}</span>
+              {theme.date && <span className="px-3 py-1 bg-purple-600 text-white text-sm font-semibold rounded-full">📅 {formatDateFR(theme.date)}</span>}
+              {theme.isMulti && <span className="px-3 py-1 text-white text-sm font-semibold rounded-full" style={{ background: 'linear-gradient(to right, #9333ea, #ec4899)' }}>🌍 Multi-région</span>}
+            </div>
           </div>
-          <div className="flex gap-3 pt-4 border-t border-gray-700">
-            <button onClick={onClose} className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold">Fermer</button>
-            <button onClick={onEdit} className="flex-1 py-3 bg-gradient-to-r from-orange-600 to-pink-600 text-white rounded-lg font-bold flex items-center justify-center gap-2"><Edit2 className="w-4 h-4" />Modifier</button>
-            <button onClick={onDelete} className="py-3 px-6 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold flex items-center gap-2"><Trash2 className="w-4 h-4" /></button>
+          <div className="flex gap-3 pt-4">
+            <button onClick={onEdit} className="flex-1 py-3 bg-gradient-to-r from-orange-600 to-pink-600 hover:from-orange-700 hover:to-pink-700 text-white rounded-lg font-bold flex items-center justify-center gap-2">
+              <Edit2 className="w-5 h-5" />Modifier
+            </button>
+            <button onClick={onDelete} className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold flex items-center justify-center gap-2">
+              <Trash2 className="w-5 h-5" />Supprimer
+            </button>
+            <a href={theme.downloadUrl} target="_blank" rel="noopener noreferrer" className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold flex items-center justify-center gap-2">
+              <Download className="w-5 h-5" />Télécharger
+            </a>
           </div>
         </div>
       </div>
@@ -1174,20 +1029,25 @@ const PreviewModal = ({ theme, onClose, onEdit, onDelete, systems, categories }:
 
 // ── EditModal ─────────────────────────────────────────────────────────────────
 const EditModal = ({ theme, onSave, onClose, systems, categories }: {
-  theme: ThemeItem; onSave: (t: ThemeItem) => void; onClose: () => void;
+  theme: ThemeItem; onSave: (theme: ThemeItem) => void; onClose: () => void;
   systems: SystemRow[]; categories: Category[];
 }) => {
   const [editData, setEditData] = useState<ThemeItem>({ ...theme });
   const availableSystems = systems.filter(s => !s.isHeader && !s.isSubHeader);
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave({ ...editData, name: editData.name.trim(), creator: editData.creator.trim(), imageUrl: editData.imageUrl.trim(), downloadUrl: editData.downloadUrl.trim(), size: editData.size.trim() });
+  };
+
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-orange-500 max-w-3xl w-full shadow-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-        <div className="bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-4 flex items-center justify-between sticky top-0 z-10">
-          <h2 className="text-2xl font-black text-white flex items-center gap-2"><Edit2 className="w-6 h-6" />Modifier le thème</h2>
+      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-orange-500 max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
+        <div className="sticky top-0 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 p-4 flex items-center justify-between z-10">
+          <h2 className="text-2xl font-black text-white">✏️ Modifier le thème</h2>
           <button onClick={onClose} className="text-white hover:text-gray-200"><X className="w-6 h-6" /></button>
         </div>
-        <form onSubmit={e => { e.preventDefault(); onSave(editData); }} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-bold text-gray-300 mb-2">Nom du thème *</label>
@@ -1225,6 +1085,8 @@ const EditModal = ({ theme, onSave, onClose, systems, categories }: {
                   className="w-full p-3 bg-gray-900 border border-gray-700 rounded-xl text-gray-400 cursor-not-allowed" />
               </div>
             )}
+
+            {/* Checkbox ScreenScraper */}
             <div className="md:col-span-2">
               <label className="flex items-center gap-3 p-4 bg-gray-950 border border-gray-700 rounded-xl cursor-pointer hover:border-blue-500 transition">
                 <input type="checkbox" checked={editData.onScreenScraper || false}
@@ -1239,6 +1101,8 @@ const EditModal = ({ theme, onSave, onClose, systems, categories }: {
                 </div>
               </label>
             </div>
+
+            {/* ── Checkbox Multi ── */}
             <div className="md:col-span-2">
               <label className="flex items-center gap-3 p-4 bg-gray-950 border border-gray-700 rounded-xl cursor-pointer hover:border-purple-500 transition">
                 <input type="checkbox" checked={editData.isMulti || false}
@@ -1253,6 +1117,7 @@ const EditModal = ({ theme, onSave, onClose, systems, categories }: {
               </label>
             </div>
           </div>
+
           <div>
             <label className="block text-sm font-bold text-gray-300 mb-2">URL de l'image</label>
             <input type="url" value={editData.imageUrl} onChange={e => setEditData({...editData, imageUrl: e.target.value})}
@@ -1263,6 +1128,7 @@ const EditModal = ({ theme, onSave, onClose, systems, categories }: {
             <input type="url" value={editData.downloadUrl} onChange={e => setEditData({...editData, downloadUrl: e.target.value})}
               className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
           </div>
+
           <div className="flex gap-3 pt-4 border-t border-gray-700">
             <button type="button" onClick={onClose} className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold">Annuler</button>
             <button type="submit" className="flex-1 py-3 bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 text-white rounded-lg font-bold shadow-lg">💾 Enregistrer</button>
