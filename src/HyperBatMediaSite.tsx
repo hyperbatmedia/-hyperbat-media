@@ -52,6 +52,153 @@ const getThemeColors = (isDarkMode: boolean) => ({
   inputBg: isDarkMode ? '#1f2937' : '#ffffff'
 });
 
+const GITHUB_OWNER = 'hyperbatmedia';
+const GITHUB_REPO = '-hyperbat-media';
+const GITHUB_BRANCH = 'main';
+const LOCK_PATH = 'admin_lock.json';
+
+// ── Helpers GitHub lock ───────────────────────────────────────────────────────
+const writeLock = async (token: string, adminName: string, isLocked: boolean) => {
+  const lockData = { isLocked, adminName, lockedAt: Date.now() };
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(lockData, null, 2))));
+  let sha: string | undefined;
+  try {
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}?ref=${GITHUB_BRANCH}`, {
+      headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
+    });
+    if (res.ok) { const d = await res.json(); sha = d.sha; }
+  } catch { /* fichier inexistant, OK */ }
+  await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: `Admin lock: ${isLocked ? 'locked by' : 'released by'} ${adminName}`, content, ...(sha ? { sha } : {}), branch: GITHUB_BRANCH })
+  });
+};
+
+const readLock = async (): Promise<{ isLocked: boolean; adminName: string; lockedAt: number } | null> => {
+  try {
+    const res = await fetch(`https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${LOCK_PATH}?t=${Date.now()}`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch { return null; }
+};
+
+// ── Modale entrée admin (Prénom + Token) ─────────────────────────────────────
+const AdminLoginModal = ({ onConfirm, onCancel }: {
+  onConfirm: (name: string, token: string) => void;
+  onCancel: () => void;
+}) => {
+  const [name, setName] = useState(() => localStorage.getItem('hyperbat_admin_name') || '');
+  const [token, setToken] = useState('');
+  const [isChecking, setIsChecking] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async () => {
+    const trimmedName = name.trim();
+    const trimmedToken = token.trim();
+    if (!trimmedName || !trimmedToken) return;
+    setIsChecking(true);
+    setError('');
+    try {
+      // Vérifier si le lock est déjà pris
+      const lock = await readLock();
+      if (lock?.isLocked) {
+        const elapsed = Math.floor((Date.now() - lock.lockedAt) / 60000);
+        const elapsedStr = elapsed < 1 ? 'moins d\'1 minute' : `${elapsed} minute${elapsed > 1 ? 's' : ''}`;
+        setError(`🔒 ${lock.adminName} est déjà dans l'admin depuis ${elapsedStr}. Réessaie plus tard ou force l'accès.`);
+        setIsChecking(false);
+        return;
+      }
+      // Écrire le lock
+      await writeLock(trimmedToken, trimmedName, true);
+      localStorage.setItem('hyperbat_admin_name', trimmedName);
+      onConfirm(trimmedName, trimmedToken);
+    } catch {
+      setError('❌ Erreur GitHub — vérifie ton token.');
+    }
+    setIsChecking(false);
+  };
+
+  const handleForce = async () => {
+    const trimmedName = name.trim();
+    const trimmedToken = token.trim();
+    if (!trimmedName || !trimmedToken) return;
+    setIsChecking(true);
+    setError('');
+    try {
+      await writeLock(trimmedToken, trimmedName, true);
+      localStorage.setItem('hyperbat_admin_name', trimmedName);
+      onConfirm(trimmedName, trimmedToken);
+    } catch {
+      setError('❌ Erreur GitHub — vérifie ton token.');
+    }
+    setIsChecking(false);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+      <div className="bg-gray-800 rounded-2xl border-2 border-orange-500 max-w-sm w-full shadow-2xl p-6">
+        <h2 className="text-xl font-black text-orange-400 mb-1 flex items-center gap-2">
+          🔐 Accès Administration
+        </h2>
+        <p className="text-gray-400 text-sm mb-4">
+          Ton prénom sera affiché aux autres admins. Le token sera oublié à la fermeture.
+        </p>
+        <div className="space-y-3 mb-4">
+          <div className="grid grid-cols-2 gap-2">
+            {['Alain', 'Bob', 'Dav', 'Christophe'].map(n => (
+              <button
+                key={n}
+                type="button"
+                onClick={() => { setName(n); setError(''); }}
+                className={`py-3 rounded-xl font-black text-lg transition-all border-2 ${
+                  name === n
+                    ? 'bg-gradient-to-r from-orange-600 to-pink-600 border-orange-400 text-white shadow-lg shadow-orange-500/30'
+                    : 'bg-gray-900 border-gray-700 text-gray-300 hover:border-orange-500 hover:text-white'
+                }`}
+              >
+                {n}
+              </button>
+            ))}
+          </div>
+          <input
+            type="password"
+            autoFocus
+            value={token}
+            onChange={e => { setToken(e.target.value); setError(''); }}
+            onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+            placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+            className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none font-mono text-sm"
+          />
+        </div>
+        {error && (
+          <div className="mb-4 p-3 bg-red-900/40 border border-red-500 rounded-xl text-red-300 text-sm">
+            {error}
+            {error.includes('déjà dans') && (
+              <button onClick={handleForce} disabled={isChecking || !name.trim() || !token.trim()}
+                className="mt-2 w-full py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white rounded-lg font-bold text-sm transition-all">
+                Forcer l'accès quand même
+              </button>
+            )}
+          </div>
+        )}
+        <div className="flex gap-3">
+          <button onClick={onCancel} className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold transition-all">
+            Annuler
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={!name.trim() || !token.trim() || isChecking}
+            className="flex-1 py-3 bg-gradient-to-r from-orange-600 to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold transition-all flex items-center justify-center gap-2"
+          >
+            {isChecking ? <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />Vérif...</> : 'Entrer'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function HyperBatMediaSite(): JSX.Element {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -65,6 +212,14 @@ export default function HyperBatMediaSite(): JSX.Element {
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
     try { return localStorage.getItem('sidebar-collapsed') === 'true'; } catch { return false; }
   });
+
+  // ── Admin : token en mémoire + lock ─────────────────────────────────────
+  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+  const [adminToken, setAdminToken] = useState<string>(''); // token en mémoire, jamais stocké
+
+  // ── Modale fermeture admin ────────────────────────────────────────────────
+  const [showCloseModal, setShowCloseModal] = useState<boolean>(false);
+  const [showPushFromClose, setShowPushFromClose] = useState<boolean>(false);
 
   // ── Panier ────────────────────────────────────────────────────────────────
   const [cart, setCart] = useState<ThemeItem[]>([]);
@@ -106,7 +261,7 @@ export default function HyperBatMediaSite(): JSX.Element {
   }, [rawThemes]);
 
   const themeStats = useMemo(() => {
-    const multiThemes = themes.filter(t => t.isMulti === true).length;                                                           // ← NOUVEAU
+    const multiThemes = themes.filter(t => t.isMulti === true).length;
     const collectionThemes = themes.filter(t => (t.system === 'collectionspersonnalises' || t.system === 'Collections Personnalisées') && t.category !== 'artwork').length;
     const artworkThemes = themes.filter(t => t.category === 'artwork').length;
     const gameThemes = themes.filter(t => t.category === 'game-themes').length;
@@ -118,7 +273,7 @@ export default function HyperBatMediaSite(): JSX.Element {
     return { multiThemes, collectionThemes, artworkThemes, gameThemes, systemThemes, defaultThemes, magazineThemes, screenScraperThemes, total };
   }, [themes]);
 
-  // ── Systèmes sans aucun thème (même logique que RecapThemesPanel) ──────────
+  // ── Systèmes sans aucun thème ─────────────────────────────────────────────
   const missingSystemsCount = useMemo(() => {
     const bobSystems = bobSystemsData as { slug: string }[];
     const allThemeSlugs = [...new Set(themes.map(t => t.system))];
@@ -135,11 +290,31 @@ export default function HyperBatMediaSite(): JSX.Element {
     }).length;
   }, [themes]);
 
+  // ── Entrée admin ──────────────────────────────────────────────────────────
   const handleSearchChange = (value: string) => {
-    if (value.toLowerCase() === 'canafloche') { setShowAdminPanel(true); setSearchTerm(''); }
-    else setSearchTerm(value);
+    if (value.toLowerCase() === 'canafloche') {
+      setSearchTerm('');
+      setShowLoginModal(true);
+    } else {
+      setSearchTerm(value);
+    }
   };
 
+  const handleLoginConfirm = (_name: string, token: string) => {
+    setAdminToken(token);
+    setShowLoginModal(false);
+    setShowAdminPanel(true);
+  };
+
+  const handleLoginCancel = () => {
+    setShowLoginModal(false);
+  };
+
+  // ── Fermeture admin : efface le lock ─────────────────────────────────────
+  const releaseLock = async (token: string) => {
+    const adminName = localStorage.getItem('hyperbat_admin_name') || 'Admin';
+    try { await writeLock(token, adminName, false); } catch { /* silencieux */ }
+  };
 
   const filteredThemes = useMemo(() => {
     const searchLower = searchTerm.toLowerCase();
@@ -153,7 +328,7 @@ export default function HyperBatMediaSite(): JSX.Element {
         const matchesCategory = systemsLogic.selectedCategory === 'all' ? true
           : systemsLogic.selectedCategory === 'collection' ? (theme.system === 'collectionspersonnalises' && theme.category !== 'artwork')
           : systemsLogic.selectedCategory === 'screenscraper' ? theme.onScreenScraper === true
-          : systemsLogic.selectedCategory === 'multi' ? theme.isMulti === true          // ← NOUVEAU
+          : systemsLogic.selectedCategory === 'multi' ? theme.isMulti === true
           : systemsLogic.selectedCategory === 'magazines' ? (theme.system === 'magazines')
           : theme.category === systemsLogic.selectedCategory;
         return matchesSearch && matchesSystem && matchesCategory;
@@ -220,8 +395,12 @@ export default function HyperBatMediaSite(): JSX.Element {
               </div>
             </div>
             {showAdminPanel && (
-              <div className="flex justify-center">
-                <button onClick={() => setShowAdminPanel(false)}
+              <div className="flex justify-center items-center gap-3 flex-wrap">
+                <span className="text-sm text-gray-400 font-semibold">
+                  Connecté en tant que : <span className="text-orange-400 font-black">{localStorage.getItem('hyperbat_admin_name') || 'Admin'}</span>
+                </span>
+                <span className="text-xs text-yellow-500/70 font-semibold">⚠️ PC partagé — ne laisse pas l'admin ouvert</span>
+                <button onClick={() => setShowCloseModal(true)}
                   className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg font-semibold text-xs border-2 transition hover:brightness-110 bg-red-600 border-red-400 text-white">
                   <LogOut className="w-3 h-3" />Fermer Admin
                 </button>
@@ -236,7 +415,6 @@ export default function HyperBatMediaSite(): JSX.Element {
               {/* ── Statistiques / Filtres ── */}
               <div className="flex flex-wrap justify-center gap-3 mb-4">
                 {[
-                  // ── Multi en premier ──
                   { id: 'multi', label: 'Multi-région', count: themeStats.multiThemes, icon: '🌍' },
                   { id: 'screenscraper', label: 'ScreenScraper', count: themeStats.screenScraperThemes, special: true },
                   { id: 'magazines', label: 'Magazines', count: themeStats.magazineThemes, icon: '📰' },
@@ -277,7 +455,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                 ))}
               </div>
 
-              {/* ── Barre de contrôles avec bouton panier ── */}
+              {/* ── Barre de contrôles ── */}
               <div className="flex items-center gap-4 mb-6">
                 <div className="flex gap-2 flex-shrink-0">
                   <button onClick={() => setViewMode('grid')} className="p-3 rounded-lg transition border-2"
@@ -457,6 +635,87 @@ export default function HyperBatMediaSite(): JSX.Element {
           </div>
         </footer>
       </div>
+
+      {/* ── Modale fermeture admin ── */}
+      {showCloseModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="bg-gray-800 rounded-2xl border-2 border-red-500 max-w-sm w-full shadow-2xl p-6">
+            <h2 className="text-xl font-black text-red-400 mb-2 flex items-center gap-2">
+              <LogOut className="w-6 h-6" /> Fermer l'administration
+            </h2>
+            <p className="text-gray-300 text-sm mb-6">
+              Tu as fini tes modifications ?
+            </p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => { setShowCloseModal(false); setShowPushFromClose(true); }}
+                className="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg font-bold flex items-center justify-center gap-2 transition-all">
+                🚀 Pusher maintenant puis quitter
+              </button>
+              <button
+                onClick={async () => {
+                  setShowCloseModal(false);
+                  await releaseLock(adminToken);
+                  setAdminToken('');
+                  window.dispatchEvent(new CustomEvent('hyperbat-close-admin'));
+                  setShowAdminPanel(false);
+                }}
+                className="w-full py-3 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white rounded-lg font-bold transition-all">
+                Quitter sans pusher
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Modale push depuis fermeture ── */}
+      {showPushFromClose && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="bg-gray-800 rounded-2xl border-2 border-purple-500 max-w-md w-full shadow-2xl p-6">
+            <h2 className="text-xl font-black text-purple-400 mb-2 flex items-center gap-2">
+              🚀 Push GitHub
+            </h2>
+            <p className="text-gray-400 text-sm mb-1">
+              Connecté en tant que : <span className="text-orange-400 font-bold">{localStorage.getItem('hyperbat_admin_name') || 'Admin'}</span>
+            </p>
+            <p className="text-gray-400 text-sm mb-4">
+              Le token entré à l'ouverture sera utilisé. Un cooldown de 3 min démarrera ensuite.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={async () => {
+                  setShowPushFromClose(false);
+                  await releaseLock(adminToken);
+                  setAdminToken('');
+                  window.dispatchEvent(new CustomEvent('hyperbat-close-admin'));
+                  setShowAdminPanel(false);
+                }}
+                className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold">
+                Quitter sans pusher
+              </button>
+              <button
+                onClick={() => {
+                  setShowPushFromClose(false);
+                  setShowAdminPanel(false);
+                  // Déclenche le push via event — ManageTab s'occupe du push + cooldown + efface lock
+                  window.dispatchEvent(new CustomEvent('hyperbat-push-request', { detail: { token: adminToken } }));
+                  setAdminToken('');
+                }}
+                className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg font-bold transition-all">
+                🚀 Pusher
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Modale login admin ── */}
+      {showLoginModal && (
+        <AdminLoginModal
+          onConfirm={handleLoginConfirm}
+          onCancel={handleLoginCancel}
+        />
+      )}
 
       {/* ── Panier lightbox ── */}
       {cartOpen && (
