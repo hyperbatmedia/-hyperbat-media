@@ -57,6 +57,7 @@ const GITHUB_REPO = '-hyperbat-media';
 const GITHUB_BRANCH = 'main';
 const LOCK_PATH = 'admin_lock.json';
 const COOLDOWN_CLOSE_SECONDS = 60;   // fermeture sans push
+const LOCK_EXPIRES_HOURS = 8;        // expiration automatique du lock
 
 // ── Helpers GitHub lock ───────────────────────────────────────────────────────
 const writeLock = async (
@@ -70,6 +71,7 @@ const writeLock = async (
       isLocked,
       adminName,
       lockedAt: Date.now(),
+      expiresAt: isLocked ? Date.now() + LOCK_EXPIRES_HOURS * 3600 * 1000 : undefined,
       cooldownUntil: cooldownSeconds ? Date.now() + cooldownSeconds * 1000 : undefined
     };
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(lockData, null, 2))));
@@ -113,16 +115,18 @@ const writeLock = async (
   }
 };
 
-const readLock = async (): Promise<{ isLocked: boolean; adminName: string; lockedAt: number; cooldownUntil?: number } | null> => {
+const readLock = async (): Promise<{ isLocked: boolean; adminName: string; lockedAt: number; cooldownUntil?: number; expiresAt?: number } | null> => {
   try {
-    // API GitHub = toujours frais, pas de cache
     const res = await fetch(
       `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`,
       { headers: { Accept: 'application/vnd.github+json' } }
     );
     if (!res.ok) return null;
     const data = await res.json();
-    return JSON.parse(atob(data.content.replace(/\n/g, '')));
+    const lock = JSON.parse(atob(data.content.replace(/\n/g, '')));
+    // Expiration automatique après 8h
+    if (lock?.isLocked && lock?.expiresAt && lock.expiresAt < Date.now()) return null;
+    return lock;
   } catch { return null; }
 };
 
@@ -263,7 +267,7 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
           <div className="mb-4 p-4 bg-gray-900 border-2 border-orange-500 rounded-xl text-center">
             <div className="text-sm text-gray-400 mb-1">
               {isPush
-                ? `⏳ ${countdownAdmin} vient de pusher — site en déploiement`
+                ? `⏳ ${countdownAdmin} vient de pusher — vitrine en déploiement`
                 : `⏳ ${countdownAdmin} vient de quitter l'admin`}
             </div>
             <div className="text-4xl font-black mb-1" style={{
@@ -273,7 +277,7 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
               {formatCountdown(countdown)}
             </div>
             <div className="text-xs text-gray-500">
-              {isPush ? 'disponible dans...' : 'Réessaie dans...'}
+              {isPush ? 'vitrine disponible dans...' : 'Réessaie dans...'}
             </div>
           </div>
         )}
@@ -513,14 +517,22 @@ export default function HyperBatMediaSite(): JSX.Element {
               </div>
             </div>
             {showAdminPanel && (
-              <div className="flex justify-center items-center gap-3 flex-wrap">
-                <span className="text-sm text-gray-400 font-semibold">
-                  Connecté en tant que : <span className="text-orange-400 font-black">{localStorage.getItem('hyperbat_admin_name') || 'Admin'}</span>
-                </span>
-                <span className="text-xs text-yellow-500/70 font-semibold">⚠️ PC partagé — ne laisse pas l'admin ouvert</span>
-                <button onClick={() => setShowCloseModal(true)}
-                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg font-semibold text-xs border-2 transition hover:brightness-110 bg-red-600 border-red-400 text-white">
-                  <LogOut className="w-3 h-3" />Fermer Admin
+              <div style={{ position: 'sticky', top: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 20px', marginTop: '8px', background: '#450a0a', border: '1.5px solid #dc2626', borderRadius: '8px' }}>
+                <div>
+                  <div style={{ color: 'white', fontSize: '15px', fontWeight: 500 }}>
+                    {localStorage.getItem('hyperbat_admin_name') || 'Admin'} — mode admin
+                  </div>
+                  <div style={{ color: '#fca5a5', fontSize: '12px' }}>
+                    ⚠ Ne laisse pas l'admin ouvert sans surveillance
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowCloseModal(true)}
+                  style={{ background: '#dc2626', color: 'white', border: '2px solid #f87171', borderRadius: '8px', padding: '10px 24px', fontSize: '15px', fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
+                  className="hover:brightness-110 transition-all"
+                >
+                  <LogOut className="w-5 h-5" />
+                  Quitter l'admin
                 </button>
               </div>
             )}
