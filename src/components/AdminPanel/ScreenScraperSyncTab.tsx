@@ -1,36 +1,41 @@
 // ScreenScraperSyncTab.tsx
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useRef } from 'react';
 import {
-  Upload, CheckCircle, ChevronDown, ChevronUp,
-  Loader2, Check, Database, AlertTriangle, FileText, Trash2
+  Upload, CheckCircle, Loader2, Check, Database,
+  RefreshCw, Download, Filter
 } from 'lucide-react';
 import { ThemeItem } from '../../types';
 import {
   parseSSManquesCSV,
-  matchFileResults,
-  applySelectedMatches,
-  SSFileResult,
-  MatchResult,
+  SSGameEntry,
   SS_TO_THEME,
 } from './utils/screenScraperUtils';
 import { generateSystems } from '../../hooks/useSystemsLogic';
 import { categories, systemsData, sectionIcons } from '../../constants';
 
-interface ScreenScraperSyncTabProps {
-  themes: ThemeItem[];
-  onUpdateThemes: (themes: ThemeItem[]) => Promise<void>;
+// ===== INTERFACES =====
+
+interface RowData {
+  // Thème de la vitrine (peut être null si absent vitrine)
+  theme: ThemeItem | null;
+  // Entrée du CSV SS (peut être null si pas de CSV ou pas trouvé dans CSV)
+  ssEntry: SSGameEntry | null;
+  // Statut calculé
+  onSS: boolean;       // onScreenScraper actuel du thème
+  csvStatus: 'present' | 'missing' | 'none' | 'no-csv'; // statut dans le CSV SS
+  isAbsentVitrine: boolean; // dans CSV SS mais absent de la vitrine
 }
 
-// ── Liste de tous les slugs disponibles pour le sélecteur de système ──────────
+type FilterType = 'all' | 'on-ss' | 'to-upload' | 'absent-vitrine';
+
+// ===== LISTE DES SYSTÈMES =====
 const ALL_SYSTEM_SLUGS: { slug: string; name: string }[] = (() => {
   const systems = generateSystems(categories, systemsData, sectionIcons);
   const seen = new Set<string>();
   const result: { slug: string; name: string }[] = [];
-
   for (const s of systems) {
     if (s.isHeader || s.isSubHeader) continue;
     if (['all', 'tools', 'tutorials', 'main-themes', 'other-themes'].includes(s.id)) continue;
-    // Le slug = dernière partie de l'id (après le dernier tiret composé de section-sub-normalizedName)
     const parts = s.id.split('-');
     const slug = parts[parts.length - 1];
     if (!seen.has(slug)) {
@@ -38,597 +43,487 @@ const ALL_SYSTEM_SLUGS: { slug: string; name: string }[] = (() => {
       result.push({ slug, name: s.name });
     }
   }
-
   return result.sort((a, b) => a.name.localeCompare(b.name, 'fr'));
 })();
 
-// ── Types internes ─────────────────────────────────────────────────────────────
-interface LoadedFile {
-  id: string;
-  file: File;
-  systemSlug: string;
-  parsed?: SSFileResult;
-  matchResults?: MatchResult[];
-  selected: Set<number>; // indices dans matchResults
-  expanded: { present: boolean; missing: boolean; notFound: boolean };
-  applied: boolean;
-  error?: string;
+// ===== COMPOSANT PRINCIPAL =====
+
+interface ScreenScraperSyncTabProps {
+  themes: ThemeItem[];
+  onUpdateThemes: (themes: ThemeItem[]) => Promise<void>;
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// COMPOSANT PRINCIPAL
-// ══════════════════════════════════════════════════════════════════════════════
-
 const ScreenScraperSyncTab: React.FC<ScreenScraperSyncTabProps> = ({ themes, onUpdateThemes }) => {
-  const [loadedFiles, setLoadedFiles] = useState<LoadedFile[]>([]);
-  const [analyzing, setAnalyzing] = useState<string | null>(null);
+  const [systemSlug, setSystemSlug] = useState('');
+  const [csvEntries, setCsvEntries] = useState<SSGameEntry[] | null>(null);
+  const [csvFileName, setCsvFileName] = useState('');
+  const [selected, setSelected] = useState<Set<number>>(new Set()); // ids de ThemeItem
+  const [filter, setFilter] = useState<FilterType>('all');
   const [saving, setSaving] = useState(false);
-  const [globalSuccess, setGlobalSuccess] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // ── Deviner le slug depuis le nom de fichier ─────────────────────────────────
+  // ── Deviner le slug depuis le nom de fichier ──────────────────────────────
   const guessSlug = (fileName: string): string => {
-    const base = fileName
-      .replace(/\.csv$/i, '')
-      .replace(/-manques$/i, '')
-      .toLowerCase();
-
-    // Chercher dans SS_TO_THEME (ex: "megadrive" → "megadrivegenesis")
+    const base = fileName.replace(/\.csv$/i, '').replace(/-manques$/i, '').toLowerCase();
     const ssMatch = SS_TO_THEME[base];
     if (ssMatch !== undefined && ssMatch !== null) return ssMatch;
-
-    // Correspondance directe dans les slugs de ta base
     const found = ALL_SYSTEM_SLUGS.find(s => s.slug === base);
     return found ? found.slug : '';
   };
 
-  // ── Ajout de fichiers ────────────────────────────────────────────────────────
-  const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []);
-    if (!files.length) return;
-
-    const newEntries: LoadedFile[] = files.map(file => ({
-      id: `${file.name}-${Date.now()}-${Math.random()}`,
-      file,
-      systemSlug: guessSlug(file.name),
-      selected: new Set(),
-      expanded: { present: false, missing: false, notFound: false },
-      applied: false,
-    }));
-
-    setLoadedFiles(prev => [...prev, ...newEntries]);
-    e.target.value = '';
-  };
-
-  // ── Supprimer un fichier ─────────────────────────────────────────────────────
-  const removeFile = (id: string) => {
-    setLoadedFiles(prev => prev.filter(f => f.id !== id));
-  };
-
-  // ── Changer le système d'un fichier ─────────────────────────────────────────
-  const updateSlug = (id: string, slug: string) => {
-    setLoadedFiles(prev => prev.map(f =>
-      f.id === id
-        ? { ...f, systemSlug: slug, parsed: undefined, matchResults: undefined, selected: new Set(), applied: false, error: undefined }
-        : f
-    ));
-  };
-
-  // ── Analyser un fichier ──────────────────────────────────────────────────────
-  const analyzeFile = useCallback(async (lf: LoadedFile) => {
-    if (!lf.systemSlug) return;
-    setAnalyzing(lf.id);
-
-    try {
-      const text = await lf.file.text();
-      const parsed = parseSSManquesCSV(text, lf.file.name, lf.systemSlug);
-
-      if (parsed.entries.length === 0) {
-        setLoadedFiles(prev => prev.map(f =>
-          f.id === lf.id
-            ? { ...f, error: 'Aucune entrée trouvée. Vérifiez le format du fichier (colonnes "Game Name" et "Thème HyperBat" requises).' }
-            : f
-        ));
-        return;
-      }
-
-      const matchResults = matchFileResults(parsed, themes, 80);
-
-      // Auto-sélectionner les matchs exacts (100%) présents sur SS
-      const autoSelected = new Set<number>(
-        matchResults
-          .map((r, i) => ({ r, i }))
-          .filter(({ r }) => r.matched && r.ssEntry.hasTheme && r.score === 100)
-          .map(({ i }) => i)
-      );
-
-      setLoadedFiles(prev => prev.map(f =>
-        f.id === lf.id
-          ? {
-              ...f,
-              parsed,
-              matchResults,
-              selected: autoSelected,
-              expanded: { present: true, missing: false, notFound: false },
-              error: undefined,
-            }
-          : f
-      ));
-    } catch (err) {
-      console.error('Erreur analyse:', err);
-      setLoadedFiles(prev => prev.map(f =>
-        f.id === lf.id ? { ...f, error: `Erreur de lecture : ${String(err)}` } : f
-      ));
-    } finally {
-      setAnalyzing(null);
-    }
-  }, [themes]);
-
-  // ── Sélection individuelle ───────────────────────────────────────────────────
-  const toggleResult = (fileId: string, idx: number) => {
-    setLoadedFiles(prev => prev.map(f => {
-      if (f.id !== fileId) return f;
-      const next = new Set(f.selected);
-      next.has(idx) ? next.delete(idx) : next.add(idx);
-      return { ...f, selected: next };
-    }));
-  };
-
-  // ── Sélection de groupe ──────────────────────────────────────────────────────
-  const selectGroup = (fileId: string, indices: number[], select: boolean) => {
-    setLoadedFiles(prev => prev.map(f => {
-      if (f.id !== fileId) return f;
-      const next = new Set(f.selected);
-      indices.forEach(i => select ? next.add(i) : next.delete(i));
-      return { ...f, selected: next };
-    }));
-  };
-
-  // ── Plier/déplier une section ────────────────────────────────────────────────
-  const toggleExpand = (fileId: string, section: 'present' | 'missing' | 'notFound') => {
-    setLoadedFiles(prev => prev.map(f =>
-      f.id !== fileId ? f : { ...f, expanded: { ...f.expanded, [section]: !f.expanded[section] } }
-    ));
-  };
-
-  // ── Total sélectionné tous fichiers confondus ────────────────────────────────
-  const totalSelected = useMemo(
-    () => loadedFiles.reduce((acc, f) => acc + f.selected.size, 0),
-    [loadedFiles]
+  // ── Thèmes du système sélectionné ────────────────────────────────────────
+  const systemThemes = useMemo(
+    () => themes.filter(t => t.system === systemSlug),
+    [themes, systemSlug]
   );
 
-  // ── Appliquer tous les changements sélectionnés ──────────────────────────────
-  const handleApplyAll = async () => {
-    const toApply = loadedFiles.flatMap(f =>
-      (f.matchResults ?? []).filter((_, i) => f.selected.has(i))
-    );
-    if (!toApply.length) return;
-    if (!confirm(`Appliquer les changements pour ${toApply.length} thème(s) ?`)) return;
+  // ── Construction des lignes du tableau ───────────────────────────────────
+  const rows = useMemo((): RowData[] => {
+    const result: RowData[] = [];
 
+    // Lignes vitrine
+    for (const theme of systemThemes) {
+      let ssEntry: SSGameEntry | null = null;
+      let csvStatus: RowData['csvStatus'] = 'no-csv';
+
+      if (csvEntries) {
+        // Chercher par nom exact d'abord (les consoles matchent bien)
+        const exact = csvEntries.find(e =>
+          e.gameName.toLowerCase().trim() === theme.name.toLowerCase().trim()
+        );
+        if (exact) {
+          ssEntry = exact;
+          csvStatus = exact.hasTheme ? 'present' : 'missing';
+        } else {
+          csvStatus = 'none';
+        }
+      }
+
+      result.push({
+        theme,
+        ssEntry,
+        onSS: theme.onScreenScraper ?? false,
+        csvStatus,
+        isAbsentVitrine: false,
+      });
+    }
+
+    // Lignes "absent vitrine" (dans CSV SS mais pas dans la vitrine)
+    if (csvEntries) {
+      const themeNames = new Set(systemThemes.map(t => t.name.toLowerCase().trim()));
+      for (const entry of csvEntries) {
+        if (!themeNames.has(entry.gameName.toLowerCase().trim())) {
+          result.push({
+            theme: null,
+            ssEntry: entry,
+            onSS: false,
+            csvStatus: entry.hasTheme ? 'present' : 'missing',
+            isAbsentVitrine: true,
+          });
+        }
+      }
+    }
+
+    return result;
+  }, [systemThemes, csvEntries]);
+
+  // ── Stats ─────────────────────────────────────────────────────────────────
+  const stats = useMemo(() => ({
+    onSS: rows.filter(r => !r.isAbsentVitrine && r.onSS).length,
+    toUpload: rows.filter(r => !r.isAbsentVitrine && !r.onSS).length,
+    absentVitrine: rows.filter(r => r.isAbsentVitrine).length,
+  }), [rows]);
+
+  // ── Lignes filtrées ───────────────────────────────────────────────────────
+  const filteredRows = useMemo(() => {
+    switch (filter) {
+      case 'on-ss':           return rows.filter(r => !r.isAbsentVitrine && r.onSS);
+      case 'to-upload':       return rows.filter(r => !r.isAbsentVitrine && !r.onSS);
+      case 'absent-vitrine':  return rows.filter(r => r.isAbsentVitrine);
+      default:                return rows;
+    }
+  }, [rows, filter]);
+
+  // ── Import CSV ────────────────────────────────────────────────────────────
+  const handleFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setError('');
+
+    const guessed = guessSlug(file.name);
+    if (guessed && !systemSlug) setSystemSlug(guessed);
+
+    try {
+      const text = await file.text();
+      const parsed = parseSSManquesCSV(text, file.name, guessed || systemSlug);
+      if (parsed.entries.length === 0) {
+        setError('Aucune entrée trouvée. Vérifiez que le fichier contient les colonnes "Game Name" et "Thème HyperBat".');
+        return;
+      }
+      setCsvEntries(parsed.entries);
+      setCsvFileName(file.name);
+      setSelected(new Set());
+      setSuccess(false);
+      setFilter('all');
+    } catch (err) {
+      setError(`Erreur de lecture : ${String(err)}`);
+    }
+    e.target.value = '';
+  }, [systemSlug]);
+
+  // ── Réanalyser (vider CSV) ────────────────────────────────────────────────
+  const handleReset = () => {
+    setCsvEntries(null);
+    setCsvFileName('');
+    setSelected(new Set());
+    setSuccess(false);
+    setError('');
+    setFilter('all');
+  };
+
+  // ── Sélection ─────────────────────────────────────────────────────────────
+  const toggleRow = (themeId: number) => {
+    setSelected(prev => {
+      const next = new Set(prev);
+      next.has(themeId) ? next.delete(themeId) : next.add(themeId);
+      return next;
+    });
+  };
+
+  const toggleAll = () => {
+    const selectableIds = filteredRows
+      .filter(r => r.theme !== null)
+      .map(r => r.theme!.id);
+    const allSelected = selectableIds.every(id => selected.has(id));
+    if (allSelected) {
+      setSelected(prev => {
+        const next = new Set(prev);
+        selectableIds.forEach(id => next.delete(id));
+        return next;
+      });
+    } else {
+      setSelected(prev => {
+        const next = new Set(prev);
+        selectableIds.forEach(id => next.add(id));
+        return next;
+      });
+    }
+  };
+
+  const selectableInView = filteredRows.filter(r => r.theme !== null);
+  const allInViewSelected = selectableInView.length > 0 && selectableInView.every(r => selected.has(r.theme!.id));
+
+  // ── Appliquer ─────────────────────────────────────────────────────────────
+  const handleApply = async () => {
+    if (selected.size === 0) return;
+    if (!confirm(`Appliquer les changements pour ${selected.size} thème(s) ?`)) return;
     setSaving(true);
     try {
-      const updated = applySelectedMatches(themes, toApply);
+      const updated = themes.map(t => {
+        if (!selected.has(t.id)) return t;
+        const row = rows.find(r => r.theme?.id === t.id);
+        if (!row) return t;
+        let newOnSS: boolean;
+        if (row.csvStatus === 'present') newOnSS = true;
+        else if (row.csvStatus === 'missing') newOnSS = false;
+        else newOnSS = !row.onSS;
+        return { ...t, onScreenScraper: newOnSS };
+      });
       await onUpdateThemes(updated);
-      setLoadedFiles(prev => prev.map(f => ({ ...f, applied: true })));
-      setGlobalSuccess(true);
+      setSuccess(true);
+      setSelected(new Set());
     } catch (err) {
-      console.error(err);
       alert('Erreur lors de la sauvegarde.');
     } finally {
       setSaving(false);
     }
   };
 
+  // ── Export absents vitrine ────────────────────────────────────────────────
+  const handleExportAbsents = () => {
+    const absentRows = rows.filter(r => r.isAbsentVitrine && r.ssEntry);
+    if (!absentRows.length) return;
+    const lines = ['Nom SS,Game ID SS,Thème SS'];
+    for (const r of absentRows) {
+      lines.push(`"${r.ssEntry!.gameName}","${r.ssEntry!.gameId}","${r.ssEntry!.hasTheme ? 'oui' : 'non'}"`);
+    }
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${systemSlug}-absents-vitrine.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const currentOnSS = themes.filter(t => t.onScreenScraper).length;
-  const hasResults = loadedFiles.some(f => f.matchResults && f.selected.size > 0);
+  const systemName = ALL_SYSTEM_SLUGS.find(s => s.slug === systemSlug)?.name ?? systemSlug;
 
   return (
-    <div className="text-white space-y-6">
+    <div className="text-white space-y-5">
 
-      {/* ── HEADER ──────────────────────────────────────────────────────────── */}
+      {/* ── HEADER ──────────────────────────────────────────────────────── */}
       <div className="flex items-center gap-4 pb-4 border-b border-gray-700">
         <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-2xl p-3">
           <Database className="w-8 h-8 text-cyan-400" />
         </div>
         <div>
-          <h2 className="text-xl font-black text-white tracking-tight">Synchronisation ScreenScraper</h2>
+          <h2 className="text-xl font-black text-orange-400 tracking-tight">Synchronisation ScreenScraper</h2>
           <p className="text-gray-500 text-sm mt-0.5">
-            Import des fichiers "médias manquants" · {currentOnSS} thèmes actuellement marqués sur SS
+            Import des fichiers "médias manquants" · {currentOnSS} thèmes marqués sur SS
           </p>
         </div>
       </div>
 
-      {/* ── ZONE D'IMPORT ───────────────────────────────────────────────────── */}
-      <div
-        className="border-2 border-dashed border-gray-700 hover:border-cyan-600 rounded-2xl p-8 text-center transition-colors cursor-pointer group"
-        onClick={() => document.getElementById('ss-file-input')?.click()}
-      >
-        <input
-          id="ss-file-input"
-          type="file"
-          accept=".csv"
-          multiple
-          className="hidden"
-          onChange={handleFilesChange}
-        />
-        <Upload className="w-10 h-10 text-gray-600 group-hover:text-cyan-500 mx-auto mb-3 transition-colors" />
-        <p className="text-gray-400 font-semibold group-hover:text-white transition-colors">
-          Cliquer pour importer un ou plusieurs fichiers CSV
-        </p>
-        <p className="text-gray-600 text-sm mt-1">
-          Format : export "médias manquants" ScreenScraper (séparateur ;)
-        </p>
-      </div>
-
-      {/* ── FICHIERS CHARGÉS ────────────────────────────────────────────────── */}
-      {loadedFiles.map(lf => (
-        <FileCard
-          key={lf.id}
-          lf={lf}
-          analyzing={analyzing === lf.id}
-          onAnalyze={() => analyzeFile(lf)}
-          onRemove={() => removeFile(lf.id)}
-          onSlugChange={slug => updateSlug(lf.id, slug)}
-          onToggleResult={idx => toggleResult(lf.id, idx)}
-          onSelectGroup={(indices, select) => selectGroup(lf.id, indices, select)}
-          onToggleExpand={section => toggleExpand(lf.id, section)}
-        />
-      ))}
-
-      {/* ── BOUTON APPLIQUER GLOBAL ──────────────────────────────────────────── */}
-      {hasResults && !globalSuccess && (
-        <div className="sticky bottom-4 pt-2">
-          <button
-            onClick={handleApplyAll}
-            disabled={saving || totalSelected === 0}
-            className="w-full py-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-2xl font-black text-lg flex items-center justify-center gap-3 transition-all shadow-2xl shadow-cyan-900/40"
+      {/* ── CONTRÔLES ───────────────────────────────────────────────────── */}
+      <div className="flex flex-wrap gap-3 items-end">
+        <div className="flex-1 min-w-[180px]">
+          <label className="text-xs text-gray-500 block mb-1.5">Système</label>
+          <select
+            value={systemSlug}
+            onChange={e => { setSystemSlug(e.target.value); handleReset(); }}
+            className="w-full bg-gray-800 border border-gray-700 text-white text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-cyan-500 transition-colors"
           >
-            {saving
-              ? <><Loader2 className="w-6 h-6 animate-spin" /> Sauvegarde en cours…</>
-              : <><CheckCircle className="w-6 h-6" /> Appliquer {totalSelected} changement{totalSelected > 1 ? 's' : ''}</>
-            }
+            <option value="">-- Sélectionner --</option>
+            {ALL_SYSTEM_SLUGS.map(s => (
+              <option key={s.slug} value={s.slug}>{s.name}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex gap-2">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".csv"
+            className="hidden"
+            onChange={handleFileChange}
+          />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="flex items-center gap-2 px-4 py-2.5 bg-gray-800 border border-gray-700 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl text-sm font-semibold transition-colors"
+          >
+            <Upload className="w-4 h-4" />
+            {csvFileName ? csvFileName : 'Importer CSV SS'}
           </button>
-        </div>
-      )}
 
-      {/* ── SUCCÈS GLOBAL ───────────────────────────────────────────────────── */}
-      {globalSuccess && (
-        <div className="bg-green-900/30 border border-green-500/40 rounded-2xl p-5 flex items-center gap-4">
-          <CheckCircle className="w-8 h-8 text-green-400 flex-shrink-0" />
-          <div>
-            <div className="text-green-400 font-bold text-lg">Synchronisation appliquée !</div>
-            <div className="text-gray-400 text-sm">{totalSelected} thème{totalSelected > 1 ? 's' : ''} mis à jour dans votre base.</div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-// ══════════════════════════════════════════════════════════════════════════════
-// SOUS-COMPOSANT : carte d'un fichier chargé
-// ══════════════════════════════════════════════════════════════════════════════
-
-interface FileCardProps {
-  lf: LoadedFile;
-  analyzing: boolean;
-  onAnalyze: () => void;
-  onRemove: () => void;
-  onSlugChange: (slug: string) => void;
-  onToggleResult: (idx: number) => void;
-  onSelectGroup: (indices: number[], select: boolean) => void;
-  onToggleExpand: (section: 'present' | 'missing' | 'notFound') => void;
-}
-
-const FileCard: React.FC<FileCardProps> = ({
-  lf, analyzing, onAnalyze, onRemove, onSlugChange,
-  onToggleResult, onSelectGroup, onToggleExpand,
-}) => {
-  const { file, systemSlug, matchResults, selected, expanded, applied, error } = lf;
-
-  const presentResults  = useMemo(() => (matchResults ?? []).map((r, i) => ({ r, i })).filter(({ r }) =>  r.matched &&  r.ssEntry.hasTheme), [matchResults]);
-  const missingResults  = useMemo(() => (matchResults ?? []).map((r, i) => ({ r, i })).filter(({ r }) =>  r.matched && !r.ssEntry.hasTheme), [matchResults]);
-  const notFoundResults = useMemo(() => (matchResults ?? []).map((r, i) => ({ r, i })).filter(({ r }) => !r.matched), [matchResults]);
-
-  const allPresentSelected = presentResults.length > 0 && presentResults.every(({ i }) => selected.has(i));
-  const allMissingSelected = missingResults.length > 0 && missingResults.every(({ i }) => selected.has(i));
-
-  const stats = matchResults
-    ? {
-        total: matchResults.length,
-        present: presentResults.length,
-        missing: missingResults.length,
-        notFound: notFoundResults.length,
-      }
-    : null;
-
-  return (
-    <div className={`bg-gray-900 border rounded-2xl overflow-hidden transition-colors ${applied ? 'border-green-600/50' : 'border-gray-800'}`}>
-
-      {/* En-tête */}
-      <div className="flex flex-wrap items-center gap-3 p-4 border-b border-gray-800">
-        <FileText className="w-5 h-5 text-gray-500 flex-shrink-0" />
-
-        <div className="flex-1 min-w-0">
-          <p className="text-white font-semibold truncate">{file.name}</p>
-          {stats && (
-            <p className="text-gray-500 text-xs mt-0.5">
-              {stats.total} jeux · {stats.present} présents · {stats.missing} manquants · {stats.notFound} non trouvés
-            </p>
+          {csvEntries && (
+            <button
+              onClick={handleReset}
+              className="flex items-center gap-2 px-4 py-2.5 bg-gray-800 border border-orange-500/40 hover:bg-gray-700 text-orange-400 rounded-xl text-sm font-semibold transition-colors"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Réinitialiser
+            </button>
           )}
         </div>
-
-        {/* Sélecteur de système */}
-        <select
-          value={systemSlug}
-          onChange={e => onSlugChange(e.target.value)}
-          className="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg px-3 py-2 max-w-[220px] focus:outline-none focus:border-cyan-500 transition-colors"
-        >
-          <option value="">-- Sélectionner le système --</option>
-          {ALL_SYSTEM_SLUGS.map(s => (
-            <option key={s.slug} value={s.slug}>{s.name}</option>
-          ))}
-        </select>
-
-        {/* Bouton Analyser (visible tant que pas encore analysé) */}
-        {!matchResults && (
-          <button
-            onClick={onAnalyze}
-            disabled={!systemSlug || analyzing}
-            className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg font-bold text-sm flex items-center gap-2 transition-colors flex-shrink-0"
-          >
-            {analyzing && <Loader2 className="w-4 h-4 animate-spin" />}
-            Analyser
-          </button>
-        )}
-
-        <button
-          onClick={onRemove}
-          title="Supprimer"
-          className="p-2 text-gray-600 hover:text-red-400 transition-colors flex-shrink-0"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
       </div>
 
-      {/* Erreur */}
+      {/* ── ERREUR ──────────────────────────────────────────────────────── */}
       {error && (
-        <div className="mx-4 my-3 bg-red-900/30 border border-red-700/40 rounded-xl p-3 flex items-center gap-2 text-red-400 text-sm">
-          <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+        <div className="bg-red-900/30 border border-red-700/40 rounded-xl p-3 text-red-400 text-sm">
           {error}
         </div>
       )}
 
-      {/* Résultats */}
-      {matchResults && (
-        <div className="p-4 space-y-3">
-
+      {/* ── CONTENU (si système sélectionné) ────────────────────────────── */}
+      {systemSlug && (
+        <>
           {/* Stats */}
           <div className="grid grid-cols-3 gap-3">
-            <StatBox value={presentResults.length}  label="Présents + trouvés"  color="green" />
-            <StatBox value={missingResults.length}   label="Manquants + trouvés" color="red"   />
-            <StatBox value={notFoundResults.length}  label="Non trouvés en base" color="yellow"/>
+            <button
+              onClick={() => setFilter(filter === 'on-ss' ? 'all' : 'on-ss')}
+              className={`rounded-xl p-3 text-center transition-all border ${filter === 'on-ss' ? 'border-green-500 bg-green-900/30' : 'border-green-700/30 bg-green-900/20 hover:border-green-600/50'}`}
+            >
+              <div className="text-2xl font-black text-green-400">{stats.onSS}</div>
+              <div className="text-xs text-gray-500 mt-0.5">✅ Sur ScreenScraper</div>
+            </button>
+            <button
+              onClick={() => setFilter(filter === 'to-upload' ? 'all' : 'to-upload')}
+              className={`rounded-xl p-3 text-center transition-all border ${filter === 'to-upload' ? 'border-red-500 bg-red-900/30' : 'border-red-700/30 bg-red-900/20 hover:border-red-600/50'}`}
+            >
+              <div className="text-2xl font-black text-red-400">{stats.toUpload}</div>
+              <div className="text-xs text-gray-500 mt-0.5">❌ À uploader sur SS</div>
+            </button>
+            <button
+              onClick={() => setFilter(filter === 'absent-vitrine' ? 'all' : 'absent-vitrine')}
+              disabled={stats.absentVitrine === 0}
+              className={`rounded-xl p-3 text-center transition-all border ${filter === 'absent-vitrine' ? 'border-yellow-500 bg-yellow-900/30' : 'border-yellow-700/30 bg-yellow-900/20 hover:border-yellow-600/50'} disabled:opacity-40 disabled:cursor-not-allowed`}
+            >
+              <div className="text-2xl font-black text-yellow-400">{stats.absentVitrine}</div>
+              <div className="text-xs text-gray-500 mt-0.5">⚠️ Absent vitrine</div>
+            </button>
           </div>
 
-          {/* Section PRÉSENTS */}
-          {presentResults.length > 0 && (
-            <ResultSection
-              title={`✅ Présents sur ScreenScraper (${presentResults.length})`}
-              titleColor="text-green-400"
-              borderColor="border-green-700/30"
-              bgColor="bg-green-900/10"
-              expanded={expanded.present}
-              onToggle={() => onToggleExpand('present')}
-              allSelected={allPresentSelected}
-              onSelectAll={() => onSelectGroup(presentResults.map(x => x.i), !allPresentSelected)}
-            >
-              {presentResults.map(({ r, i }) => (
-                <ResultRow key={i} result={r} selected={selected.has(i)} onToggle={() => onToggleResult(i)} accent="green" />
-              ))}
-            </ResultSection>
-          )}
+          {/* Filtre actif + export */}
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4 text-gray-500" />
+              <span className="text-sm text-gray-400">
+                {filter === 'all' && `Tous (${rows.length})`}
+                {filter === 'on-ss' && `Sur SS (${stats.onSS})`}
+                {filter === 'to-upload' && `À uploader (${stats.toUpload})`}
+                {filter === 'absent-vitrine' && `Absent vitrine (${stats.absentVitrine})`}
+              </span>
+              {filter !== 'all' && (
+                <button
+                  onClick={() => setFilter('all')}
+                  className="text-xs text-cyan-400 hover:text-cyan-300 underline"
+                >
+                  Tout afficher
+                </button>
+              )}
+            </div>
 
-          {/* Section MANQUANTS */}
-          {missingResults.length > 0 && (
-            <ResultSection
-              title={`❌ Manquants sur ScreenScraper (${missingResults.length})`}
-              titleColor="text-red-400"
-              borderColor="border-red-700/30"
-              bgColor="bg-red-900/10"
-              expanded={expanded.missing}
-              onToggle={() => onToggleExpand('missing')}
-              allSelected={allMissingSelected}
-              onSelectAll={() => onSelectGroup(missingResults.map(x => x.i), !allMissingSelected)}
-            >
-              {missingResults.map(({ r, i }) => (
-                <ResultRow key={i} result={r} selected={selected.has(i)} onToggle={() => onToggleResult(i)} accent="red" />
-              ))}
-            </ResultSection>
-          )}
+            {stats.absentVitrine > 0 && csvEntries && (
+              <button
+                onClick={handleExportAbsents}
+                className="flex items-center gap-2 px-3 py-1.5 bg-yellow-900/20 border border-yellow-700/30 hover:border-yellow-500/50 text-yellow-400 rounded-lg text-xs font-semibold transition-colors"
+              >
+                <Download className="w-3.5 h-3.5" />
+                Exporter {stats.absentVitrine} absents ({systemSlug}-absents-vitrine.csv)
+              </button>
+            )}
+          </div>
 
-          {/* Section NON TROUVÉS */}
-          {notFoundResults.length > 0 && (
-            <ResultSection
-              title={`❓ Non trouvés dans votre base (${notFoundResults.length})`}
-              titleColor="text-yellow-400"
-              borderColor="border-yellow-700/30"
-              bgColor="bg-yellow-900/10"
-              expanded={expanded.notFound}
-              onToggle={() => onToggleExpand('notFound')}
-              hideSelectAll
-            >
-              {notFoundResults.map(({ r, i }) => (
-                <div key={i} className="flex items-center gap-3 py-2 px-3 rounded-lg bg-gray-900/50">
-                  <AlertTriangle className="w-4 h-4 text-yellow-500 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <span className="text-gray-300 text-sm truncate block">{r.ssEntry.gameName}</span>
-                    {r.matchedTheme && (
-                      <span className="text-gray-600 text-xs">
-                        Meilleur match : {r.matchedTheme.name} ({r.score}%)
-                      </span>
-                    )}
-                  </div>
-                  <span className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 font-semibold ${
-                    r.ssEntry.hasTheme
-                      ? 'bg-green-900/40 text-green-400'
-                      : 'bg-red-900/40 text-red-400'
-                  }`}>
-                    {r.ssEntry.hasTheme ? 'présent SS' : 'absent SS'}
-                  </span>
+          {/* Tableau */}
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
+
+            {/* En-tête tableau */}
+            <div className="grid bg-gray-950 border-b border-gray-800" style={{gridTemplateColumns:'44px 1fr 100px 120px'}}>
+              <div className="p-3 flex items-center justify-center">
+                <div
+                  className={`w-5 h-5 rounded border-2 flex items-center justify-center cursor-pointer transition-all ${allInViewSelected ? 'bg-green-600 border-green-500' : 'bg-gray-800 border-gray-600 hover:border-gray-400'}`}
+                  onClick={toggleAll}
+                >
+                  {allInViewSelected && <Check className="w-3 h-3 text-white" />}
                 </div>
-              ))}
-            </ResultSection>
-          )}
+              </div>
+              <div className="p-3 text-xs text-gray-500 font-semibold uppercase tracking-wide flex items-center">
+                Thème {systemName && <span className="ml-2 text-gray-600 normal-case font-normal">({systemThemes.length} thèmes)</span>}
+              </div>
+              <div className="p-3 text-xs text-gray-500 font-semibold uppercase tracking-wide flex items-center justify-center">Sur SS</div>
+              <div className="p-3 text-xs text-gray-500 font-semibold uppercase tracking-wide flex items-center justify-center">CSV SS</div>
+            </div>
 
-          {/* Compteur de sélection */}
-          {selected.size > 0 && (
-            <p className="text-sm text-cyan-400 font-semibold text-center pt-1">
-              {selected.size} élément{selected.size > 1 ? 's' : ''} sélectionné{selected.size > 1 ? 's' : ''} dans ce fichier
+            {/* Lignes */}
+            <div className="max-h-[500px] overflow-y-auto">
+              {filteredRows.length === 0 && (
+                <div className="p-8 text-center text-gray-600 text-sm">Aucun résultat</div>
+              )}
+
+              {filteredRows.map((row, idx) => {
+                if (row.isAbsentVitrine) {
+                  return (
+                    <div
+                      key={`absent-${idx}`}
+                      className="grid border-b border-gray-800/50 bg-yellow-950/10 border-l-2 border-l-yellow-600/50"
+                      style={{gridTemplateColumns:'44px 1fr 100px 120px'}}
+                    >
+                      <div className="p-3 flex items-center justify-center">
+                        <span className="text-gray-600 text-lg">—</span>
+                      </div>
+                      <div className="p-3">
+                        <span className="text-yellow-600/80 text-sm italic">{row.ssEntry?.gameName}</span>
+                        <span className="ml-2 text-xs text-yellow-700/60">absent vitrine</span>
+                      </div>
+                      <div className="p-3 flex items-center justify-center">
+                        <span className="text-gray-600 text-lg">—</span>
+                      </div>
+                      <div className="p-3 flex items-center justify-center">
+                        <CsvBadge status={row.csvStatus} />
+                      </div>
+                    </div>
+                  );
+                }
+
+                const isSelected = selected.has(row.theme!.id);
+                return (
+                  <div
+                    key={row.theme!.id}
+                    className={`grid border-b border-gray-800/50 cursor-pointer transition-all ${
+                      isSelected
+                        ? 'bg-green-950/20 border-l-2 border-l-green-500'
+                        : 'hover:bg-gray-800/30 border-l-2 border-l-transparent'
+                    }`}
+                    style={{gridTemplateColumns:'44px 1fr 100px 120px'}}
+                    onClick={() => toggleRow(row.theme!.id)}
+                  >
+                    <div className="p-3 flex items-center justify-center">
+                      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${isSelected ? 'bg-green-600 border-green-500' : 'bg-gray-800 border-gray-600'}`}>
+                        {isSelected && <Check className="w-3 h-3 text-white" />}
+                      </div>
+                    </div>
+                    <div className="p-3 flex items-center">
+                      <span className="font-mono text-sm text-gray-200">{row.theme!.name}</span>
+                    </div>
+                    <div className="p-3 flex items-center justify-center">
+                      {row.onSS
+                        ? <span className="text-green-400 text-lg">✅</span>
+                        : <span className="text-red-400 text-lg">❌</span>
+                      }
+                    </div>
+                    <div className="p-3 flex items-center justify-center">
+                      <CsvBadge status={row.csvStatus} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="flex items-center justify-between gap-4">
+            <p className="text-sm text-gray-500">
+              {selected.size > 0
+                ? `${selected.size} thème${selected.size > 1 ? 's' : ''} sélectionné${selected.size > 1 ? 's' : ''}`
+                : 'Aucun thème sélectionné'
+              }
             </p>
-          )}
+            {success && (
+              <span className="text-green-400 text-sm font-semibold flex items-center gap-2">
+                <CheckCircle className="w-4 h-4" /> Sauvegardé avec succès
+              </span>
+            )}
+            <button
+              onClick={handleApply}
+              disabled={saving || selected.size === 0}
+              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl font-bold text-sm transition-all"
+            >
+              {saving
+                ? <><Loader2 className="w-4 h-4 animate-spin" /> Sauvegarde…</>
+                : <><CheckCircle className="w-4 h-4" /> Appliquer {selected.size > 0 ? `${selected.size} changement${selected.size > 1 ? 's' : ''}` : ''}</>
+              }
+            </button>
+          </div>
+        </>
+      )}
+
+      {/* ── ÉTAT VIDE ────────────────────────────────────────────────────── */}
+      {!systemSlug && (
+        <div className="text-center py-12 text-gray-600">
+          <Database className="w-12 h-12 mx-auto mb-3 opacity-30" />
+          <p className="text-sm">Sélectionnez un système pour commencer</p>
         </div>
       )}
     </div>
   );
 };
 
-// ══════════════════════════════════════════════════════════════════════════════
-// SOUS-COMPOSANT : boîte de stat
-// ══════════════════════════════════════════════════════════════════════════════
-
-const StatBox: React.FC<{ value: number; label: string; color: 'green' | 'red' | 'yellow' }> = ({ value, label, color }) => {
-  const colors = {
-    green:  'bg-green-900/20  border-green-700/30  text-green-400',
-    red:    'bg-red-900/20    border-red-700/30    text-red-400',
-    yellow: 'bg-yellow-900/20 border-yellow-700/30 text-yellow-400',
-  };
-  return (
-    <div className={`border rounded-xl p-3 text-center ${colors[color]}`}>
-      <div className="text-2xl font-black">{value}</div>
-      <div className="text-xs text-gray-500 mt-0.5">{label}</div>
-    </div>
-  );
-};
-
-// ══════════════════════════════════════════════════════════════════════════════
-// SOUS-COMPOSANT : section pliable
-// ══════════════════════════════════════════════════════════════════════════════
-
-interface ResultSectionProps {
-  title: string;
-  titleColor: string;
-  borderColor: string;
-  bgColor: string;
-  expanded: boolean;
-  onToggle: () => void;
-  allSelected?: boolean;
-  onSelectAll?: () => void;
-  hideSelectAll?: boolean;
-  children: React.ReactNode;
-}
-
-const ResultSection: React.FC<ResultSectionProps> = ({
-  title, titleColor, borderColor, bgColor,
-  expanded, onToggle, allSelected, onSelectAll, hideSelectAll, children,
-}) => (
-  <div className={`border ${borderColor} ${bgColor} rounded-xl overflow-hidden`}>
-    <div
-      className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
-      onClick={onToggle}
-    >
-      <span className={`font-bold text-sm ${titleColor}`}>{title}</span>
-      <div className="flex items-center gap-3">
-        {!hideSelectAll && onSelectAll && (
-          <button
-            onClick={e => { e.stopPropagation(); onSelectAll(); }}
-            className={`text-xs px-3 py-1 rounded-lg font-semibold transition-colors ${
-              allSelected
-                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                : 'bg-cyan-700/50 text-cyan-300 hover:bg-cyan-600/50'
-            }`}
-          >
-            {allSelected ? 'Tout désélectionner' : 'Tout sélectionner'}
-          </button>
-        )}
-        {expanded
-          ? <ChevronUp className="w-4 h-4 text-gray-500" />
-          : <ChevronDown className="w-4 h-4 text-gray-500" />
-        }
-      </div>
-    </div>
-
-    {expanded && (
-      <div className="px-3 pb-3 max-h-[500px] overflow-y-auto space-y-1.5">
-        {children}
-      </div>
-    )}
-  </div>
-);
-
-// ══════════════════════════════════════════════════════════════════════════════
-// SOUS-COMPOSANT : ligne de résultat sélectionnable
-// ══════════════════════════════════════════════════════════════════════════════
-
-interface ResultRowProps {
-  result: MatchResult;
-  selected: boolean;
-  onToggle: () => void;
-  accent: 'green' | 'red';
-}
-
-const ResultRow: React.FC<ResultRowProps> = ({ result, selected, onToggle, accent }) => {
-  const isExact = result.score === 100;
-
-  const styles = {
-    green: {
-      border: selected ? 'border-green-500' : 'border-transparent hover:border-green-800',
-      bg:     selected ? 'bg-green-950/30'  : 'bg-gray-900/50 hover:bg-gray-800/50',
-      check:  'bg-green-600 border-green-500',
-    },
-    red: {
-      border: selected ? 'border-red-500'   : 'border-transparent hover:border-red-800',
-      bg:     selected ? 'bg-red-950/20'    : 'bg-gray-900/50 hover:bg-gray-800/50',
-      check:  'bg-red-600 border-red-500',
-    },
-  };
-  const s = styles[accent];
-
-  return (
-    <div
-      className={`flex items-center gap-3 py-2 px-3 rounded-lg border cursor-pointer transition-all ${s.border} ${s.bg}`}
-      onClick={onToggle}
-    >
-      {/* Checkbox */}
-      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all ${selected ? s.check : 'bg-gray-800 border-gray-600'}`}>
-        {selected && <Check className="w-3 h-3 text-white" />}
-      </div>
-
-      {/* Contenu */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-white text-sm font-semibold truncate">
-            {result.matchedTheme?.name}
-          </span>
-          <span className={`text-xs px-2 py-0.5 rounded-full font-bold flex-shrink-0 border ${
-            isExact
-              ? 'bg-green-900/50 text-green-300 border-green-700/50'
-              : result.score >= 95
-              ? 'bg-blue-900/50  text-blue-300  border-blue-700/50'
-              : result.score >= 90
-              ? 'bg-yellow-900/50 text-yellow-300 border-yellow-700/50'
-              : 'bg-orange-900/50 text-orange-300 border-orange-700/50'
-          }`}>
-            {result.score}%
-          </span>
-        </div>
-        {/* Afficher le nom SS uniquement si ce n'est pas un match exact */}
-        {!isExact && (
-          <div className="text-gray-500 text-xs truncate mt-0.5">
-            SS : {result.ssEntry.gameName}
-          </div>
-        )}
-      </div>
-    </div>
-  );
+// ===== SOUS-COMPOSANT : badge CSV =====
+const CsvBadge: React.FC<{ status: 'present' | 'missing' | 'none' | 'no-csv' }> = ({ status }) => {
+  switch (status) {
+    case 'present':
+      return <span className="text-xs px-2 py-0.5 rounded-full font-semibold bg-green-900/40 text-green-400 border border-green-700/40">✓ présent</span>;
+    case 'missing':
+      return <span className="text-xs px-2 py-0.5 rounded-full font-semibold bg-red-900/40 text-red-400 border border-red-700/40">✗ manquant</span>;
+    case 'none':
+      return <span className="text-xs px-2 py-0.5 rounded-full font-semibold bg-gray-800 text-gray-500 border border-gray-700">— non trouvé</span>;
+    case 'no-csv':
+      return <span className="text-xs px-2 py-0.5 rounded-full font-semibold bg-gray-800/50 text-gray-600 border border-gray-700/50">— sans CSV</span>;
+  }
 };
 
 export default ScreenScraperSyncTab;
