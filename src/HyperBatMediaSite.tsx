@@ -58,28 +58,60 @@ const GITHUB_BRANCH = 'main';
 const LOCK_PATH = 'admin_lock.json';
 
 // ── Helpers GitHub lock ───────────────────────────────────────────────────────
-const writeLock = async (token: string, adminName: string, isLocked: boolean) => {
-  const lockData = { isLocked, adminName, lockedAt: Date.now() };
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(lockData, null, 2))));
-  let sha: string | undefined;
+const writeLock = async (token: string, adminName: string, isLocked: boolean): Promise<{ ok: boolean; error?: string }> => {
   try {
-    const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}?ref=${GITHUB_BRANCH}`, {
-      headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
-    });
-    if (res.ok) { const d = await res.json(); sha = d.sha; }
-  } catch { /* fichier inexistant, OK */ }
-  await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`, {
-    method: 'PUT',
-    headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: `Admin lock: ${isLocked ? 'locked by' : 'released by'} ${adminName}`, content, ...(sha ? { sha } : {}), branch: GITHUB_BRANCH })
-  });
+    const lockData = { isLocked, adminName, lockedAt: Date.now() };
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(lockData, null, 2))));
+
+    // Toujours relire le SHA frais via l'API (jamais de cache)
+    let sha: string | undefined;
+    const shaRes = await fetch(
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`,
+      { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } }
+    );
+    if (shaRes.ok) {
+      const shaData = await shaRes.json();
+      sha = shaData.sha;
+    } else if (shaRes.status !== 404) {
+      return { ok: false, error: `Erreur lecture SHA: ${shaRes.status}` };
+    }
+
+    // Écrire le lock avec le SHA frais
+    const putRes = await fetch(
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`,
+      {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: `Admin lock: ${isLocked ? 'locked by' : 'released by'} ${adminName}`,
+          content,
+          ...(sha ? { sha } : {}),
+          branch: GITHUB_BRANCH
+        })
+      }
+    );
+
+    if (!putRes.ok) {
+      const errData = await putRes.json().catch(() => ({}));
+      return { ok: false, error: `GitHub ${putRes.status}: ${errData.message || 'Erreur inconnue'}` };
+    }
+
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: `Réseau: ${err instanceof Error ? err.message : 'Erreur inconnue'}` };
+  }
 };
 
 const readLock = async (): Promise<{ isLocked: boolean; adminName: string; lockedAt: number } | null> => {
   try {
-    const res = await fetch(`https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${LOCK_PATH}?t=${Date.now()}`);
+    // API GitHub = toujours frais, pas de cache
+    const res = await fetch(
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`,
+      { headers: { Accept: 'application/vnd.github+json' } }
+    );
     if (!res.ok) return null;
-    return await res.json();
+    const data = await res.json();
+    return JSON.parse(atob(data.content.replace(/\n/g, '')));
   } catch { return null; }
 };
 
@@ -110,7 +142,12 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
         return;
       }
       // Écrire le lock
-      await writeLock(trimmedToken, trimmedName, true);
+      const result = await writeLock(trimmedToken, trimmedName, true);
+      if (!result.ok) {
+        setError(`❌ Impossible d'écrire le verrou : ${result.error}`);
+        setIsChecking(false);
+        return;
+      }
       localStorage.setItem('hyperbat_admin_name', trimmedName);
       onConfirm(trimmedName, trimmedToken);
     } catch {
@@ -126,7 +163,12 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
     setIsChecking(true);
     setError('');
     try {
-      await writeLock(trimmedToken, trimmedName, true);
+      const result = await writeLock(trimmedToken, trimmedName, true);
+      if (!result.ok) {
+        setError(`❌ Impossible d'écrire le verrou : ${result.error}`);
+        setIsChecking(false);
+        return;
+      }
       localStorage.setItem('hyperbat_admin_name', trimmedName);
       onConfirm(trimmedName, trimmedToken);
     } catch {
@@ -311,9 +353,20 @@ export default function HyperBatMediaSite(): JSX.Element {
   };
 
   // ── Fermeture admin : efface le lock ─────────────────────────────────────
-  const releaseLock = async (token: string) => {
+  const releaseLock = async (token: string): Promise<boolean> => {
     const adminName = localStorage.getItem('hyperbat_admin_name') || 'Admin';
-    try { await writeLock(token, adminName, false); } catch { /* silencieux */ }
+    const result = await writeLock(token, adminName, false);
+    if (!result.ok) {
+      console.error('releaseLock failed:', result.error);
+      alert(`⚠️ Impossible de libérer le verrou :\n${result.error}\n\nLe verrou restera actif sur GitHub.`);
+      return false;
+    }
+    return true;
+  };
+
+  const clearCooldown = () => {
+    localStorage.removeItem('hyperbat_cooldown');
+    window.dispatchEvent(new CustomEvent('hyperbat-close-admin'));
   };
 
   const filteredThemes = useMemo(() => {
@@ -655,10 +708,12 @@ export default function HyperBatMediaSite(): JSX.Element {
               <button
                 onClick={async () => {
                   setShowCloseModal(false);
-                  await releaseLock(adminToken);
-                  setAdminToken('');
-                  window.dispatchEvent(new CustomEvent('hyperbat-close-admin'));
-                  setShowAdminPanel(false);
+                  const ok = await releaseLock(adminToken);
+                  if (ok) {
+                    clearCooldown();
+                    setAdminToken('');
+                    setShowAdminPanel(false);
+                  }
                 }}
                 className="w-full py-3 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white rounded-lg font-bold transition-all">
                 Quitter sans pusher
@@ -685,10 +740,12 @@ export default function HyperBatMediaSite(): JSX.Element {
               <button
                 onClick={async () => {
                   setShowPushFromClose(false);
-                  await releaseLock(adminToken);
-                  setAdminToken('');
-                  window.dispatchEvent(new CustomEvent('hyperbat-close-admin'));
-                  setShowAdminPanel(false);
+                  const ok = await releaseLock(adminToken);
+                  if (ok) {
+                    clearCooldown();
+                    setAdminToken('');
+                    setShowAdminPanel(false);
+                  }
                 }}
                 className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold">
                 Quitter sans pusher
