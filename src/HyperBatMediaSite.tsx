@@ -516,28 +516,30 @@ export default function HyperBatMediaSite(): JSX.Element {
                 <Gamepad2 className="w-12 h-12" style={{ color: '#FF8C00' }} />
               </div>
             </div>
-            {showAdminPanel && (
-              <div style={{ position: 'sticky', top: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 20px', marginTop: '8px', background: '#450a0a', border: '1.5px solid #dc2626', borderRadius: '8px' }}>
-                <div>
-                  <div style={{ color: 'white', fontSize: '15px', fontWeight: 500 }}>
-                    {localStorage.getItem('hyperbat_admin_name') || 'Admin'} — mode admin
-                  </div>
-                  <div style={{ color: '#fca5a5', fontSize: '12px' }}>
-                    ⚠ Ne laisse pas l'admin ouvert sans surveillance
-                  </div>
-                </div>
-                <button
-                  onClick={() => setShowCloseModal(true)}
-                  style={{ background: '#dc2626', color: 'white', border: '2px solid #f87171', borderRadius: '8px', padding: '10px 24px', fontSize: '15px', fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
-                  className="hover:brightness-110 transition-all"
-                >
-                  <LogOut className="w-5 h-5" />
-                  Quitter l'admin
-                </button>
-              </div>
-            )}
           </div>
         </header>
+
+        {/* ── Bande sticky admin ── */}
+        {showAdminPanel && (
+          <div style={{ position: 'sticky', top: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px', background: '#450a0a', border: '1.5px solid #dc2626', borderRadius: '8px', maxWidth: '600px', margin: '8px auto' }}>
+            <div>
+              <div style={{ color: 'white', fontSize: '15px', fontWeight: 500 }}>
+                {localStorage.getItem('hyperbat_admin_name') || 'Admin'} — mode admin
+              </div>
+              <div style={{ color: '#fca5a5', fontSize: '12px' }}>
+                ⚠ Ne laisse pas l'admin ouvert sans surveillance
+              </div>
+            </div>
+            <button
+              onClick={() => setShowCloseModal(true)}
+              style={{ background: '#dc2626', color: 'white', border: '2px solid #f87171', borderRadius: '8px', padding: '10px 24px', fontSize: '15px', fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
+              className="hover:brightness-110 transition-all"
+            >
+              <LogOut className="w-5 h-5" />
+              Quitter l'admin
+            </button>
+          </div>
+        )}
 
         <div className="container mx-auto px-4 py-4">
           {!showAdminPanel && (
