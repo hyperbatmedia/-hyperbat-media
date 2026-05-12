@@ -30090,7 +30090,9 @@
     "imageUrl": "https://drive.google.com/file/d/1xNRwA3ndN8vbEYvunP2U4xsas4hthalb/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1DnZE4kq-dVwQw3h65B6x5ZKjmidtpLgg/view?usp=sharing",
     "size": "1.5 MB",
-    "date": "2026-05-04"
+    "date": "2026-05-04",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 52953,
@@ -30103,5 +30105,16 @@
     "size": "39.8 MB",
     "date": "2026-05-12",
     "isMulti": true
+  },
+  {
+    "id": 53322,
+    "name": "zombraid",
+    "creator": "Dav",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1KhxzlcvnmeBOHlKTStbhbVuy3UB7Toi0/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1PWbDKxr6P5STq3mYudxxG4Aa-Hfm9nI5/view?usp=sharing",
+    "size": "9.1 MB",
+    "date": "2026-05-12"
   }
 ]
