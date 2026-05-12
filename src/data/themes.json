@@ -1270,7 +1270,7 @@
     "downloadUrl": "https://drive.google.com/file/d/1hsKX-AltERAVQvXgcrywzwt9f7whLB-9/view?usp=sharing",
     "size": "5.5 MB",
     "date": "2026-01-25",
-    "onScreenScraper": false,
+    "onScreenScraper": true,
     "isMulti": false
   },
   {
@@ -2570,7 +2570,7 @@
     "downloadUrl": "https://drive.google.com/file/d/1m5547N0IOQJjX1aGAPA3j0x6GxhRq94Q/view?usp=sharing",
     "size": "3.7 MB",
     "date": "2026-01-22",
-    "onScreenScraper": false,
+    "onScreenScraper": true,
     "isMulti": false
   },
   {
@@ -2726,7 +2726,7 @@
     "downloadUrl": "https://drive.google.com/file/d/1-qnfCB4N8iymvorumzjm60K04Qq0ClQm/view?usp=sharing",
     "size": "1.3 MB",
     "date": "2026-01-02",
-    "onScreenScraper": false,
+    "onScreenScraper": true,
     "isMulti": false
   },
   {
