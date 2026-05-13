@@ -72,7 +72,8 @@ const writeLock = async (
       adminName,
       lockedAt: Date.now(),
       expiresAt: isLocked ? Date.now() + LOCK_EXPIRES_HOURS * 3600 * 1000 : undefined,
-      cooldownUntil: cooldownSeconds ? Date.now() + cooldownSeconds * 1000 : undefined
+      cooldownUntil: cooldownSeconds ? Date.now() + cooldownSeconds * 1000 : undefined,
+      isPushCooldown: cooldownSeconds ? (cooldownSeconds > COOLDOWN_CLOSE_SECONDS) : undefined
     };
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(lockData, null, 2))));
 
@@ -115,11 +116,17 @@ const writeLock = async (
   }
 };
 
-const readLock = async (): Promise<{ isLocked: boolean; adminName: string; lockedAt: number; cooldownUntil?: number; expiresAt?: number } | null> => {
+const readLock = async (): Promise<{ isLocked: boolean; adminName: string; lockedAt: number; cooldownUntil?: number; expiresAt?: number; isPushCooldown?: boolean } | null> => {
   try {
     const res = await fetch(
       `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`,
-      { headers: { Accept: 'application/vnd.github+json' } }
+      {
+        headers: {
+          Accept: 'application/vnd.github+json',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      }
     );
     if (!res.ok) return null;
     const data = await res.json();
@@ -170,19 +177,9 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
     setIsChecking(true);
     setError('');
     try {
-      // Vérifier si le lock est déjà pris
       const lock = await readLock();
 
-      // Cooldown actif (après push ou fermeture)
-      if (lock?.cooldownUntil && lock.cooldownUntil > Date.now()) {
-        const remaining = Math.ceil((lock.cooldownUntil - Date.now()) / 1000);
-        setCountdownAdmin(lock.adminName);
-        setIsPush(!lock.isLocked && !!lock.cooldownUntil);
-        setCountdown(remaining);
-        setIsChecking(false);
-        return;
-      }
-
+      // 1. Vérifier isLocked EN PREMIER
       if (lock?.isLocked) {
         const elapsed = Math.floor((Date.now() - lock.lockedAt) / 60000);
         const elapsedStr = elapsed < 1 ? 'moins d\'1 minute' : `${elapsed} minute${elapsed > 1 ? 's' : ''}`;
@@ -190,7 +187,18 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
         setIsChecking(false);
         return;
       }
-      // Écrire le lock
+
+      // 2. Vérifier cooldown ENSUITE
+      if (lock?.cooldownUntil && lock.cooldownUntil > Date.now()) {
+        const remaining = Math.ceil((lock.cooldownUntil - Date.now()) / 1000);
+        setCountdownAdmin(lock.adminName);
+        setIsPush(lock.isPushCooldown === true);
+        setCountdown(remaining);
+        setIsChecking(false);
+        return;
+      }
+
+      // 3. Écrire le lock
       const result = await writeLock(trimmedToken, trimmedName, true);
       if (!result.ok) {
         setError(`❌ Impossible d'écrire le verrou : ${result.error}`);
@@ -299,7 +307,7 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
           </button>
           <button
             onClick={handleSubmit}
-            disabled={!name.trim() || !token.trim() || isChecking}
+            disabled={!name.trim() || !token.trim() || isChecking || countdown > 0}
             className="flex-1 py-3 bg-gradient-to-r from-orange-600 to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold transition-all flex items-center justify-center gap-2"
           >
             {isChecking ? <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />Vérif...</> : 'Entrer'}
@@ -379,9 +387,10 @@ export default function HyperBatMediaSite(): JSX.Element {
     const systemThemes = themes.filter(t => t.category === 'system-themes').length;
     const defaultThemes = themes.filter(t => t.category === 'default-themes').length;
     const magazineThemes = themes.filter(t => t.system === 'magazines').length;
-    const screenScraperThemes = themes.filter(t => t.onScreenScraper === true).length;
+    const screenScraperThemes = themes.filter(t => t.category === 'game-themes' && t.onScreenScraper === true).length;
+    const gameThemesTotal = themes.filter(t => t.category === 'game-themes').length;
     const total = themes.length;
-    return { multiThemes, collectionThemes, artworkThemes, gameThemes, systemThemes, defaultThemes, magazineThemes, screenScraperThemes, total };
+    return { multiThemes, collectionThemes, artworkThemes, gameThemes, systemThemes, defaultThemes, magazineThemes, screenScraperThemes, gameThemesTotal, total };
   }, [themes]);
 
   // ── Systèmes sans aucun thème ─────────────────────────────────────────────
@@ -548,7 +557,7 @@ export default function HyperBatMediaSite(): JSX.Element {
               <div className="flex flex-wrap justify-center gap-3 mb-4">
                 {[
                   { id: 'multi', label: 'Multi-région', count: themeStats.multiThemes, icon: '🌍' },
-                  { id: 'screenscraper', label: 'ScreenScraper', count: themeStats.screenScraperThemes, special: true },
+                  { id: 'screenscraper', label: 'ScreenScraper', count: themeStats.screenScraperThemes, total: themeStats.gameThemesTotal, special: true },
                   { id: 'magazines', label: 'Magazines', count: themeStats.magazineThemes, icon: '📰' },
                   { id: 'collection', label: 'Collection', count: themeStats.collectionThemes, Icon: Package },
                   { id: 'artwork', label: 'Artwork', count: themeStats.artworkThemes, Icon: Image },
@@ -556,7 +565,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                   { id: 'system-themes', label: 'Thèmes système', count: themeStats.systemThemes, Icon: Monitor },
                   { id: 'default-themes', label: 'Thèmes default', count: themeStats.defaultThemes, Icon: Star },
                   { id: 'all', label: 'Total global', count: themeStats.total, Icon: BarChart3 },
-                ].map(({ id, label, count, special, icon, Icon }) => (
+                ].map(({ id, label, count, special, icon, Icon, total }) => (
                   <button key={id}
                     onClick={() => { systemsLogic.handleSystemSelect('all'); systemsLogic.setSelectedCategory(id); }}
                     className="px-7 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
@@ -581,7 +590,9 @@ export default function HyperBatMediaSite(): JSX.Element {
                       ) : (
                         <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>{label}</p>
                       )}
-                      <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{count}</p>
+                      <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>
+                        {total ? `${count}/${total}` : count}
+                      </p>
                     </div>
                   </button>
                 ))}

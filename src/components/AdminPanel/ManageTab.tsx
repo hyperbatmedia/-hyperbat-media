@@ -455,6 +455,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     onlyInvalidUrls: false,
     onlyMissingCreators: false,
     onlyNotOnScreenScraper: false,
+    onlyOnScreenScraper: false,
     onlyMulti: false
   });
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
@@ -560,7 +561,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   // ── Fin Lock system ───────────────────────────────────────────────────────
 
   const itemsPerPage = 52;
-  const availableSystems = systems.filter(s => !s.isHeader && !s.isSubHeader);
+  const availableSystems = systems.filter(s => !s.isHeader && !s.isSubHeader && !['all', 'tools', 'tutorials', 'main-themes', 'other-themes'].includes(s.id));
 
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     setToast({ message, type });
@@ -571,7 +572,9 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     total: themes.length,
     invalidUrls: themes.filter(t => isInvalidUrl(t.imageUrl)).length,
     missingCreators: themes.filter(t => isUnknownCreator(t.creator)).length,
-    notOnScreenScraper: themes.filter(t => !t.onScreenScraper).length,
+    gameThemesTotal: themes.filter(t => t.category === 'game-themes').length,
+    gameThemesNotOnSS: themes.filter(t => t.category === 'game-themes' && !t.onScreenScraper).length,
+    gameThemesOnSS: themes.filter(t => t.category === 'game-themes' && t.onScreenScraper).length,
     multiCount: themes.filter(t => t.isMulti).length
   }), [themes]);
 
@@ -594,7 +597,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       if (filters.category && theme.category !== filters.category) return false;
       if (filters.onlyInvalidUrls && !isInvalidUrl(theme.imageUrl)) return false;
       if (filters.onlyMissingCreators && !isUnknownCreator(theme.creator)) return false;
-      if (filters.onlyNotOnScreenScraper && theme.onScreenScraper) return false;
+      if (filters.onlyNotOnScreenScraper && !(theme.category === 'game-themes' && !theme.onScreenScraper)) return false;
+      if (filters.onlyOnScreenScraper && !(theme.category === 'game-themes' && theme.onScreenScraper)) return false;
       if (filters.onlyMulti && !theme.isMulti) return false;
       return true;
     });
@@ -729,6 +733,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
         adminName,
         pushedAt: Date.now(),
         cooldownUntil: Date.now() + COOLDOWN_SECONDS * 1000,
+        isPushCooldown: true,
         cooldownSeconds: COOLDOWN_SECONDS
       };
       const lockContent = btoa(unescape(encodeURIComponent(JSON.stringify(lockData, null, 2))));
@@ -809,8 +814,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     setIsCleaning(false);
   };
 
-  const resetFilters = () => setFilters({ search: '', category: '', system: '', onlyInvalidUrls: false, onlyMissingCreators: false, onlyNotOnScreenScraper: false, onlyMulti: false });
-  const hasActiveFilters = filters.search || filters.category || filters.system || filters.onlyInvalidUrls || filters.onlyMissingCreators || filters.onlyNotOnScreenScraper || filters.onlyMulti;
+  const resetFilters = () => setFilters({ search: '', category: '', system: '', onlyInvalidUrls: false, onlyMissingCreators: false, onlyNotOnScreenScraper: false, onlyOnScreenScraper: false, onlyMulti: false });
+  const hasActiveFilters = filters.search || filters.category || filters.system || filters.onlyInvalidUrls || filters.onlyMissingCreators || filters.onlyNotOnScreenScraper || filters.onlyOnScreenScraper || filters.onlyMulti;
   const selectedThemes = themes.filter(t => selectedIds.includes(t.id));
 
   if (themes.length === 0) {
@@ -829,14 +834,14 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
         <div className="bg-gray-800 border-2 border-orange-500 rounded-2xl p-10 max-w-md w-full text-center shadow-2xl">
           <div className="text-6xl mb-4">⏳</div>
           <h2 className="text-2xl font-black text-orange-400 mb-2">Push effectué par {cooldownAdmin}</h2>
-          <p className="text-gray-400 mb-6">Attente de la mise à jour GitHub...</p>
+          <p className="text-gray-400 mb-6">Vitrine en cours de déploiement...</p>
           <div className="text-7xl font-black mb-2" style={{
             background: 'linear-gradient(180deg, #FF8C00 0%, #FFD700 100%)',
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
           }}>
             {formatCountdown(cooldownRemaining)}
           </div>
-          <p className="text-gray-500 text-sm mb-8">L'admin sera disponible dans quelques instants</p>
+          <p className="text-gray-500 text-sm mb-8">La vitrine sera disponible dans quelques instants</p>
           <button
             onClick={forceCooldownSkip}
             className="px-6 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white rounded-lg font-bold text-sm transition-all border border-gray-600"
@@ -907,10 +912,19 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
               <User className="w-4 h-4" />Créateurs manquants
               <span className={`px-2 py-0.5 rounded-full text-xs font-black ${filters.onlyMissingCreators ? 'bg-white text-yellow-600' : 'bg-gray-800 text-white'}`}>{stats.missingCreators}</span>
             </button>
-            <button onClick={() => setFilters({...filters, onlyNotOnScreenScraper: !filters.onlyNotOnScreenScraper})}
+            <button onClick={() => setFilters({...filters, onlyNotOnScreenScraper: !filters.onlyNotOnScreenScraper, onlyOnScreenScraper: false})}
               className={`px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${filters.onlyNotOnScreenScraper ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg' : 'bg-gray-900 border border-gray-700 text-gray-300 hover:border-blue-500'}`}>
-              <Database className="w-4 h-4" />Pas sur ScreenScraper
-              <span className={`px-2 py-0.5 rounded-full text-xs font-black ${filters.onlyNotOnScreenScraper ? 'bg-white text-blue-600' : 'bg-gray-800 text-white'}`}>{stats.notOnScreenScraper}</span>
+              <Database className="w-4 h-4" />❌ Pas sur ScreenScraper
+              <span className={`px-2 py-0.5 rounded-full text-xs font-black ${filters.onlyNotOnScreenScraper ? 'bg-white text-blue-600' : 'bg-gray-800 text-white'}`}>
+                {stats.gameThemesNotOnSS}/{stats.gameThemesTotal} thèmes de jeux
+              </span>
+            </button>
+            <button onClick={() => setFilters({...filters, onlyOnScreenScraper: !filters.onlyOnScreenScraper, onlyNotOnScreenScraper: false})}
+              className={`px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${filters.onlyOnScreenScraper ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg' : 'bg-gray-900 border border-gray-700 text-gray-300 hover:border-green-500'}`}>
+              <Database className="w-4 h-4" />✅ Sur ScreenScraper
+              <span className={`px-2 py-0.5 rounded-full text-xs font-black ${filters.onlyOnScreenScraper ? 'bg-white text-green-600' : 'bg-gray-800 text-white'}`}>
+                {stats.gameThemesOnSS}/{stats.gameThemesTotal} thèmes de jeux
+              </span>
             </button>
             <button onClick={() => setFilters({...filters, onlyMulti: !filters.onlyMulti})}
               className={`px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${filters.onlyMulti ? 'text-white shadow-lg' : 'bg-gray-900 border border-gray-700 text-gray-300'}`}
