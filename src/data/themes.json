@@ -30115,6 +30115,85 @@
     "imageUrl": "https://drive.google.com/file/d/1KhxzlcvnmeBOHlKTStbhbVuy3UB7Toi0/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1PWbDKxr6P5STq3mYudxxG4Aa-Hfm9nI5/view?usp=sharing",
     "size": "9.1 MB",
-    "date": "2026-05-12"
+    "date": "2026-05-12",
+    "onScreenScraper": false,
+    "isMulti": false
+  },
+  {
+    "id": 53475,
+    "name": "zoar",
+    "creator": "Dav",
+    "system": "dataeast",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Cq0lWg3OIGhXsEy5Ku1feMsthC7IxY9y/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1pgSYQ_x_2om5ySsK-TU4PX0sa3Sl6bB9/view?usp=sharing",
+    "size": "6.5 MB",
+    "date": "2026-05-14"
+  },
+  {
+    "id": 53692,
+    "name": "zeropnt",
+    "creator": "Dav",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1JX6m5lwnhjqtjs8hcSk8_6OlNTbyPg34/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/17iUHEae02reiGOXQXlFt5jErWqBLXzd3/view?usp=sharing",
+    "size": "6.6 MB",
+    "date": "2026-05-14"
+  },
+  {
+    "id": 53693,
+    "name": "zeropnt2",
+    "creator": "Dav",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1NXy7_p36RzSLZVSyJYp-O4YAI9HWQ5ql/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1bZcbWObbjqf3oTP8wvjMZ5IIVmwm55yg/view?usp=sharing",
+    "size": "6.6 MB",
+    "date": "2026-05-14"
+  },
+  {
+    "id": 53694,
+    "name": "zingzip",
+    "creator": "Dav",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1aQxsY5yhTYeqijav5LQP9UeTwLBsqqfL/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/15QAnKUR7GtsR7gHxO2HPUMNWRMw6Vj2M/view?usp=sharing",
+    "size": "7.4 MB",
+    "date": "2026-05-14"
+  },
+  {
+    "id": 53695,
+    "name": "zoar",
+    "creator": "Dav",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1-enqwD0MKlAPBTXNcHYm08ZMaIDemEZ7/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1BoRDr9ttf6RvJtJ9V8nEzfMbYtoz9AD3/view?usp=sharing",
+    "size": "6.5 MB",
+    "date": "2026-05-14"
+  },
+  {
+    "id": 54639,
+    "name": "zombraid",
+    "creator": "Dav",
+    "system": "sammy",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1MkHL4INa8qEHNliMs_pAdpK-IdSv9_gt/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/191NMWQUtfWsrBPOoiEZh8810vBCX4wty/view?usp=sharing",
+    "size": "9.1 MB",
+    "date": "2026-05-14"
+  },
+  {
+    "id": 54640,
+    "name": "zingzip",
+    "creator": "Dav",
+    "system": "sammy",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1RiZmmz575bUdwnjgKa8v9YFRUr6wzaei/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1wMnwpI9aj88Koy1kxWjgwrN8a4RlpwSi/view?usp=sharing",
+    "size": "7.4 MB",
+    "date": "2026-05-14"
   }
 ]
