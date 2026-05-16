@@ -867,7 +867,7 @@
     "downloadUrl": "https://drive.google.com/file/d/1SqV-P6lyQKEt7PB8WGacvkw3l3NUn31W/view?usp=sharing",
     "size": "1.9 MB",
     "date": "2025-11-30",
-    "onScreenScraper": false,
+    "onScreenScraper": true,
     "isMulti": false
   },
   {
@@ -2284,7 +2284,7 @@
     "downloadUrl": "https://drive.google.com/file/d/1SdMgzbf7V-_eph-sVxV_825CXL6wAYZm/view?usp=sharing",
     "size": "3.0 MB",
     "date": "2025-11-13",
-    "onScreenScraper": false,
+    "onScreenScraper": true,
     "isMulti": false
   },
   {
@@ -2492,7 +2492,7 @@
     "downloadUrl": "https://drive.google.com/file/d/19NkcoKsUOAAjtAspxAF5i1i-DiH4wh9D/view?usp=sharing",
     "size": "2.4 MB",
     "date": "2025-11-30",
-    "onScreenScraper": false,
+    "onScreenScraper": true,
     "isMulti": false
   },
   {
