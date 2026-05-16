@@ -10,7 +10,8 @@ export type ThemeItem = {
   size: string;
   date?: string;
   onScreenScraper?: boolean;
-  isMulti?: boolean;  // ← NOUVEAU : thème multi-région (PAL, USA, JAP, etc.)
+  isMulti?: boolean;  // thème multi-région (PAL, USA, JAP, etc.)
+  ssGameId?: string;  // ID du jeu sur ScreenScraper (lien manuel ou auto)
 };
 
 export type NewThemeForm = Omit<ThemeItem, 'id'>;
