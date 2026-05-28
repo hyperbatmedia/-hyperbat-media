@@ -478,12 +478,13 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const [cooldownRemaining, setCooldownRemaining] = useState<number>(0);
   const [cooldownAdmin, setCooldownAdmin] = useState<string>('');
   const cooldownIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const handleGithubPushRef = useRef<(token: string) => Promise<void>>();
 
   // Écoute le push déclenché depuis la modale "Fermer Admin"
   useEffect(() => {
     const handlePushRequest = (e: Event) => {
       const token = (e as CustomEvent).detail?.token;
-      if (token) handleGithubPush(token);
+      if (token) void handleGithubPushRef.current?.(token);
     };
     // Écoute la fermeture sans push → reset le cooldown
     const handleCloseAdmin = () => {
@@ -498,7 +499,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       window.removeEventListener('hyperbat-push-request', handlePushRequest);
       window.removeEventListener('hyperbat-close-admin', handleCloseAdmin);
     };
-  }, [themes]);
+  }, []);
 
   // Vérifie si un cooldown est actif au montage (depuis localStorage)
   useEffect(() => {
@@ -772,6 +773,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       setIsPushing(false);
     }
   };
+  handleGithubPushRef.current = handleGithubPush;
 
   const handleGithubButtonClick = () => {
     setShowGithubModal(true);
