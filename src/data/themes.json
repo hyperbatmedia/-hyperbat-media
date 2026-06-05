@@ -30104,6 +30104,7 @@
     "downloadUrl": "https://drive.google.com/file/d/10K7VPrrGFUnsO97pW8ADgRhx76z4azlT/view?usp=sharing",
     "size": "39.8 MB",
     "date": "2026-05-12",
+    "onScreenScraper": false,
     "isMulti": true
   },
   {
@@ -30128,7 +30129,9 @@
     "imageUrl": "https://drive.google.com/file/d/1Cq0lWg3OIGhXsEy5Ku1feMsthC7IxY9y/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1pgSYQ_x_2om5ySsK-TU4PX0sa3Sl6bB9/view?usp=sharing",
     "size": "6.5 MB",
-    "date": "2026-05-14"
+    "date": "2026-05-14",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 53692,
@@ -30139,7 +30142,9 @@
     "imageUrl": "https://drive.google.com/file/d/1JX6m5lwnhjqtjs8hcSk8_6OlNTbyPg34/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/17iUHEae02reiGOXQXlFt5jErWqBLXzd3/view?usp=sharing",
     "size": "6.6 MB",
-    "date": "2026-05-14"
+    "date": "2026-05-14",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 53693,
@@ -30150,7 +30155,9 @@
     "imageUrl": "https://drive.google.com/file/d/1NXy7_p36RzSLZVSyJYp-O4YAI9HWQ5ql/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1bZcbWObbjqf3oTP8wvjMZ5IIVmwm55yg/view?usp=sharing",
     "size": "6.6 MB",
-    "date": "2026-05-14"
+    "date": "2026-05-14",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 53694,
@@ -30161,7 +30168,9 @@
     "imageUrl": "https://drive.google.com/file/d/1aQxsY5yhTYeqijav5LQP9UeTwLBsqqfL/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/15QAnKUR7GtsR7gHxO2HPUMNWRMw6Vj2M/view?usp=sharing",
     "size": "7.4 MB",
-    "date": "2026-05-14"
+    "date": "2026-05-14",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 53695,
@@ -30172,7 +30181,9 @@
     "imageUrl": "https://drive.google.com/file/d/1-enqwD0MKlAPBTXNcHYm08ZMaIDemEZ7/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1BoRDr9ttf6RvJtJ9V8nEzfMbYtoz9AD3/view?usp=sharing",
     "size": "6.5 MB",
-    "date": "2026-05-14"
+    "date": "2026-05-14",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 54639,
@@ -30183,7 +30194,9 @@
     "imageUrl": "https://drive.google.com/file/d/1MkHL4INa8qEHNliMs_pAdpK-IdSv9_gt/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/191NMWQUtfWsrBPOoiEZh8810vBCX4wty/view?usp=sharing",
     "size": "9.1 MB",
-    "date": "2026-05-14"
+    "date": "2026-05-14",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 54640,
@@ -30194,6 +30207,52 @@
     "imageUrl": "https://drive.google.com/file/d/1RiZmmz575bUdwnjgKa8v9YFRUr6wzaei/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1wMnwpI9aj88Koy1kxWjgwrN8a4RlpwSi/view?usp=sharing",
     "size": "7.4 MB",
-    "date": "2026-05-14"
+    "date": "2026-05-14",
+    "onScreenScraper": false,
+    "isMulti": false
+  },
+  {
+    "id": 54664,
+    "name": "asurabus Alt",
+    "creator": "Roni",
+    "system": "fuuki",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/17dFN1X3sr1ArIzshOOGV20Li6QWRofIj/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1JZV8FGkBz8a77h4Ws19SHoK0o_TRObBo/view?usp=sharing",
+    "size": "4.3 MB",
+    "date": "2026-05-24"
+  },
+  {
+    "id": 54665,
+    "name": "asurabus",
+    "creator": "Roni",
+    "system": "fuuki",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1swN3AMATzGsOo0BDrnGfQ2_xoYgCrkLp/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1FB8cHq8b7y6qNJB-g5xUjZ1R8A_vOxeG/view?usp=sharing",
+    "size": "5.6 MB",
+    "date": "2026-05-20"
+  },
+  {
+    "id": 54676,
+    "name": "fuuki",
+    "creator": "Roni",
+    "system": "fuuki",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1WK1SxP-wkkUsKZqJ2f2JC05t6XsJQ3m_/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1JUTYYYufJSpSSohqU8BVrg2L-pTgFTUU/view?usp=sharing",
+    "size": "1.3 MB",
+    "date": "2026-05-20"
+  },
+  {
+    "id": 54678,
+    "name": "_default",
+    "creator": "Roni",
+    "system": "fuuki",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1f25HY1skcz9AEWcj5mcngwd9qz5wpElY/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1vVFCq5BCjB5OsMsXFKkugfAIQiUYhN7T/view?usp=sharing",
+    "size": "654.5 KB",
+    "date": "2026-05-20"
   }
 ]
