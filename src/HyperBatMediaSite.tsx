@@ -1,4 +1,7 @@
-// Fichier: src/HyperBatMediaSite.tsx 
+// Fichier: src/HyperBatMediaSite.tsx
+// MODIFIÉ : ajout du useEffect de lecture des query params URL (?search=, ?system=, ?category=)
+// pour permettre au script hyperbat_theme_finder.py d'ouvrir la vitrine pré-filtrée.
+
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download } from 'lucide-react';
 
@@ -8,7 +11,7 @@ import { useThemeStorage } from './hooks/useThemeStorage';
 import { useSystemsLogic } from './hooks/useSystemsLogic';
 import { getThemeKey } from './utils/themeUtils';
 import Sidebar from './components/Sidebar/Sidebar';
-import AdminPanel, { AdminTab } from './components/AdminPanel/AdminPanel'; 
+import AdminPanel, { AdminTab } from './components/AdminPanel/AdminPanel';
 import ThemeList from './components/ThemeList/ThemeList';
 import CartPanel from './components/CartPanel/CartPanel';
 import RecapThemesPanel from './components/RecapThemesPanel/RecapThemesPanel';
@@ -56,10 +59,9 @@ const GITHUB_OWNER = 'hyperbatmedia';
 const GITHUB_REPO = '-hyperbat-media';
 const GITHUB_BRANCH = 'main';
 const LOCK_PATH = 'admin_lock.json';
-const COOLDOWN_CLOSE_SECONDS = 60;   // fermeture sans push
-const LOCK_EXPIRES_HOURS = 8;        // expiration automatique du lock
+const COOLDOWN_CLOSE_SECONDS = 60;
+const LOCK_EXPIRES_HOURS = 8;
 
-// ── Helpers GitHub lock ───────────────────────────────────────────────────────
 const writeLock = async (
   token: string,
   adminName: string,
@@ -76,8 +78,6 @@ const writeLock = async (
       isPushCooldown: cooldownSeconds ? (cooldownSeconds > COOLDOWN_CLOSE_SECONDS) : undefined
     };
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(lockData, null, 2))));
-
-    // Toujours relire le SHA frais via l'API (jamais de cache)
     let sha: string | undefined;
     const shaRes = await fetch(
       `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`,
@@ -89,8 +89,6 @@ const writeLock = async (
     } else if (shaRes.status !== 404) {
       return { ok: false, error: `Erreur lecture SHA: ${shaRes.status}` };
     }
-
-    // Écrire le lock avec le SHA frais
     const putRes = await fetch(
       `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`,
       {
@@ -104,12 +102,10 @@ const writeLock = async (
         })
       }
     );
-
     if (!putRes.ok) {
       const errData = await putRes.json().catch(() => ({}));
       return { ok: false, error: `GitHub ${putRes.status}: ${errData.message || 'Erreur inconnue'}` };
     }
-
     return { ok: true };
   } catch (err) {
     return { ok: false, error: `Réseau: ${err instanceof Error ? err.message : 'Erreur inconnue'}` };
@@ -120,24 +116,16 @@ const readLock = async (): Promise<{ isLocked: boolean; adminName: string; locke
   try {
     const res = await fetch(
       `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`,
-      {
-        headers: {
-          Accept: 'application/vnd.github+json',
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
-        }
-      }
+      { headers: { Accept: 'application/vnd.github+json', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' } }
     );
     if (!res.ok) return null;
     const data = await res.json();
     const lock = JSON.parse(atob(data.content.replace(/\n/g, '')));
-    // Expiration automatique après 8h
     if (lock?.isLocked && lock?.expiresAt && lock.expiresAt < Date.now()) return null;
     return lock;
   } catch { return null; }
 };
 
-// ── Modale entrée admin (Prénom + Token) ─────────────────────────────────────
 const AdminLoginModal = ({ onConfirm, onCancel }: {
   onConfirm: (name: string, token: string) => void;
   onCancel: () => void;
@@ -151,7 +139,6 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
   const [isPush, setIsPush] = useState<boolean>(false);
   const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Décompte visible
   useEffect(() => {
     if (countdown > 0) {
       countdownRef.current = setInterval(() => {
@@ -178,17 +165,13 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
     setError('');
     try {
       const lock = await readLock();
-
-      // 1. Vérifier isLocked EN PREMIER
       if (lock?.isLocked) {
         const elapsed = Math.floor((Date.now() - lock.lockedAt) / 60000);
-        const elapsedStr = elapsed < 1 ? 'moins d\'1 minute' : `${elapsed} minute${elapsed > 1 ? 's' : ''}`;
+        const elapsedStr = elapsed < 1 ? "moins d'1 minute" : `${elapsed} minute${elapsed > 1 ? 's' : ''}`;
         setError(`🔒 ${lock.adminName} est déjà dans l'admin depuis ${elapsedStr}. Réessaie plus tard ou force l'accès.`);
         setIsChecking(false);
         return;
       }
-
-      // 2. Vérifier cooldown ENSUITE
       if (lock?.cooldownUntil && lock.cooldownUntil > Date.now()) {
         const remaining = Math.ceil((lock.cooldownUntil - Date.now()) / 1000);
         setCountdownAdmin(lock.adminName);
@@ -197,8 +180,6 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
         setIsChecking(false);
         return;
       }
-
-      // 3. Écrire le lock
       const result = await writeLock(trimmedToken, trimmedName, true);
       if (!result.ok) {
         setError(`❌ Impossible d'écrire le verrou : ${result.error}`);
@@ -246,37 +227,26 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
         <div className="space-y-3 mb-4">
           <div className="grid grid-cols-2 gap-2">
             {['Alain', 'Bob', 'Dav', 'Christophe'].map(n => (
-              <button
-                key={n}
-                type="button"
-                onClick={() => { setName(n); setError(''); }}
+              <button key={n} type="button" onClick={() => { setName(n); setError(''); }}
                 className={`py-3 rounded-xl font-black text-lg transition-all border-2 ${
                   name === n
                     ? 'bg-gradient-to-r from-orange-600 to-pink-600 border-orange-400 text-white shadow-lg shadow-orange-500/30'
                     : 'bg-gray-900 border-gray-700 text-gray-300 hover:border-orange-500 hover:text-white'
-                }`}
-              >
+                }`}>
                 {n}
               </button>
             ))}
           </div>
-          <input
-            type="password"
-            autoFocus
-            value={token}
+          <input type="password" autoFocus value={token}
             onChange={e => { setToken(e.target.value); setError(''); }}
             onKeyDown={e => e.key === 'Enter' && handleSubmit()}
             placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
-            className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none font-mono text-sm"
-          />
+            className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none font-mono text-sm" />
         </div>
-        {/* Décompte cooldown */}
         {countdown > 0 && (
           <div className="mb-4 p-4 bg-gray-900 border-2 border-orange-500 rounded-xl text-center">
             <div className="text-sm text-gray-400 mb-1">
-              {isPush
-                ? `⏳ ${countdownAdmin} vient de pusher — vitrine en déploiement`
-                : `⏳ ${countdownAdmin} vient de quitter l'admin`}
+              {isPush ? `⏳ ${countdownAdmin} vient de pusher — vitrine en déploiement` : `⏳ ${countdownAdmin} vient de quitter l'admin`}
             </div>
             <div className="text-4xl font-black mb-1" style={{
               background: 'linear-gradient(180deg, #FF8C00 0%, #FFD700 100%)',
@@ -284,12 +254,9 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
             }}>
               {formatCountdown(countdown)}
             </div>
-            <div className="text-xs text-gray-500">
-              {isPush ? 'vitrine disponible dans...' : 'Réessaie dans...'}
-            </div>
+            <div className="text-xs text-gray-500">{isPush ? 'vitrine disponible dans...' : 'Réessaie dans...'}</div>
           </div>
         )}
-
         {error && (
           <div className="mb-4 p-3 bg-red-900/40 border border-red-500 rounded-xl text-red-300 text-sm">
             {error}
@@ -302,14 +269,9 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
           </div>
         )}
         <div className="flex gap-3">
-          <button onClick={onCancel} className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold transition-all">
-            Annuler
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={!name.trim() || !token.trim() || isChecking || countdown > 0}
-            className="flex-1 py-3 bg-gradient-to-r from-orange-600 to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold transition-all flex items-center justify-center gap-2"
-          >
+          <button onClick={onCancel} className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold transition-all">Annuler</button>
+          <button onClick={handleSubmit} disabled={!name.trim() || !token.trim() || isChecking || countdown > 0}
+            className="flex-1 py-3 bg-gradient-to-r from-orange-600 to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold transition-all flex items-center justify-center gap-2">
             {isChecking ? <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />Vérif...</> : 'Entrer'}
           </button>
         </div>
@@ -331,16 +293,10 @@ export default function HyperBatMediaSite(): JSX.Element {
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
     try { return localStorage.getItem('sidebar-collapsed') === 'true'; } catch { return false; }
   });
-
-  // ── Admin : token en mémoire + lock ─────────────────────────────────────
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
-  const [adminToken, setAdminToken] = useState<string>(''); // token en mémoire, jamais stocké
-
-  // ── Modale fermeture admin ────────────────────────────────────────────────
+  const [adminToken, setAdminToken] = useState<string>('');
   const [showCloseModal, setShowCloseModal] = useState<boolean>(false);
   const [showPushFromClose, setShowPushFromClose] = useState<boolean>(false);
-
-  // ── Panier ────────────────────────────────────────────────────────────────
   const [cart, setCart] = useState<ThemeItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
 
@@ -352,20 +308,57 @@ export default function HyperBatMediaSite(): JSX.Element {
       return [...prev, theme];
     });
   }, []);
+  const handleCartRemove = useCallback((key: string) => setCart(prev => prev.filter(t => getThemeKey(t) !== key)), []);
+  const handleCartClear = useCallback(() => setCart([]), []);
 
-  const handleCartRemove = useCallback((key: string) => {
-    setCart(prev => prev.filter(t => getThemeKey(t) !== key));
-  }, []);
-
-  const handleCartClear = useCallback(() => {
-    setCart([]);
-  }, []);
-
-  // ── Thèmes ────────────────────────────────────────────────────────────────
   const { themes: rawThemes, setThemes, isLoading, saveThemes } = useThemeStorage();
   const systemsLogic = useSystemsLogic();
-
   const colors = useMemo(() => getThemeColors(isDarkMode), [isDarkMode]);
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // NOUVEAUTÉ : lecture des query params URL au premier chargement
+  // Utilisé par le script hyperbat_theme_finder.py pour ouvrir la vitrine
+  // directement filtrée sur un jeu/système.
+  //
+  // Exemples d'URLs supportées :
+  //   ?search=mario
+  //   ?system=snes
+  //   ?search=mario&system=snes
+  //   ?search=mario&system=snes&category=game-themes
+  // ─────────────────────────────────────────────────────────────────────────
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const searchParam   = params.get('search');
+    const systemParam   = params.get('system');
+    const categoryParam = params.get('category');
+
+    if (searchParam) {
+      setSearchTerm(searchParam);
+    }
+
+    if (systemParam) {
+      const normalized = systemParam.toLowerCase().replace(/[^a-z0-9]+/g, '');
+      const found = systemsLogic.systems.find(s => {
+        const parts = s.id.split('-');
+        const idTail = parts[parts.length - 1].toLowerCase().replace(/[^a-z0-9]+/g, '');
+        const idFull = s.id.toLowerCase().replace(/[^a-z0-9]+/g, '');
+        return idTail === normalized || idFull === normalized;
+      });
+      if (found) {
+        systemsLogic.handleSystemSelect(found.id);
+      }
+    }
+
+    if (categoryParam) {
+      systemsLogic.setSelectedCategory(categoryParam);
+    }
+
+    // Nettoie l'URL après lecture pour éviter la persistance au refresh
+    if (searchParam || systemParam || categoryParam) {
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // S'exécute une seule fois au montage
 
   const themes = useMemo(() => {
     return rawThemes.map(theme => {
@@ -380,20 +373,19 @@ export default function HyperBatMediaSite(): JSX.Element {
   }, [rawThemes]);
 
   const themeStats = useMemo(() => {
-    const multiThemes = themes.filter(t => t.isMulti === true).length;
-    const collectionThemes = themes.filter(t => (t.system === 'collectionspersonnalises' || t.system === 'Collections Personnalisées') && t.category !== 'artwork').length;
-    const artworkThemes = themes.filter(t => t.category === 'artwork').length;
-    const gameThemes = themes.filter(t => t.category === 'game-themes').length;
-    const systemThemes = themes.filter(t => t.category === 'system-themes').length;
-    const defaultThemes = themes.filter(t => t.category === 'default-themes').length;
-    const magazineThemes = themes.filter(t => t.system === 'magazines').length;
+    const multiThemes        = themes.filter(t => t.isMulti === true).length;
+    const collectionThemes   = themes.filter(t => (t.system === 'collectionspersonnalises' || t.system === 'Collections Personnalisées') && t.category !== 'artwork').length;
+    const artworkThemes      = themes.filter(t => t.category === 'artwork').length;
+    const gameThemes         = themes.filter(t => t.category === 'game-themes').length;
+    const systemThemes       = themes.filter(t => t.category === 'system-themes').length;
+    const defaultThemes      = themes.filter(t => t.category === 'default-themes').length;
+    const magazineThemes     = themes.filter(t => t.system === 'magazines').length;
     const screenScraperThemes = themes.filter(t => t.category === 'game-themes' && t.onScreenScraper === true).length;
-    const gameThemesTotal = themes.filter(t => t.category === 'game-themes').length;
-    const total = themes.length;
+    const gameThemesTotal    = themes.filter(t => t.category === 'game-themes').length;
+    const total              = themes.length;
     return { multiThemes, collectionThemes, artworkThemes, gameThemes, systemThemes, defaultThemes, magazineThemes, screenScraperThemes, gameThemesTotal, total };
   }, [themes]);
 
-  // ── Systèmes sans aucun thème ─────────────────────────────────────────────
   const missingSystemsCount = useMemo(() => {
     const bobSystems = bobSystemsData as { slug: string }[];
     const allThemeSlugs = [...new Set(themes.map(t => t.system))];
@@ -410,7 +402,6 @@ export default function HyperBatMediaSite(): JSX.Element {
     }).length;
   }, [themes]);
 
-  // ── Entrée admin ──────────────────────────────────────────────────────────
   const handleSearchChange = (value: string) => {
     if (value.toLowerCase() === 'canafloche') {
       setSearchTerm('');
@@ -426,11 +417,8 @@ export default function HyperBatMediaSite(): JSX.Element {
     setShowAdminPanel(true);
   };
 
-  const handleLoginCancel = () => {
-    setShowLoginModal(false);
-  };
+  const handleLoginCancel = () => setShowLoginModal(false);
 
-  // ── Fermeture admin : efface le lock ─────────────────────────────────────
   const releaseLock = async (token: string): Promise<boolean> => {
     const adminName = localStorage.getItem('hyperbat_admin_name') || 'Admin';
     const result = await writeLock(token, adminName, false, COOLDOWN_CLOSE_SECONDS);
@@ -452,28 +440,30 @@ export default function HyperBatMediaSite(): JSX.Element {
     return themes
       .filter(theme => {
         const systemName = systemsLogic.systems.find(s => s.id === theme.system)?.name || theme.system;
-        const matchesSearch = theme.name.toLowerCase().includes(searchLower) ||
+        const matchesSearch =
+          theme.name.toLowerCase().includes(searchLower) ||
           theme.creator.toLowerCase().includes(searchLower) ||
           systemName.toLowerCase().includes(searchLower);
-        const matchesSystem = matchSystemId(theme.system, systemsLogic.selectedSystem);
-        const matchesCategory = systemsLogic.selectedCategory === 'all' ? true
-          : systemsLogic.selectedCategory === 'collection' ? (theme.system === 'collectionspersonnalises' && theme.category !== 'artwork')
-          : systemsLogic.selectedCategory === 'screenscraper' ? theme.onScreenScraper === true
-          : systemsLogic.selectedCategory === 'multi' ? theme.isMulti === true
-          : systemsLogic.selectedCategory === 'magazines' ? (theme.system === 'magazines')
-          : theme.category === systemsLogic.selectedCategory;
+        const matchesSystem   = matchSystemId(theme.system, systemsLogic.selectedSystem);
+        const matchesCategory =
+          systemsLogic.selectedCategory === 'all'          ? true :
+          systemsLogic.selectedCategory === 'collection'   ? (theme.system === 'collectionspersonnalises' && theme.category !== 'artwork') :
+          systemsLogic.selectedCategory === 'screenscraper'? theme.onScreenScraper === true :
+          systemsLogic.selectedCategory === 'multi'        ? theme.isMulti === true :
+          systemsLogic.selectedCategory === 'magazines'    ? (theme.system === 'magazines') :
+          theme.category === systemsLogic.selectedCategory;
         return matchesSearch && matchesSystem && matchesCategory;
       })
       .sort((a, b) => {
         if (sortBy === 'date') {
-          const parseDate = (dateStr: string | undefined) => {
-            if (!dateStr) return 0;
-            if (dateStr.includes('-')) return new Date(dateStr).getTime();
-            return new Date(dateStr.split('/').reverse().join('-')).getTime();
+          const parseDate = (d: string | undefined) => {
+            if (!d) return 0;
+            if (d.includes('-')) return new Date(d).getTime();
+            return new Date(d.split('/').reverse().join('-')).getTime();
           };
-          const dateA = parseDate(a.date); const dateB = parseDate(b.date);
-          if (dateA === 0 && dateB === 0) return b.id - a.id;
-          if (dateA !== dateB) { if (dateA === 0) return 1; if (dateB === 0) return -1; return dateB - dateA; }
+          const dA = parseDate(a.date), dB = parseDate(b.date);
+          if (dA === 0 && dB === 0) return b.id - a.id;
+          if (dA !== dB) { if (dA === 0) return 1; if (dB === 0) return -1; return dB - dA; }
           return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
         }
         return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
@@ -481,14 +471,11 @@ export default function HyperBatMediaSite(): JSX.Element {
   }, [searchTerm, systemsLogic.selectedSystem, systemsLogic.selectedCategory, themes, sortBy, systemsLogic.systems]);
 
   const paginatedThemes = useMemo(() => {
-    const startIndex = (currentPage - 1) * THEMES_PER_PAGE;
-    return filteredThemes.slice(startIndex, startIndex + THEMES_PER_PAGE);
+    const start = (currentPage - 1) * THEMES_PER_PAGE;
+    return filteredThemes.slice(start, start + THEMES_PER_PAGE);
   }, [filteredThemes, currentPage]);
 
-  const totalPages = useMemo(
-    () => Math.max(1, Math.ceil(filteredThemes.length / THEMES_PER_PAGE)),
-    [filteredThemes.length]
-  );
+  const totalPages = useMemo(() => Math.max(1, Math.ceil(filteredThemes.length / THEMES_PER_PAGE)), [filteredThemes.length]);
 
   useEffect(() => { setCurrentPage(1); }, [searchTerm, systemsLogic.selectedSystem, systemsLogic.selectedCategory, sortBy]);
 
@@ -528,24 +515,18 @@ export default function HyperBatMediaSite(): JSX.Element {
           </div>
         </header>
 
-        {/* ── Bande sticky admin ── */}
         {showAdminPanel && (
           <div style={{ position: 'sticky', top: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px', background: '#450a0a', border: '1.5px solid #dc2626', borderRadius: '8px', maxWidth: '600px', margin: '8px auto' }}>
             <div>
               <div style={{ color: 'white', fontSize: '15px', fontWeight: 500 }}>
                 {localStorage.getItem('hyperbat_admin_name') || 'Admin'} — mode admin
               </div>
-              <div style={{ color: '#fca5a5', fontSize: '12px' }}>
-                ⚠ Ne laisse pas l'admin ouvert sans surveillance
-              </div>
+              <div style={{ color: '#fca5a5', fontSize: '12px' }}>⚠ Ne laisse pas l'admin ouvert sans surveillance</div>
             </div>
-            <button
-              onClick={() => setShowCloseModal(true)}
+            <button onClick={() => setShowCloseModal(true)}
               style={{ background: '#dc2626', color: 'white', border: '2px solid #f87171', borderRadius: '8px', padding: '10px 24px', fontSize: '15px', fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
-              className="hover:brightness-110 transition-all"
-            >
-              <LogOut className="w-5 h-5" />
-              Quitter l'admin
+              className="hover:brightness-110 transition-all">
+              <LogOut className="w-5 h-5" />Quitter l'admin
             </button>
           </div>
         )}
@@ -553,27 +534,24 @@ export default function HyperBatMediaSite(): JSX.Element {
         <div className="container mx-auto px-4 py-4">
           {!showAdminPanel && (
             <>
-              {/* ── Statistiques / Filtres ── */}
               <div className="flex flex-wrap justify-center gap-3 mb-4">
                 {[
-                  { id: 'multi', label: 'Multi-région', count: themeStats.multiThemes, icon: '🌍' },
-                  { id: 'screenscraper', label: 'ScreenScraper', count: themeStats.screenScraperThemes, total: themeStats.gameThemesTotal, special: true },
-                  { id: 'magazines', label: 'Magazines', count: themeStats.magazineThemes, icon: '📰' },
-                  { id: 'collection', label: 'Collection', count: themeStats.collectionThemes, Icon: Package },
-                  { id: 'artwork', label: 'Artwork', count: themeStats.artworkThemes, Icon: Image },
-                  { id: 'game-themes', label: 'Thèmes de jeux', count: themeStats.gameThemes, Icon: Trophy },
-                  { id: 'system-themes', label: 'Thèmes système', count: themeStats.systemThemes, Icon: Monitor },
-                  { id: 'default-themes', label: 'Thèmes default', count: themeStats.defaultThemes, Icon: Star },
-                  { id: 'all', label: 'Total global', count: themeStats.total, Icon: BarChart3 },
+                  { id: 'multi',          label: 'Multi-région',    count: themeStats.multiThemes,         icon: '🌍' },
+                  { id: 'screenscraper',  label: 'ScreenScraper',   count: themeStats.screenScraperThemes, total: themeStats.gameThemesTotal, special: true },
+                  { id: 'magazines',      label: 'Magazines',       count: themeStats.magazineThemes,      icon: '📰' },
+                  { id: 'collection',     label: 'Collection',      count: themeStats.collectionThemes,    Icon: Package },
+                  { id: 'artwork',        label: 'Artwork',         count: themeStats.artworkThemes,       Icon: Image },
+                  { id: 'game-themes',    label: 'Thèmes de jeux',  count: themeStats.gameThemes,          Icon: Trophy },
+                  { id: 'system-themes',  label: 'Thèmes système',  count: themeStats.systemThemes,        Icon: Monitor },
+                  { id: 'default-themes', label: 'Thèmes default',  count: themeStats.defaultThemes,       Icon: Star },
+                  { id: 'all',            label: 'Total global',    count: themeStats.total,               Icon: BarChart3 },
                 ].map(({ id, label, count, special, icon, Icon, total }) => (
                   <button key={id}
                     onClick={() => { systemsLogic.handleSystemSelect('all'); systemsLogic.setSelectedCategory(id); }}
                     className="px-7 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
                     style={{
                       background: special ? '#2a2a2a' : id === 'multi'
-                        ? systemsLogic.selectedCategory === 'multi'
-                          ? 'linear-gradient(to right, #7e22ce, #be185d)'
-                          : 'linear-gradient(to right, #6b21a8, #9d174d)'
+                        ? systemsLogic.selectedCategory === 'multi' ? 'linear-gradient(to right, #7e22ce, #be185d)' : 'linear-gradient(to right, #6b21a8, #9d174d)'
                         : '#D97706',
                       borderColor: systemsLogic.selectedCategory === id ? '#FFFF00' : id === 'multi' ? '#c084fc' : '#FFD700',
                       borderWidth: systemsLogic.selectedCategory === id ? '3px' : '2px',
@@ -590,15 +568,12 @@ export default function HyperBatMediaSite(): JSX.Element {
                       ) : (
                         <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>{label}</p>
                       )}
-                      <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>
-                        {total ? `${count}/${total}` : count}
-                      </p>
+                      <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{total ? `${count}/${total}` : count}</p>
                     </div>
                   </button>
                 ))}
               </div>
 
-              {/* ── Barre de contrôles ── */}
               <div className="flex items-center gap-4 mb-6">
                 <div className="flex gap-2 flex-shrink-0">
                   <button onClick={() => setViewMode('grid')} className="p-3 rounded-lg transition border-2"
@@ -621,31 +596,20 @@ export default function HyperBatMediaSite(): JSX.Element {
                     title={isDarkMode ? 'Mode clair' : 'Mode sombre'}>
                     {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                   </button>
-
-                  {/* ── Bouton Panier ── */}
-                  <button
-                    onClick={() => setCartOpen(true)}
+                  <button onClick={() => setCartOpen(true)}
                     className="relative p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
-                    style={{
-                      backgroundColor: cart.length > 0 ? '#FF8C00' : colors.cardBg,
-                      borderColor: cart.length > 0 ? '#FFD700' : '#4b5563',
-                      color: cart.length > 0 ? 'white' : '#FFA500'
-                    }}
+                    style={{ backgroundColor: cart.length > 0 ? '#FF8C00' : colors.cardBg, borderColor: cart.length > 0 ? '#FFD700' : '#4b5563', color: cart.length > 0 ? 'white' : '#FFA500' }}
                     title="Ouvrir le panier">
                     <Download className="w-5 h-5" />
                     {cart.length > 0 && (
                       <>
                         <span className="text-xs font-bold">{cart.length}/{CART_MAX}</span>
                         <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full text-xs font-black flex items-center justify-center"
-                          style={{ backgroundColor: '#FFD700', color: '#1a1a1a' }}>
-                          {cart.length}
-                        </span>
+                          style={{ backgroundColor: '#FFD700', color: '#1a1a1a' }}>{cart.length}</span>
                       </>
                     )}
                   </button>
                 </div>
-
-                {/* Barre de recherche */}
                 <div className="relative flex-1">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: '#FFA500' }} />
                   <input type="text" placeholder="Rechercher un thème, un jeu, un créateur, un système..." value={searchTerm}
@@ -661,7 +625,6 @@ export default function HyperBatMediaSite(): JSX.Element {
                 </div>
               </div>
 
-              {/* ── Bandeau manques ── */}
               <div className="flex items-center justify-between px-3 py-2.5 rounded-lg mb-3 border mr-auto w-[360px]"
                 style={{ backgroundColor: isDarkMode ? '#0d0d1a' : '#fef2f2', borderColor: isDarkMode ? '#1f2937' : '#fecaca' }}>
                 <div className="flex items-center gap-1.5">
@@ -670,8 +633,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                     système{missingSystemsCount > 1 ? 's' : ''} sans thème
                   </span>
                 </div>
-                <button
-                  onClick={() => setShowRecapPanel(true)}
+                <button onClick={() => setShowRecapPanel(true)}
                   className="flex items-center gap-1 px-2 py-1 rounded-lg font-bold text-xs border-2 transition hover:brightness-110"
                   style={{ backgroundColor: '#cc6f00', borderColor: '#b8960a', color: 'white' }}>
                   Voir le récap
@@ -706,7 +668,6 @@ export default function HyperBatMediaSite(): JSX.Element {
                 />
               </div>
             )}
-
             <main className="flex-1 min-w-0">
               {!showAdminPanel && (
                 <div className="mb-6 flex items-center gap-4 text-sm flex-wrap">
@@ -721,9 +682,9 @@ export default function HyperBatMediaSite(): JSX.Element {
                   <div className="flex items-center gap-2">
                     <span style={{ color: colors.textSecondary }}>Catégorie:</span>
                     <span className="font-bold" style={{ color: '#FFA500' }}>
-                      {systemsLogic.selectedCategory === 'all' ? 'Toutes les catégories'
-                        : systemsLogic.selectedCategory === 'multi' ? '🌍 Multi-région'
-                        : categories.find(c => c.id === systemsLogic.selectedCategory)?.name || systemsLogic.selectedCategory}
+                      {systemsLogic.selectedCategory === 'all'    ? 'Toutes les catégories' :
+                       systemsLogic.selectedCategory === 'multi'  ? '🌍 Multi-région' :
+                       categories.find(c => c.id === systemsLogic.selectedCategory)?.name || systemsLogic.selectedCategory}
                     </span>
                   </div>
                   <span style={{ color: colors.textSecondary }}>•</span>
@@ -738,24 +699,18 @@ export default function HyperBatMediaSite(): JSX.Element {
                   </div>
                 </div>
               )}
-
               {showAdminPanel && (
-                <AdminPanel
-                  themes={rawThemes} setThemes={setThemes} saveThemes={saveThemes}
+                <AdminPanel themes={rawThemes} setThemes={setThemes} saveThemes={saveThemes}
                   systems={systemsLogic.systems} categories={categories}
-                  adminTab={adminTab} setAdminTab={setAdminTab}
-                />
+                  adminTab={adminTab} setAdminTab={setAdminTab} />
               )}
-
               {!showAdminPanel && (
-                <ThemeList
-                  viewMode={viewMode} themes={paginatedThemes}
+                <ThemeList viewMode={viewMode} themes={paginatedThemes}
                   allFilteredThemes={filteredThemes} filteredThemesLength={filteredThemes.length}
                   totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage}
                   themesPerPage={THEMES_PER_PAGE} systems={systemsLogic.systems}
                   cart={cart} onCartAdd={handleCartAdd} onCartRemove={handleCartRemove} onCartOpen={() => setCartOpen(true)}
-                  sidebarCollapsed={sidebarCollapsed}
-                />
+                  sidebarCollapsed={sidebarCollapsed} />
               )}
             </main>
           </div>
@@ -768,8 +723,8 @@ export default function HyperBatMediaSite(): JSX.Element {
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(2px 2px 0px #000)'
             }}>HYPERBAT MEDIA</p>
             <p className="mt-1">
-              Thème HYPERBAT créé par <span className="font-bold" style={{ background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Bob Morane</span> | 
-              Vitrine crée par <span className="font-bold" style={{ background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Christophe</span> | 
+              Thème HYPERBAT créé par <span className="font-bold" style={{ background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Bob Morane</span> |
+              Vitrine crée par <span className="font-bold" style={{ background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Christophe</span> |
               Mise à jour par <span className="font-bold" style={{ background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Alain et Christophe</span>
             </p>
             <p className="mt-2 text-sm">
@@ -779,31 +734,22 @@ export default function HyperBatMediaSite(): JSX.Element {
         </footer>
       </div>
 
-      {/* ── Modale fermeture admin ── */}
       {showCloseModal && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <div className="bg-gray-800 rounded-2xl border-2 border-red-500 max-w-sm w-full shadow-2xl p-6">
             <h2 className="text-xl font-black text-red-400 mb-2 flex items-center gap-2">
               <LogOut className="w-6 h-6" /> Fermer l'administration
             </h2>
-            <p className="text-gray-300 text-sm mb-6">
-              Tu as fini tes modifications ?
-            </p>
+            <p className="text-gray-300 text-sm mb-6">Tu as fini tes modifications ?</p>
             <div className="flex flex-col gap-3">
-              <button
-                onClick={() => { setShowCloseModal(false); setShowPushFromClose(true); }}
+              <button onClick={() => { setShowCloseModal(false); setShowPushFromClose(true); }}
                 className="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg font-bold flex items-center justify-center gap-2 transition-all">
                 🚀 Pusher maintenant puis quitter
               </button>
-              <button
-                onClick={async () => {
+              <button onClick={async () => {
                   setShowCloseModal(false);
                   const ok = await releaseLock(adminToken);
-                  if (ok) {
-                    clearCooldown();
-                    setAdminToken('');
-                    setShowAdminPanel(false);
-                  }
+                  if (ok) { clearCooldown(); setAdminToken(''); setShowAdminPanel(false); }
                 }}
                 className="w-full py-3 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white rounded-lg font-bold transition-all">
                 Quitter sans pusher
@@ -813,38 +759,26 @@ export default function HyperBatMediaSite(): JSX.Element {
         </div>
       )}
 
-      {/* ── Modale push depuis fermeture ── */}
       {showPushFromClose && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <div className="bg-gray-800 rounded-2xl border-2 border-purple-500 max-w-md w-full shadow-2xl p-6">
-            <h2 className="text-xl font-black text-purple-400 mb-2 flex items-center gap-2">
-              🚀 Push GitHub
-            </h2>
+            <h2 className="text-xl font-black text-purple-400 mb-2 flex items-center gap-2">🚀 Push GitHub</h2>
             <p className="text-gray-400 text-sm mb-1">
               Connecté en tant que : <span className="text-orange-400 font-bold">{localStorage.getItem('hyperbat_admin_name') || 'Admin'}</span>
             </p>
-            <p className="text-gray-400 text-sm mb-4">
-              Le token entré à l'ouverture sera utilisé. Un cooldown de 3 min démarrera ensuite.
-            </p>
+            <p className="text-gray-400 text-sm mb-4">Le token entré à l'ouverture sera utilisé. Un cooldown de 3 min démarrera ensuite.</p>
             <div className="flex gap-3">
-              <button
-                onClick={async () => {
+              <button onClick={async () => {
                   setShowPushFromClose(false);
                   const ok = await releaseLock(adminToken);
-                  if (ok) {
-                    clearCooldown();
-                    setAdminToken('');
-                    setShowAdminPanel(false);
-                  }
+                  if (ok) { clearCooldown(); setAdminToken(''); setShowAdminPanel(false); }
                 }}
                 className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold">
                 Quitter sans pusher
               </button>
-              <button
-                onClick={() => {
+              <button onClick={() => {
                   setShowPushFromClose(false);
                   setShowAdminPanel(false);
-                  // Déclenche le push via event — ManageTab s'occupe du push + cooldown + efface lock
                   window.dispatchEvent(new CustomEvent('hyperbat-push-request', { detail: { token: adminToken } }));
                   setAdminToken('');
                 }}
@@ -856,33 +790,15 @@ export default function HyperBatMediaSite(): JSX.Element {
         </div>
       )}
 
-      {/* ── Modale login admin ── */}
-      {showLoginModal && (
-        <AdminLoginModal
-          onConfirm={handleLoginConfirm}
-          onCancel={handleLoginCancel}
-        />
-      )}
+      {showLoginModal && <AdminLoginModal onConfirm={handleLoginConfirm} onCancel={handleLoginCancel} />}
 
-      {/* ── Panier lightbox ── */}
       {cartOpen && (
-        <CartPanel
-          cart={cart}
-          onRemove={handleCartRemove}
-          onClear={handleCartClear}
-          onClose={() => setCartOpen(false)}
-          systems={systemsLogic.systems}
-          isDarkMode={isDarkMode}
-        />
+        <CartPanel cart={cart} onRemove={handleCartRemove} onClear={handleCartClear}
+          onClose={() => setCartOpen(false)} systems={systemsLogic.systems} isDarkMode={isDarkMode} />
       )}
 
-      {/* ── Récap Thèmes ── */}
       {showRecapPanel && (
-        <RecapThemesPanel
-          themes={themes}
-          onClose={() => setShowRecapPanel(false)}
-          isDarkMode={isDarkMode}
-        />
+        <RecapThemesPanel themes={themes} onClose={() => setShowRecapPanel(false)} isDarkMode={isDarkMode} />
       )}
     </div>
   );
