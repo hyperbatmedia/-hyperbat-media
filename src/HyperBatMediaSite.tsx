@@ -334,8 +334,15 @@ export default function HyperBatMediaSite(): JSX.Element {
     if (searchParam) setSearchTerm(searchParam);
 
     if (systemParam) {
+      // Cherche d'abord par nom exact (ex: "Nintendo 64", "Mega Drive / Genesis")
+      // puis par slug normalisé en fallback
       const normalized = systemParam.toLowerCase().replace(/[^a-z0-9]+/g, '');
       const found = systemsLogic.systems.find(s => {
+        // Correspondance exacte sur le nom
+        if (s.name && s.name.toLowerCase() === systemParam.toLowerCase()) return true;
+        // Correspondance normalisée sur le nom
+        if (s.name && s.name.toLowerCase().replace(/[^a-z0-9]+/g, '') === normalized) return true;
+        // Correspondance sur l'ID (fallback)
         const parts = s.id.split('-');
         const idTail = parts[parts.length - 1].toLowerCase().replace(/[^a-z0-9]+/g, '');
         const idFull = s.id.toLowerCase().replace(/[^a-z0-9]+/g, '');
