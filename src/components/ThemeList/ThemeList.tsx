@@ -23,13 +23,15 @@ interface ThemeListProps {
   onCartRemove: (key: string) => void;
   onCartOpen: () => void;
   sidebarCollapsed?: boolean;
+  isRetrobat?: boolean;
 }
 
 const ThemeList: React.FC<ThemeListProps> = ({
   viewMode, themes, allFilteredThemes, filteredThemesLength,
   totalPages, currentPage, setCurrentPage, themesPerPage,
   systems,
-  cart, onCartAdd, onCartRemove, sidebarCollapsed = false
+  cart, onCartAdd, onCartRemove, sidebarCollapsed = false,
+  isRetrobat = false
 }) => {
   const [selectedTheme, setSelectedTheme] = useState<ThemeItem | null>(null);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
@@ -266,12 +268,23 @@ const ThemeList: React.FC<ThemeListProps> = ({
                 {theme.onScreenScraper && <div className="mb-2"><ScreenScraperBadge /></div>}
 
                 <div className="flex gap-2">
-                  <a href={theme.downloadUrl} target="_blank" rel="noopener noreferrer"
-                    className="flex-1 py-2 rounded flex items-center justify-center gap-2 font-bold text-xs border transition hover:brightness-110 active:scale-95"
-                    style={{ backgroundColor: '#CC7000', borderColor: '#E89B3C', color: 'white' }}>
-                    <Download className="w-4 h-4" />
-                    Télécharger
-                  </a>
+                  {isRetrobat ? (
+                    // ── Mode RetroBat : bouton "Installer dans RetroBat" ──
+                    <a
+                      href={`hyperbat://install?url=${encodeURIComponent(theme.downloadUrl)}&system=${encodeURIComponent(theme.system)}&category=${encodeURIComponent(theme.category)}&name=${encodeURIComponent(theme.name)}`}
+                      className="flex-1 py-2 rounded flex items-center justify-center gap-2 font-bold text-xs border transition hover:brightness-110 active:scale-95"
+                      style={{ backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white' }}>
+                      🎮 Installer dans RetroBat
+                    </a>
+                  ) : (
+                    // ── Mode normal : bouton Télécharger ──
+                    <a href={theme.downloadUrl} target="_blank" rel="noopener noreferrer"
+                      className="flex-1 py-2 rounded flex items-center justify-center gap-2 font-bold text-xs border transition hover:brightness-110 active:scale-95"
+                      style={{ backgroundColor: '#CC7000', borderColor: '#E89B3C', color: 'white' }}>
+                      <Download className="w-4 h-4" />
+                      Télécharger
+                    </a>
+                  )}
                   <button
                     onClick={() => handleCartToggle(theme)}
                     title={inCart ? 'Retirer de la sélection' : cart.length >= CART_MAX ? 'Sélection pleine' : 'Ajouter à la sélection'}

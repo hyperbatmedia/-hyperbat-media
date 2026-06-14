@@ -316,25 +316,22 @@ export default function HyperBatMediaSite(): JSX.Element {
   const colors = useMemo(() => getThemeColors(isDarkMode), [isDarkMode]);
 
   // ─────────────────────────────────────────────────────────────────────────
-  // NOUVEAUTÉ : lecture des query params URL au premier chargement
-  // Utilisé par le script hyperbat_theme_finder.py pour ouvrir la vitrine
-  // directement filtrée sur un jeu/système.
-  //
-  // Exemples d'URLs supportées :
-  //   ?search=mario
-  //   ?system=snes
-  //   ?search=mario&system=snes
-  //   ?search=mario&system=snes&category=game-themes
+  // Lecture des query params URL au premier chargement
+  // ?system=snes        → filtre sur le système
+  // ?search=mario       → pré-remplit la recherche
+  // ?category=...       → filtre sur une catégorie
+  // ?retrobat=1         → mode RetroBat (affiche bouton "Installer dans RetroBat")
   // ─────────────────────────────────────────────────────────────────────────
+  const [isRetrobat, setIsRetrobat] = useState<boolean>(false);
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const searchParam   = params.get('search');
     const systemParam   = params.get('system');
     const categoryParam = params.get('category');
+    const retrobatParam = params.get('retrobat');
 
-    if (searchParam) {
-      setSearchTerm(searchParam);
-    }
+    if (searchParam) setSearchTerm(searchParam);
 
     if (systemParam) {
       const normalized = systemParam.toLowerCase().replace(/[^a-z0-9]+/g, '');
@@ -344,21 +341,20 @@ export default function HyperBatMediaSite(): JSX.Element {
         const idFull = s.id.toLowerCase().replace(/[^a-z0-9]+/g, '');
         return idTail === normalized || idFull === normalized;
       });
-      if (found) {
-        systemsLogic.handleSystemSelect(found.id);
-      }
+      if (found) systemsLogic.handleSystemSelect(found.id);
     }
 
-    if (categoryParam) {
-      systemsLogic.setSelectedCategory(categoryParam);
-    }
+    if (categoryParam) systemsLogic.setSelectedCategory(categoryParam);
 
-    // Nettoie l'URL après lecture pour éviter la persistance au refresh
-    if (searchParam || systemParam || categoryParam) {
+    // Mode RetroBat : remplace le bouton Télécharger par "Installer dans RetroBat"
+    if (retrobatParam === '1') setIsRetrobat(true);
+
+    // Nettoie l'URL après lecture
+    if (searchParam || systemParam || categoryParam || retrobatParam) {
       window.history.replaceState({}, '', window.location.pathname);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // S'exécute une seule fois au montage
+  }, []);
 
   const themes = useMemo(() => {
     return rawThemes.map(theme => {
@@ -710,7 +706,8 @@ export default function HyperBatMediaSite(): JSX.Element {
                   totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage}
                   themesPerPage={THEMES_PER_PAGE} systems={systemsLogic.systems}
                   cart={cart} onCartAdd={handleCartAdd} onCartRemove={handleCartRemove} onCartOpen={() => setCartOpen(true)}
-                  sidebarCollapsed={sidebarCollapsed} />
+                  sidebarCollapsed={sidebarCollapsed}
+                  isRetrobat={isRetrobat} />
               )}
             </main>
           </div>
