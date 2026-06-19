@@ -180,7 +180,7 @@ export const systemsData: SystemsDataStructure = {
         commodore: { label: 'COMMODORE', systems: ['VIC-20 (C20)', 'Commodore 64', 'Commodore 128', 'PET', 'Amiga', 'Amiga 500', 'Amiga 1200', 'Amiga 4000', 'Plus/4 (C+4)', 'Commodore 16'] },
         amstrad: { label: 'AMSTRAD', systems: ['CPC', 'GX4000'] },
         applied: { label: 'APPLIED TECHNOLOGY', systems: ['Micro-Bee'] },
-		enterprise: { label: 'ENTERPRISE', systems: ['Enterprise 64', 'Enterprise 128'] }
+        enterprise: { label: 'ENTERPRISE', systems: ['Enterprise 64', 'Enterprise 128'] },
         sinclair: { label: 'SINCLAIR', systems: ['ZX81', 'ZX Spectrum'] },
         samcoupe: { label: 'MGT', systems: ['SAM Coupé'] },
         msx: { label: 'MSX', systems: ['MSX', 'MSX2', 'MSX2+', 'MSX TurboR'] },
