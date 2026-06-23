@@ -693,6 +693,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const handleGithubPush = async (token: string) => {
     // Récupérer le nom de l'admin depuis localStorage
     const adminName = localStorage.getItem('hyperbat_admin_name') || 'Admin';
+    const MAX_ATTEMPTS = 3;
 
     setIsPushing(true);
     try {
@@ -707,26 +708,33 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       }));
       const content = btoa(unescape(encodeURIComponent(JSON.stringify(allThemesData, null, 2))));
 
-      // 1. Récupérer le SHA du fichier existant
-      const getRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}?ref=${GITHUB_BRANCH}`, {
-        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
-      });
-      if (!getRes.ok) throw new Error(`Erreur récupération SHA: ${getRes.status}`);
-      const fileData = await getRes.json();
-      const sha = fileData.sha;
+      // 1+2. Récupérer le SHA et pousser le nouveau themes.json, avec retry si le SHA était périmé (409)
+      let themesPushed = false;
+      for (let attempt = 1; attempt <= MAX_ATTEMPTS && !themesPushed; attempt++) {
+        const getRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}?ref=${GITHUB_BRANCH}`, {
+          headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+        });
+        if (!getRes.ok) throw new Error(`Erreur récupération SHA: ${getRes.status}`);
+        const fileData = await getRes.json();
+        const sha = fileData.sha;
 
-      // 2. Pousser le nouveau themes.json
-      const pushRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`, {
-        method: 'PUT',
-        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: `Update themes.json (${themes.length} thèmes) - ${new Date().toLocaleDateString('fr-FR')}`,
-          content,
-          sha,
-          branch: GITHUB_BRANCH
-        })
-      });
-      if (!pushRes.ok) throw new Error(`Erreur push: ${pushRes.status}`);
+        const pushRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`, {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: `Update themes.json (${themes.length} thèmes) - ${new Date().toLocaleDateString('fr-FR')}`,
+            content,
+            sha,
+            branch: GITHUB_BRANCH
+          })
+        });
+        if (pushRes.ok) { themesPushed = true; break; }
+        if (pushRes.status === 409 && attempt < MAX_ATTEMPTS) {
+          await new Promise(r => setTimeout(r, 400 * attempt));
+          continue;
+        }
+        throw new Error(`Erreur push: ${pushRes.status}`);
+      }
 
       // 3. Écrire le lock avec cooldown sur GitHub (isLocked: false = libéré après push)
       const lockData = {
@@ -739,33 +747,47 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       };
       const lockContent = btoa(unescape(encodeURIComponent(JSON.stringify(lockData, null, 2))));
 
-      // Récupérer le SHA du lock si il existe déjà
-      let lockSha: string | undefined;
-      try {
-        const lockGetRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}?ref=${GITHUB_BRANCH}`, {
-          headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
+      // 4. Récupérer le SHA du lock et l'écrire, avec retry si périmé (409) — et vérification du résultat
+      let lockWritten = false;
+      for (let attempt = 1; attempt <= MAX_ATTEMPTS && !lockWritten; attempt++) {
+        let lockSha: string | undefined;
+        try {
+          const lockGetRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}?ref=${GITHUB_BRANCH}`, {
+            headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+          });
+          if (lockGetRes.ok) {
+            const lockFileData = await lockGetRes.json();
+            lockSha = lockFileData.sha;
+          }
+        } catch { /* fichier n'existe pas encore, c'est OK */ }
+
+        const lockPutRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`, {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: `Admin lock: push by ${adminName}`,
+            content: lockContent,
+            ...(lockSha ? { sha: lockSha } : {}),
+            branch: GITHUB_BRANCH
+          })
         });
-        if (lockGetRes.ok) {
-          const lockFileData = await lockGetRes.json();
-          lockSha = lockFileData.sha;
+        if (lockPutRes.ok) { lockWritten = true; break; }
+        if (lockPutRes.status === 409 && attempt < MAX_ATTEMPTS) {
+          await new Promise(r => setTimeout(r, 400 * attempt));
+          continue;
         }
-      } catch { /* fichier n'existe pas encore, c'est OK */ }
+        console.error('Lock write failed:', lockPutRes.status);
+        break;
+      }
 
-      await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`, {
-        method: 'PUT',
-        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: `Admin lock: push by ${adminName}`,
-          content: lockContent,
-          ...(lockSha ? { sha: lockSha } : {}),
-          branch: GITHUB_BRANCH
-        })
-      });
-
-      // 4. Démarrer le cooldown local
+      // 5. Démarrer le cooldown local
       startCooldown(adminName);
 
-      showToast(`✅ Push réussi par ${adminName} — Admin bloqué 3 min`, 'success');
+      if (lockWritten) {
+        showToast(`✅ Push réussi par ${adminName} — Admin bloqué 3 min`, 'success');
+      } else {
+        showToast(`⚠️ Thèmes poussés, mais le verrou n'a pas pu être libéré sur GitHub. Libère-le manuellement si besoin.`, 'error');
+      }
       setShowGithubModal(false);
     } catch (err) {
       showToast(`❌ Erreur GitHub : ${err instanceof Error ? err.message : 'Inconnue'}`, 'error');

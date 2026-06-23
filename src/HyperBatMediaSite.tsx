@@ -68,48 +68,70 @@ const writeLock = async (
   isLocked: boolean,
   cooldownSeconds?: number
 ): Promise<{ ok: boolean; error?: string }> => {
-  try {
-    const lockData = {
-      isLocked,
-      adminName,
-      lockedAt: Date.now(),
-      expiresAt: isLocked ? Date.now() + LOCK_EXPIRES_HOURS * 3600 * 1000 : undefined,
-      cooldownUntil: cooldownSeconds ? Date.now() + cooldownSeconds * 1000 : undefined,
-      isPushCooldown: cooldownSeconds ? (cooldownSeconds > COOLDOWN_CLOSE_SECONDS) : undefined
-    };
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(lockData, null, 2))));
-    let sha: string | undefined;
-    const shaRes = await fetch(
-      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`,
-      { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } }
-    );
-    if (shaRes.ok) {
-      const shaData = await shaRes.json();
-      sha = shaData.sha;
-    } else if (shaRes.status !== 404) {
-      return { ok: false, error: `Erreur lecture SHA: ${shaRes.status}` };
-    }
-    const putRes = await fetch(
-      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`,
-      {
-        method: 'PUT',
-        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: `Admin lock: ${isLocked ? 'locked by' : 'released by'} ${adminName}`,
-          content,
-          ...(sha ? { sha } : {}),
-          branch: GITHUB_BRANCH
-        })
+  const MAX_ATTEMPTS = 3;
+  const lockData = {
+    isLocked,
+    adminName,
+    lockedAt: Date.now(),
+    expiresAt: isLocked ? Date.now() + LOCK_EXPIRES_HOURS * 3600 * 1000 : undefined,
+    cooldownUntil: cooldownSeconds ? Date.now() + cooldownSeconds * 1000 : undefined,
+    isPushCooldown: cooldownSeconds ? (cooldownSeconds > COOLDOWN_CLOSE_SECONDS) : undefined
+  };
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(lockData, null, 2))));
+
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      let sha: string | undefined;
+      const shaRes = await fetch(
+        `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/vnd.github+json',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+          }
+        }
+      );
+      if (shaRes.ok) {
+        const shaData = await shaRes.json();
+        sha = shaData.sha;
+      } else if (shaRes.status !== 404) {
+        return { ok: false, error: `Erreur lecture SHA: ${shaRes.status}` };
       }
-    );
-    if (!putRes.ok) {
-      const errData = await putRes.json().catch(() => ({}));
-      return { ok: false, error: `GitHub ${putRes.status}: ${errData.message || 'Erreur inconnue'}` };
+      const putRes = await fetch(
+        `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`,
+        {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: `Admin lock: ${isLocked ? 'locked by' : 'released by'} ${adminName}`,
+            content,
+            ...(sha ? { sha } : {}),
+            branch: GITHUB_BRANCH
+          })
+        }
+      );
+      if (!putRes.ok) {
+        const errData = await putRes.json().catch(() => ({}));
+        const isConflict = putRes.status === 409;
+        if (isConflict && attempt < MAX_ATTEMPTS) {
+          // Le SHA était périmé : on attend un court instant puis on relit/réécrit.
+          await new Promise(r => setTimeout(r, 400 * attempt));
+          continue;
+        }
+        return { ok: false, error: `GitHub ${putRes.status}: ${errData.message || 'Erreur inconnue'}` };
+      }
+      return { ok: true };
+    } catch (err) {
+      if (attempt < MAX_ATTEMPTS) {
+        await new Promise(r => setTimeout(r, 400 * attempt));
+        continue;
+      }
+      return { ok: false, error: `Réseau: ${err instanceof Error ? err.message : 'Erreur inconnue'}` };
     }
-    return { ok: true };
-  } catch (err) {
-    return { ok: false, error: `Réseau: ${err instanceof Error ? err.message : 'Erreur inconnue'}` };
   }
+  return { ok: false, error: 'Échec après plusieurs tentatives' };
 };
 
 const readLock = async (): Promise<{ isLocked: boolean; adminName: string; lockedAt: number; cooldownUntil?: number; expiresAt?: number; isPushCooldown?: boolean } | null> => {
@@ -338,18 +360,18 @@ export default function HyperBatMediaSite(): JSX.Element {
       // puis par slug normalisé en fallback
       const normalized = systemParam.toLowerCase().replace(/[^a-z0-9]+/g, '');
       const found = systemsLogic.systems.find(s => {
-	  // Ignore les lignes d'en-tête / sous-en-tête (ce ne sont pas de vrais systèmes sélectionnables)
-	  if (s.isHeader || s.isSubHeader) return false;
-	  // Correspondance exacte sur le nom
-	  if (s.name && s.name.toLowerCase() === systemParam.toLowerCase()) return true;
-	  // Correspondance normalisée sur le nom
-	  if (s.name && s.name.toLowerCase().replace(/[^a-z0-9]+/g, '') === normalized) return true;
-	  // Correspondance sur l'ID (fallback)
-	  const parts = s.id.split('-');
-	  const idTail = parts[parts.length - 1].toLowerCase().replace(/[^a-z0-9]+/g, '');
-	  const idFull = s.id.toLowerCase().replace(/[^a-z0-9]+/g, '');
-	  return idTail === normalized || idFull === normalized;
-	});
+        // Ignore les lignes d'en-tête / sous-en-tête (ce ne sont pas de vrais systèmes sélectionnables)
+        if (s.isHeader || s.isSubHeader) return false;
+        // Correspondance exacte sur le nom
+        if (s.name && s.name.toLowerCase() === systemParam.toLowerCase()) return true;
+        // Correspondance normalisée sur le nom
+        if (s.name && s.name.toLowerCase().replace(/[^a-z0-9]+/g, '') === normalized) return true;
+        // Correspondance sur l'ID (fallback)
+        const parts = s.id.split('-');
+        const idTail = parts[parts.length - 1].toLowerCase().replace(/[^a-z0-9]+/g, '');
+        const idFull = s.id.toLowerCase().replace(/[^a-z0-9]+/g, '');
+        return idTail === normalized || idFull === normalized;
+      });
       if (found) systemsLogic.handleSystemSelect(found.id);
     }
 
