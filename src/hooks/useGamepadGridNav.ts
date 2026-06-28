@@ -58,6 +58,35 @@ interface GamepadGridNavOptions {
 }
 
 export function useGamepadGridNav({ enabled, onMove, onSelect, onBack, onPreview, onToggleCart, onOpenCart, onPrevPage, onNextPage }: GamepadGridNavOptions) {
+
+  // ── Lecture du mapping depuis les parametres URL ──────────────────────
+  // Le launcher AHK passe les index detectes dans l'URL (&btnA=0&btnB=1...)
+  // Si absent (pas de RetroBat ou bouton non configure) : valeurs W3C standard
+  const getUrlParam = (name: string, fallback: number): number => {
+    if (typeof window === 'undefined') return fallback;
+    const val = new URLSearchParams(window.location.search).get(name);
+    if (val === null || val === '-1') return fallback;
+    const n = parseInt(val, 10);
+    return isNaN(n) ? fallback : n;
+  };
+
+  // Index resolus : URL en priorite, sinon constante W3C standard
+  const idx = {
+    A:     getUrlParam('btnA',     BTN_A),
+    B:     getUrlParam('btnB',     BTN_B),
+    X:     getUrlParam('btnX',     BTN_X),
+    Y:     getUrlParam('btnY',     BTN_Y),
+    Start: getUrlParam('btnStart', BTN_START),
+    L1:    getUrlParam('btnL1',    BTN_L1),    // -1 si non configure (borne arcade)
+    L2:    getUrlParam('btnL2',    BTN_L2),    // -1 si non configure (borne arcade)
+  };
+
+  // L1/L2 desactives si non configures dans l'URL (borne arcade sans L1/L2)
+  // Si pas de parametre URL du tout (mode standard W3C), L1/L2 sont actives
+  const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
+  const isRetrobatMode = urlParams.get('retrobat') === '1';
+  const l1Enabled = !isRetrobatMode || getUrlParam('btnL1', -1) !== -1;
+  const l2Enabled = !isRetrobatMode || getUrlParam('btnL2', -1) !== -1;
   const rafRef = useRef<number | null>(null);
   const heldDirection = useRef<GamepadDirection | null>(null);
   const nextRepeatAt = useRef<number>(0);
@@ -114,7 +143,7 @@ export function useGamepadGridNav({ enabled, onMove, onSelect, onBack, onPreview
 
       if (gp) {
         const now = performance.now();
-        const hotkeyHeld = isButtonDown(gp, BTN_HOTKEY);
+        const hotkeyHeld = isButtonDown(gp, BTN_HOTKEY); // bouton systeme fixe (PS/Guide Xbox)
         const direction = readDirection(gp);
 
         if (hotkeyHeld) {
@@ -150,17 +179,18 @@ export function useGamepadGridNav({ enabled, onMove, onSelect, onBack, onPreview
 
         // ── Boutons à détection de front montant (un seul déclenchement par appui) ──
         const prevDown = prevButtonsDown.current;
-        const justPressed = (index: number) => isButtonDown(gp, index) && !prevDown[index];
+        const justPressed = (index: number) => index >= 0 && isButtonDown(gp, index) && !prevDown[index];
 
-        if (justPressed(BTN_A))     onSelectRef.current();
-        if (justPressed(BTN_B))     onBackRef.current();
-        if (justPressed(BTN_X))     onPreviewRef.current();
-        if (justPressed(BTN_Y))     onToggleCartRef.current();
-        if (justPressed(BTN_START)) onOpenCartRef.current();
+        if (justPressed(idx.A))     onSelectRef.current();
+        if (justPressed(idx.B))     onBackRef.current();
+        if (justPressed(idx.X))     onPreviewRef.current();
+        if (justPressed(idx.Y))     onToggleCartRef.current();
+        if (justPressed(idx.Start)) onOpenCartRef.current();
 
         // ── L1 / L2 : changement de page avec répétition si maintenu ──
-        const l1Down = isButtonDown(gp, BTN_L1);
-        const l2Down = isButtonDown(gp, BTN_L2);
+        // Desactives si non configures (borne arcade sans L1/L2)
+        const l1Down = l1Enabled && isButtonDown(gp, idx.L1);
+        const l2Down = l2Enabled && isButtonDown(gp, idx.L2);
         if (l1Down) {
           if (heldPageBtn.current !== 'L1') {
             heldPageBtn.current = 'L1';
