@@ -1,12 +1,30 @@
 // Fichier: src/components/ThemeList/ThemeList.tsx
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Download, Plus } from 'lucide-react';
+import { Download, Plus, ArrowUp, ArrowDown, ArrowLeft, ArrowRight } from 'lucide-react';
 import { ThemeItem, SystemRow } from '../../types';
 import { getThemeKey } from '../../utils/themeUtils';
 import Lightbox from '../Lightbox/Lightbox';
 import ScreenScraperBadge from '../ScreenScraperBadge';
+import { useGamepadGridNav } from '../../hooks/useGamepadGridNav';
 
 import { CART_MAX } from '../../constants';
+
+// ── Petit badge rond/rectangulaire pour representer un bouton de manette ──
+const ControlBadge: React.FC<{ label: string; color: string; textColor?: string; rectangular?: boolean }> = ({ label, color, textColor = '#fff', rectangular }) => (
+  <span
+    style={{
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+      minWidth: rectangular ? '30px' : '22px', height: '22px',
+      padding: rectangular ? '0 6px' : 0,
+      borderRadius: rectangular ? '4px' : '50%',
+      backgroundColor: color, color: textColor,
+      fontWeight: 700, fontSize: '12px', lineHeight: 1,
+      border: '1px solid rgba(255,255,255,0.3)', flexShrink: 0
+    }}
+  >
+    {label}
+  </span>
+);
 
 interface ThemeListProps {
   viewMode: 'grid' | 'list';
@@ -30,13 +48,57 @@ const ThemeList: React.FC<ThemeListProps> = ({
   viewMode, themes, allFilteredThemes, filteredThemesLength,
   totalPages, currentPage, setCurrentPage, themesPerPage,
   systems,
-  cart, onCartAdd, onCartRemove, sidebarCollapsed = false,
+  cart, onCartAdd, onCartRemove, onCartOpen, sidebarCollapsed = false,
   isRetrobat = false
 }) => {
   const [selectedTheme, setSelectedTheme] = useState<ThemeItem | null>(null);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const [cartFullMsg, setCartFullMsg] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
+
+  // ── Navigation manette (mode kiosk RetroBat uniquement) ──────────────────
+  const [focusedIndex, setFocusedIndex] = useState(0);
+  const [columns, setColumns] = useState(2);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const actionRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+
+  // Recalcule le nombre de colonnes réellement affichées (miroir des classes Tailwind ci-dessous)
+  useEffect(() => {
+    const computeColumns = () => {
+      if (viewMode !== 'grid') { setColumns(1); return; }
+      const w = window.innerWidth;
+      if (sidebarCollapsed) {
+        setColumns(w >= 768 ? 5 : 2);
+      } else {
+        setColumns(w >= 1024 ? 4 : w >= 768 ? 3 : 2);
+      }
+    };
+    computeColumns();
+    window.addEventListener('resize', computeColumns);
+    return () => window.removeEventListener('resize', computeColumns);
+  }, [viewMode, sidebarCollapsed]);
+
+  // Revient en haut de la grille à chaque changement de page/filtre
+  useEffect(() => { setFocusedIndex(0); }, [themes]);
+
+  // Garde la carte sélectionnée visible à l'écran
+  useEffect(() => {
+    if (!isRetrobat) return;
+    cardRefs.current[focusedIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [focusedIndex, isRetrobat]);
+
+  const moveFocus = useCallback((direction: 'up' | 'down' | 'left' | 'right') => {
+    setFocusedIndex((prev) => {
+      const count = themes.length;
+      if (count === 0) return prev;
+      const col = prev % columns;
+      if (direction === 'left' && col > 0) return prev - 1;
+      if (direction === 'right' && col < columns - 1 && prev + 1 < count) return prev + 1;
+      if (direction === 'up' && prev - columns >= 0) return prev - columns;
+      if (direction === 'down' && prev + columns < count) return prev + columns;
+      return prev;
+    });
+  }, [themes.length, columns]);
 
   const isInCart = useCallback((theme: ThemeItem) =>
     cart.some(t => getThemeKey(t) === getThemeKey(theme)), [cart]);
@@ -54,6 +116,42 @@ const ThemeList: React.FC<ThemeListProps> = ({
       onCartAdd(theme);
     }
   }, [cart, isInCart, onCartAdd, onCartRemove]);
+
+  const handleGamepadSelect = useCallback(() => {
+    actionRefs.current[focusedIndex]?.click();
+  }, [focusedIndex]);
+
+  const handleGamepadBack = useCallback(() => {
+    window.history.back();
+  }, []);
+
+  const handleGamepadPreview = useCallback(() => {
+    if (themes[focusedIndex]) setSelectedTheme(themes[focusedIndex]);
+  }, [themes, focusedIndex]);
+
+  const handleGamepadToggleCart = useCallback(() => {
+    if (themes[focusedIndex]) handleCartToggle(themes[focusedIndex]);
+  }, [themes, focusedIndex, handleCartToggle]);
+
+  const handlePrevPage = useCallback(() => {
+    setCurrentPage((p) => Math.max(1, p - 1));
+  }, [setCurrentPage]);
+
+  const handleNextPage = useCallback(() => {
+    setCurrentPage((p) => Math.min(totalPages, p + 1));
+  }, [setCurrentPage, totalPages]);
+
+  useGamepadGridNav({
+    enabled: isRetrobat,
+    onMove: moveFocus,
+    onSelect: handleGamepadSelect,
+    onBack: handleGamepadBack,
+    onPreview: handleGamepadPreview,
+    onToggleCart: handleGamepadToggleCart,
+    onOpenCart: onCartOpen,   // Start (Options PS / Menu Xbox) : ouvre le panier (modale)
+    onPrevPage: handlePrevPage,
+    onNextPage: handleNextPage,
+  });
 
   useEffect(() => {
     setLoadedImages(new Set());
@@ -160,14 +258,18 @@ const ThemeList: React.FC<ThemeListProps> = ({
         {themes.map((theme, index) => {
           const key = getThemeKey(theme);
           const inCart = isInCart(theme);
+          const isGamepadFocused = isRetrobat && index === focusedIndex;
 
           return (
             <div
               key={`${key}-${index}`}
+              ref={(el) => { cardRefs.current[index] = el; }}
               className="theme-card rounded-lg border-2 overflow-hidden group relative"
               style={{
                 backgroundColor: '#111827',
-                borderColor: inCart ? '#FF8C00' : '#444',
+                borderColor: isGamepadFocused ? '#FF8C00' : inCart ? '#FF8C00' : '#444',
+                boxShadow: isGamepadFocused ? '0 25px 50px rgba(255,140,0,0.8), 0 0 30px rgba(255,165,0,0.6)' : undefined,
+                transform: isGamepadFocused ? 'translateY(-8px) scale(1.05)' : undefined,
                 transition: 'all 0.3s ease'
               }}
               onMouseEnter={(e) => {
@@ -178,9 +280,9 @@ const ThemeList: React.FC<ThemeListProps> = ({
               }}
               onMouseLeave={(e) => {
                 const card = e.currentTarget;
-                card.style.borderColor = inCart ? '#FF8C00' : '#444';
-                card.style.boxShadow = 'none';
-                card.style.transform = 'translateY(0) scale(1)';
+                card.style.borderColor = isGamepadFocused ? '#FF8C00' : inCart ? '#FF8C00' : '#444';
+                card.style.boxShadow = isGamepadFocused ? '0 25px 50px rgba(255,140,0,0.8), 0 0 30px rgba(255,165,0,0.6)' : 'none';
+                card.style.transform = isGamepadFocused ? 'translateY(-8px) scale(1.05)' : 'translateY(0) scale(1)';
               }}
             >
               <div
@@ -271,6 +373,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                   {isRetrobat ? (
                     // ── Mode RetroBat : bouton "Installer dans RetroBat" ──
                     <a
+                      ref={(el) => { actionRefs.current[index] = el; }}
                       href={`hyperbat://install?url=${encodeURIComponent(theme.downloadUrl)}&system=${encodeURIComponent(theme.system)}&category=${encodeURIComponent(theme.category)}&name=${encodeURIComponent(theme.name)}`}
                       className="flex-1 py-2 rounded flex items-center justify-center gap-2 font-bold text-xs border transition hover:brightness-110 active:scale-95"
                       style={{ backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white' }}>
@@ -278,7 +381,9 @@ const ThemeList: React.FC<ThemeListProps> = ({
                     </a>
                   ) : (
                     // ── Mode normal : bouton Télécharger ──
-                    <a href={theme.downloadUrl} target="_blank" rel="noopener noreferrer"
+                    <a
+                      ref={(el) => { actionRefs.current[index] = el; }}
+                      href={theme.downloadUrl} target="_blank" rel="noopener noreferrer"
                       className="flex-1 py-2 rounded flex items-center justify-center gap-2 font-bold text-xs border transition hover:brightness-110 active:scale-95"
                       style={{ backgroundColor: '#CC7000', borderColor: '#E89B3C', color: 'white' }}>
                       <Download className="w-4 h-4" />
@@ -369,6 +474,74 @@ const ThemeList: React.FC<ThemeListProps> = ({
         allThemes={allFilteredThemes}
         onNavigate={setSelectedTheme}
       />
+
+      {/* ── Bandeau de controles manette (mode kiosk RetroBat uniquement) ── */}
+      {isRetrobat && (
+        <div
+          style={{
+            position: 'fixed', bottom: 0, left: 0, right: 0,
+            backgroundColor: 'rgba(17, 24, 39, 0.96)',
+            borderTop: '2px solid #FF8C00',
+            padding: '8px 16px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            gap: '22px', flexWrap: 'wrap',
+            zIndex: 9999,
+            fontSize: '13px', color: '#FFFFFF',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <ControlBadge label="A" color="#2ecc71" />
+            <span>Installer</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <ControlBadge label="B" color="#e74c3c" />
+            <span>Retour</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <ControlBadge label="X" color="#3498db" />
+            <span>Aperçu</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <ControlBadge label="Y" color="#f1c40f" textColor="#111" />
+            {/* Libellé dynamique : dépend de si le thème focusé est déjà dans le panier */}
+            <span>{themes[focusedIndex] && isInCart(themes[focusedIndex]) ? 'Retirer du panier' : 'Ajouter au panier'}</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            {/* Start = Options PS / Menu Xbox */}
+            <ControlBadge label="START" color="#555" rectangular />
+            <span>Panier ({cart.length})</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <ArrowUp className="w-4 h-4" /><ArrowDown className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4" /><ArrowRight className="w-4 h-4" />
+            <span>Déplacer</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            {/* HOTKEY = bouton PS (PlayStation) / Guide Xbox (boule lumineuse) / Home générique */}
+            <ControlBadge label="HOTKEY" color="#555" rectangular />
+            <span>+</span>
+            <ArrowLeft className="w-4 h-4" />
+            <span>Page -</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <ControlBadge label="HOTKEY" color="#555" rectangular />
+            <span>+</span>
+            <ArrowRight className="w-4 h-4" />
+            <span>Page +</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <ControlBadge label="L1" color="#555" rectangular />
+            <span>/</span>
+            <ControlBadge label="L2" color="#555" rectangular />
+            <span>Page - / +</span>
+          </div>
+          {totalPages > 1 && (
+            <span style={{ color: '#FFD700', fontWeight: 700 }}>
+              Page {currentPage}/{totalPages}
+            </span>
+          )}
+        </div>
+      )}
     </>
   );
 };
