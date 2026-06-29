@@ -1,6 +1,6 @@
 // Fichier: src/components/ThemeList/ThemeList.tsx
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Download, Plus, ArrowUp, ArrowDown, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Download, Plus } from 'lucide-react';
 import { ThemeItem, SystemRow } from '../../types';
 import { getThemeKey } from '../../utils/themeUtils';
 import Lightbox from '../Lightbox/Lightbox';
@@ -126,8 +126,24 @@ const ThemeList: React.FC<ThemeListProps> = ({
   }, []);
 
   const handleGamepadPreview = useCallback(() => {
-    if (themes[focusedIndex]) setSelectedTheme(themes[focusedIndex]);
-  }, [themes, focusedIndex]);
+    // Si la lightbox est deja ouverte : la fermer (toggle)
+    if (selectedTheme !== null) {
+      setSelectedTheme(null);
+      return;
+    }
+    const theme = themes[focusedIndex];
+    if (!theme) return;
+    // Précharge l'image avant d'ouvrir la Lightbox pour éviter
+    // le blanc quand on navigue à la manette (image pas encore en cache)
+    if (theme.imageUrl) {
+      const img = new Image();
+      img.src = theme.imageUrl;
+      img.onload = () => setSelectedTheme(theme);
+      img.onerror = () => setSelectedTheme(theme); // ouvre quand même si erreur
+    } else {
+      setSelectedTheme(theme);
+    }
+  }, [themes, focusedIndex, selectedTheme]);
 
   const handleGamepadToggleCart = useCallback(() => {
     if (themes[focusedIndex]) handleCartToggle(themes[focusedIndex]);
@@ -143,14 +159,26 @@ const ThemeList: React.FC<ThemeListProps> = ({
 
   useGamepadGridNav({
     enabled: isRetrobat,
+    lightboxOpen: selectedTheme !== null,
     onMove: moveFocus,
     onSelect: handleGamepadSelect,
     onBack: handleGamepadBack,
     onPreview: handleGamepadPreview,
     onToggleCart: handleGamepadToggleCart,
-    onOpenCart: onCartOpen,   // Start (Options PS / Menu Xbox) : ouvre le panier (modale)
+    onOpenCart: onCartOpen,
     onPrevPage: handlePrevPage,
     onNextPage: handleNextPage,
+    onLightboxClose: () => setSelectedTheme(null),
+    onLightboxPrev:  () => {
+      if (!selectedTheme) return;
+      const idx = themes.indexOf(selectedTheme);
+      if (idx > 0) setSelectedTheme(themes[idx - 1]);
+    },
+    onLightboxNext:  () => {
+      if (!selectedTheme) return;
+      const idx = themes.indexOf(selectedTheme);
+      if (idx < themes.length - 1) setSelectedTheme(themes[idx + 1]);
+    },
   });
 
   useEffect(() => {
@@ -477,68 +505,54 @@ const ThemeList: React.FC<ThemeListProps> = ({
 
       {/* ── Bandeau de controles manette (mode kiosk RetroBat uniquement) ── */}
       {isRetrobat && (
-        <div
-          style={{
-            position: 'fixed', bottom: 0, left: 0, right: 0,
-            backgroundColor: 'rgba(17, 24, 39, 0.96)',
-            borderTop: '2px solid #FF8C00',
-            padding: '8px 16px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            gap: '22px', flexWrap: 'wrap',
-            zIndex: 9999,
-            fontSize: '13px', color: '#FFFFFF',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <ControlBadge label="A" color="#2ecc71" />
-            <span>Installer</span>
+        <div style={{
+          position: 'fixed', bottom: 0, left: 0, right: 0,
+          backgroundColor: 'rgba(17, 24, 39, 0.96)',
+          borderTop: '2px solid #FF8C00',
+          padding: '6px 16px',
+          zIndex: 9999,
+          fontSize: '12px', color: '#FFFFFF',
+        }}>
+
+          {/* ── Ligne PlayStation ── */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '3px' }}>
+            <span style={{ color: '#aaa', minWidth: '36px', fontWeight: 700 }}>PS</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="✕" color="#3498db" />Installer</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="○" color="#e74c3c" />Retour</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="□" color="#e0aaff" textColor="#111" />Aperçu</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="△" color="#2ecc71" textColor="#111" />{themes[focusedIndex] && isInCart(themes[focusedIndex]) ? 'Retirer du panier' : 'Ajouter au panier'}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="Options" color="#555" rectangular />Panier ({cart.length})</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="L1" color="#555" rectangular /><ControlBadge label="L2" color="#555" rectangular />Page ±</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="PS" color="#555" rectangular />+←→ Page ±</div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <ControlBadge label="B" color="#e74c3c" />
-            <span>Retour</span>
+
+          {/* ── Ligne Xbox ── */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '3px' }}>
+            <span style={{ color: '#aaa', minWidth: '36px', fontWeight: 700 }}>Xbox</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="A" color="#2ecc71" />Installer</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="B" color="#e74c3c" />Retour</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="X" color="#3498db" />Aperçu</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="Y" color="#f1c40f" textColor="#111" />{themes[focusedIndex] && isInCart(themes[focusedIndex]) ? 'Retirer du panier' : 'Ajouter au panier'}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="Menu" color="#555" rectangular />Panier ({cart.length})</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="LB" color="#555" rectangular /><ControlBadge label="LT" color="#555" rectangular />Page ±</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="Guide" color="#555" rectangular />+←→ Page ±</div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <ControlBadge label="X" color="#3498db" />
-            <span>Aperçu</span>
+
+          {/* ── Ligne Borne arcade ── */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <span style={{ color: '#aaa', minWidth: '36px', fontWeight: 700 }}>Borne</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="A" color="#2ecc71" />Installer</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="B" color="#e74c3c" />Retour</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="X" color="#3498db" />Aperçu</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="Y" color="#f1c40f" textColor="#111" />{themes[focusedIndex] && isInCart(themes[focusedIndex]) ? 'Retirer du panier' : 'Ajouter au panier'}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="Start" color="#555" rectangular />Panier ({cart.length})</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="HOTKEY" color="#555" rectangular />+←→ Page ±</div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <ControlBadge label="Y" color="#f1c40f" textColor="#111" />
-            {/* Libellé dynamique : dépend de si le thème focusé est déjà dans le panier */}
-            <span>{themes[focusedIndex] && isInCart(themes[focusedIndex]) ? 'Retirer du panier' : 'Ajouter au panier'}</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            {/* Start = Options PS / Menu Xbox */}
-            <ControlBadge label="START" color="#555" rectangular />
-            <span>Panier ({cart.length})</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <ArrowUp className="w-4 h-4" /><ArrowDown className="w-4 h-4" />
-            <ArrowLeft className="w-4 h-4" /><ArrowRight className="w-4 h-4" />
-            <span>Déplacer</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            {/* HOTKEY = bouton PS (PlayStation) / Guide Xbox (boule lumineuse) / Home générique */}
-            <ControlBadge label="HOTKEY" color="#555" rectangular />
-            <span>+</span>
-            <ArrowLeft className="w-4 h-4" />
-            <span>Page -</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <ControlBadge label="HOTKEY" color="#555" rectangular />
-            <span>+</span>
-            <ArrowRight className="w-4 h-4" />
-            <span>Page +</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <ControlBadge label="L1" color="#555" rectangular />
-            <span>/</span>
-            <ControlBadge label="L2" color="#555" rectangular />
-            <span>Page - / +</span>
-          </div>
+
           {totalPages > 1 && (
-            <span style={{ color: '#FFD700', fontWeight: 700 }}>
+            <div style={{ textAlign: 'center', marginTop: '3px', color: '#FFD700', fontWeight: 700 }}>
               Page {currentPage}/{totalPages}
-            </span>
+            </div>
           )}
         </div>
       )}
