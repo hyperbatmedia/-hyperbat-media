@@ -171,13 +171,13 @@ const ThemeList: React.FC<ThemeListProps> = ({
     onLightboxClose: () => setSelectedTheme(null),
     onLightboxPrev:  () => {
       if (!selectedTheme) return;
-      const idx = themes.indexOf(selectedTheme);
-      if (idx > 0) setSelectedTheme(themes[idx - 1]);
+      const idx = allFilteredThemes.indexOf(selectedTheme);
+      if (idx > 0) setSelectedTheme(allFilteredThemes[idx - 1]);
     },
     onLightboxNext:  () => {
       if (!selectedTheme) return;
-      const idx = themes.indexOf(selectedTheme);
-      if (idx < themes.length - 1) setSelectedTheme(themes[idx + 1]);
+      const idx = allFilteredThemes.indexOf(selectedTheme);
+      if (idx < allFilteredThemes.length - 1) setSelectedTheme(allFilteredThemes[idx + 1]);
     },
   });
 
