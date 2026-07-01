@@ -338,18 +338,18 @@ export default function HyperBatMediaSite(): JSX.Element {
       // puis par slug normalisé en fallback
       const normalized = systemParam.toLowerCase().replace(/[^a-z0-9]+/g, '');
       const found = systemsLogic.systems.find(s => {
-	  // Ignore les lignes d'en-tête / sous-en-tête (ce ne sont pas de vrais systèmes sélectionnables)
-	  if (s.isHeader || s.isSubHeader) return false;
-	  // Correspondance exacte sur le nom
-	  if (s.name && s.name.toLowerCase() === systemParam.toLowerCase()) return true;
-	  // Correspondance normalisée sur le nom
-	  if (s.name && s.name.toLowerCase().replace(/[^a-z0-9]+/g, '') === normalized) return true;
-	  // Correspondance sur l'ID (fallback)
-	  const parts = s.id.split('-');
-	  const idTail = parts[parts.length - 1].toLowerCase().replace(/[^a-z0-9]+/g, '');
-	  const idFull = s.id.toLowerCase().replace(/[^a-z0-9]+/g, '');
-	  return idTail === normalized || idFull === normalized;
-	});
+        // Ignore les lignes d'en-tête / sous-en-tête (ce ne sont pas de vrais systèmes sélectionnables)
+        if (s.isHeader || s.isSubHeader) return false;
+        // Correspondance exacte sur le nom
+        if (s.name && s.name.toLowerCase() === systemParam.toLowerCase()) return true;
+        // Correspondance normalisée sur le nom
+        if (s.name && s.name.toLowerCase().replace(/[^a-z0-9]+/g, '') === normalized) return true;
+        // Correspondance sur l'ID (fallback)
+        const parts = s.id.split('-');
+        const idTail = parts[parts.length - 1].toLowerCase().replace(/[^a-z0-9]+/g, '');
+        const idFull = s.id.toLowerCase().replace(/[^a-z0-9]+/g, '');
+        return idTail === normalized || idFull === normalized;
+      });
       if (found) systemsLogic.handleSystemSelect(found.id);
     }
 
@@ -714,7 +714,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                   allFilteredThemes={filteredThemes} filteredThemesLength={filteredThemes.length}
                   totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage}
                   themesPerPage={THEMES_PER_PAGE} systems={systemsLogic.systems}
-                  cart={cart} onCartAdd={handleCartAdd} onCartRemove={handleCartRemove} onCartOpen={() => setCartOpen(true)}
+                  cart={cart} onCartAdd={handleCartAdd} onCartRemove={handleCartRemove}
                   sidebarCollapsed={sidebarCollapsed}
                   isRetrobat={isRetrobat} />
               )}
