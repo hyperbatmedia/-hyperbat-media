@@ -9,21 +9,78 @@ import { useGamepadGridNav } from '../../hooks/useGamepadGridNav';
 
 import { CART_MAX } from '../../constants';
 
-// ── Petit badge rond/rectangulaire pour representer un bouton de manette ──
-const ControlBadge: React.FC<{ label: string; color: string; textColor?: string; rectangular?: boolean }> = ({ label, color, textColor = '#fff', rectangular }) => (
-  <span
-    style={{
+// ── Icone bouton cardinal style RetroBat (SUD/EST/NORD/OUEST) ────────────
+const CardinalButton: React.FC<{
+  direction: 'sud' | 'est' | 'nord' | 'ouest';
+  active?: boolean;
+  label: string;
+  action: string;
+}> = ({ direction, active = true, label, action }) => {
+  const colors = { sud: '#00CC66', est: '#CC3333', nord: '#9933FF', ouest: '#CCAA00' };
+  const positions = { sud: [0,10], est: [10,0], nord: [0,-10], ouest: [-10,0] };
+  const activeColor = active ? colors[direction] : '#444';
+  const textColor   = active ? '#FFFFFF' : '#555';
+  const [dx, dy]    = positions[direction];
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px', opacity: active ? 1 : 0.4 }}>
+      <svg width="32" height="32" viewBox="-16 -16 32 32">
+        <circle cx="0" cy="0" r="14" fill="#222" stroke="#555" strokeWidth="1.5"/>
+        {/* 4 petits cercles cardinaux */}
+        <circle cx="0"  cy="-9" r="2.5" fill={direction === 'nord'  ? activeColor : '#555'}/>
+        <circle cx="0"  cy="9"  r="2.5" fill={direction === 'sud'   ? activeColor : '#555'}/>
+        <circle cx="-9" cy="0"  r="2.5" fill={direction === 'ouest' ? activeColor : '#555'}/>
+        <circle cx="9"  cy="0"  r="2.5" fill={direction === 'est'   ? activeColor : '#555'}/>
+        <circle cx="0"  cy="0"  r="2"   fill="#444"/>
+        {/* Point actif plus grand */}
+        <circle cx={dx} cy={dy} r="3.5" fill={activeColor} opacity="0.9"/>
+      </svg>
+      <span style={{ fontSize: '10px', fontWeight: 700, color: textColor }}>{label}</span>
+      <span style={{ fontSize: '10px', color: active ? '#CCCCCC' : '#444' }}>{action}</span>
+    </div>
+  );
+};
+
+// ── Icone D-PAD style RetroBat ────────────────────────────────────────────
+const DPadIcon: React.FC = () => (
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
+    <svg width="32" height="32" viewBox="-16 -16 32 32">
+      <circle cx="0" cy="0" r="14" fill="#222" stroke="#555" strokeWidth="1.5"/>
+      <rect x="-2" y="-11" width="4" height="22" rx="1" fill="#666"/>
+      <rect x="-11" y="-2" width="22" height="4" rx="1" fill="#666"/>
+      <circle cx="0" cy="0" r="3.5" fill="#444" stroke="#666" strokeWidth="1"/>
+    </svg>
+    <span style={{ fontSize: '10px', fontWeight: 700, color: '#FFFFFF' }}>D-PAD</span>
+    <span style={{ fontSize: '10px', color: '#CCCCCC' }}>Naviguer</span>
+  </div>
+);
+
+// ── Badge START/SELECT/L1/L2/HOTKEY ──────────────────────────────────────
+const BadgeButton: React.FC<{
+  label: string;
+  action: string;
+  active?: boolean;
+  wide?: boolean;
+}> = ({ label, action, active = true, wide = false }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px', opacity: active ? 1 : 0.4 }}>
+    <div style={{
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-      minWidth: rectangular ? '30px' : '22px', height: '22px',
-      padding: rectangular ? '0 6px' : 0,
-      borderRadius: rectangular ? '4px' : '50%',
-      backgroundColor: color, color: textColor,
-      fontWeight: 700, fontSize: '12px', lineHeight: 1,
-      border: '1px solid rgba(255,255,255,0.3)', flexShrink: 0
-    }}
-  >
-    {label}
-  </span>
+      minWidth: wide ? '52px' : '32px', height: '20px',
+      padding: '0 6px', borderRadius: '4px',
+      backgroundColor: active ? '#333' : '#1a1a1a',
+      border: `1px solid ${active ? '#666' : '#333'}`,
+      fontSize: '9px', fontWeight: 700, color: active ? '#FFFFFF' : '#444',
+    }}>
+      {label}
+    </div>
+    <span style={{ fontSize: '10px', fontWeight: 700, color: active ? '#FFFFFF' : '#555' }}>{label}</span>
+    <span style={{ fontSize: '10px', color: active ? '#CCCCCC' : '#444' }}>{action}</span>
+  </div>
+);
+
+// ── Séparateur vertical ───────────────────────────────────────────────────
+const Sep: React.FC = () => (
+  <div style={{ width: '1px', height: '60px', backgroundColor: '#333', margin: '0 4px' }}/>
 );
 
 interface ThemeListProps {
@@ -48,7 +105,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
   viewMode, themes, allFilteredThemes, filteredThemesLength,
   totalPages, currentPage, setCurrentPage, themesPerPage,
   systems,
-  cart, onCartAdd, onCartRemove, onCartOpen, sidebarCollapsed = false,
+  cart, onCartAdd, onCartRemove, sidebarCollapsed = false,
   isRetrobat = false
 }) => {
   const [selectedTheme, setSelectedTheme] = useState<ThemeItem | null>(null);
@@ -145,10 +202,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
     }
   }, [themes, focusedIndex, selectedTheme]);
 
-  const handleGamepadToggleCart = useCallback(() => {
-    if (themes[focusedIndex]) handleCartToggle(themes[focusedIndex]);
-  }, [themes, focusedIndex, handleCartToggle]);
-
   const handlePrevPage = useCallback(() => {
     setCurrentPage((p) => Math.max(1, p - 1));
   }, [setCurrentPage]);
@@ -164,17 +217,15 @@ const ThemeList: React.FC<ThemeListProps> = ({
     onSelect: handleGamepadSelect,
     onBack: handleGamepadBack,
     onPreview: handleGamepadPreview,
-    onToggleCart: handleGamepadToggleCart,
-    onOpenCart: onCartOpen,
     onPrevPage: handlePrevPage,
     onNextPage: handleNextPage,
     onLightboxClose: () => setSelectedTheme(null),
-    onLightboxPrev:  () => {
+    onLightboxPrev: () => {
       if (!selectedTheme) return;
       const idx = allFilteredThemes.indexOf(selectedTheme);
       if (idx > 0) setSelectedTheme(allFilteredThemes[idx - 1]);
     },
-    onLightboxNext:  () => {
+    onLightboxNext: () => {
       if (!selectedTheme) return;
       const idx = allFilteredThemes.indexOf(selectedTheme);
       if (idx < allFilteredThemes.length - 1) setSelectedTheme(allFilteredThemes[idx + 1]);
@@ -504,58 +555,62 @@ const ThemeList: React.FC<ThemeListProps> = ({
       />
 
       {/* ── Bandeau de controles manette (mode kiosk RetroBat uniquement) ── */}
-      {isRetrobat && (
-        <div style={{
-          position: 'fixed', bottom: 0, left: 0, right: 0,
-          backgroundColor: 'rgba(17, 24, 39, 0.96)',
-          borderTop: '2px solid #FF8C00',
-          padding: '6px 16px',
-          zIndex: 9999,
-          fontSize: '12px', color: '#FFFFFF',
-        }}>
+      {isRetrobat && (() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const controllerType = urlParams.get('controllerType') || 'gamepad';
+        const hasL1L2   = controllerType === 'gamepad' || controllerType === 'both';
+        const hasHotkey = controllerType === 'arcade'  || controllerType === 'both';
+        const hasSud    = urlParams.get('btnSud')  !== '-1' && urlParams.has('btnSud');
+        const hasEst    = urlParams.get('btnEst')  !== '-1' && urlParams.has('btnEst');
+        const hasNord   = urlParams.get('btnNord') !== '-1' && urlParams.has('btnNord');
 
-          {/* ── Ligne PlayStation ── */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '3px' }}>
-            <span style={{ color: '#aaa', minWidth: '36px', fontWeight: 700 }}>PS</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="✕" color="#3498db" />Installer</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="○" color="#e74c3c" />Retour</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="□" color="#e0aaff" textColor="#111" />Aperçu</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="△" color="#2ecc71" textColor="#111" />{themes[focusedIndex] && isInCart(themes[focusedIndex]) ? 'Retirer du panier' : 'Ajouter au panier'}</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="Options" color="#555" rectangular />Panier ({cart.length})</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="L1" color="#555" rectangular /><ControlBadge label="L2" color="#555" rectangular />Page ±</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="PS" color="#555" rectangular />+←→ Page ±</div>
+        return (
+          <div style={{
+            position: 'fixed', bottom: 0, left: 0, right: 0,
+            backgroundColor: 'rgba(17, 24, 39, 0.97)',
+            borderTop: '2px solid #FF8C00',
+            padding: '6px 20px',
+            zIndex: 9999,
+            display: 'flex', alignItems: 'center',
+            justifyContent: 'center', gap: '6px',
+            flexWrap: 'nowrap',
+          }}>
+            {/* SUD - Installer */}
+            <CardinalButton direction="sud"  active={hasSud}  label="SUD"  action="Installer" />
+            <Sep />
+            {/* EST - Retour */}
+            <CardinalButton direction="est"  active={hasEst}  label="EST"  action="Retour" />
+            <Sep />
+            {/* NORD - Aperçu */}
+            <CardinalButton direction="nord" active={hasNord} label="NORD" action="Aperçu" />
+            <Sep />
+            {/* D-PAD navigation */}
+            <DPadIcon />
+            <Sep />
+            {/* Pages - L1/L2 manette */}
+            {hasL1L2 && (
+              <>
+                <BadgeButton label="L1" action="Page -" active={urlParams.get('btnL1') !== '-1' && urlParams.has('btnL1')} />
+                <BadgeButton label="L2" action="Page +" active={urlParams.get('btnL2') !== '-1' && urlParams.has('btnL2')} />
+                {hasHotkey && <Sep />}
+              </>
+            )}
+            {/* Pages - HOTKEY borne */}
+            {hasHotkey && (
+              <BadgeButton label="HOTKEY+←→" action="Page ±" wide active={urlParams.get('btnHotkey') !== '-1' && urlParams.has('btnHotkey')} />
+            )}
+            {/* Page courante */}
+            {totalPages > 1 && (
+              <>
+                <Sep />
+                <span style={{ fontSize: '13px', fontWeight: 700, color: '#FFD700', whiteSpace: 'nowrap' }}>
+                  Page {currentPage}/{totalPages}
+                </span>
+              </>
+            )}
           </div>
-
-          {/* ── Ligne Xbox ── */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '3px' }}>
-            <span style={{ color: '#aaa', minWidth: '36px', fontWeight: 700 }}>Xbox</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="A" color="#2ecc71" />Installer</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="B" color="#e74c3c" />Retour</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="X" color="#3498db" />Aperçu</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="Y" color="#f1c40f" textColor="#111" />{themes[focusedIndex] && isInCart(themes[focusedIndex]) ? 'Retirer du panier' : 'Ajouter au panier'}</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="Menu" color="#555" rectangular />Panier ({cart.length})</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="LB" color="#555" rectangular /><ControlBadge label="LT" color="#555" rectangular />Page ±</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="Guide" color="#555" rectangular />+←→ Page ±</div>
-          </div>
-
-          {/* ── Ligne Borne arcade ── */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <span style={{ color: '#aaa', minWidth: '36px', fontWeight: 700 }}>Borne</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="A" color="#2ecc71" />Installer</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="B" color="#e74c3c" />Retour</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="X" color="#3498db" />Aperçu</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="Y" color="#f1c40f" textColor="#111" />{themes[focusedIndex] && isInCart(themes[focusedIndex]) ? 'Retirer du panier' : 'Ajouter au panier'}</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="Start" color="#555" rectangular />Panier ({cart.length})</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ControlBadge label="HOTKEY" color="#555" rectangular />+←→ Page ±</div>
-          </div>
-
-          {totalPages > 1 && (
-            <div style={{ textAlign: 'center', marginTop: '3px', color: '#FFD700', fontWeight: 700 }}>
-              Page {currentPage}/{totalPages}
-            </div>
-          )}
-        </div>
-      )}
+        );
+      })()}
     </>
   );
 };
