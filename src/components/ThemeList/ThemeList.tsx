@@ -69,6 +69,17 @@ const ThemeList: React.FC<ThemeListProps> = ({
     cardRefs.current[focusedIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [focusedIndex, isRetrobat]);
 
+  // Donne le vrai focus DOM (pas juste visuel) au bouton "Installer" de la
+  // carte sélectionnée. Indispensable pour hyperbat:// : un clic déclenché
+  // par script (.click()) n'est pas "trusted" pour Chrome et ne peut pas
+  // lancer un protocole externe une fois l'activation utilisateur consommée.
+  // Un vrai Entrée envoyé par AHK (SendInput, donc trusted) sur un élément
+  // réellement focusé déclenche en revanche un clic natif autorisé.
+  useEffect(() => {
+    if (!isRetrobat) return;
+    actionRefs.current[focusedIndex]?.focus({ preventScroll: true });
+  }, [focusedIndex, isRetrobat]);
+
   const moveFocus = useCallback((direction: 'up' | 'down' | 'left' | 'right') => {
     setFocusedIndex((prev) => {
       const count = themes.length;
@@ -99,9 +110,14 @@ const ThemeList: React.FC<ThemeListProps> = ({
     }
   }, [cart, isInCart, onCartAdd, onCartRemove]);
 
+  // Le clic réel est désormais déclenché par un vrai Entrée envoyé par AHK
+  // (SendInput = "trusted" pour Chrome, contrairement à .click() en JS, qui
+  // ne peut pas relancer un protocole externe hyperbat:// après le premier
+  // appui). On ne fait donc plus de .click() ici pour éviter un double
+  // déclenchement si jamais un reliquat d'activation utilisateur existe.
   const handleGamepadSelect = useCallback(() => {
-    actionRefs.current[focusedIndex]?.click();
-  }, [focusedIndex]);
+    // no-op volontaire : voir commentaire ci-dessus
+  }, []);
 
   const handleGamepadBack = useCallback(() => {
     window.history.back();
