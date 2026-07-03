@@ -1,5 +1,5 @@
 // Fichier: src/components/ThemeList/ThemeList.tsx
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Download, Plus } from 'lucide-react';
 import { ThemeItem, SystemRow } from '../../types';
 import { getThemeKey } from '../../utils/themeUtils';
@@ -37,6 +37,28 @@ const ThemeList: React.FC<ThemeListProps> = ({
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const [cartFullMsg, setCartFullMsg] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
+
+  // Capture unique des parametres manette/kiosque au tout premier rendu,
+  // avant qu'un eventuel window.history.replaceState() ailleurs (ex:
+  // nettoyage de l'URL dans HyperBatMediaSite.tsx) ne les fasse disparaitre
+  // de window.location.search. Sans ca, le bandeau relirait l'URL en
+  // direct a chaque rendu et perdrait ses etats "actifs" des que l'URL
+  // est modifiee par autre chose, meme correctement configuree au depart.
+  const gamepadConfig = useMemo(() => {
+    const p = new URLSearchParams(window.location.search);
+    const controllerType = p.get('controllerType') || 'gamepad';
+    return {
+      controllerType,
+      hasL1L2:     controllerType === 'gamepad' || controllerType === 'both',
+      hasHotkey:   controllerType === 'arcade'  || controllerType === 'both',
+      btnSudOk:    p.has('btnSud')    && p.get('btnSud')    !== '-1',
+      btnEstOk:    p.has('btnEst')    && p.get('btnEst')    !== '-1',
+      btnNordOk:   p.has('btnNord')   && p.get('btnNord')   !== '-1',
+      btnL1Ok:     p.has('btnL1')     && p.get('btnL1')     !== '-1',
+      btnL2Ok:     p.has('btnL2')     && p.get('btnL2')     !== '-1',
+      btnHotkeyOk: p.has('btnHotkey') && p.get('btnHotkey') !== '-1',
+    };
+  }, []);
 
   // ── Navigation manette (mode kiosk RetroBat uniquement) ──────────────────
   const [focusedIndex, setFocusedIndex] = useState(0);
@@ -497,16 +519,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
 
       {/* ── Bandeau de controles manette (mode kiosk RetroBat uniquement) ── */}
       {isRetrobat && (() => {
-        const urlParams      = new URLSearchParams(window.location.search);
-        const controllerType = urlParams.get('controllerType') || 'gamepad';
-        const hasL1L2        = controllerType === 'gamepad' || controllerType === 'both';
-        const hasHotkey      = controllerType === 'arcade'  || controllerType === 'both';
-        const btnSudOk       = urlParams.has('btnSud')    && urlParams.get('btnSud')    !== '-1';
-        const btnEstOk       = urlParams.has('btnEst')    && urlParams.get('btnEst')    !== '-1';
-        const btnNordOk      = urlParams.has('btnNord')   && urlParams.get('btnNord')   !== '-1';
-        const btnL1Ok        = urlParams.has('btnL1')     && urlParams.get('btnL1')     !== '-1';
-        const btnL2Ok        = urlParams.has('btnL2')     && urlParams.get('btnL2')     !== '-1';
-        const btnHotkeyOk    = urlParams.has('btnHotkey') && urlParams.get('btnHotkey') !== '-1';
+        const { hasL1L2, hasHotkey, btnSudOk, btnEstOk, btnNordOk, btnL1Ok, btnL2Ok, btnHotkeyOk } = gamepadConfig;
 
         // Icone bouton cardinal style RetroBat
         const BtnIcon = ({ dir, color, active, label, action }: {

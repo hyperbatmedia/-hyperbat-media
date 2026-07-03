@@ -358,9 +358,22 @@ export default function HyperBatMediaSite(): JSX.Element {
     // Mode RetroBat : remplace le bouton Télécharger par "Installer dans RetroBat"
     if (retrobatParam === '1') setIsRetrobat(true);
 
-    // Nettoie l'URL après lecture
+    // Nettoie l'URL apres lecture, MAIS en preservant les parametres
+    // manette/kiosque (btnSud, btnEst, btnNord, btnL1, btnL2, btnHotkey,
+    // controllerType) : ThemeList.tsx relit window.location.search en
+    // direct a chaque rendu pour le bandeau de controles, donc si on les
+    // supprime ici, le bandeau perd immediatement tous ses etats "actifs"
+    // juste apres le premier chargement, meme si l'URL de depart etait
+    // correcte.
     if (searchParam || systemParam || categoryParam || retrobatParam) {
-      window.history.replaceState({}, '', window.location.pathname);
+      const preserved = new URLSearchParams();
+      const gamepadKeys = ['btnSud', 'btnEst', 'btnNord', 'btnL1', 'btnL2', 'btnHotkey', 'controllerType'];
+      gamepadKeys.forEach((key) => {
+        const value = params.get(key);
+        if (value !== null) preserved.set(key, value);
+      });
+      const newSearch = preserved.toString();
+      window.history.replaceState({}, '', window.location.pathname + (newSearch ? `?${newSearch}` : ''));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
