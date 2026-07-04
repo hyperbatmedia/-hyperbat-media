@@ -6,18 +6,22 @@
 //   - SUD  (A Xbox / Croix PS)   : installer un thème
 //   - EST  (B Xbox / Rond PS)    : retour / annuler
 //   - NORD (Y Xbox / Triangle PS): ouvrir/fermer lightbox (toggle)
-//   - L1                         : page précédente (manette uniquement)
-//   - L2                         : page suivante   (manette uniquement)
-//   - HOTKEY + gauche/droite     : page précédente/suivante (borne arcade)
+//   - L2/LT                      : page précédente (si configuré)
+//   - R2/RT                      : page suivante   (si configuré)
+//
+// Sans L1/L2 configurés (ex: borne arcade), la pagination se fait en
+// naviguant au D-PAD jusqu'aux boutons Précédent/Suivant, geré par le
+// composant appelant (ThemeList) via onMove, pas par ce hook.
 //
 // Paramètres URL passés par le launcher AHK :
-//   &btnSud=0&btnEst=1&btnNord=3&btnHotkey=16&btnL1=4&btnL2=6
-//   &controllerType=gamepad|arcade|both
-// Si absents → valeurs W3C standard par défaut.
+//   &btnSud=0&btnEst=1&btnNord=3&btnTriggerL=4&btnTriggerR=6
+// Si absents → valeurs W3C standard par défaut. L1/L2 ne sont utilisés
+// que si effectivement présents dans l'URL (sinon -1 côté launcher).
 //
 // Le stick droit (axes 2 et 3) est volontairement ignoré.
 //
-// IMPORTANT : R1 et R3 ne sont JAMAIS utilisés ici.
+// IMPORTANT : R1 et R3 ne sont JAMAIS utilisés ici (gérés par l'AHK, hors
+// de la page web, pour ouvrir/fermer la vitrine).
 import { useEffect, useRef } from 'react';
 
 const REPEAT_DELAY_MS   = 350;
@@ -29,9 +33,8 @@ const TRIGGER_THRESHOLD = 0.5;
 const BTN_SUD        = 0;   // A Xbox / Croix PS
 const BTN_EST        = 1;   // B Xbox / Rond PS
 const BTN_NORD       = 3;   // Y Xbox / Triangle PS
-const BTN_L1         = 4;
-const BTN_L2         = 6;
-const BTN_HOTKEY     = 16;
+const BTN_TRIGGER_L  = 4;
+const BTN_TRIGGER_R  = 6;
 const BTN_DPAD_UP    = 12;
 const BTN_DPAD_DOWN  = 13;
 const BTN_DPAD_LEFT  = 14;
@@ -46,8 +49,8 @@ interface GamepadGridNavOptions {
   onSelect: () => void;         // SUD  : installer un thème
   onBack: () => void;           // EST  : retour / annuler
   onPreview: () => void;        // NORD : ouvrir/fermer lightbox (toggle)
-  onPrevPage: () => void;       // L1 ou HOTKEY+← : page précédente
-  onNextPage: () => void;       // L2 ou HOTKEY+→ : page suivante
+  onPrevPage: () => void;       // TriggerL (L2/LT) : page précédente
+  onNextPage: () => void;       // TriggerR (R2/RT) : page suivante
   onLightboxClose: () => void;  // NORD ou EST quand lightbox ouverte
   onLightboxPrev: () => void;   // ← quand lightbox ouverte
   onLightboxNext: () => void;   // → quand lightbox ouverte
@@ -62,7 +65,7 @@ export function useGamepadGridNav({
   const rafRef           = useRef<number | null>(null);
   const heldDirection    = useRef<GamepadDirection | null>(null);
   const nextRepeatAt     = useRef<number>(0);
-  const heldPageBtn      = useRef<'L1' | 'L2' | null>(null);
+  const heldPageBtn      = useRef<'TriggerL' | 'TriggerR' | null>(null);
   const nextPageRepeatAt = useRef<number>(0);
   const prevButtonsDown  = useRef<boolean[]>([]);
 
@@ -103,22 +106,21 @@ export function useGamepadGridNav({
     const urlParams      = typeof window !== 'undefined'
       ? new URLSearchParams(window.location.search)
       : new URLSearchParams();
-    const isRetrobatMode = urlParams.get('retrobat') === '1';
-    const controllerType = urlParams.get('controllerType') || 'gamepad';
 
     const idx = {
-      Sud:    getUrlParam('btnSud',    BTN_SUD),
-      Est:    getUrlParam('btnEst',    BTN_EST),
-      Nord:   getUrlParam('btnNord',   BTN_NORD),
-      Hotkey: getUrlParam('btnHotkey', BTN_HOTKEY),
-      L1:     getUrlParam('btnL1',     BTN_L1),
-      L2:     getUrlParam('btnL2',     BTN_L2),
+      Sud:  getUrlParam('btnSud',  BTN_SUD),
+      Est:  getUrlParam('btnEst',  BTN_EST),
+      Nord: getUrlParam('btnNord', BTN_NORD),
+      TriggerL: getUrlParam('btnTriggerL', BTN_TRIGGER_L),
+      TriggerR: getUrlParam('btnTriggerR', BTN_TRIGGER_R),
     };
 
-    // L1/L2 actifs pour manette, HOTKEY actif pour borne
-    const l1Enabled     = !isRetrobatMode || controllerType === 'gamepad' || controllerType === 'both';
-    const l2Enabled     = l1Enabled;
-    const hotkeyEnabled = !isRetrobatMode || controllerType === 'arcade'  || controllerType === 'both';
+    // L1/L2 actifs seulement si reellement configures (presents et != -1
+    // dans l'URL) - pas de configuration = pas de raccourci, la pagination
+    // se fait alors via le D-PAD jusqu'aux boutons Precedent/Suivant, gere
+    // par le composant appelant (onMove), pas ici.
+    const triggerLEnabled = urlParams.has('btnTriggerL') && urlParams.get('btnTriggerL') !== '-1';
+    const triggerREnabled = urlParams.has('btnTriggerR') && urlParams.get('btnTriggerR') !== '-1';
 
     // Stick gauche uniquement (axes 0 et 1) — stick droit (axes 2 et 3) ignoré
     const readDirection = (gp: Gamepad): GamepadDirection | null => {
@@ -180,35 +182,19 @@ export function useGamepadGridNav({
         }
 
         // ── MODE GRILLE NORMAL ────────────────────────────────────────────
-        const hotkeyHeld = hotkeyEnabled && isButtonDown(gp, idx.Hotkey);
-        const direction  = readDirection(gp);
+        const direction = readDirection(gp);
 
-        if (hotkeyHeld) {
-          if (direction === 'left' || direction === 'right') {
-            if (direction !== heldDirection.current) {
-              heldDirection.current = direction;
-              nextRepeatAt.current  = now + REPEAT_DELAY_MS;
-              (direction === 'left' ? onPrevPageRef : onNextPageRef).current();
-            } else if (now >= nextRepeatAt.current) {
-              nextRepeatAt.current = now + REPEAT_RATE_MS;
-              (direction === 'left' ? onPrevPageRef : onNextPageRef).current();
-            }
-          } else {
-            heldDirection.current = null;
+        if (direction) {
+          if (direction !== heldDirection.current) {
+            heldDirection.current = direction;
+            nextRepeatAt.current  = now + REPEAT_DELAY_MS;
+            onMoveRef.current(direction);
+          } else if (now >= nextRepeatAt.current) {
+            nextRepeatAt.current = now + REPEAT_RATE_MS;
+            onMoveRef.current(direction);
           }
         } else {
-          if (direction) {
-            if (direction !== heldDirection.current) {
-              heldDirection.current = direction;
-              nextRepeatAt.current  = now + REPEAT_DELAY_MS;
-              onMoveRef.current(direction);
-            } else if (now >= nextRepeatAt.current) {
-              nextRepeatAt.current = now + REPEAT_RATE_MS;
-              onMoveRef.current(direction);
-            }
-          } else {
-            heldDirection.current = null;
-          }
+          heldDirection.current = null;
         }
 
         // ── Boutons ───────────────────────────────────────────────────────
@@ -216,21 +202,21 @@ export function useGamepadGridNav({
         if (justPressed(idx.Est))  onBackRef.current();
         if (justPressed(idx.Nord)) onPreviewRef.current();
 
-        // ── L1/L2 avec répétition (manette uniquement) ────────────────────
-        const l1Down = l1Enabled && isButtonDown(gp, idx.L1);
-        const l2Down = l2Enabled && isButtonDown(gp, idx.L2);
-        if (l1Down) {
-          if (heldPageBtn.current !== 'L1') {
-            heldPageBtn.current      = 'L1';
+        // ── TriggerL/TriggerR avec répétition (raccourci optionnel) ────────
+        const triggerLDown = triggerLEnabled && isButtonDown(gp, idx.TriggerL);
+        const triggerRDown = triggerREnabled && isButtonDown(gp, idx.TriggerR);
+        if (triggerLDown) {
+          if (heldPageBtn.current !== 'TriggerL') {
+            heldPageBtn.current      = 'TriggerL';
             nextPageRepeatAt.current = now + REPEAT_DELAY_MS;
             onPrevPageRef.current();
           } else if (now >= nextPageRepeatAt.current) {
             nextPageRepeatAt.current = now + REPEAT_RATE_MS;
             onPrevPageRef.current();
           }
-        } else if (l2Down) {
-          if (heldPageBtn.current !== 'L2') {
-            heldPageBtn.current      = 'L2';
+        } else if (triggerRDown) {
+          if (heldPageBtn.current !== 'TriggerR') {
+            heldPageBtn.current      = 'TriggerR';
             nextPageRepeatAt.current = now + REPEAT_DELAY_MS;
             onNextPageRef.current();
           } else if (now >= nextPageRepeatAt.current) {

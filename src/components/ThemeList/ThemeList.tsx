@@ -46,17 +46,19 @@ const ThemeList: React.FC<ThemeListProps> = ({
   // est modifiee par autre chose, meme correctement configuree au depart.
   const gamepadConfig = useMemo(() => {
     const p = new URLSearchParams(window.location.search);
-    const controllerType = p.get('controllerType') || 'gamepad';
+    const btnTriggerLOk = p.has('btnTriggerL') && p.get('btnTriggerL') !== '-1';
+    const btnTriggerROk = p.has('btnTriggerR') && p.get('btnTriggerR') !== '-1';
     return {
-      controllerType,
-      hasL1L2:     controllerType === 'gamepad' || controllerType === 'both',
-      hasHotkey:   controllerType === 'arcade'  || controllerType === 'both',
-      btnSudOk:    p.has('btnSud')    && p.get('btnSud')    !== '-1',
-      btnEstOk:    p.has('btnEst')    && p.get('btnEst')    !== '-1',
-      btnNordOk:   p.has('btnNord')   && p.get('btnNord')   !== '-1',
-      btnL1Ok:     p.has('btnL1')     && p.get('btnL1')     !== '-1',
-      btnL2Ok:     p.has('btnL2')     && p.get('btnL2')     !== '-1',
-      btnHotkeyOk: p.has('btnHotkey') && p.get('btnHotkey') !== '-1',
+      // Le badge L2/R2 (LT/RT) n'apparait que si les deux triggers sont
+      // reellement configures - sinon (borne arcade, ou manette sans ces
+      // boutons) on navigue vers Precedent/Suivant via le D-PAD, toujours
+      // disponible, sans configuration necessaire.
+      hasTriggers: btnTriggerLOk && btnTriggerROk,
+      btnSudOk:  p.has('btnSud')  && p.get('btnSud')  !== '-1',
+      btnEstOk:  p.has('btnEst')  && p.get('btnEst')  !== '-1',
+      btnNordOk: p.has('btnNord') && p.get('btnNord') !== '-1',
+      btnTriggerLOk,
+      btnTriggerROk,
     };
   }, []);
 
@@ -65,6 +67,14 @@ const ThemeList: React.FC<ThemeListProps> = ({
   const [columns, setColumns] = useState(2);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const actionRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+
+  // Zone de focus pagination : null = focus dans la grille, sinon 'prev'/'next'.
+  // Permet d'atteindre les boutons "Precedent"/"Suivant" avec le D-PAD,
+  // depuis la derniere ligne de la grille - utile pour la borne arcade
+  // (qui n'a pas de bouton dedie L2/R2) et utilisable aussi par une manette.
+  const [paginationFocus, setPaginationFocus] = useState<'prev' | 'next' | null>(null);
+  const prevPageBtnRef = useRef<HTMLButtonElement | null>(null);
+  const nextPageBtnRef = useRef<HTMLButtonElement | null>(null);
 
   // Recalcule le nombre de colonnes réellement affichées (miroir des classes Tailwind ci-dessous)
   useEffect(() => {
@@ -83,13 +93,15 @@ const ThemeList: React.FC<ThemeListProps> = ({
   }, [viewMode, sidebarCollapsed]);
 
   // Revient en haut de la grille à chaque changement de page/filtre
-  useEffect(() => { setFocusedIndex(0); }, [themes]);
+  useEffect(() => { setFocusedIndex(0); setPaginationFocus(null); }, [themes]);
 
-  // Garde la carte sélectionnée visible à l'écran
+  // Garde la carte (ou le bouton pagination) sélectionné visible à l'écran
   useEffect(() => {
     if (!isRetrobat) return;
+    if (paginationFocus === 'prev') { prevPageBtnRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+    if (paginationFocus === 'next') { nextPageBtnRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
     cardRefs.current[focusedIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, [focusedIndex, isRetrobat]);
+  }, [focusedIndex, isRetrobat, paginationFocus]);
 
   // Donne le vrai focus DOM (pas juste visuel) au bouton "Installer" de la
   // carte sélectionnée. Indispensable pour hyperbat:// : un clic déclenché
@@ -99,10 +111,24 @@ const ThemeList: React.FC<ThemeListProps> = ({
   // réellement focusé déclenche en revanche un clic natif autorisé.
   useEffect(() => {
     if (!isRetrobat) return;
+    if (paginationFocus === 'prev') { prevPageBtnRef.current?.focus({ preventScroll: true }); return; }
+    if (paginationFocus === 'next') { nextPageBtnRef.current?.focus({ preventScroll: true }); return; }
     actionRefs.current[focusedIndex]?.focus({ preventScroll: true });
-  }, [focusedIndex, isRetrobat]);
+  }, [focusedIndex, isRetrobat, paginationFocus]);
 
   const moveFocus = useCallback((direction: 'up' | 'down' | 'left' | 'right') => {
+    // Zone pagination active : gauche/droite bascule Precedent <-> Suivant,
+    // haut retourne dans la grille (derniere ligne, meme colonne qu'avant).
+    if (paginationFocus) {
+      if (direction === 'left' || direction === 'right') {
+        setPaginationFocus((p) => (p === 'prev' ? 'next' : 'prev'));
+      } else if (direction === 'up') {
+        setPaginationFocus(null);
+      }
+      // 'down' depuis la pagination : rien, deja tout en bas
+      return;
+    }
+
     setFocusedIndex((prev) => {
       const count = themes.length;
       if (count === 0) return prev;
@@ -110,10 +136,15 @@ const ThemeList: React.FC<ThemeListProps> = ({
       if (direction === 'left' && col > 0) return prev - 1;
       if (direction === 'right' && col < columns - 1 && prev + 1 < count) return prev + 1;
       if (direction === 'up' && prev - columns >= 0) return prev - columns;
-      if (direction === 'down' && prev + columns < count) return prev + columns;
+      if (direction === 'down') {
+        if (prev + columns < count) return prev + columns;
+        // Derniere ligne : si pagination disponible, on y bascule le focus
+        if (totalPages > 1) setPaginationFocus('prev');
+        return prev;
+      }
       return prev;
     });
-  }, [themes.length, columns]);
+  }, [themes.length, columns, paginationFocus, totalPages]);
 
   const isInCart = useCallback((theme: ThemeItem) =>
     cart.some(t => getThemeKey(t) === getThemeKey(theme)), [cart]);
@@ -132,11 +163,12 @@ const ThemeList: React.FC<ThemeListProps> = ({
     }
   }, [cart, isInCart, onCartAdd, onCartRemove]);
 
-  // Le clic réel est désormais déclenché par un vrai Entrée envoyé par AHK
-  // (SendInput = "trusted" pour Chrome, contrairement à .click() en JS, qui
-  // ne peut pas relancer un protocole externe hyperbat:// après le premier
-  // appui). On ne fait donc plus de .click() ici pour éviter un double
-  // déclenchement si jamais un reliquat d'activation utilisateur existe.
+  // Le clic réel (Installer ET pagination) est désormais déclenché par un
+  // vrai Entrée envoyé par AHK sur l'élément réellement focusé (SendInput
+  // = "trusted" pour Chrome, contrairement à .click() en JS). On ne fait
+  // donc plus de .click() ici du tout, sous peine de double-déclenchement :
+  // un bouton <button> réagit nativement à Entrée quand il est focusé, donc
+  // l'AHK suffit seul pour la pagination aussi, pas besoin de dupliquer.
   const handleGamepadSelect = useCallback(() => {
     // no-op volontaire : voir commentaire ci-dessus
   }, []);
@@ -456,9 +488,12 @@ const ThemeList: React.FC<ThemeListProps> = ({
 
       {totalPages > 1 && (
         <div className="mt-8 flex items-center justify-center gap-2 flex-wrap">
-          <button onClick={() => setCurrentPage(Math.max(1, currentPage - 1))} disabled={currentPage === 1}
+          <button ref={prevPageBtnRef} onClick={() => setCurrentPage(Math.max(1, currentPage - 1))} disabled={currentPage === 1}
             className="px-4 py-2 rounded-lg font-bold border-2 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white' }}>
+            style={{
+              backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white',
+              ...(paginationFocus === 'prev' ? { outline: '3px solid #fff', outlineOffset: '2px' } : {}),
+            }}>
             ← Précédent
           </button>
           <div className="flex gap-1">
@@ -494,9 +529,12 @@ const ThemeList: React.FC<ThemeListProps> = ({
               </>
             )}
           </div>
-          <button onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))} disabled={currentPage === totalPages}
+          <button ref={nextPageBtnRef} onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))} disabled={currentPage === totalPages}
             className="px-4 py-2 rounded-lg font-bold border-2 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white' }}>
+            style={{
+              backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white',
+              ...(paginationFocus === 'next' ? { outline: '3px solid #fff', outlineOffset: '2px' } : {}),
+            }}>
             Suivant →
           </button>
         </div>
@@ -519,7 +557,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
 
       {/* ── Bandeau de controles manette (mode kiosk RetroBat uniquement) ── */}
       {isRetrobat && (() => {
-        const { hasL1L2, hasHotkey, btnSudOk, btnEstOk, btnNordOk, btnL1Ok, btnL2Ok, btnHotkeyOk } = gamepadConfig;
+        const { hasTriggers, btnSudOk, btnEstOk, btnNordOk, btnTriggerLOk, btnTriggerROk } = gamepadConfig;
 
         // Icone bouton cardinal style RetroBat
         const BtnIcon = ({ dir, color, active, label, action }: {
@@ -559,7 +597,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
           </div>
         );
 
-        // Badge L1/L2/HOTKEY
+        // Badge L2/R2
         const Badge = ({ label, action, active }: { label:string; action:string; active:boolean }) => (
           <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:'2px', opacity: active ? 1 : 0.35 }}>
             <div style={{
@@ -569,7 +607,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
               border:`1.5px solid ${active ? '#666' : '#2a2a2a'}`,
               fontSize:'9px', fontWeight:700, color: active ? '#fff' : '#333',
             }}>{label}</div>
-            <span style={{ fontSize:'9px', fontWeight:700, color: active ? '#fff' : '#333', lineHeight:1 }}>{label}</span>
             <span style={{ fontSize:'9px', color: active ? '#aaa' : '#333', lineHeight:1 }}>{action}</span>
           </div>
         );
@@ -583,9 +620,27 @@ const ThemeList: React.FC<ThemeListProps> = ({
             borderTop:'2px solid #FF8C00',
             padding:'6px 16px',
             zIndex:9999,
+            display:'flex', flexDirection:'column', alignItems:'center',
+          }}>
+          <div style={{
             display:'flex', alignItems:'center', justifyContent:'center',
             gap:'6px', flexWrap:'nowrap',
           }}>
+            {/* R1 (ou touche configuree au setup) : ouvre/ferme la vitrine.
+                Gere entierement par l'AHK, toujours disponible (manette
+                comme borne), donc pas de condition d'affichage - juste un
+                rappel visuel + F9 en secours clavier. */}
+            <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:'2px' }}>
+              <div style={{
+                display:'inline-flex', alignItems:'center', justifyContent:'center',
+                minWidth:'34px', height:'22px', padding:'0 6px', borderRadius:'5px',
+                backgroundColor:'#2a2a2a', border:'1.5px solid #666',
+                fontSize:'9px', fontWeight:700, color:'#fff',
+              }}>R1</div>
+              <span style={{ fontSize:'9px', color:'#aaa', lineHeight:1 }}>Fermer</span>
+              <span style={{ fontSize:'8px', color:'#666', marginTop:'1px' }}>(F9 clavier)</span>
+            </div>
+            <Sep/>
             {/* SUD - Installer — vert Xbox (A) */}
             <BtnIcon dir="sud"  color="#2ecc71" active={btnSudOk}  label="SUD"  action="Installer"/>
             <Sep/>
@@ -595,21 +650,17 @@ const ThemeList: React.FC<ThemeListProps> = ({
             {/* NORD - Aperçu — jaune Xbox (Y) */}
             <BtnIcon dir="nord" color="#f1c40f" active={btnNordOk} label="NORD" action="Aperçu"/>
             <Sep/>
-            {/* D-PAD */}
+            {/* D-PAD : navigue aussi jusqu'aux boutons Precedent/Suivant en bas
+                de la liste (borne arcade ET manette peuvent l'utiliser) */}
             <DPad/>
-            <Sep/>
-            {/* L1/L2 manette */}
-            {hasL1L2 && (
+            {/* Trigger gauche/droite : raccourci direct de pagination,
+                manette uniquement (pas de badge dedie pour la borne, qui
+                passe par le D-PAD ci-dessus) */}
+            {hasTriggers && (
               <>
-                <Badge label="L1" action="Page -" active={btnL1Ok}/>
-                <Badge label="L2" action="Page +" active={btnL2Ok}/>
-              </>
-            )}
-            {/* HOTKEY borne */}
-            {hasHotkey && (
-              <>
-                {hasL1L2 && <Sep/>}
-                <Badge label="HOTKEY+←→" action="Page ±" active={btnHotkeyOk}/>
+                <Sep/>
+                <Badge label="L2/LT" action="Page -" active={btnTriggerLOk}/>
+                <Badge label="R2/RT" action="Page +" active={btnTriggerROk}/>
               </>
             )}
             {/* Page courante */}
@@ -621,6 +672,10 @@ const ThemeList: React.FC<ThemeListProps> = ({
                 </span>
               </>
             )}
+          </div>
+          <span style={{ fontSize:'10px', color:'#666', marginTop:'4px' }}>
+            🖱 Vous pouvez aussi utiliser une souris pour plus de confort
+          </span>
           </div>
         );
       })()}
