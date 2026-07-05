@@ -1,6 +1,8 @@
 // Fichier: src/HyperBatMediaSite.tsx
-// MODIFIÉ : ajout du useEffect de lecture des query params URL (?search=, ?system=, ?category=)
-// pour permettre au script hyperbat_theme_finder.py d'ouvrir la vitrine pré-filtrée.
+// Page principale de la vitrine HyperBat Media.
+// Lit les parametres d'URL (?search=, ?system=, ?category=, ?retrobat=)
+// pour permettre a des outils externes (le launcher AHK RetroBat, le
+// script hyperbat_theme_finder.py) d'ouvrir la vitrine deja pre-filtree.
 
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download } from 'lucide-react';
@@ -359,15 +361,20 @@ export default function HyperBatMediaSite(): JSX.Element {
     if (retrobatParam === '1') setIsRetrobat(true);
 
     // Nettoie l'URL apres lecture, MAIS en preservant les parametres
-    // manette/kiosque (btnSud, btnEst, btnNord, btnL1, btnL2, btnHotkey,
-    // controllerType) : ThemeList.tsx relit window.location.search en
-    // direct a chaque rendu pour le bandeau de controles, donc si on les
-    // supprime ici, le bandeau perd immediatement tous ses etats "actifs"
-    // juste apres le premier chargement, meme si l'URL de depart etait
-    // correcte.
+    // manette/kiosque (btnSud, btnEst, btnNord, btnTriggerL, btnTriggerR,
+    // btnHotkey, controllerType) : ThemeList.tsx et useGamepadGridNav.ts
+    // relisent window.location.search directement (pas seulement au
+    // premier rendu), donc si on les supprime ici, la navigation manette -
+    // en particulier la pagination L2/R2 - cesse de fonctionner juste apres
+    // le premier chargement, meme si l'URL de depart etait correcte.
+    // IMPORTANT : cette liste doit rester synchronisee avec les noms de
+    // parametres reellement envoyes par le launcher AHK (voir
+    // OpenHyperBatVitrine dans hyperbatmedia-theme-launcher.ahk) et lus
+    // par useGamepadGridNav.ts - btnL1/btnL2 sont les anciens noms conserves
+    // ici uniquement par compatibilite ascendante avec d'anciens liens.
     if (searchParam || systemParam || categoryParam || retrobatParam) {
       const preserved = new URLSearchParams();
-      const gamepadKeys = ['btnSud', 'btnEst', 'btnNord', 'btnL1', 'btnL2', 'btnHotkey', 'controllerType'];
+      const gamepadKeys = ['btnSud', 'btnEst', 'btnNord', 'btnTriggerL', 'btnTriggerR', 'btnL1', 'btnL2', 'btnHotkey', 'controllerType'];
       gamepadKeys.forEach((key) => {
         const value = params.get(key);
         if (value !== null) preserved.set(key, value);
