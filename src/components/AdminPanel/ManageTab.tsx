@@ -711,8 +711,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       // 1+2. Récupérer le SHA et pousser le nouveau themes.json, avec retry si le SHA était périmé (409)
       let themesPushed = false;
       for (let attempt = 1; attempt <= MAX_ATTEMPTS && !themesPushed; attempt++) {
-        const getRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}?ref=${GITHUB_BRANCH}`, {
-          headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+        const getRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}?ref=${GITHUB_BRANCH}&_=${Date.now()}`, {
+          headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
         });
         if (!getRes.ok) throw new Error(`Erreur récupération SHA: ${getRes.status}`);
         const fileData = await getRes.json();
@@ -752,8 +752,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       for (let attempt = 1; attempt <= MAX_ATTEMPTS && !lockWritten; attempt++) {
         let lockSha: string | undefined;
         try {
-          const lockGetRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}?ref=${GITHUB_BRANCH}`, {
-            headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+          const lockGetRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}?ref=${GITHUB_BRANCH}&_=${Date.now()}`, {
+            headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
           });
           if (lockGetRes.ok) {
             const lockFileData = await lockGetRes.json();
