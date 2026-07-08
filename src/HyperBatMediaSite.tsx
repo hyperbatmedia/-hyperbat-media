@@ -117,8 +117,8 @@ const writeLock = async (
 const readLock = async (): Promise<{ isLocked: boolean; adminName: string; lockedAt: number; cooldownUntil?: number; expiresAt?: number; isPushCooldown?: boolean } | null> => {
   try {
     const res = await fetch(
-      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`,
-      { headers: { Accept: 'application/vnd.github+json', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' } }
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}?_=${Date.now()}`,
+      { headers: { Accept: 'application/vnd.github+json' } }
     );
     if (!res.ok) return null;
     const data = await res.json();
