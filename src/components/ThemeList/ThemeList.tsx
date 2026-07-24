@@ -135,11 +135,29 @@ const ThemeList: React.FC<ThemeListProps> = ({
       const col = prev % columns;
       if (direction === 'left' && col > 0) return prev - 1;
       if (direction === 'right' && col < columns - 1 && prev + 1 < count) return prev + 1;
-      if (direction === 'up' && prev - columns >= 0) return prev - columns;
+      if (direction === 'up') {
+        if (prev - columns >= 0) return prev - columns;
+        // Deja sur la premiere ligne : meme logique symetrique que 'down'
+        // ci-dessous, au cas ou l'utilisateur a scrolle manuellement (ou
+        // via 'down') et veut remonter voir le haut de la carte/page.
+        if (typeof window !== 'undefined') window.scrollBy({ top: -220, behavior: 'smooth' });
+        return prev;
+      }
       if (direction === 'down') {
         if (prev + columns < count) return prev + columns;
         // Derniere ligne : si pagination disponible, on y bascule le focus
-        if (totalPages > 1) setPaginationFocus('prev');
+        if (totalPages > 1) { setPaginationFocus('prev'); return prev; }
+        // Sinon (une seule page - frequent quand il y a peu de themes) :
+        // le D-Pad ne peut plus changer de carte, mais la carte
+        // actuellement focus peut etre plus haute que la zone visible
+        // (image + description + bouton Installer, coupes par le bandeau
+        // de controles fixe en bas d'ecran) - remonte par un testeur :
+        // "je veux voir le theme complet". Un simple retour a l'index
+        // inchange ne re-declenche pas le scrollIntoView (React n'effectue
+        // pas l'effet si la valeur ne change pas), donc rien ne se
+        // passait. On scrolle manuellement la page vers le bas pour
+        // reveler le reste de la carte.
+        if (typeof window !== 'undefined') window.scrollBy({ top: 220, behavior: 'smooth' });
         return prev;
       }
       return prev;
