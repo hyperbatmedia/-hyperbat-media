@@ -288,7 +288,7 @@ export default function HyperBatMediaSite(): JSX.Element {
   const [sidebarSearch, setSidebarSearch] = useState<string>('');
   const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [sortBy, setSortBy] = useState<'name' | 'date'>('name');
+  const [sortBy, setSortBy] = useState<'name' | 'date'>('date');
   const [showAdminPanel, setShowAdminPanel] = useState<boolean>(false);
   const [showRecapPanel, setShowRecapPanel] = useState<boolean>(false);
   const [adminTab, setAdminTab] = useState<AdminTab>('manage');
