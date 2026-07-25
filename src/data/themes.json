@@ -34881,19 +34881,6 @@
     "isMulti": false
   },
   {
-    "id": 70258,
-    "name": "zoar alt",
-    "creator": "Akeshi",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "",
-    "downloadUrl": "https://drive.google.com/file/d/1p15Vr07JUG5Cej8hUKDUSVTRy1Omz6aY/view?usp=sharing",
-    "size": "2.2 MB",
-    "date": "2026-07-15",
-    "onScreenScraper": false,
-    "isMulti": false
-  },
-  {
     "id": 70259,
     "name": "zodiack",
     "creator": "Akeshi",
@@ -35162,19 +35149,6 @@
     "imageUrl": "https://drive.google.com/file/d/1B3Y-kHWXkp5FbgxV7cigEZ8fnFJyneP3/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1xj3rUrXuwt-DWE13O05DduuDvAmMg1kw/view?usp=sharing",
     "size": "2.0 MB",
-    "date": "2026-07-16",
-    "onScreenScraper": false,
-    "isMulti": false
-  },
-  {
-    "id": 71714,
-    "name": "SNK vs. Capcom - Card Fighters' Clash - Capcom Version (USA, Europe)",
-    "creator": "Akeshi",
-    "system": "neogeopocketcolor",
-    "category": "game-themes",
-    "imageUrl": "",
-    "downloadUrl": "https://drive.google.com/file/d/1GyTdLlrPULEeCLoYvLNVgkSXgEy6gGXn/view?usp=sharing",
-    "size": "2.9 MB",
     "date": "2026-07-16",
     "onScreenScraper": false,
     "isMulti": false
@@ -35656,7 +35630,9 @@
     "imageUrl": "https://drive.google.com/file/d/15e6w8yPBXT4H7KR9nAFirFQqyvNq6E7i/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1AK2QSUpv5pxWelqz64FYTh-6n6GL-v5u/view?usp=sharing",
     "size": "2.4 MB",
-    "date": "2026-07-22"
+    "date": "2026-07-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72533,
@@ -35667,7 +35643,9 @@
     "imageUrl": "https://drive.google.com/file/d/1XkCDUn3oSy9k4Ltvu7M2lg4ycYsv-o1H/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1xmAgnPfLZLnmsg4iGPvMe_y1TyvwyBpW/view?usp=sharing",
     "size": "5.7 MB",
-    "date": "2026-07-22"
+    "date": "2026-07-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72534,
@@ -35678,7 +35656,9 @@
     "imageUrl": "https://drive.google.com/file/d/1GdJ3fCkVI9Bkh9EYKJHfLaBEf_wGGdnn/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1dfNmKPwcq-wOkfvzKIZEm-dzPOcc2r8A/view?usp=sharing",
     "size": "1.5 MB",
-    "date": "2026-07-22"
+    "date": "2026-07-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72535,
@@ -35689,7 +35669,9 @@
     "imageUrl": "https://drive.google.com/file/d/1dr-u_IqhNpco4oywcfKE0BgvkLP8WNpF/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1R09d8ADtXeFoY3W9CWznrcGb_Da9GMA-/view?usp=sharing",
     "size": "2.2 MB",
-    "date": "2026-07-22"
+    "date": "2026-07-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72536,
@@ -35700,7 +35682,9 @@
     "imageUrl": "https://drive.google.com/file/d/1uZyhUiuVpDuKAKAgXE2tkA40L9nZxu2o/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Gy2d7UPkcjFdK4fXtBNp4f5VXhwKoCrs/view?usp=sharing",
     "size": "1.4 MB",
-    "date": "2026-07-22"
+    "date": "2026-07-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72537,
@@ -35711,7 +35695,9 @@
     "imageUrl": "https://drive.google.com/file/d/11WVx_uaVIROSnmqWIXBw7omYEkw_0nEQ/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1CmLSOBWBn_cA9DQUz9JJ_8WjBjBn2KiG/view?usp=sharing",
     "size": "1.5 MB",
-    "date": "2026-07-22"
+    "date": "2026-07-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72538,
@@ -35722,7 +35708,9 @@
     "imageUrl": "https://drive.google.com/file/d/18Th8gpgRY2HcHahk3SvNFzG0kmZyl3-4/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1QMmSLLipHtgYzHSUUABX_-IbjTHAdXPb/view?usp=sharing",
     "size": "1.2 MB",
-    "date": "2026-07-22"
+    "date": "2026-07-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72539,
@@ -35733,7 +35721,9 @@
     "imageUrl": "https://drive.google.com/file/d/1p3Vb_4zAWlGm9Zx5evj5m6COVq-f-J2W/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1a8gd1fs9n2BGr3Kxf3QibCBMDTlWi68s/view?usp=sharing",
     "size": "1.4 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72540,
@@ -35744,7 +35734,9 @@
     "imageUrl": "https://drive.google.com/file/d/1G48u31tzlC1JBVoMt8GehdeSlFlOTfBg/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1ZeRQaKV0jXyvCSFHSb0PM_tQetmysDNO/view?usp=sharing",
     "size": "2.5 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72541,
@@ -35755,7 +35747,9 @@
     "imageUrl": "https://drive.google.com/file/d/1zONEX1NIkL8R-PGNG1PfaAc8nak0M8nq/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1GMIYlgDGyLVrZXaYxjnfWiWp0vZC5180/view?usp=sharing",
     "size": "1.4 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72542,
@@ -35766,7 +35760,9 @@
     "imageUrl": "https://drive.google.com/file/d/1Z6QZNuZ1LWIfS0aKWYcn8vtUf0ck3lYJ/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1uqL_tLUeAnuGpli4w4NOleHrXgz8RlGf/view?usp=sharing",
     "size": "3.5 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72543,
@@ -35777,7 +35773,9 @@
     "imageUrl": "https://drive.google.com/file/d/1FKZQCYDUKsbP3Qek_qhys-x-e7DXF9Ha/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1ohm3FLwuqBvZ4nTPMZWggaI6w9-NgK7Q/view?usp=sharing",
     "size": "2.1 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72544,
@@ -35788,7 +35786,9 @@
     "imageUrl": "https://drive.google.com/file/d/1xlp8cJdvFTnm-iVsBfFtZObqBn3pExJN/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Zi-QWBd0owvW3PdrLp2PFrCu-KwrKrIR/view?usp=sharing",
     "size": "3.1 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72545,
@@ -35799,7 +35799,9 @@
     "imageUrl": "https://drive.google.com/file/d/1XE-qG69cU3d37XB9cqYmrpp7ZTnvKAZz/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1G5kRZUpUN2YjYDJOgtzH90PRBeKZ0kJM/view?usp=sharing",
     "size": "4.0 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72546,
@@ -35810,7 +35812,9 @@
     "imageUrl": "https://drive.google.com/file/d/13xe8D05rw-nGx5rbbJi6-dfk663TsRSd/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1X0JNWb7kXeYeqkC9EwsjLuZBdbqP9dxV/view?usp=sharing",
     "size": "4.1 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72547,
@@ -35821,7 +35825,9 @@
     "imageUrl": "https://drive.google.com/file/d/1f868JyGPVUoDyeAYmfZJzy8vsgVh-lFC/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1DKee3Q82nZgVq-1-L2oAz1aCgPUNPGf2/view?usp=sharing",
     "size": "2.0 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72548,
@@ -35832,7 +35838,9 @@
     "imageUrl": "https://drive.google.com/file/d/1XYEnZ3VAfxbOz1de-GYNUOoZv_1UdZ7Y/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1ncxZ3NrM-g4nBBItUSH0EwoKbn6675en/view?usp=sharing",
     "size": "1.7 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72675,
@@ -35843,7 +35851,9 @@
     "imageUrl": "https://drive.google.com/file/d/1_y6shXClcoU4-XIpxsF4KyD4dnmjl5xn/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1yOHws6JrSDx_t5hcTQGqDDJyjGARUuhZ/view?usp=sharing",
     "size": "4.5 MB",
-    "date": "2026-07-18"
+    "date": "2026-07-18",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72959,
@@ -35854,7 +35864,9 @@
     "imageUrl": "https://drive.google.com/file/d/1wA8RqHR1vQbOvkQHSmk57Jrc-QxhTM7j/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1zakP02bXc3LvGOcGsWbsHvv1E4XF6uBd/view?usp=sharing",
     "size": "3.0 MB",
-    "date": "2026-07-20"
+    "date": "2026-07-20",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72960,
@@ -35865,7 +35877,9 @@
     "imageUrl": "https://drive.google.com/file/d/1A_8t2l5eEy9z0aNV8RflruPzTb4iClbW/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1qqXCCvgphBnDh-WJQdvabR8Ckqm_uF9b/view?usp=sharing",
     "size": "1.1 MB",
-    "date": "2026-07-20"
+    "date": "2026-07-20",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72961,
@@ -35876,7 +35890,9 @@
     "imageUrl": "https://drive.google.com/file/d/1LmhsH92Wkgoq-WOLEu0TKitUg-qlPVxJ/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/16Lo4iZo7OP8jroHcrf3DOBsOvhK15QqE/view?usp=sharing",
     "size": "130.9 KB",
-    "date": "2026-07-20"
+    "date": "2026-07-20",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72962,
@@ -35887,7 +35903,9 @@
     "imageUrl": "https://drive.google.com/file/d/1GFN5NkqAc4HZmaB8v4O6IslWqJwoWOqJ/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/12eGdllewpZ7raVo_Edt2OrFDYdZYml6Y/view?usp=sharing",
     "size": "2.7 MB",
-    "date": "2026-07-20"
+    "date": "2026-07-20",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72963,
@@ -35898,7 +35916,9 @@
     "imageUrl": "https://drive.google.com/file/d/1Yu3FUXe3GGVkz2ozUqgoFqNSCFzjSOX_/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1zew9OVDFUwAXHFiBigpPSPSMCb3Mro8n/view?usp=sharing",
     "size": "6.7 MB",
-    "date": "2026-07-19"
+    "date": "2026-07-19",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72964,
@@ -35909,7 +35929,9 @@
     "imageUrl": "https://drive.google.com/file/d/1UCu7eZ5mVSytZsc621Yu_IElvbwto_h5/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1RJ2iwpyfkIXN_TZ3qRFDRVQskpysDpp-/view?usp=sharing",
     "size": "13.6 MB",
-    "date": "2026-07-19"
+    "date": "2026-07-19",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72965,
@@ -35920,7 +35942,9 @@
     "imageUrl": "https://drive.google.com/file/d/1pqB8dez9wtJOZBNEhnQtM6QeOL_JIvE1/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1arF7P-UrisuSVgja7-IOcz3lD9uKHIxM/view?usp=sharing",
     "size": "2.5 MB",
-    "date": "2026-07-19"
+    "date": "2026-07-19",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72966,
@@ -35931,7 +35955,9 @@
     "imageUrl": "https://drive.google.com/file/d/1arQqrLt4s9ZXQIZTDaL7kh3ugomXVl4p/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/12TGBSWmTf-kpqDYqQRdazjBlFAwOhUhP/view?usp=sharing",
     "size": "2.0 MB",
-    "date": "2026-07-19"
+    "date": "2026-07-19",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72967,
@@ -35942,7 +35968,9 @@
     "imageUrl": "https://drive.google.com/file/d/1J1CqiJ_donivqFEz8Hwb0Ag1semW4VLz/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/12o3OKNzCeX6Ux8xRRND0qqaWvAMg0JYg/view?usp=sharing",
     "size": "2.6 MB",
-    "date": "2026-07-19"
+    "date": "2026-07-19",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72968,
@@ -35953,7 +35981,9 @@
     "imageUrl": "https://drive.google.com/file/d/1GjHEpDg6d32k4_4FyadwyVp7Y4xr7lA8/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/11EbGK56AM7wfvNtwUhoK8OzkvS5_tqmd/view?usp=sharing",
     "size": "659.4 KB",
-    "date": "2026-07-18"
+    "date": "2026-07-18",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72969,
@@ -35964,7 +35994,9 @@
     "imageUrl": "https://drive.google.com/file/d/1-f1h9RbxiFaDgZKxU9gIeY8TzMCD9l17/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1xGlRXkXgEMLYWUKr0bIB5VY53-1IK9qq/view?usp=sharing",
     "size": "2.8 MB",
-    "date": "2026-07-18"
+    "date": "2026-07-18",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72970,
@@ -35975,7 +36007,9 @@
     "imageUrl": "https://drive.google.com/file/d/15jH-s_sUibt73YDe2sfsaplNOaIliYoi/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1VAr1Hg38uCwwuKcFilo2drNzy27mnmMg/view?usp=sharing",
     "size": "1.6 MB",
-    "date": "2026-07-16"
+    "date": "2026-07-16",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72971,
@@ -35986,7 +36020,9 @@
     "imageUrl": "https://drive.google.com/file/d/1mZKmGMpK1RssEXRpel_jBiuOBgHSi5eJ/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1CQti9jXhgWMJY_b0kS4hwjeQKphIapbA/view?usp=sharing",
     "size": "1.3 MB",
-    "date": "2026-07-16"
+    "date": "2026-07-16",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72972,
@@ -35997,7 +36033,9 @@
     "imageUrl": "https://drive.google.com/file/d/1Tw-aDW0rLK7nPuv_H8iWwyltmUwR75H0/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1aEZtQd7fU99FgwLh_UZvkwqvFRtAG59B/view?usp=sharing",
     "size": "2.0 MB",
-    "date": "2026-07-16"
+    "date": "2026-07-16",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72973,
@@ -36008,7 +36046,9 @@
     "imageUrl": "https://drive.google.com/file/d/1jdijMZKVQxP37pfVHK6cp6IPzHTffR-A/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1dbdQkiVMnSK9ByJa0BUMoP2OdrUVypWK/view?usp=sharing",
     "size": "707.9 KB",
-    "date": "2026-07-16"
+    "date": "2026-07-16",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72974,
@@ -36019,7 +36059,9 @@
     "imageUrl": "https://drive.google.com/file/d/1zinF9vfKwJBeXjgmF-tqFHmQ399VCY4k/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1eQoiUEGYB7ABe9ajTss_0hJVCVc_sT5z/view?usp=sharing",
     "size": "2.8 MB",
-    "date": "2026-07-16"
+    "date": "2026-07-16",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72981,
@@ -36030,7 +36072,9 @@
     "imageUrl": "https://drive.google.com/file/d/1iz1tj_Dt40j8aSqESi0OxCQz3wqMNQT0/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1buQVoOj1oU-JfG2i4OMLiSH_aVxykErN/view?usp=sharing",
     "size": "1.2 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72982,
@@ -36041,7 +36085,9 @@
     "imageUrl": "https://drive.google.com/file/d/1HrKslnDqB16Dd9CEh71poZUrjZqjxQPu/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1-u9qSXwSbpSE9oqNHJlFd2HsZQDBjzlh/view?usp=sharing",
     "size": "3.4 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72983,
@@ -36052,7 +36098,9 @@
     "imageUrl": "https://drive.google.com/file/d/16GAPVJjkynQ7NtWPmbht2yqvVbxbU9o1/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1SUWrVHYgy_aPPBxqdvfUoneKA4l9pUdi/view?usp=sharing",
     "size": "2.8 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72984,
@@ -36063,7 +36111,9 @@
     "imageUrl": "https://drive.google.com/file/d/1TnGRl_yL36zz68nqvrWyWdDY1ylQoTl_/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1aRuA-RZntuvLmjSaUs_S7BticrBPp5YK/view?usp=sharing",
     "size": "1.9 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72985,
@@ -36074,7 +36124,9 @@
     "imageUrl": "https://drive.google.com/file/d/1BPoj_tI88u9flk1bQAnRHl1FhC_ClKCo/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1AZcesitZZTLw8kYZB9-iY96JfAfgKsfZ/view?usp=sharing",
     "size": "1.7 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72986,
@@ -36085,7 +36137,9 @@
     "imageUrl": "https://drive.google.com/file/d/19FnFrnxfs39qxdRE0TG50Yilk66Ab3BM/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1VRYauot5OaZ69xywS6w45emjnLjfDXTu/view?usp=sharing",
     "size": "1.8 MB",
-    "date": "2026-07-24"
+    "date": "2026-07-24",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72987,
@@ -36096,7 +36150,9 @@
     "imageUrl": "https://drive.google.com/file/d/1_kR9bivan5j2oC6Cp4z5YUfLeFtmuVNi/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1-0GhVwUaNAhdeBtYhsAMhqpIOq-odACf/view?usp=sharing",
     "size": "1.6 MB",
-    "date": "2026-07-24"
+    "date": "2026-07-24",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72988,
@@ -36107,7 +36163,9 @@
     "imageUrl": "https://drive.google.com/file/d/1DqQuidKhzrykBsMYsmCWiPhDOUbl3ixz/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/14kN0HyLWiYgrudwsZH09aqI91KEs-y-7/view?usp=sharing",
     "size": "5.9 MB",
-    "date": "2026-07-24"
+    "date": "2026-07-24",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72989,
@@ -36118,7 +36176,9 @@
     "imageUrl": "https://drive.google.com/file/d/1_lOgrTAB0HG02NriYH0kq5Jt6VaSLmWz/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1F7NNFYcZ3mGnnnEdyDW2nBXucJm1bKJ-/view?usp=sharing",
     "size": "1.7 MB",
-    "date": "2026-07-24"
+    "date": "2026-07-24",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72990,
@@ -36129,7 +36189,9 @@
     "imageUrl": "https://drive.google.com/file/d/1DozY1WQO-kX4weKnnwA7_WTkQiFgG5jj/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1N219WkoE32ZMh9dFkW85Mvq4tZl55tAB/view?usp=sharing",
     "size": "1.4 MB",
-    "date": "2026-07-23"
+    "date": "2026-07-23",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72991,
@@ -36140,7 +36202,9 @@
     "imageUrl": "https://drive.google.com/file/d/1dSScrlJua-5pnzN5OSmxvU9slxk9cDt9/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1n0urSiRak-AcFJc2HIQvA9xqd3DKjv2Q/view?usp=sharing",
     "size": "1.9 MB",
-    "date": "2026-07-23"
+    "date": "2026-07-23",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72992,
@@ -36151,7 +36215,9 @@
     "imageUrl": "https://drive.google.com/file/d/1xlXj8IluP-sBtjTrLBSjDPMBpT7z9Nwc/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/154dx9DAeKwN9R9-5QSef1dY1h_caYTGM/view?usp=sharing",
     "size": "6.4 MB",
-    "date": "2026-07-23"
+    "date": "2026-07-23",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72993,
@@ -36162,7 +36228,9 @@
     "imageUrl": "https://drive.google.com/file/d/1C69Er74trkq0yUoCwCcgdisC5wdA4Pa1/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1AU8T7co11AiVIppQ9hCsIBG0ZO9VaGF3/view?usp=sharing",
     "size": "2.4 MB",
-    "date": "2026-07-22"
+    "date": "2026-07-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72994,
@@ -36173,7 +36241,9 @@
     "imageUrl": "https://drive.google.com/file/d/1fOhePz96zReL67du53geJkiwYDohjYd6/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1ugCSUTW6-o6Bz7Z1cs-VLtYQTb0V7s_-/view?usp=sharing",
     "size": "5.7 MB",
-    "date": "2026-07-22"
+    "date": "2026-07-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72995,
@@ -36184,7 +36254,9 @@
     "imageUrl": "https://drive.google.com/file/d/1tjh-O-ouBX--ZGIjfhW3bax2AHBoOpbM/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1e6ksJeC6cvBVVUF1b0fAmyojsZdsFfpR/view?usp=sharing",
     "size": "1.5 MB",
-    "date": "2026-07-22"
+    "date": "2026-07-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72996,
@@ -36195,7 +36267,9 @@
     "imageUrl": "https://drive.google.com/file/d/1URH0-UU4s82dJ-qTwzmZCG9RmP8ciu8r/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1CeYudLA1FLkTovExKZgneesUA_TRqLBA/view?usp=sharing",
     "size": "2.2 MB",
-    "date": "2026-07-22"
+    "date": "2026-07-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72997,
@@ -36206,7 +36280,9 @@
     "imageUrl": "https://drive.google.com/file/d/1KnqZlNVxo6ClTQckAMKnd2QvMOU43n6D/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/10qMw7AvKHlOjcnV1D8by6f_Kj00EwJWb/view?usp=sharing",
     "size": "1.4 MB",
-    "date": "2026-07-22"
+    "date": "2026-07-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72998,
@@ -36217,7 +36293,9 @@
     "imageUrl": "https://drive.google.com/file/d/1UszoDe6lfQFYTyndP9BzkXU4Wsyd8RMi/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/186GP_W6IUxZpZKSSwfFXqK5OX7Zmr5M8/view?usp=sharing",
     "size": "1.5 MB",
-    "date": "2026-07-22"
+    "date": "2026-07-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 72999,
@@ -36228,7 +36306,9 @@
     "imageUrl": "https://drive.google.com/file/d/1MVikyLY13VJuqRugZ1NEFqv-iOI2ajCV/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1WEaYB6IlGPsp8kuMaeSVeVfP59vbPFBy/view?usp=sharing",
     "size": "1.2 MB",
-    "date": "2026-07-22"
+    "date": "2026-07-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73000,
@@ -36239,7 +36319,9 @@
     "imageUrl": "https://drive.google.com/file/d/1oWCa7B63ezRh1T9vgf5c-JJ7v-5FsPPE/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1ToAzLlysW5fXRl3YFTJamu2pdNdUKj04/view?usp=sharing",
     "size": "1.4 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73001,
@@ -36250,7 +36332,9 @@
     "imageUrl": "https://drive.google.com/file/d/1cMbTyAdKd6CTrq3CnZUCmuwXyEm-Y8OF/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1QfGl9iWVG83mp1btWCDiwqd0Z0IWxE95/view?usp=sharing",
     "size": "2.5 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73002,
@@ -36261,7 +36345,9 @@
     "imageUrl": "https://drive.google.com/file/d/1q1WMQI867sbQox2NErRWdyw9LlKlb9RX/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1lIWf-28fz_Z720uiCUrcjWBvGqmYaYTT/view?usp=sharing",
     "size": "1.4 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73003,
@@ -36272,7 +36358,9 @@
     "imageUrl": "https://drive.google.com/file/d/1H6ZirXnSW66G78661GVYA0gMJUsOy1kZ/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1gpYU7Y1_LArIG_bGJKapy9jGZlUcdpjF/view?usp=sharing",
     "size": "3.5 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73004,
@@ -36283,7 +36371,9 @@
     "imageUrl": "https://drive.google.com/file/d/1hrVMQ3zDhNRi8xOUe1oeku0skhBwpDVv/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1zgQqZnY2GY1ILtYrp7BKXt3t6I9tVTop/view?usp=sharing",
     "size": "2.1 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73005,
@@ -36294,7 +36384,9 @@
     "imageUrl": "https://drive.google.com/file/d/1EQSat986nsoxQUtaRScKO0xxMP-geEBC/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1UvVPpolo2J9A9CtZ7ttC4VR-Og38QHaL/view?usp=sharing",
     "size": "3.1 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73006,
@@ -36305,7 +36397,9 @@
     "imageUrl": "https://drive.google.com/file/d/1PG0P3DUbZaBYHg0dWMmnavQPayWGQVZn/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1AB5p4f9VRHzN-STy00WxYq2jQkedSC5k/view?usp=sharing",
     "size": "4.0 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73007,
@@ -36316,7 +36410,9 @@
     "imageUrl": "https://drive.google.com/file/d/11DpzRNbM1oKFsp-wmLRViXasrzoG5O4-/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1UGPUT1IL9Sj3hdY9If50ouHXbSuQnvgG/view?usp=sharing",
     "size": "4.1 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73008,
@@ -36327,7 +36423,9 @@
     "imageUrl": "https://drive.google.com/file/d/1GwsOAZ2z_tOYA2woI1G12l7fx2FoeQ4-/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1LJZNT0SEb3a4g2u3Rl-MGiUgygFsjDtL/view?usp=sharing",
     "size": "2.0 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73009,
@@ -36338,7 +36436,9 @@
     "imageUrl": "https://drive.google.com/file/d/1CCKGD79L2xofnEW9cPuU9UvV8zj2xsU4/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1B6Vw4MRbXO9He5FyCBiDB-akr4AOI-Ic/view?usp=sharing",
     "size": "1.7 MB",
-    "date": "2026-07-21"
+    "date": "2026-07-21",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73010,
@@ -36349,7 +36449,9 @@
     "imageUrl": "https://drive.google.com/file/d/1tql_PuW95r6_CwFW5MeExTNmAIHKWB9x/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1amKWLDUH_SiRPO37s7lrnyd1hPNKOcx-/view?usp=sharing",
     "size": "3.0 MB",
-    "date": "2026-07-20"
+    "date": "2026-07-20",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73011,
@@ -36360,7 +36462,9 @@
     "imageUrl": "https://drive.google.com/file/d/1VkZtT7sDrt-C0kE-p07FFunRlN1qcTom/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1y6mcE_uTuPVYt76LL6HJRIcd9QRozumq/view?usp=sharing",
     "size": "1.1 MB",
-    "date": "2026-07-20"
+    "date": "2026-07-20",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73012,
@@ -36371,7 +36475,9 @@
     "imageUrl": "https://drive.google.com/file/d/1AI2Go6k13DC1rY-KgLbmtkwN1ByGX3Kx/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1tihAm7pT6QtLiIf0MyMkwSkQVPOJQQB-/view?usp=sharing",
     "size": "130.9 KB",
-    "date": "2026-07-20"
+    "date": "2026-07-20",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73013,
@@ -36382,7 +36488,9 @@
     "imageUrl": "https://drive.google.com/file/d/1JPV1eXqvZ8w7kX2tJlLWCsabXjOclb2k/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1IRtDIypjhMxZQ0D3T7W2P23XaJnEHIOT/view?usp=sharing",
     "size": "2.7 MB",
-    "date": "2026-07-20"
+    "date": "2026-07-20",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73014,
@@ -36393,7 +36501,9 @@
     "imageUrl": "https://drive.google.com/file/d/1LtYoYxAFQkKoJmhPOT69HIFclqsn34YW/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1-NBXcnwuMZLtXJ8B9L1a7RloekZh2GOV/view?usp=sharing",
     "size": "6.7 MB",
-    "date": "2026-07-19"
+    "date": "2026-07-19",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73015,
@@ -36404,7 +36514,9 @@
     "imageUrl": "https://drive.google.com/file/d/1hva6IjqGlygALOXAo5SX0Vc_MXeImyb6/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/12usbBsnacD7JbrGKZerV090WAd8kw9mJ/view?usp=sharing",
     "size": "13.6 MB",
-    "date": "2026-07-19"
+    "date": "2026-07-19",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73016,
@@ -36415,7 +36527,9 @@
     "imageUrl": "https://drive.google.com/file/d/1aPrvRLIgSNgCDc8snw5rutWDsIYifgs8/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1yMtMa1cSeHwG_riuRJGNqbTvbYNAmN3i/view?usp=sharing",
     "size": "2.5 MB",
-    "date": "2026-07-19"
+    "date": "2026-07-19",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73017,
@@ -36426,7 +36540,9 @@
     "imageUrl": "https://drive.google.com/file/d/15D6Vj-w9A28jXbOjBIPn_GTz4CPuu0ie/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Z4XvdaTXPy9wOsTX__PBgZzQStiYGQ4h/view?usp=sharing",
     "size": "2.0 MB",
-    "date": "2026-07-19"
+    "date": "2026-07-19",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73018,
@@ -36437,7 +36553,9 @@
     "imageUrl": "https://drive.google.com/file/d/13jYwInMMnqWWHTn4ctWjGxxkHZ8asawF/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1tKSHfca0GTpLl3ezAt42-QRuLSljLrzd/view?usp=sharing",
     "size": "2.6 MB",
-    "date": "2026-07-19"
+    "date": "2026-07-19",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73019,
@@ -36448,7 +36566,9 @@
     "imageUrl": "https://drive.google.com/file/d/1ddlY-D4lrKm6NmE46PNz4XpE-hTzLMBH/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1wihgPS6_ZP4g9CnDf2kVZmrxqWkm2fi5/view?usp=sharing",
     "size": "659.4 KB",
-    "date": "2026-07-18"
+    "date": "2026-07-18",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73020,
@@ -36459,7 +36579,9 @@
     "imageUrl": "https://drive.google.com/file/d/1W_LCL-O8GCcejtyndSUrD8eIxOjP-zi6/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1EskMcaNGeV4TkAQxhwwndHd2JjPAtCAf/view?usp=sharing",
     "size": "2.8 MB",
-    "date": "2026-07-18"
+    "date": "2026-07-18",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73021,
@@ -36470,7 +36592,9 @@
     "imageUrl": "https://drive.google.com/file/d/1FrJu2xTBe4QRP-qAday3paGocud125uV/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1d8L5ogjtdQNJL9vmFcj-Vy0Xk-iWAitK/view?usp=sharing",
     "size": "4.5 MB",
-    "date": "2026-07-18"
+    "date": "2026-07-18",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73022,
@@ -36481,7 +36605,9 @@
     "imageUrl": "https://drive.google.com/file/d/1EPc0DG6rvqZTgSk5Eta1nt0Fbnvo8tpt/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1SSrd5rCFq40c8cAztuQA0OyzNDazNv8k/view?usp=sharing",
     "size": "1.6 MB",
-    "date": "2026-07-16"
+    "date": "2026-07-16",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73023,
@@ -36492,7 +36618,9 @@
     "imageUrl": "https://drive.google.com/file/d/1tMQ9EqbxaMKCnnD3A9sAOKxFABbP87J4/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Pl7IzHzjJgP_3-0wr_biXKD1wfo-9Z1F/view?usp=sharing",
     "size": "1.3 MB",
-    "date": "2026-07-16"
+    "date": "2026-07-16",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73024,
@@ -36503,7 +36631,9 @@
     "imageUrl": "https://drive.google.com/file/d/1xohKGjMl5xsJDgrhY56GC7B_wHVuo1bv/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1H-mDzNf2NRWc-uLNey9cRySNoh7PkO5g/view?usp=sharing",
     "size": "2.0 MB",
-    "date": "2026-07-16"
+    "date": "2026-07-16",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73025,
@@ -36514,7 +36644,9 @@
     "imageUrl": "https://drive.google.com/file/d/1uiNk85N3BzrWhVsXheGQxAOeo1Zz08lI/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1MjzNFKuLg5Zwjb_SnbTMycbtYY-BjFOA/view?usp=sharing",
     "size": "707.9 KB",
-    "date": "2026-07-16"
+    "date": "2026-07-16",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 73026,
@@ -36525,7 +36657,9 @@
     "imageUrl": "https://drive.google.com/file/d/1NjkH9RdmCBrKFdi0NB7d0zFeFtje-1ZK/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1z54_6WSD6TmDBVUN92YW1JRmHIy6uSmW/view?usp=sharing",
     "size": "2.8 MB",
-    "date": "2026-07-16"
+    "date": "2026-07-16",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74001,
@@ -36536,7 +36670,9 @@
     "imageUrl": "https://drive.google.com/file/d/1BF9mpSEt-V4Q4n4ptvN7zQOZ6Skyh9zs/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1EVStDQUwAXEf-r-1MsYkGevxUFbDe12T/view?usp=sharing",
     "size": "1.4 MB",
-    "date": "2026-07-24"
+    "date": "2026-07-24",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74002,
@@ -36547,7 +36683,9 @@
     "imageUrl": "https://drive.google.com/file/d/1MR2-nL8Pnln-dMNYjcUXtSMJtpNy5WKV/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1nc47WZ1cuCrYHfhcIT132q47KbceqiCi/view?usp=sharing",
     "size": "1.9 MB",
-    "date": "2026-07-24"
+    "date": "2026-07-24",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74003,
@@ -36558,7 +36696,9 @@
     "imageUrl": "https://drive.google.com/file/d/1Oy0VkVtSgGzh-X4-nxvli6WVakCeLdxr/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1lSxr_7AjWZ_P6sj1oZwGGcspUiBGJmJw/view?usp=sharing",
     "size": "6.4 MB",
-    "date": "2026-07-24"
+    "date": "2026-07-24",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74004,
@@ -36569,7 +36709,9 @@
     "imageUrl": "https://drive.google.com/file/d/1pggzd-jkJGT4M7s210otWcR4IuspKizv/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/18w1MY84_vmOBIrwJvRMwwzGK6HRHD39_/view?usp=sharing",
     "size": "4.0 MB",
-    "date": "2026-07-23"
+    "date": "2026-07-23",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74005,
@@ -36580,7 +36722,9 @@
     "imageUrl": "https://drive.google.com/file/d/1u4l4cufyO4BCnQujO_aHAtKIVQQ5tUeu/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1RfLtHKwRcdg7vX8UAFPqHKNiGRRl_MMs/view?usp=sharing",
     "size": "3.2 MB",
-    "date": "2026-07-23"
+    "date": "2026-07-23",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74006,
@@ -36591,7 +36735,9 @@
     "imageUrl": "https://drive.google.com/file/d/11R4yJ2kK9mWDTBobTQVYdiBt5N635XLi/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1unrsRFsE-7sBRMpsOUDpYIM2pu-OubAs/view?usp=sharing",
     "size": "1.4 MB",
-    "date": "2026-07-23"
+    "date": "2026-07-23",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74007,
@@ -36602,7 +36748,9 @@
     "imageUrl": "https://drive.google.com/file/d/19iwgs9Nv9TslTEaasgjW7_CxehmlPVqf/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1guM6CY9RfZAX5Uh9kaJDR6hjBjooKicP/view?usp=sharing",
     "size": "2.3 MB",
-    "date": "2026-07-23"
+    "date": "2026-07-23",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74009,
@@ -36613,7 +36761,9 @@
     "imageUrl": "https://drive.google.com/file/d/1U11jrBad1aFMVCPBwff9yIgUqDFUc7cw/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1UPh7VtiVyfLTqsutnuHDlFmDSzmoKvVP/view?usp=sharing",
     "size": "1.2 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74010,
@@ -36624,7 +36774,9 @@
     "imageUrl": "https://drive.google.com/file/d/1AdgggjE5pG7KkksT-9mDSnGnmJU7TACS/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1efnPVOYuoj_GtG20tUvyyyke58dVUSci/view?usp=sharing",
     "size": "3.4 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74011,
@@ -36635,7 +36787,9 @@
     "imageUrl": "https://drive.google.com/file/d/1MCOy6NWYMM9XT4aI7AJZVbbzWisZXuv6/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1-WqmUYebtzd50Nr6x8BvSPPuNbLRrrhV/view?usp=sharing",
     "size": "2.8 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74012,
@@ -36646,7 +36800,9 @@
     "imageUrl": "https://drive.google.com/file/d/15sJzzAikktjT3uuh6ZsoTz9nYcZk0wiQ/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1YoPmOEbsWy0tjYRUfs1hTbBgEiz35Oi4/view?usp=sharing",
     "size": "1.9 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74013,
@@ -36657,7 +36813,9 @@
     "imageUrl": "https://drive.google.com/file/d/1p12omsyXuU4EqJ0EZ4UKmqfnqEk3u6zO/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1D8aF6d66s6Df8BXOsSnqozclMnSKEGmy/view?usp=sharing",
     "size": "1.7 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74014,
@@ -36668,7 +36826,9 @@
     "imageUrl": "https://drive.google.com/file/d/1N9uOPVMA_e0HhG5XseKqJWmrZ1GTPJB_/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/18XmR4wi5p3w8yHm2mJWgbKfVFPoEI8aQ/view?usp=sharing",
     "size": "1.8 MB",
-    "date": "2026-07-24"
+    "date": "2026-07-24",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74015,
@@ -36679,7 +36839,9 @@
     "imageUrl": "https://drive.google.com/file/d/1J2fOGeMgrQTqQ2Hp1ESeMnoqwkroNPXd/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1W2bNc0RKOC7bS8r4YIx5g3MZnGSWle_V/view?usp=sharing",
     "size": "1.6 MB",
-    "date": "2026-07-24"
+    "date": "2026-07-24",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74016,
@@ -36690,7 +36852,9 @@
     "imageUrl": "https://drive.google.com/file/d/1gJcyzkuyp3gPOmhfNP9h_eFqWI5WoB_g/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/19Pd1-f2IpMmIBPiNinV_p25mkB97Nb1_/view?usp=sharing",
     "size": "5.9 MB",
-    "date": "2026-07-24"
+    "date": "2026-07-24",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74017,
@@ -36701,7 +36865,9 @@
     "imageUrl": "https://drive.google.com/file/d/1TO4whLEhwVlQ-EG9JFIYB629qLeqoMCY/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1MueHRR32mpiObSExY732c7WlcuD5LZx-/view?usp=sharing",
     "size": "1.7 MB",
-    "date": "2026-07-24"
+    "date": "2026-07-24",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74642,
@@ -36712,7 +36878,9 @@
     "imageUrl": "https://drive.google.com/file/d/1goFHApO_1dbZE_VHOAL_PVLrnZoh0msi/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1fAPwXZdBjEA3EUsf_T_FoXIz58XV0ydv/view?usp=sharing",
     "size": "3.5 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74643,
@@ -36723,7 +36891,9 @@
     "imageUrl": "https://drive.google.com/file/d/1EaJqWitsQ9oy5ztq2lMahho1I1SuW45V/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1TLzJ_ewgExyloLkYz9SmAu-neodl7eb5/view?usp=sharing",
     "size": "11.8 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74644,
@@ -36734,7 +36904,9 @@
     "imageUrl": "https://drive.google.com/file/d/1RkoE_ZGg-9ZngPyD7zgewsQd1ANopbRz/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1XCsP-In5tTqQw2YTz4jiCSumZqLL5GaO/view?usp=sharing",
     "size": "7.3 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74645,
@@ -36745,7 +36917,9 @@
     "imageUrl": "https://drive.google.com/file/d/1oT5qdm06CIoabwb9r8DybUk5aRgSfyaJ/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1AEzk4tTKJNmX6hKNkDaU3IfDV0TxZoFi/view?usp=sharing",
     "size": "6.7 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 74646,
@@ -36756,6 +36930,52 @@
     "imageUrl": "https://drive.google.com/file/d/1wIBUKfhuQ6Rc8Y10HNyCLfsJ3Oa6W-Fr/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Q4cLDvbHDD_N0d372VeO1Uj3HwlVlLLB/view?usp=sharing",
     "size": "4.6 MB",
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
+  },
+  {
+    "id": 76516,
+    "name": "Galaga Legions DX",
+    "creator": "KittieKatie",
+    "system": "xbox360",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1OilyiQw3UzsJeAxFKC4Y7oObLU_jr6y7/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1M1oKKuquVHXK9OfA5nflu8g3ujfTiCRu/view?usp=sharing",
+    "size": "6.3 MB",
+    "date": "2026-07-25"
+  },
+  {
+    "id": 76517,
+    "name": "Pac-Man - Championship Edition DX",
+    "creator": "KittieKatie",
+    "system": "xbox360",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1za5ZIDJXK8njD87WObZa0Cygx5m2xQQC/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1qQiDMXWW74itEqGqmn4hiubrv6PkM-em/view?usp=sharing",
+    "size": "4.2 MB",
+    "date": "2026-07-25"
+  },
+  {
+    "id": 76817,
+    "name": "Street Fighter EX3",
+    "creator": "KittieKatie",
+    "system": "playstation2",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1nNJ6Hb5ykGEsOSMZ3SyKCgaTp2EIqGN8/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/14Fu6zLvao9P18k2GJ_uTDXUBCL9NrmlE/view?usp=sharing",
+    "size": "2.0 MB",
+    "date": "2026-07-25"
+  },
+  {
+    "id": 76818,
+    "name": "Gran Turismo 3 - A-spec",
+    "creator": "KittieKatie",
+    "system": "playstation2",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1uQqEm7fe2y1CV0X1wlFezm7pUw5NVZLJ/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1frngtyaqBvMT20oNrMdGw-Wp1IiwZkpg/view?usp=sharing",
+    "size": "4.7 MB",
     "date": "2026-07-25"
   }
 ]
