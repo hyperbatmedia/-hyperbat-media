@@ -36982,7 +36982,9 @@
     "imageUrl": "https://drive.google.com/file/d/17ltDPfqdz4WvBsdGnTM3YfzcbFV6T81d/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Uyo85cCc3ivZy4uNB0YOM2vtZYEoOLMT/view?usp=sharing",
     "size": "1.5 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 79555,
@@ -36993,6 +36995,8 @@
     "imageUrl": "https://drive.google.com/file/d/1rF_6vt_9hVSXc2eSm3hj31jOmR0z0zEt/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1HppoJv570lC0EzpA-_qUAKVhBhQEnm7C/view?usp=sharing",
     "size": "1.6 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   }
 ]
