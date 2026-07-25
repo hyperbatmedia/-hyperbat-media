@@ -33958,19 +33958,6 @@
     "isMulti": false
   },
   {
-    "id": 69309,
-    "name": "_default v2",
-    "creator": "huhe-8554",
-    "system": "psp",
-    "category": "default-themes",
-    "imageUrl": "https://drive.google.com/file/d/1tW3VfQjQg7tgTOxzDIgVxk4KxcHl4H17/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/116Oy4qH_lXp1eXigbUsTirMAn50AW2gg/view?usp=sharing",
-    "size": "2.4 MB",
-    "date": "2026-07-13",
-    "onScreenScraper": false,
-    "isMulti": false
-  },
-  {
     "id": 69358,
     "name": "vblokbrk",
     "creator": "Roni",
@@ -36943,7 +36930,9 @@
     "imageUrl": "https://drive.google.com/file/d/1OilyiQw3UzsJeAxFKC4Y7oObLU_jr6y7/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1M1oKKuquVHXK9OfA5nflu8g3ujfTiCRu/view?usp=sharing",
     "size": "6.3 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 76517,
@@ -36954,7 +36943,9 @@
     "imageUrl": "https://drive.google.com/file/d/1za5ZIDJXK8njD87WObZa0Cygx5m2xQQC/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1qQiDMXWW74itEqGqmn4hiubrv6PkM-em/view?usp=sharing",
     "size": "4.2 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 76817,
@@ -36965,7 +36956,9 @@
     "imageUrl": "https://drive.google.com/file/d/1nNJ6Hb5ykGEsOSMZ3SyKCgaTp2EIqGN8/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/14Fu6zLvao9P18k2GJ_uTDXUBCL9NrmlE/view?usp=sharing",
     "size": "2.0 MB",
-    "date": "2026-07-25"
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 76818,
@@ -36976,6 +36969,30 @@
     "imageUrl": "https://drive.google.com/file/d/1uQqEm7fe2y1CV0X1wlFezm7pUw5NVZLJ/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1frngtyaqBvMT20oNrMdGw-Wp1IiwZkpg/view?usp=sharing",
     "size": "4.7 MB",
+    "date": "2026-07-25",
+    "onScreenScraper": false,
+    "isMulti": false
+  },
+  {
+    "id": 79554,
+    "name": "_default v3",
+    "creator": "Akeshi et Bob",
+    "system": "gamecube",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/17ltDPfqdz4WvBsdGnTM3YfzcbFV6T81d/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Uyo85cCc3ivZy4uNB0YOM2vtZYEoOLMT/view?usp=sharing",
+    "size": "1.5 MB",
+    "date": "2026-07-25"
+  },
+  {
+    "id": 79555,
+    "name": "_default v2",
+    "creator": "Akeshi",
+    "system": "gamecube",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1rF_6vt_9hVSXc2eSm3hj31jOmR0z0zEt/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1HppoJv570lC0EzpA-_qUAKVhBhQEnm7C/view?usp=sharing",
+    "size": "1.6 MB",
     "date": "2026-07-25"
   }
 ]
