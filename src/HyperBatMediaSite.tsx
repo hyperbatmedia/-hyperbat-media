@@ -462,7 +462,7 @@ export default function HyperBatMediaSite(): JSX.Element {
 
   const filteredThemes = useMemo(() => {
     const searchLower = searchTerm.toLowerCase();
-    return themes
+    let result = themes
       .filter(theme => {
         const systemName = systemsLogic.systems.find(s => s.id === theme.system)?.name || theme.system;
         const matchesSearch =
@@ -478,8 +478,34 @@ export default function HyperBatMediaSite(): JSX.Element {
           systemsLogic.selectedCategory === 'magazines'    ? (theme.system === 'magazines') :
           theme.category === systemsLogic.selectedCategory;
         return matchesSearch && matchesSystem && matchesCategory;
-      })
-      .sort((a, b) => {
+      });
+
+    // ───────────────────────────────────────────────────────────────────
+    // Déduplication MAME : un même jeu peut avoir un thème classé sous le
+    // système générique "mame" ET un thème classé sous une carte arcade
+    // précise (system16, cps1, cps2, iremm62...). Ce n'est pas une erreur
+    // de données (les deux entrées sont légitimes et servent quand on
+    // filtre sur un système précis), mais en vue "Tous les systèmes" ça
+    // affiche le même jeu deux fois. On ne garde alors que la version
+    // "mame" quand un doublon (même nom + même créateur) existe.
+    // ───────────────────────────────────────────────────────────────────
+    if (systemsLogic.selectedSystem === 'all') {
+      const groups = new Map<string, typeof result>();
+      for (const theme of result) {
+        const key = `${theme.name.toLowerCase()}|${theme.creator.toLowerCase()}`;
+        const group = groups.get(key);
+        if (group) group.push(theme); else groups.set(key, [theme]);
+      }
+      result = result.filter(theme => {
+        const key = `${theme.name.toLowerCase()}|${theme.creator.toLowerCase()}`;
+        const group = groups.get(key)!;
+        if (group.length <= 1) return true;
+        const hasMame = group.some(t => t.system === 'mame');
+        return hasMame ? theme.system === 'mame' : true;
+      });
+    }
+
+    return result.sort((a, b) => {
         if (sortBy === 'date') {
           const parseDate = (d: string | undefined) => {
             if (!d) return 0;
