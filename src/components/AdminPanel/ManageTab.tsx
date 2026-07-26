@@ -1,7 +1,7 @@
 // ManageTab.tsx 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Search, Download, Edit2, Trash2, Eye, X, AlertCircle, ImageOff, User, CheckSquare, Square, Upload, ArrowUpDown, Zap, ChevronDown, Users, Database, Globe } from 'lucide-react';
-import { ensureDisplayableUrl, reverseConvertUrl, isUnknownCreator, formatDateFR } from './DriveTab/DriveHelpers';
+import { ensureDisplayableUrl, reverseConvertUrl, isUnknownCreator, formatDateFR, extractDriveFileId } from './DriveTab/DriveHelpers';
 
 interface ThemeItem {
   id: number;
@@ -15,6 +15,7 @@ interface ThemeItem {
   date?: string;
   onScreenScraper?: boolean;
   isMulti?: boolean;
+  ssGameId?: string;
 }
 
 interface SystemRow {
@@ -704,7 +705,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
         id: theme.id, name: theme.name, creator: theme.creator, system: theme.system,
         category: theme.category, imageUrl: reverseConvertUrl(theme.imageUrl),
         downloadUrl: reverseConvertUrl(theme.downloadUrl), size: theme.size,
-        date: theme.date, onScreenScraper: theme.onScreenScraper, isMulti: theme.isMulti
+        date: theme.date, onScreenScraper: theme.onScreenScraper, isMulti: theme.isMulti,
+        ssGameId: theme.ssGameId
       }));
       const content = btoa(unescape(encodeURIComponent(JSON.stringify(allThemesData, null, 2))));
 
@@ -802,11 +804,35 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   };
 
   const handleImport = (imported: Omit<ThemeItem, 'id'>[]) => {
-    const maxId = themes.length > 0 ? Math.max(...themes.map(t => t.id)) : 0;
-    const newThemes = imported.map((t, i) => ({ ...t, id: maxId + i + 1 }));
-    const updated = [...themes, ...newThemes];
+    const makeKey = (t: { name: string; system: string; downloadUrl: string }) =>
+      `${t.name.toLowerCase().trim()}|${t.system}|${extractDriveFileId(t.downloadUrl)}`;
+
+    const themeMap = new Map<string, ThemeItem>();
+    let maxId = 0;
+    for (const t of themes) {
+      themeMap.set(makeKey(t), t);
+      if (t.id > maxId) maxId = t.id;
+    }
+
+    let nextId = maxId + 1;
+    let addedCount = 0;
+    let updatedCount = 0;
+
+    for (const incoming of imported) {
+      const key = makeKey(incoming);
+      const existing = themeMap.get(key);
+      if (existing) {
+        themeMap.set(key, { ...existing, ...incoming, id: existing.id });
+        updatedCount++;
+      } else {
+        themeMap.set(key, { ...incoming, id: nextId++ });
+        addedCount++;
+      }
+    }
+
+    const updated = Array.from(themeMap.values());
     setThemes(updated); saveThemes(updated);
-    showToast(`✅ ${newThemes.length} thème(s) importé(s)`, 'success');
+    showToast(`✅ ${addedCount} thème(s) ajouté(s), ${updatedCount} mis à jour (doublons ignorés)`, 'success');
   };
 
   const handleAutoCleanup = async () => {
@@ -1264,6 +1290,12 @@ const EditModal = ({ theme, onSave, onClose, systems, categories }: {
                   className="w-full p-3 bg-gray-900 border border-gray-700 rounded-xl text-gray-400 cursor-not-allowed" />
               </div>
             )}
+            <div>
+              <label className="block text-sm font-bold text-gray-300 mb-2">ID ScreenScraper</label>
+              <input type="text" value={editData.ssGameId || ''} onChange={e => setEditData({...editData, ssGameId: e.target.value})}
+                placeholder="ex: 1234"
+                className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
+            </div>
             <div className="md:col-span-2">
               <label className="flex items-center gap-3 p-4 bg-gray-950 border border-gray-700 rounded-xl cursor-pointer hover:border-blue-500 transition">
                 <input type="checkbox" checked={editData.onScreenScraper || false}

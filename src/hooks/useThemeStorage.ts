@@ -23,7 +23,8 @@ const deepCloneThemes = (themes: ThemeItem[]): ThemeItem[] => {
     size: theme.size,
     date: theme.date,
     onScreenScraper: theme.onScreenScraper,  // ✅ AJOUTÉ
-    isMulti: theme.isMulti
+    isMulti: theme.isMulti,
+    ssGameId: theme.ssGameId
   }));
 };
 
