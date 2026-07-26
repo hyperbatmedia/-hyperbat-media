@@ -12,6 +12,7 @@ export type ThemeItem = {
   onScreenScraper?: boolean;
   isMulti?: boolean;  // thème multi-région (PAL, USA, JAP, etc.)
   ssGameId?: string;  // ID du jeu sur ScreenScraper (lien manuel ou auto)
+  gameId?: number;    // ID interne rempli par la vitrine après analyse Drive, sert à éviter les doublons
 };
 
 export type NewThemeForm = Omit<ThemeItem, 'id'>;

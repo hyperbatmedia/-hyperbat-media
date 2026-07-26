@@ -684,7 +684,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       id: theme.id, name: theme.name, creator: theme.creator, system: theme.system,
       category: theme.category, imageUrl: reverseConvertUrl(theme.imageUrl),
       downloadUrl: reverseConvertUrl(theme.downloadUrl), size: theme.size,
-      date: theme.date, onScreenScraper: theme.onScreenScraper, isMulti: theme.isMulti
+      date: theme.date, onScreenScraper: theme.onScreenScraper, isMulti: theme.isMulti,
+      gameId: theme.gameId
     }));
     const filename = `themes_${new Date().toISOString().split('T')[0]}.json`;
     downloadJson(data, filename);
@@ -706,7 +707,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
         category: theme.category, imageUrl: reverseConvertUrl(theme.imageUrl),
         downloadUrl: reverseConvertUrl(theme.downloadUrl), size: theme.size,
         date: theme.date, onScreenScraper: theme.onScreenScraper, isMulti: theme.isMulti,
-        ssGameId: theme.ssGameId
+        ssGameId: theme.ssGameId, gameId: theme.gameId
       }));
       const content = btoa(unescape(encodeURIComponent(JSON.stringify(allThemesData, null, 2))));
 
@@ -803,14 +804,16 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     setShowGithubModal(true);
   };
 
-  const handleImport = (imported: Omit<ThemeItem, 'id'>[]) => {
+  const handleImport = (imported: (Omit<ThemeItem, 'id'> & { id?: number })[]) => {
     const makeKey = (t: { name: string; system: string; downloadUrl: string }) =>
       `${t.name.toLowerCase().trim()}|${t.system}|${extractDriveFileId(t.downloadUrl)}`;
 
     const themeMap = new Map<string, ThemeItem>();
+    const idMap = new Map<number, ThemeItem>();
     let maxId = 0;
     for (const t of themes) {
       themeMap.set(makeKey(t), t);
+      idMap.set(t.id, t);
       if (t.id > maxId) maxId = t.id;
     }
 
@@ -819,13 +822,35 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     let updatedCount = 0;
 
     for (const incoming of imported) {
+      // 1️⃣ PRIORITÉ : si le thème importé a un id qui existe déjà, c'est une mise à
+      // jour de ce thème précis — fiable à 100%, contrairement à la clé nom+système+URL
+      // (l'URL peut être reformatée entre export et import et fausser la correspondance).
+      const existingById = incoming.id !== undefined ? idMap.get(incoming.id) : undefined;
+
+      if (existingById) {
+        const oldKey = makeKey(existingById);
+        const merged: ThemeItem = { ...existingById, ...incoming, id: existingById.id };
+        themeMap.delete(oldKey);
+        themeMap.set(makeKey(merged), merged);
+        idMap.set(merged.id, merged);
+        updatedCount++;
+        continue;
+      }
+
+      // 2️⃣ Repli : pas d'id connu (import externe, ex: scan Drive) → on matche par
+      // nom+système+fichier Drive comme avant.
       const key = makeKey(incoming);
       const existing = themeMap.get(key);
       if (existing) {
-        themeMap.set(key, { ...existing, ...incoming, id: existing.id });
+        const merged: ThemeItem = { ...existing, ...incoming, id: existing.id };
+        themeMap.set(key, merged);
+        idMap.set(merged.id, merged);
         updatedCount++;
       } else {
-        themeMap.set(key, { ...incoming, id: nextId++ });
+        const safeId = nextId++;
+        const newTheme: ThemeItem = { ...incoming, id: safeId } as ThemeItem;
+        themeMap.set(key, newTheme);
+        idMap.set(safeId, newTheme);
         addedCount++;
       }
     }

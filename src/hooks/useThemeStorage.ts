@@ -24,7 +24,8 @@ const deepCloneThemes = (themes: ThemeItem[]): ThemeItem[] => {
     date: theme.date,
     onScreenScraper: theme.onScreenScraper,  // ✅ AJOUTÉ
     isMulti: theme.isMulti,
-    ssGameId: theme.ssGameId
+    ssGameId: theme.ssGameId,
+    gameId: theme.gameId  // ✅ AJOUTÉ — ne plus effacer l'ID anti-doublon Drive
   }));
 };
 
