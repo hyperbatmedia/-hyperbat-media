@@ -112,6 +112,12 @@ export const THEME_TO_BOB: Record<string, string | null> = {
   // ── PINBALL ───────────────────────────────────────────────────────────────
   'futurepinball':           'fpinball',
 
+  // ── ÉQUIVALENTS MANQUANTS (trouvés lors de l'audit du récap) ─────────────
+  'nintendo64dd':            'n64dd',
+  'stv':                     'segastv',
+  'ti994a':                  'ti99',
+  'videopacodyssey2':        'odyssey2',
+
   // ── ARCADE custom (pas dans bob-systems) ─────────────────────────────────
   'aae':                     null,
   'adrenalineamusement':     null,
@@ -173,6 +179,14 @@ export const THEME_TO_BOB: Record<string, string | null> = {
   'collectionspersonnalises': null,
   'magazines':                null,
   'xboxlivearcade':           'xbox360',
+
+  // ── ARCADE sans équivalent domestique (exclusion volontaire, audit récap) ─
+  'atarisystem1':             null,
+  'fuuki':                    null,
+  'iremclassique':            null,
+  'namcoclassique':           null,
+  'namcosystem2':             null,
+  'playchoice10':             null,
 };
 
 // ── 2. Résolution d'un slug theme vers slug bob ───────────────────────────────
