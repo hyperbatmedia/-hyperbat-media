@@ -1,6 +1,6 @@
 // ManageTab.tsx 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Search, Download, Edit2, Trash2, Eye, X, AlertCircle, ImageOff, User, CheckSquare, Square, Upload, ArrowUpDown, Zap, ChevronDown, Users, Database, Globe } from 'lucide-react';
+import { Search, Download, Edit2, Trash2, Eye, X, AlertCircle, ImageOff, User, CheckSquare, Square, Upload, ArrowUpDown, Zap, ChevronDown, Users, Database, Globe, HelpCircle } from 'lucide-react';
 import { ensureDisplayableUrl, reverseConvertUrl, isUnknownCreator, formatDateFR, extractDriveFileId } from './DriveTab/DriveHelpers';
 
 interface ThemeItem {
@@ -16,6 +16,7 @@ interface ThemeItem {
   onScreenScraper?: boolean;
   isMulti?: boolean;
   ssGameId?: string;
+  gameId?: number;
 }
 
 interface SystemRow {
@@ -472,6 +473,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [isCleaning, setIsCleaning] = useState(false);
   const [showGithubModal, setShowGithubModal] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
   const [githubTokenInput, setGithubTokenInput] = useState('');
   const [isPushing, setIsPushing] = useState(false);
 
@@ -948,9 +950,17 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
                 <p className="text-gray-400 text-sm font-semibold">Organisez • Modifiez • Exportez</p>
               </div>
             </div>
-            <div className="bg-gradient-to-br from-orange-600 to-orange-500 rounded-xl px-6 py-3 shadow-lg">
-              <div className="text-3xl font-black text-white">{stats.total}</div>
-              <div className="text-sm text-orange-100 font-semibold">Thèmes totaux</div>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setShowGuide(true)}
+                className="flex items-center gap-1.5 text-xs px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition-colors border border-gray-700"
+              >
+                <HelpCircle className="w-4 h-4" /> Guide
+              </button>
+              <div className="bg-gradient-to-br from-orange-600 to-orange-500 rounded-xl px-6 py-3 shadow-lg">
+                <div className="text-3xl font-black text-white">{stats.total}</div>
+                <div className="text-sm text-orange-100 font-semibold">Thèmes totaux</div>
+              </div>
             </div>
           </div>
         </div>
@@ -1213,6 +1223,94 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
                 className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold flex items-center justify-center gap-2">
                 <Globe className="w-4 h-4" /> Pousser
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODALE GUIDE */}
+      {showGuide && (
+        <div
+          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
+          onClick={() => setShowGuide(false)}
+        >
+          <div
+            className="bg-gray-900 border border-gray-700 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 space-y-4"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-gray-700 pb-3">
+              <h3 className="text-lg font-black text-orange-400">Guide — Onglet "Gérer"</h3>
+              <button onClick={() => setShowGuide(false)} className="text-gray-500 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-sm text-gray-300">
+              <section>
+                <h4 className="text-cyan-400 font-bold mb-1">À quoi sert cet onglet</h4>
+                <p>
+                  C'est le cœur de l'admin : rechercher, filtrer, trier, modifier, supprimer, importer et
+                  exporter tes thèmes, puis pousser le résultat sur GitHub pour publier sur la vitrine.
+                </p>
+              </section>
+
+              <section>
+                <h4 className="text-cyan-400 font-bold mb-1">Rechercher / filtrer / trier</h4>
+                <p>
+                  Barre de recherche (nom, créateur), filtres par système et catégorie, et tri (nom, date,
+                  taille...). Les stats en haut (sur SS / hors SS / multi...) sont aussi cliquables comme
+                  raccourcis de filtre.
+                </p>
+              </section>
+
+              <section>
+                <h4 className="text-cyan-400 font-bold mb-1">Modifier un thème</h4>
+                <p>
+                  Clique sur une carte pour l'aperçu, ou l'icône crayon pour l'édition (nom, créateur,
+                  système, catégorie, statut ScreenScraper, multi-région...). C'est ici — pas dans l'onglet
+                  ScreenScraper Sync — qu'on change le statut On/Off.
+                </p>
+              </section>
+
+              <section>
+                <h4 className="text-cyan-400 font-bold mb-1">Sélection multiple / actions en masse</h4>
+                <p>
+                  Coche plusieurs thèmes pour : changer le créateur, le statut ScreenScraper, ou le
+                  statut multi-région en une seule action, plutôt que thème par thème.
+                </p>
+              </section>
+
+              <section>
+                <h4 className="text-cyan-400 font-bold mb-1">Importer un JSON</h4>
+                <p>
+                  Réimporte un fichier <code className="text-cyan-300">themes.json</code> (ex: après l'avoir
+                  édité à la main) : les thèmes qui ont déjà un <code className="text-cyan-300">id</code>
+                  existant sont mis à jour, les nouveaux sont ajoutés — sans créer de doublons.
+                </p>
+              </section>
+
+              <section>
+                <h4 className="text-cyan-400 font-bold mb-1">Exporter / Backup</h4>
+                <p>
+                  "Exporter" télécharge un fichier JSON du catalogue actuel (utile pour l'éditer à la main
+                  puis le réimporter). "Backup" fait la même chose en secours, à garder de côté avant toute
+                  grosse manipulation.
+                </p>
+              </section>
+
+              <section>
+                <h4 className="text-cyan-400 font-bold mb-1">Push GitHub</h4>
+                <p>
+                  Publie <code className="text-cyan-300">themes.json</code> sur GitHub avec un token
+                  personnel (jamais sauvegardé). Un cooldown de 3 minutes démarre après chaque push pour
+                  éviter les pushes en rafale entre plusieurs admins.
+                </p>
+                <p className="mt-2 text-yellow-400/90">
+                  Le push met à jour la donnée, mais <strong>pas le code du site</strong>. Après un push,
+                  laisse le temps à GitHub Pages de reconstruire la vitrine avant de vérifier que ça a
+                  bien pris (ça peut prendre quelques minutes).
+                </p>
+              </section>
             </div>
           </div>
         </div>

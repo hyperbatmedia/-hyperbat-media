@@ -1,6 +1,6 @@
 // Fichier: src/components/RecapThemesPanel/RecapThemesPanel.tsx
 import { useMemo, useState, useCallback } from 'react';
-import { X, Download, Search, ChevronDown, ChevronUp } from 'lucide-react';
+import { X, Download, Search, ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
 import { ThemeItem } from '../../types';
 
 // ── Import des données statiques ──────────────────────────────────────────────
@@ -69,6 +69,7 @@ const exportCSV = (rows: SystemRow[]) => {
 // ── Composant principal ───────────────────────────────────────────────────────
 export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapThemesPanelProps) {
   const [search, setSearch] = useState('');
+  const [showGuide, setShowGuide] = useState(false);
   const [filterPlatform, setFilterPlatform] = useState<'all' | 'retrobat' | 'batocera' | 'both' | 'none'>('all');
   const [filterMissing, setFilterMissing] = useState<'all' | 'system' | 'default' | 'both-missing'>('all');
   const [sortBy, setSortBy] = useState<'name' | 'system' | 'default' | 'game' | 'total'>('name');
@@ -204,6 +205,13 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
           </div>
 
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowGuide(true)}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg font-bold text-sm border-2 transition hover:brightness-110"
+              style={{ backgroundColor: cardBg, borderColor: borderColor, color: textSecondary }}>
+              <HelpCircle className="w-4 h-4" />
+              Guide
+            </button>
             <button
               onClick={() => exportCSV(filtered)}
               className="flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm border-2 transition hover:brightness-110"
@@ -441,6 +449,52 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
           </div>
         </div>
       </div>
+
+      {/* MODALE GUIDE */}
+      {showGuide && (
+        <div
+          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
+          onClick={() => setShowGuide(false)}
+        >
+          <div
+            className="rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 space-y-4 border"
+            style={{ backgroundColor: cardBg, borderColor, color: text }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-3 border-b" style={{ borderColor }}>
+              <h3 className="text-lg font-black" style={{ color: '#FF8C00' }}>Guide — "Récap Thèmes"</h3>
+              <button onClick={() => setShowGuide(false)} style={{ color: textSecondary }}>
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-sm" style={{ color: textSecondary }}>
+              <section>
+                <h4 className="font-bold mb-1" style={{ color: text }}>À quoi sert ce panneau</h4>
+                <p>
+                  Pour chaque système RetroBat/Batocera de référence, il montre s'il existe sur RetroBat,
+                  Batocera, les deux ou aucun (badges RB/BAT/HB), et combien tu as de thèmes système, par
+                  défaut et par jeu pour ce système, avec le total.
+                </p>
+              </section>
+
+              <section>
+                <h4 className="font-bold mb-1" style={{ color: text }}>Filtrer / trier</h4>
+                <p>
+                  Recherche par nom de système, filtre par plateforme (RetroBat/Batocera/les deux/aucune),
+                  filtre "manquants" (système ou thème par défaut absent), et tri par n'importe quelle
+                  colonne en cliquant sur son en-tête.
+                </p>
+              </section>
+
+              <section>
+                <h4 className="font-bold mb-1" style={{ color: text }}>Exporter</h4>
+                <p>Le bouton "Télécharger CSV" exporte exactement les lignes actuellement filtrées/affichées.</p>
+              </section>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
