@@ -3,6 +3,15 @@ import React, { useMemo } from 'react';
 import { X, Gift, Download, Package } from 'lucide-react';
 import { ThemePacksData } from '../../types';
 
+// Convertit n'importe quel format de lien Google Drive (partage, view, open...)
+// en lien de téléchargement direct, pour éviter la page de prévisualisation
+// Drive qui s'affiche sinon sur les gros fichiers comme les .zip.
+const toDirectDriveDownload = (url: string): string => {
+  const match = url.match(/[-\w]{25,}/); // l'ID Drive fait toujours 25+ caractères alphanumériques/-/_
+  if (!match) return url;
+  return `https://drive.google.com/uc?export=download&id=${match[0]}`;
+};
+
 interface ThemePacksPanelProps {
   packsData: ThemePacksData;
   onClose: () => void;
@@ -85,7 +94,7 @@ const ThemePacksPanel: React.FC<ThemePacksPanelProps> = ({ packsData, onClose, i
                 </div>
               </div>
               <a
-                href={featuredPack.driveUrl}
+                href={toDirectDriveDownload(featuredPack.driveUrl)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-shrink-0 font-black text-sm px-5 py-3 rounded-xl flex items-center gap-2 whitespace-nowrap"
@@ -115,7 +124,7 @@ const ThemePacksPanel: React.FC<ThemePacksPanelProps> = ({ packsData, onClose, i
                       )}
                     </div>
                     <a
-                      href={pack.driveUrl}
+                      href={toDirectDriveDownload(pack.driveUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-shrink-0 text-xs font-bold flex items-center gap-1.5"
