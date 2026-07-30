@@ -40,3 +40,17 @@ export type SystemSubsection = {
 
 export type SystemsDataStructure = Record<string, Record<string, SystemSubsection>>;
 export type SectionIconsStructure = Record<string, string>;
+
+// ── Packs mensuels de thèmes ─────────────────────────────────────────────────
+export type ThemePack = {
+  month: string;      // format "YYYY-MM", ex: "2026-07"
+  label: string;       // libellé affiché, ex: "Juillet 2026"
+  driveUrl: string;    // lien Google Drive du .zip
+  note?: string;       // info visible dans la modale (facultatif)
+};
+
+export type ThemePacksData = {
+  featuredMonth: string;   // le "month" du pack actuellement mis en avant
+  packs: ThemePack[];
+};
+

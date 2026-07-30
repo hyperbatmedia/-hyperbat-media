@@ -10,6 +10,7 @@ import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc, 
 import { ThemeItem } from './types';
 import { categories, CART_MAX } from './constants';
 import { useThemeStorage } from './hooks/useThemeStorage';
+import { useThemePacksStorage } from './hooks/useThemePacksStorage';
 import { useSystemsLogic } from './hooks/useSystemsLogic';
 import { getThemeKey } from './utils/themeUtils';
 import Sidebar from './components/Sidebar/Sidebar';
@@ -17,6 +18,7 @@ import AdminPanel, { AdminTab } from './components/AdminPanel/AdminPanel';
 import ThemeList from './components/ThemeList/ThemeList';
 import CartPanel from './components/CartPanel/CartPanel';
 import RecapThemesPanel from './components/RecapThemesPanel/RecapThemesPanel';
+import ThemePacksPanel from './components/ThemePacksPanel/ThemePacksPanel';
 import bobSystemsData from './data/bob-systems.json';
 import { resolveBobSlug } from './data/systemAliases';
 
@@ -291,6 +293,7 @@ export default function HyperBatMediaSite(): JSX.Element {
   const [sortBy, setSortBy] = useState<'name' | 'date'>('date');
   const [showAdminPanel, setShowAdminPanel] = useState<boolean>(false);
   const [showRecapPanel, setShowRecapPanel] = useState<boolean>(false);
+  const [showPacksPanel, setShowPacksPanel] = useState<boolean>(false);
   const [adminTab, setAdminTab] = useState<AdminTab>('manage');
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
     try { return localStorage.getItem('sidebar-collapsed') === 'true'; } catch { return false; }
@@ -314,8 +317,26 @@ export default function HyperBatMediaSite(): JSX.Element {
   const handleCartClear = useCallback(() => setCart([]), []);
 
   const { themes: rawThemes, setThemes, isLoading, saveThemes } = useThemeStorage();
+  const { packsData, setPacksData, savePacksData } = useThemePacksStorage();
   const systemsLogic = useSystemsLogic();
   const colors = useMemo(() => getThemeColors(isDarkMode), [isDarkMode]);
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Empêche la fermeture accidentelle de l'onglet/navigateur pendant que
+  // l'admin est ouvert (le verrou GitHub resterait posé jusqu'à expiration
+  // si on ferme sans passer par "Quitter l'admin"). Le navigateur affiche
+  // sa propre alerte native de confirmation — impossible de personnaliser
+  // le texte ni de bloquer complètement la fermeture, c'est une limitation
+  // de sécurité imposée par tous les navigateurs.
+  useEffect(() => {
+    if (!showAdminPanel) return;
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [showAdminPanel]);
 
   // ─────────────────────────────────────────────────────────────────────────
   // Lecture des query params URL au premier chargement
@@ -676,19 +697,41 @@ export default function HyperBatMediaSite(): JSX.Element {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between px-3 py-2.5 rounded-lg mb-3 border mr-auto w-[360px]"
-                style={{ backgroundColor: isDarkMode ? '#0d0d1a' : '#fef2f2', borderColor: isDarkMode ? '#1f2937' : '#fecaca' }}>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-base font-black" style={{ color: '#ef4444' }}>{missingSystemsCount}</span>
-                  <span className="text-sm" style={{ color: isDarkMode ? '#9ca3af' : '#6b7280' }}>
-                    système{missingSystemsCount > 1 ? 's' : ''} sans thème
-                  </span>
-                </div>
+              <div className="flex items-center gap-3 mb-3 mr-auto">
                 <button onClick={() => setShowRecapPanel(true)}
-                  className="flex items-center gap-1 px-2 py-1 rounded-lg font-bold text-xs border-2 transition hover:brightness-110"
-                  style={{ backgroundColor: '#cc6f00', borderColor: '#b8960a', color: 'white' }}>
-                  Voir le récap
+                  className="px-7 py-1.5 rounded-lg border-2 flex flex-col items-center transition hover:brightness-110 cursor-pointer"
+                  style={{
+                    background: 'linear-gradient(135deg,#f97316,#eab308,#f97316)',
+                    backgroundSize: '200% 100%',
+                    borderColor: '#FFD700',
+                    borderWidth: '2px',
+                    boxShadow: '0 0 10px rgba(249,115,22,0.4)'
+                  }}>
+                  <p className="text-xs font-semibold flex items-center gap-3" style={{ color: '#1a1206' }}>
+                    <span style={{ color: '#ff0000', fontWeight: 900, fontSize: '20px', lineHeight: 1, transform: 'translateY(4px)' }}>{missingSystemsCount}</span>
+                    <span>système{missingSystemsCount > 1 ? 's' : ''} sans thème</span>
+                  </p>
+                  <p className="text-xs font-black" style={{ color: '#1a1206' }}>Voir le récap</p>
                 </button>
+
+                {packsData.packs.length > 0 && (
+                  <button onClick={() => setShowPacksPanel(true)}
+                    className="px-7 py-1.5 rounded-lg border-2 flex flex-col items-center transition hover:brightness-110 cursor-pointer relative"
+                    style={{
+                      background: 'linear-gradient(135deg,#f97316,#eab308,#f97316)',
+                      backgroundSize: '200% 100%',
+                      borderColor: '#FFD700',
+                      borderWidth: '2px',
+                      boxShadow: '0 0 10px rgba(249,115,22,0.4)'
+                    }}>
+                    <span className="absolute -top-3 -right-1 font-black text-white px-1.5 py-0.5 rounded-md"
+                      style={{ backgroundColor: '#dc2626', fontSize: '8px' }}>
+                      NOUVEAU
+                    </span>
+                    <p className="text-xs font-semibold" style={{ color: '#1a1206' }}>Pack du mois</p>
+                    <p className="text-xs font-black" style={{ color: '#1a1206' }}>Télécharger</p>
+                  </button>
+                )}
               </div>
             </>
           )}
@@ -753,7 +796,8 @@ export default function HyperBatMediaSite(): JSX.Element {
               {showAdminPanel && (
                 <AdminPanel themes={rawThemes} setThemes={setThemes} saveThemes={saveThemes}
                   systems={systemsLogic.systems} categories={categories}
-                  adminTab={adminTab} setAdminTab={setAdminTab} />
+                  adminTab={adminTab} setAdminTab={setAdminTab}
+                  packsData={packsData} setPacksData={setPacksData} savePacksData={savePacksData} />
               )}
               {!showAdminPanel && (
                 <ThemeList viewMode={viewMode} themes={paginatedThemes}
@@ -851,6 +895,10 @@ export default function HyperBatMediaSite(): JSX.Element {
 
       {showRecapPanel && (
         <RecapThemesPanel themes={themes} onClose={() => setShowRecapPanel(false)} isDarkMode={isDarkMode} />
+      )}
+
+      {showPacksPanel && (
+        <ThemePacksPanel packsData={packsData} onClose={() => setShowPacksPanel(false)} isDarkMode={isDarkMode} />
       )}
     </div>
   );

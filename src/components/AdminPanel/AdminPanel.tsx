@@ -4,16 +4,18 @@ import {
   FolderOpen,
   RefreshCw,
   Database,
+  Package,
   LucideIcon
 } from 'lucide-react';
-import { ThemeItem, SystemRow, Category } from '../../types';
+import { ThemeItem, SystemRow, Category, ThemePacksData } from '../../types';
 import ManageTab from './ManageTab';
 import DriveTab from './DriveTab';
 import SyncTab from './SyncTab';
 import ScreenScraperSyncTab from './ScreenScraperSyncTab';
+import ThemePacksTab from './ThemePacksTab';
 import { extractDriveFileId, isUnknownCreator } from './DriveTab/DriveHelpers';
 
-export type AdminTab = 'manage' | 'drive-import' | 'sync' | 'screenscraper-sync';
+export type AdminTab = 'manage' | 'drive-import' | 'sync' | 'screenscraper-sync' | 'theme-packs';
 
 interface AdminPanelProps {
   themes: ThemeItem[];
@@ -23,6 +25,9 @@ interface AdminPanelProps {
   categories: Category[];
   adminTab: AdminTab;
   setAdminTab: Dispatch<SetStateAction<AdminTab>>;
+  packsData: ThemePacksData;
+  setPacksData: Dispatch<SetStateAction<ThemePacksData>>;
+  savePacksData: (data: ThemePacksData) => Promise<void>;
 }
 
 interface TabButtonProps {
@@ -65,6 +70,9 @@ const AdminPanel: FC<AdminPanelProps> = ({
   categories,
   adminTab,
   setAdminTab,
+  packsData,
+  setPacksData,
+  savePacksData,
 }) => {
 
   const handleImportThemes = async (newThemes: ThemeItem[]): Promise<void> => {
@@ -152,7 +160,16 @@ const AdminPanel: FC<AdminPanelProps> = ({
           <TabButton tab="drive-import" currentTab={adminTab} setAdminTab={setAdminTab} icon={FolderOpen} label="Import Drive" />
           <TabButton tab="sync" currentTab={adminTab} setAdminTab={setAdminTab} icon={RefreshCw} label="Synchronisation" />
           <TabButton tab="screenscraper-sync" currentTab={adminTab} setAdminTab={setAdminTab} icon={Database} label="ScreenScraper Sync" />
+          <TabButton tab="theme-packs" currentTab={adminTab} setAdminTab={setAdminTab} icon={Package} label="Packs mensuels" />
         </div>
+
+        {adminTab === 'theme-packs' && (
+          <ThemePacksTab
+            packsData={packsData}
+            setPacksData={setPacksData}
+            savePacksData={savePacksData}
+          />
+        )}
 
         {adminTab === 'manage' && (
           <ManageTab
