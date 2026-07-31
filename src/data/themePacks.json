@@ -1,5 +1,5 @@
 {
-  "featuredMonth": "slot-11",
+  "featuredMonth": "slot-12",
   "packs": [
     {
       "month": "slot-10",
@@ -12,6 +12,12 @@
       "label": "Novembre 2025",
       "driveUrl": "https://drive.google.com/file/d/1rRkBUDAvgX2i5qRhyz8hdqKoMM3VazEd/view?usp=sharing",
       "note": "+ de 850 themes"
+    },
+    {
+      "month": "slot-12",
+      "label": "Décembre 2025",
+      "driveUrl": "https://drive.google.com/file/d/1bHE1xZlB_AGc8LVFBF8IcxbvPp9AR1Rk/view?usp=sharing",
+      "note": "+ de 120 thèmes de jeux"
     }
   ]
 }
