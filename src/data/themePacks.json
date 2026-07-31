@@ -1,6 +1,12 @@
 {
-  "featuredMonth": "slot-12",
+  "featuredMonth": "slot-1",
   "packs": [
+    {
+      "month": "slot-1",
+      "label": "Janvier 2026",
+      "driveUrl": "https://drive.google.com/file/d/1GXl8aMVoLHx3B1pAfMliFH2NMIjGy7_Z/view?usp=sharing",
+      "note": "+ de 800 thèmes de jeux, system et défaut"
+    },
     {
       "month": "slot-10",
       "label": "Octobre 2025",
