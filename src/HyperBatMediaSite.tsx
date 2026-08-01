@@ -321,13 +321,9 @@ export default function HyperBatMediaSite(): JSX.Element {
   const systemsLogic = useSystemsLogic();
   const colors = useMemo(() => getThemeColors(isDarkMode), [isDarkMode]);
 
-  // ─────────────────────────────────────────────────────────────────────────
   // Empêche la fermeture accidentelle de l'onglet/navigateur pendant que
   // l'admin est ouvert (le verrou GitHub resterait posé jusqu'à expiration
-  // si on ferme sans passer par "Quitter l'admin"). Le navigateur affiche
-  // sa propre alerte native de confirmation — impossible de personnaliser
-  // le texte ni de bloquer complètement la fermeture, c'est une limitation
-  // de sécurité imposée par tous les navigateurs.
+  // si on ferme sans passer par "Quitter l'admin").
   useEffect(() => {
     if (!showAdminPanel) return;
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -606,22 +602,23 @@ export default function HyperBatMediaSite(): JSX.Element {
         <div className="container mx-auto px-4 py-4">
           {!showAdminPanel && (
             <>
-              <div className="flex flex-wrap justify-center gap-3 mb-4">
+              <div className="grid gap-3 mb-4 justify-center mx-auto" style={{ gridTemplateColumns: 'repeat(7, max-content)', width: 'fit-content' }}>
                 {[
-                  { id: 'multi',          label: 'Multi-région',    count: themeStats.multiThemes,         icon: '🌍' },
-                  { id: 'screenscraper',  label: 'ScreenScraper',   count: themeStats.screenScraperThemes, total: themeStats.gameThemesTotal, special: true },
-                  { id: 'magazines',      label: 'Magazines',       count: themeStats.magazineThemes,      icon: '📰' },
-                  { id: 'collection',     label: 'Collection',      count: themeStats.collectionThemes,    Icon: Package },
-                  { id: 'artwork',        label: 'Artwork',         count: themeStats.artworkThemes,       Icon: Image },
-                  { id: 'game-themes',    label: 'Thèmes de jeux',  count: themeStats.gameThemes,          Icon: Trophy },
-                  { id: 'system-themes',  label: 'Thèmes système',  count: themeStats.systemThemes,        Icon: Monitor },
-                  { id: 'default-themes', label: 'Thèmes default',  count: themeStats.defaultThemes,       Icon: Star },
-                  { id: 'all',            label: 'Total global',    count: themeStats.total,               Icon: BarChart3 },
-                ].map(({ id, label, count, special, icon, Icon, total }) => (
+                  { id: 'artwork',        label: 'Artwork',         count: themeStats.artworkThemes,       Icon: Image,   col: 1, row: 1 },
+                  { id: 'magazines',      label: 'Magazines',       count: themeStats.magazineThemes,      icon: '📰',    col: 2, row: 1 },
+                  { id: 'collection',     label: 'Collection',      count: themeStats.collectionThemes,    Icon: Package, col: 3, row: 1 },
+                  { id: 'system-themes',  label: 'Thèmes système',  count: themeStats.systemThemes,        Icon: Monitor, col: 4, row: 1 },
+                  { id: 'default-themes', label: 'Thèmes default',  count: themeStats.defaultThemes,       Icon: Star,    col: 5, row: 1 },
+                  { id: 'game-themes',    label: 'Thèmes de jeux',  count: themeStats.gameThemes,          Icon: Trophy,  col: 6, row: 1 },
+                  { id: 'all',            label: 'Total global',    count: themeStats.total,               Icon: BarChart3, col: 7, row: 1 },
+                  { id: 'multi',          label: 'Multi-région',    count: themeStats.multiThemes,         icon: '🌍',    col: 1, row: 2 },
+                  { id: 'screenscraper',  label: 'ScreenScraper',   count: themeStats.screenScraperThemes, total: themeStats.gameThemesTotal, special: true, col: 2, row: 2 },
+                ].map(({ id, label, count, special, icon, Icon, total, col, row }) => (
                   <button key={id}
                     onClick={() => { systemsLogic.handleSystemSelect('all'); systemsLogic.setSelectedCategory(id); }}
                     className="px-7 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
                     style={{
+                      gridColumn: col, gridRow: row,
                       background: special ? '#2a2a2a' : id === 'multi'
                         ? systemsLogic.selectedCategory === 'multi' ? 'linear-gradient(to right, #7e22ce, #be185d)' : 'linear-gradient(to right, #6b21a8, #9d174d)'
                         : '#D97706',
@@ -732,6 +729,26 @@ export default function HyperBatMediaSite(): JSX.Element {
                     <p className="text-xs font-black" style={{ color: '#1a1206' }}>Télécharger</p>
                   </button>
                 )}
+
+                <button onClick={() => {
+                    const rows = filteredThemes.map(t => ({ name: t.name, system: t.system, gameId: t.gameId ?? null }));
+                    const blob = new Blob([JSON.stringify(rows, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url; a.download = `hyperbatmedia-name-system-gameid-${new Date().toISOString().split('T')[0]}.json`; a.click();
+                    URL.revokeObjectURL(url);
+                  }}
+                  title="Export JSON name/system/gameId (respecte les filtres actuels) — pour l'outil de renommage local"
+                  className="px-4 py-1.5 rounded-lg border-2 flex items-center transition hover:brightness-110 cursor-pointer"
+                  style={{
+                    background: 'linear-gradient(135deg,#f97316,#eab308,#f97316)',
+                    backgroundSize: '200% 100%',
+                    borderColor: '#FFD700',
+                    borderWidth: '2px',
+                    boxShadow: '0 0 10px rgba(249,115,22,0.4)'
+                  }}>
+                  <p className="text-xs font-black" style={{ color: '#1a1206' }}>Export json</p>
+                </button>
               </div>
             </>
           )}

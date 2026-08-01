@@ -466,7 +466,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                     // ── Mode RetroBat : bouton "Installer dans RetroBat" ──
                     <a
                       ref={(el) => { actionRefs.current[index] = el; }}
-                      href={`hyperbat://install?url=${encodeURIComponent(theme.downloadUrl)}&system=${encodeURIComponent(theme.system)}&category=${encodeURIComponent(theme.category)}&name=${encodeURIComponent(theme.name)}`}
+                      href={`hyperbat://install?url=${encodeURIComponent(theme.downloadUrl)}&system=${encodeURIComponent(theme.system)}&category=${encodeURIComponent(theme.category)}&name=${encodeURIComponent(theme.name)}${theme.gameId ? `&gameId=${encodeURIComponent(String(theme.gameId))}` : ''}`}
                       className="flex-1 py-2 rounded flex items-center justify-center gap-2 font-bold text-xs border transition hover:brightness-110 active:scale-95"
                       style={{ backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white' }}>
                       🎮 Installer dans RetroBat
