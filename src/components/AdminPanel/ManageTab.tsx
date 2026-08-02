@@ -444,6 +444,14 @@ const ThemeCard = ({ theme, systemName, categoryName, onView, isSelected, onTogg
             Multi-région
           </div>
         )}
+        {theme.mature && (
+          <div className="text-xs text-red-400 flex items-center gap-1 font-semibold">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            +18 mature
+          </div>
+        )}
       </div>
     </div>
   );
@@ -459,7 +467,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     onlyMissingCreators: false,
     onlyNotOnScreenScraper: false,
     onlyOnScreenScraper: false,
-    onlyMulti: false
+    onlyMulti: false,
+    onlyMature: false
   });
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [sortBy, setSortBy] = useState<'name' | 'creator' | 'system'>('name');
@@ -580,7 +589,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     gameThemesTotal: themes.filter(t => t.category === 'game-themes').length,
     gameThemesNotOnSS: themes.filter(t => t.category === 'game-themes' && !t.onScreenScraper).length,
     gameThemesOnSS: themes.filter(t => t.category === 'game-themes' && t.onScreenScraper).length,
-    multiCount: themes.filter(t => t.isMulti).length
+    multiCount: themes.filter(t => t.isMulti).length,
+    matureCount: themes.filter(t => t.mature).length
   }), [themes]);
 
   const themesWithConvertedUrls = useMemo(() => {
@@ -605,6 +615,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       if (filters.onlyNotOnScreenScraper && !(theme.category === 'game-themes' && !theme.onScreenScraper)) return false;
       if (filters.onlyOnScreenScraper && !(theme.category === 'game-themes' && theme.onScreenScraper)) return false;
       if (filters.onlyMulti && !theme.isMulti) return false;
+      if (filters.onlyMature && !theme.mature) return false;
       return true;
     });
   }, [themesWithConvertedUrls, filters]);
@@ -892,8 +903,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     setIsCleaning(false);
   };
 
-  const resetFilters = () => setFilters({ search: '', category: '', system: '', onlyInvalidUrls: false, onlyMissingCreators: false, onlyNotOnScreenScraper: false, onlyOnScreenScraper: false, onlyMulti: false });
-  const hasActiveFilters = filters.search || filters.category || filters.system || filters.onlyInvalidUrls || filters.onlyMissingCreators || filters.onlyNotOnScreenScraper || filters.onlyOnScreenScraper || filters.onlyMulti;
+  const resetFilters = () => setFilters({ search: '', category: '', system: '', onlyInvalidUrls: false, onlyMissingCreators: false, onlyNotOnScreenScraper: false, onlyOnScreenScraper: false, onlyMulti: false, onlyMature: false });
+  const hasActiveFilters = filters.search || filters.category || filters.system || filters.onlyInvalidUrls || filters.onlyMissingCreators || filters.onlyNotOnScreenScraper || filters.onlyOnScreenScraper || filters.onlyMulti || filters.onlyMature;
   const selectedThemes = themes.filter(t => selectedIds.includes(t.id));
 
   if (themes.length === 0) {
@@ -1019,6 +1030,16 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
               <span className={`px-2 py-0.5 rounded-full text-xs font-black ${filters.onlyMulti ? 'bg-white' : 'bg-gray-800 text-white'}`}
                 style={filters.onlyMulti ? { color: '#9333ea' } : {}}>
                 {stats.multiCount}
+              </span>
+            </button>
+            <button onClick={() => setFilters({...filters, onlyMature: !filters.onlyMature})}
+              className={`px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${filters.onlyMature ? 'bg-red-600 text-white shadow-lg' : 'bg-gray-900 border border-gray-700 text-gray-300 hover:border-red-500'}`}>
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              +18 mature
+              <span className={`px-2 py-0.5 rounded-full text-xs font-black ${filters.onlyMature ? 'bg-white text-red-600' : 'bg-gray-800 text-white'}`}>
+                {stats.matureCount}
               </span>
             </button>
           </div>
@@ -1348,6 +1369,7 @@ const PreviewModal = ({ theme, onClose, onEdit, onDelete, systems, categories }:
             {theme.size && <div><span className="text-gray-400">Taille :</span> <span className="text-white font-bold">{theme.size}</span></div>}
             {theme.date && <div><span className="text-gray-400">Date :</span> <span className="text-white font-bold">{formatDateFR(theme.date)}</span></div>}
             <div><span className="text-gray-400">ScreenScraper :</span> <span className={`font-bold ${theme.onScreenScraper ? 'text-green-400' : 'text-gray-500'}`}>{theme.onScreenScraper ? '✅ Oui' : '❌ Non'}</span></div>
+            <div><span className="text-gray-400">Mature :</span> <span className={`font-bold ${theme.mature ? 'text-red-400' : 'text-gray-500'}`}>{theme.mature ? '🔞 Oui' : 'Non'}</span></div>
             <div><span className="text-gray-400">Multi-région :</span> <span className={`font-bold ${theme.isMulti ? 'text-purple-400' : 'text-gray-500'}`}>{theme.isMulti ? '🌍 Oui' : '❌ Non'}</span></div>
           </div>
           <div className="flex gap-3 pt-4 border-t border-gray-700">
