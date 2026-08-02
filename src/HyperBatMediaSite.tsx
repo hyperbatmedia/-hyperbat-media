@@ -5,7 +5,8 @@
 // script hyperbat_theme_finder.py) d'ouvrir la vitrine deja pre-filtree.
 
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { Search, Gamepad2, Grid, List, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download } from 'lucide-react';
+import type { ComponentType, CSSProperties } from 'react';
+import { Search, Gamepad2, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download, AlertTriangle, Gift } from 'lucide-react';
 
 import { ThemeItem } from './types';
 import { categories, CART_MAX } from './constants';
@@ -286,7 +287,7 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
 
 export default function HyperBatMediaSite(): JSX.Element {
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [viewMode] = useState<'grid' | 'list'>('grid');
   const [sidebarSearch, setSidebarSearch] = useState<string>('');
   const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -558,6 +559,68 @@ export default function HyperBatMediaSite(): JSX.Element {
     );
   }
 
+  // Rendu d'une pastille de stat (Artwork, Magazines, Collection...), factorisé
+  // pour être réutilisé identique qu'elle soit seule ou empilée avec une autre.
+  const renderPill = ({ id, label, count, special, icon, Icon, total, isExport }: {
+    id: string;
+    label?: string;
+    count?: number;
+    special?: boolean;
+    icon?: string;
+    Icon?: ComponentType<{ className?: string; style?: CSSProperties }>;
+    total?: number;
+    isExport?: boolean;
+  }) => (
+    <button key={id}
+      onClick={() => {
+        if (isExport) {
+          const rows = filteredThemes.map(t => ({ name: t.name, system: t.system, gameId: t.gameId ?? null }));
+          const blob = new Blob([JSON.stringify(rows, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url; a.download = `hyperbatmedia-name-system-gameid-${new Date().toISOString().split('T')[0]}.json`; a.click();
+          URL.revokeObjectURL(url);
+          return;
+        }
+        systemsLogic.handleSystemSelect('all'); systemsLogic.setSelectedCategory(id);
+      }}
+      title={isExport ? "Export JSON name/system/gameId (respecte les filtres actuels) — pour l'outil de renommage local" : undefined}
+      className="px-5 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
+      style={{
+        minWidth: '108px',
+        background: special ? '#2a2a2a' : id === 'multi'
+          ? systemsLogic.selectedCategory === 'multi' ? 'linear-gradient(to right, #7e22ce, #be185d)' : 'linear-gradient(to right, #6b21a8, #9d174d)'
+          : '#D97706',
+        borderColor: !isExport && systemsLogic.selectedCategory === id ? '#FFFF00' : id === 'multi' ? '#c084fc' : '#FFD700',
+        borderWidth: !isExport && systemsLogic.selectedCategory === id ? '3px' : '2px',
+        boxShadow: !isExport && systemsLogic.selectedCategory === id ? '0 0 10px rgba(255,215,0,0.3)' : 'none'
+      }}>
+      {icon && <span style={{ fontSize: '10px' }}>{icon}</span>}
+      {Icon && <Icon className="w-2.5 h-2.5" style={{ color: '#e0e0e0' }} />}
+      <div>
+        {special ? (
+          <>
+            <p className="text-xs font-black">
+              <span style={{ color: '#FFD700' }}>SCREEN</span>
+              <span style={{ background: 'linear-gradient(180deg, #6abf00 0%, #2d6a00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>SCRAPER</span>
+            </p>
+            <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{count}/{total}</p>
+          </>
+        ) : isExport ? (
+          <>
+            <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>Export</p>
+            <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>json</p>
+          </>
+        ) : (
+          <>
+            <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>{label}</p>
+            <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{total ? `${count}/${total}` : count}</p>
+          </>
+        )}
+      </div>
+    </button>
+  );
+
   return (
     <div className="min-h-screen relative overflow-hidden transition-colors duration-300" style={{ backgroundColor: colors.bg, color: colors.text }}>
       <div className="relative" style={{ zIndex: 1 }}>
@@ -576,6 +639,9 @@ export default function HyperBatMediaSite(): JSX.Element {
                     A RetroBat & Batocera theme inspired by <span className="text-yellow-400">HyperSpin</span>
                   </p>
                   <p className="text-xs mt-1" style={{ color: colors.textSecondary }}>à la sauce Bob Morane</p>
+                  <p className="text-xs font-bold mt-2" style={{ color: '#FFA500' }}>
+                    Ce site est et restera 100% gratuit, sans pub ni paiement.
+                  </p>
                 </div>
                 <Gamepad2 className="w-12 h-12" style={{ color: '#FF8C00' }} />
               </div>
@@ -602,154 +668,51 @@ export default function HyperBatMediaSite(): JSX.Element {
         <div className="container mx-auto px-4 py-4">
           {!showAdminPanel && (
             <>
-              <div className="grid gap-3 mb-4 justify-center mx-auto" style={{ gridTemplateColumns: 'repeat(7, max-content)', width: 'fit-content' }}>
-                {[
-                  { id: 'artwork',        label: 'Artwork',         count: themeStats.artworkThemes,       Icon: Image,   col: 1, row: 1 },
-                  { id: 'magazines',      label: 'Magazines',       count: themeStats.magazineThemes,      icon: '📰',    col: 2, row: 1 },
-                  { id: 'collection',     label: 'Collection',      count: themeStats.collectionThemes,    Icon: Package, col: 3, row: 1 },
-                  { id: 'system-themes',  label: 'Thèmes système',  count: themeStats.systemThemes,        Icon: Monitor, col: 4, row: 1 },
-                  { id: 'default-themes', label: 'Thèmes default',  count: themeStats.defaultThemes,       Icon: Star,    col: 5, row: 1 },
-                  { id: 'game-themes',    label: 'Thèmes de jeux',  count: themeStats.gameThemes,          Icon: Trophy,  col: 6, row: 1 },
-                  { id: 'all',            label: 'Total global',    count: themeStats.total,               Icon: BarChart3, col: 7, row: 1 },
-                  { id: 'multi',          label: 'Multi-région',    count: themeStats.multiThemes,         icon: '🌍',    col: 1, row: 2 },
-                  { id: 'screenscraper',  label: 'ScreenScraper',   count: themeStats.screenScraperThemes, total: themeStats.gameThemesTotal, special: true, col: 2, row: 2 },
-                ].map(({ id, label, count, special, icon, Icon, total, col, row }) => (
-                  <button key={id}
-                    onClick={() => { systemsLogic.handleSystemSelect('all'); systemsLogic.setSelectedCategory(id); }}
-                    className="px-7 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
-                    style={{
-                      gridColumn: col, gridRow: row,
-                      background: special ? '#2a2a2a' : id === 'multi'
-                        ? systemsLogic.selectedCategory === 'multi' ? 'linear-gradient(to right, #7e22ce, #be185d)' : 'linear-gradient(to right, #6b21a8, #9d174d)'
-                        : '#D97706',
-                      borderColor: systemsLogic.selectedCategory === id ? '#FFFF00' : id === 'multi' ? '#c084fc' : '#FFD700',
-                      borderWidth: systemsLogic.selectedCategory === id ? '3px' : '2px',
-                      boxShadow: systemsLogic.selectedCategory === id ? '0 0 10px rgba(255,215,0,0.3)' : 'none'
-                    }}>
-                    {icon && <span style={{ fontSize: '10px' }}>{icon}</span>}
-                    {Icon && <Icon className="w-2.5 h-2.5" style={{ color: '#e0e0e0' }} />}
+              <div className="flex flex-wrap items-start gap-3 mb-4">
+                <div className="flex flex-col gap-3">
+                  {renderPill({ id: 'artwork', label: 'Artwork', count: themeStats.artworkThemes, Icon: Image })}
+                  {renderPill({ id: 'multi', label: 'Multi-région', count: themeStats.multiThemes, icon: '🌍' })}
+                </div>
+                <div className="flex flex-col gap-3">
+                  {renderPill({ id: 'magazines', label: 'Magazines', count: themeStats.magazineThemes, icon: '📰' })}
+                  {renderPill({ id: 'screenscraper', label: 'ScreenScraper', count: themeStats.screenScraperThemes, total: themeStats.gameThemesTotal, special: true })}
+                </div>
+                <div className="flex flex-col gap-3">
+                  {renderPill({ id: 'collection', label: 'Collection', count: themeStats.collectionThemes, Icon: Package })}
+                  <button onClick={() => setShowRecapPanel(true)}
+                    className="px-5 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
+                    style={{ minWidth: '108px', background: 'linear-gradient(to right, #b91c1c, #dc2626)', borderColor: '#f87171' }}>
+                    <AlertTriangle className="w-2.5 h-2.5" style={{ color: '#fecaca' }} />
                     <div>
-                      {special ? (
-                        <p className="text-xs font-black">
-                          <span style={{ color: '#FFD700' }}>SCREEN</span>
-                          <span style={{ background: 'linear-gradient(180deg, #6abf00 0%, #2d6a00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>SCRAPER</span>
-                        </p>
-                      ) : (
-                        <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>{label}</p>
-                      )}
-                      <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{total ? `${count}/${total}` : count}</p>
+                      <p className="text-xs font-semibold" style={{ color: '#fecaca' }}>{missingSystemsCount} sans thème</p>
+                      <p className="text-xs font-black" style={{ color: 'white' }}>Voir le récap</p>
                     </div>
                   </button>
-                ))}
-              </div>
-
-              <div className="flex items-center gap-4 mb-6">
-                <div className="flex gap-2 flex-shrink-0">
-                  <button onClick={() => setViewMode('grid')} className="p-3 rounded-lg transition border-2"
-                    style={viewMode === 'grid' ? { backgroundColor: '#FF8C00', borderColor: '#FFD700' } : { backgroundColor: colors.cardBg, borderColor: '#4b5563' }}>
-                    <Grid className="w-5 h-5" />
-                  </button>
-                  <button onClick={() => setViewMode('list')} className="p-3 rounded-lg transition border-2"
-                    style={viewMode === 'list' ? { backgroundColor: '#FF8C00', borderColor: '#FFD700' } : { backgroundColor: colors.cardBg, borderColor: '#4b5563' }}>
-                    <List className="w-5 h-5" />
-                  </button>
-                  <button onClick={() => setSortBy(sortBy === 'name' ? 'date' : 'name')}
-                    className="p-3 rounded-lg transition border-2 flex items-center gap-2"
-                    style={sortBy === 'date' ? { backgroundColor: '#FF8C00', borderColor: '#FFD700' } : { backgroundColor: colors.cardBg, borderColor: '#4b5563' }}
-                    title={sortBy === 'name' ? 'Trier par date' : 'Trier par nom'}>
-                    {sortBy === 'name' ? <SortAsc className="w-5 h-5" /> : <Calendar className="w-5 h-5" />}
-                    <span className="text-xs font-bold">{sortBy === 'name' ? 'A-Z' : 'DATE'}</span>
-                  </button>
-                  <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-3 rounded-lg transition border-2"
-                    style={{ backgroundColor: colors.cardBg, borderColor: '#4b5563', color: '#FFA500' }}
-                    title={isDarkMode ? 'Mode clair' : 'Mode sombre'}>
-                    {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                  </button>
-                  <button onClick={() => setCartOpen(true)}
-                    className="relative p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
-                    style={{ backgroundColor: cart.length > 0 ? '#FF8C00' : colors.cardBg, borderColor: cart.length > 0 ? '#FFD700' : '#4b5563', color: cart.length > 0 ? 'white' : '#FFA500' }}
-                    title="Ouvrir le panier">
-                    <Download className="w-5 h-5" />
-                    {cart.length > 0 && (
-                      <>
-                        <span className="text-xs font-bold">{cart.length}/{CART_MAX}</span>
-                        <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full text-xs font-black flex items-center justify-center"
-                          style={{ backgroundColor: '#FFD700', color: '#1a1a1a' }}>{cart.length}</span>
-                      </>
-                    )}
-                  </button>
                 </div>
-                <div className="relative flex-1">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: '#FFA500' }} />
-                  <input type="text" placeholder="Rechercher un thème, un jeu, un créateur, un système..." value={searchTerm}
-                    onChange={(e) => handleSearchChange(e.target.value)}
-                    className="w-full rounded-lg pl-12 pr-12 py-3 border-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    style={{ backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.border }} />
-                  {searchTerm && (
-                    <button onClick={() => setSearchTerm('')} className="absolute right-4 top-1/2 -translate-y-1/2 transition hover:brightness-110"
-                      style={{ color: colors.textSecondary }} title="Effacer la recherche">
-                      <X className="w-5 h-5" />
+                <div className="flex flex-col gap-3">
+                  {renderPill({ id: 'system-themes', label: 'Thèmes système', count: themeStats.systemThemes, Icon: Monitor })}
+                  {packsData.packs.length > 0 && (
+                    <button onClick={() => setShowPacksPanel(true)}
+                      className="px-5 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer relative"
+                      style={{ minWidth: '108px', background: 'linear-gradient(to right, #0369a1, #0891b2)', borderColor: '#38bdf8' }}>
+                      <span className="absolute -top-3 -right-2 font-black text-white px-1.5 py-0.5 rounded-md border"
+                        style={{ backgroundColor: '#dc2626', borderColor: '#fca5a5', fontSize: '9px', letterSpacing: '0.02em' }}>
+                        NOUVEAU
+                      </span>
+                      <Gift className="w-2.5 h-2.5" style={{ color: '#e0f2fe' }} />
+                      <div>
+                        <p className="text-xs font-semibold" style={{ color: '#e0f2fe' }}>Pack du mois</p>
+                        <p className="text-xs font-black" style={{ color: 'white' }}>Télécharger</p>
+                      </div>
                     </button>
                   )}
                 </div>
+                {renderPill({ id: 'default-themes', label: 'Thèmes default', count: themeStats.defaultThemes, Icon: Star })}
+                {renderPill({ id: 'game-themes', label: 'Thèmes de jeux', count: themeStats.gameThemes, Icon: Trophy })}
+                {renderPill({ id: 'all', label: 'Total global', count: themeStats.total, Icon: BarChart3 })}
+                {renderPill({ id: 'export-json', label: 'Export json', isExport: true })}
               </div>
 
-              <div className="flex items-center gap-3 mb-3 mr-auto">
-                <button onClick={() => setShowRecapPanel(true)}
-                  className="px-7 py-1.5 rounded-lg border-2 flex flex-col items-center transition hover:brightness-110 cursor-pointer"
-                  style={{
-                    background: 'linear-gradient(135deg,#f97316,#eab308,#f97316)',
-                    backgroundSize: '200% 100%',
-                    borderColor: '#FFD700',
-                    borderWidth: '2px',
-                    boxShadow: '0 0 10px rgba(249,115,22,0.4)'
-                  }}>
-                  <p className="text-xs font-semibold flex items-center gap-3" style={{ color: '#1a1206' }}>
-                    <span style={{ color: '#ff0000', fontWeight: 900, fontSize: '20px', lineHeight: 1, transform: 'translateY(4px)' }}>{missingSystemsCount}</span>
-                    <span>système{missingSystemsCount > 1 ? 's' : ''} sans thème</span>
-                  </p>
-                  <p className="text-xs font-black" style={{ color: '#1a1206' }}>Voir le récap</p>
-                </button>
-
-                {packsData.packs.length > 0 && (
-                  <button onClick={() => setShowPacksPanel(true)}
-                    className="px-7 py-1.5 rounded-lg border-2 flex flex-col items-center transition hover:brightness-110 cursor-pointer relative"
-                    style={{
-                      background: 'linear-gradient(135deg,#f97316,#eab308,#f97316)',
-                      backgroundSize: '200% 100%',
-                      borderColor: '#FFD700',
-                      borderWidth: '2px',
-                      boxShadow: '0 0 10px rgba(249,115,22,0.4)'
-                    }}>
-                    <span className="absolute -top-3 -right-1 font-black text-white px-1.5 py-0.5 rounded-md"
-                      style={{ backgroundColor: '#dc2626', fontSize: '8px' }}>
-                      NOUVEAU
-                    </span>
-                    <p className="text-xs font-semibold" style={{ color: '#1a1206' }}>Pack du mois</p>
-                    <p className="text-xs font-black" style={{ color: '#1a1206' }}>Télécharger</p>
-                  </button>
-                )}
-
-                <button onClick={() => {
-                    const rows = filteredThemes.map(t => ({ name: t.name, system: t.system, gameId: t.gameId ?? null }));
-                    const blob = new Blob([JSON.stringify(rows, null, 2)], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url; a.download = `hyperbatmedia-name-system-gameid-${new Date().toISOString().split('T')[0]}.json`; a.click();
-                    URL.revokeObjectURL(url);
-                  }}
-                  title="Export JSON name/system/gameId (respecte les filtres actuels) — pour l'outil de renommage local"
-                  className="px-4 py-1.5 rounded-lg border-2 flex items-center transition hover:brightness-110 cursor-pointer"
-                  style={{
-                    background: 'linear-gradient(135deg,#f97316,#eab308,#f97316)',
-                    backgroundSize: '200% 100%',
-                    borderColor: '#FFD700',
-                    borderWidth: '2px',
-                    boxShadow: '0 0 10px rgba(249,115,22,0.4)'
-                  }}>
-                  <p className="text-xs font-black" style={{ color: '#1a1206' }}>Export json</p>
-                </button>
-              </div>
             </>
           )}
 
@@ -763,9 +726,49 @@ export default function HyperBatMediaSite(): JSX.Element {
             </div>
           )}
 
-          <div className="flex gap-6">
+          <div className="flex gap-6" style={{ marginTop: '3rem' }}>
             {!showAdminPanel && (
-              <div style={{ paddingTop: '52px' }}>
+              <div>
+                <div className="flex gap-2 justify-center mb-6">
+                  <button onClick={() => setSortBy(sortBy === 'name' ? 'date' : 'name')}
+                    className="p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
+                    style={{
+                      backgroundColor: '#D97706',
+                      borderColor: sortBy === 'date' ? '#FFFF00' : '#FFD700',
+                      borderWidth: sortBy === 'date' ? '3px' : '2px',
+                      boxShadow: sortBy === 'date' ? '0 0 10px rgba(255,215,0,0.4)' : 'none',
+                      color: '#e0e0e0'
+                    }}
+                    title={sortBy === 'name' ? 'Trier par date' : 'Trier par nom'}>
+                    {sortBy === 'name' ? <SortAsc className="w-5 h-5" /> : <Calendar className="w-5 h-5" />}
+                    <span className="text-xs font-bold">{sortBy === 'name' ? 'A-Z' : 'DATE'}</span>
+                  </button>
+                  <button onClick={() => setIsDarkMode(!isDarkMode)}
+                    className="p-3 rounded-lg transition border-2 hover:brightness-110"
+                    style={{ backgroundColor: '#D97706', borderColor: '#FFD700', color: '#e0e0e0' }}
+                    title={isDarkMode ? 'Mode clair' : 'Mode sombre'}>
+                    {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                  </button>
+                  <button onClick={() => setCartOpen(true)}
+                    className="relative p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
+                    style={{
+                      backgroundColor: '#D97706',
+                      borderColor: cart.length > 0 ? '#FFFF00' : '#FFD700',
+                      borderWidth: cart.length > 0 ? '3px' : '2px',
+                      boxShadow: cart.length > 0 ? '0 0 10px rgba(255,215,0,0.4)' : 'none',
+                      color: '#e0e0e0'
+                    }}
+                    title="Mes téléchargements">
+                    <Download className="w-5 h-5" />
+                    {cart.length > 0 && (
+                      <>
+                        <span className="text-xs font-bold">{cart.length}/{CART_MAX}</span>
+                        <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full text-xs font-black flex items-center justify-center"
+                          style={{ backgroundColor: '#FFD700', color: '#1a1a1a' }}>{cart.length}</span>
+                      </>
+                    )}
+                  </button>
+                </div>
                 <Sidebar
                   systems={systemsLogic.systems}
                   sidebarSearch={sidebarSearch} setSidebarSearch={setSidebarSearch}
@@ -780,6 +783,21 @@ export default function HyperBatMediaSite(): JSX.Element {
               </div>
             )}
             <main className="flex-1 min-w-0">
+              {!showAdminPanel && (
+                <div className="relative w-full mb-6">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: '#FFA500' }} />
+                  <input type="text" placeholder="Rechercher un thème, un jeu, un créateur, un système..." value={searchTerm}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    className="w-full rounded-lg pl-12 pr-12 py-3 border-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    style={{ backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.border }} />
+                  {searchTerm && (
+                    <button onClick={() => setSearchTerm('')} className="absolute right-4 top-1/2 -translate-y-1/2 transition hover:brightness-110"
+                      style={{ color: colors.textSecondary }} title="Effacer la recherche">
+                      <X className="w-5 h-5" />
+                    </button>
+                  )}
+                </div>
+              )}
               {!showAdminPanel && (
                 <div className="mb-6 flex items-center gap-4 text-sm flex-wrap">
                   <div className="flex items-center gap-2">

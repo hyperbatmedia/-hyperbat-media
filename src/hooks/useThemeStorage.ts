@@ -25,7 +25,8 @@ const deepCloneThemes = (themes: ThemeItem[]): ThemeItem[] => {
     onScreenScraper: theme.onScreenScraper,  // ✅ AJOUTÉ
     isMulti: theme.isMulti,
     ssGameId: theme.ssGameId,
-    gameId: theme.gameId  // ✅ ne pas effacer l'ID anti-doublon Drive
+    gameId: theme.gameId,  // ✅ ne pas effacer l'ID anti-doublon Drive
+    mature: theme.mature
   }));
 };
 

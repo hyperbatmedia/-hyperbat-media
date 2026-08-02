@@ -35,6 +35,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
 }) => {
   const [selectedTheme, setSelectedTheme] = useState<ThemeItem | null>(null);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
+  const [revealedMature, setRevealedMature] = useState<Set<string>>(new Set());
   const [cartFullMsg, setCartFullMsg] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -380,7 +381,13 @@ const ThemeList: React.FC<ThemeListProps> = ({
               <div
                 className="bg-gradient-to-br from-gray-800 to-black flex items-center justify-center border-b-2 border-gray-700 cursor-pointer relative overflow-hidden"
                 style={{ height: '180px' }}
-                onClick={() => setSelectedTheme(theme)}
+                onClick={() => {
+                  if (theme.mature && !revealedMature.has(key)) {
+                    setRevealedMature(prev => new Set(prev).add(key));
+                    return;
+                  }
+                  setSelectedTheme(theme);
+                }}
               >
                 {theme.imageUrl ? (
                   <>
@@ -398,12 +405,26 @@ const ThemeList: React.FC<ThemeListProps> = ({
                       referrerPolicy="no-referrer"
                       onLoad={() => setLoadedImages(prev => new Set(prev).add(key))}
                       onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                      style={{ opacity: loadedImages.has(key) ? 1 : 0, transition: 'opacity 0.3s ease-in-out', willChange: 'opacity' }}
+                      style={{
+                        opacity: loadedImages.has(key) ? 1 : 0,
+                        transition: 'opacity 0.3s ease-in-out',
+                        willChange: 'opacity',
+                        filter: theme.mature && !revealedMature.has(key) ? 'blur(18px)' : 'none'
+                      }}
                     />
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-2"
                       style={{ display: loadedImages.has(key) ? 'none' : 'flex', pointerEvents: 'none' }}>
                       <span className="text-5xl">🎮</span>
                     </div>
+                    {theme.mature && !revealedMature.has(key) && (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2" style={{ backgroundColor: 'rgba(20,10,20,0.45)' }}>
+                        <div className="w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm text-white" style={{ backgroundColor: '#dc2626' }}>+18</div>
+                        <span className="text-xs font-semibold" style={{ color: '#f5d5d5' }}>Cliquer pour révéler</span>
+                      </div>
+                    )}
+                    {theme.mature && revealedMature.has(key) && (
+                      <div className="absolute top-2 left-2 text-white text-[10px] font-bold px-2 py-0.5 rounded" style={{ backgroundColor: '#dc2626' }}>+18</div>
+                    )}
                   </>
                 ) : (
                   <div className="flex flex-col items-center justify-center gap-2">
