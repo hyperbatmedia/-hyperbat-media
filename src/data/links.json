@@ -115,6 +115,14 @@
           "downloadUrl": "https://hyperbat.phenix-dev.com/",
           "creator": "Phenix"
         },
+		{
+          "id": "tool-003",
+          "name": "Hyperbat gamethee automatcher",
+          "description": "Outil de renommage en masse avec l'ajout de la comparaison des gameId Sreenscraper.Vous aurez besoin d'un json disponible sur la vitrine",
+          "imageUrl": "https://drive.google.com/file/d/1DaEhe1dFpfGFpPVc4z3l0e_HtBnNTlCW/view?usp=sharing",
+          "downloadUrl": "https://drive.google.com/drive/folders/1QsdNvwqQpTQal7kvb3o65kLsMlkEA8s6?usp=drive_link",
+          "creator": "Dav"
+        },
         {
           "id": "tool-arrm",
           "name": "ARRM",
