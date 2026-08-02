@@ -3746,20 +3746,6 @@
     "gameId": 40077
   },
   {
-    "id": 33482,
-    "name": "astorm",
-    "creator": "Pento5185",
-    "system": "segaclassic",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1VE0Ma_H2eXwu6e0L6kGaiJHqIXTPWnAb/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1fT-G7LeXapjm9mEPgulRjhdRaMfsOwNp/view?usp=sharing",
-    "size": "4.0 MB",
-    "date": "2026-04-03",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 40077
-  },
-  {
     "id": 33821,
     "name": "astorm",
     "creator": "Pento5185",
@@ -9324,20 +9310,6 @@
     "downloadUrl": "https://drive.google.com/file/d/1LhIoz0tTU2Ivz4x7rB9Tg7NLVCsAK38m/view?usp=sharing",
     "size": "1001.5 KB",
     "date": "2026-07-11",
-    "onScreenScraper": false,
-    "isMulti": false,
-    "gameId": 40846
-  },
-  {
-    "id": 28827,
-    "name": "dday",
-    "creator": "Roni",
-    "system": "jaleco",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1zVexF8r-pKQ-InbJBVmNMcgjvK0c4F2-/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1Hs9WayGrTPtUw3w7oZcT7DMxtBWD-Tyu/view?usp=sharing",
-    "size": "537.8 KB",
-    "date": "2026-02-14",
     "onScreenScraper": false,
     "isMulti": false,
     "gameId": 40846
@@ -15387,20 +15359,6 @@
     "gameId": 302902
   },
   {
-    "id": 18564,
-    "name": "grdian",
-    "creator": "Mrfomt",
-    "system": "toaplan",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1rsm-oIg1-5XGBaPxv2lyNPIcXPCTD4Ko/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1yi7Vp8RV-g8HggRYHW6RQHW9NB5qFz6d/view?usp=sharing",
-    "size": "4.2 MB",
-    "date": "2026-01-20",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 41422
-  },
-  {
     "id": 1165,
     "name": "Great Volleyball (USA, Europe)",
     "creator": "Mrfomt",
@@ -15744,20 +15702,6 @@
     "onScreenScraper": true,
     "isMulti": false,
     "gameId": 41589
-  },
-  {
-    "id": 366,
-    "name": "gunnail",
-    "creator": "sk0ney",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1f5lNOl0OInm76HKLHGD8Zz82GJbDtxCW/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1JgXdiixcbT4OwM9C1DKZww0Mw34HBFDR/view?usp=sharing",
-    "size": "2.3 MB",
-    "date": "2025-11-13",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 41594
   },
   {
     "id": 365,
@@ -18432,20 +18376,6 @@
     "gameId": 7284
   },
   {
-    "id": 325,
-    "name": "korokoro",
-    "creator": "Dav",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1pLmyh80j6uKJxXeI2v34z73LtfUUUC9z/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1q1wvUIi0skfhfUEw3Ego5UqmlocSBIdu/view?usp=sharing",
-    "size": "4.9 MB",
-    "date": "2025-11-13",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 37342
-  },
-  {
     "id": 566,
     "name": "korokoro",
     "creator": "Dav",
@@ -20324,20 +20254,6 @@
     "gameId": 5443
   },
   {
-    "id": 300,
-    "name": "mk",
-    "creator": "Arcanjohack",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1-L42R9Z9a0naHgZE2lnvur7ArHnjRRSE/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1sY5S0BqqwfoNvEKGkzVEInTnCc7BjSxT/view?usp=sharing",
-    "size": "2.7 MB",
-    "date": "2025-11-13",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 78947
-  },
-  {
     "id": 11797,
     "name": "mk",
     "creator": "Arcanjohack",
@@ -20364,20 +20280,6 @@
     "onScreenScraper": true,
     "isMulti": false,
     "gameId": 78947
-  },
-  {
-    "id": 297,
-    "name": "mk2",
-    "creator": "Arcanjohack",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1ysP7Af_LocLGHTtfOuYniHjzBjFdI0fM/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1cem9TKW-gM22mZNQkzoKsnxP_7U6qZLT/view?usp=sharing",
-    "size": "2.2 MB",
-    "date": "2025-11-13",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 78948
   },
   {
     "id": 11796,
@@ -20434,20 +20336,6 @@
     "onScreenScraper": true,
     "isMulti": false,
     "gameId": 63073
-  },
-  {
-    "id": 296,
-    "name": "mk4",
-    "creator": "Roni",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/139gzUgGIUNGIS1BN8SmpvyMNImRuhGjj/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/122T2mbGd1M9dSAG8ZbSROxcUK74eQ8dB/view?usp=sharing",
-    "size": "3.0 MB",
-    "date": "2025-11-13",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 78949
   },
   {
     "id": 98,
@@ -21181,20 +21069,6 @@
     "onScreenScraper": true,
     "isMulti": false,
     "gameId": 46788
-  },
-  {
-    "id": 281,
-    "name": "mwalk",
-    "creator": "Roni",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1WsPWec4czfy3ff_vxLknl0bYKVqY-tVz/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1w_LSfXyt8ZN9ZrnWq_DRq-ISADNJWwqN/view?usp=sharing",
-    "size": "2.2 MB",
-    "date": "2025-11-13",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 63190
   },
   {
     "id": 278,
@@ -23207,20 +23081,6 @@
     "gameId": 79250
   },
   {
-    "id": 18542,
-    "name": "perfrman",
-    "creator": "Mrfomt",
-    "system": "toaplan",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/10uBz1ixmXxUhS03JeCymJIjjgwzy0g47/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1VG0zErzlojwKNmSqQa7EHqioaWNAftt-/view?usp=sharing",
-    "size": "1.0 MB",
-    "date": "2026-01-20",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 79250
-  },
-  {
     "id": 262,
     "name": "perfrman",
     "creator": "Roni",
@@ -24347,20 +24207,6 @@
     "downloadUrl": "https://drive.google.com/file/d/1Uq0yWmGX0_RvsPNCUiYesHH0vviIZCtv/view?usp=sharing",
     "size": "3.6 MB",
     "date": "2025-12-02",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 42534
-  },
-  {
-    "id": 255,
-    "name": "psyforce",
-    "creator": "Roni",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1LBuSpLTgQsX3nAT91t-4ZZGL1LnBEGkf/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1s-DPGjJOsAchesCE8c39UADnzq2NoHkE/view?usp=sharing",
-    "size": "6.8 MB",
-    "date": "2025-11-13",
     "onScreenScraper": true,
     "isMulti": false,
     "gameId": 42534
@@ -27741,20 +27587,6 @@
     "gameId": 43336
   },
   {
-    "id": 18540,
-    "name": "sstriker",
-    "creator": "Mrfomt",
-    "system": "toaplan",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1GXW048Ds7CMlZGvXskKFQNX2DYIBwkTJ/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1yHCoBbqCyl86lbu7uom_ofjz_e8_4Nrt/view?usp=sharing",
-    "size": "3.3 MB",
-    "date": "2026-01-20",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 43336
-  },
-  {
     "id": 42080,
     "name": "stakwin",
     "creator": "Dav",
@@ -28896,20 +28728,6 @@
     "gameId": 152435
   },
   {
-    "id": 197,
-    "name": "theroes",
-    "creator": "Sk0ney",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1GBR64d12E9kuXeFsexUSpbCwY3Qzjo_L/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1O81mePbnCF0tk4Oaiz2aXSBQKkP2opba/view?usp=sharing",
-    "size": "5.5 MB",
-    "date": "2025-11-13",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 37353
-  },
-  {
     "id": 196,
     "name": "thndzone",
     "creator": "Roni",
@@ -29771,20 +29589,6 @@
     "gameId": 43800
   },
   {
-    "id": 18548,
-    "name": "twincobr",
-    "creator": "Mrfomt",
-    "system": "toaplan",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1MiroAQcXXU9OgyNAXktjT79P8XoaS2TR/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1_y8k34i6gtuStusKqDhnjBkSOyQGCVt-/view?usp=sharing",
-    "size": "4.3 MB",
-    "date": "2026-01-20",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 43800
-  },
-  {
     "id": 183,
     "name": "twinhawk",
     "creator": "mrfomt",
@@ -29794,20 +29598,6 @@
     "downloadUrl": "https://drive.google.com/file/d/1EqA9RrQKsqqJT8l9lyaQ9cFlXNtLS1cZ/view?usp=sharing",
     "size": "5.2 MB",
     "date": "2025-11-13",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 43804
-  },
-  {
-    "id": 18547,
-    "name": "twinhawk",
-    "creator": "Mrfomt",
-    "system": "toaplan",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1gweBuFnoIXiu9I0W1NJ9LcLltnx0_Yof/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1AfkKCVtmE5z6ewaF_lXmarM5kafjoLd7/view?usp=sharing",
-    "size": "5.1 MB",
-    "date": "2026-01-20",
     "onScreenScraper": true,
     "isMulti": false,
     "gameId": 43804
@@ -30652,20 +30442,6 @@
     "gameId": 44030
   },
   {
-    "id": 18545,
-    "name": "wardner",
-    "creator": "Mrfomt",
-    "system": "toaplan",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1zOQmAEPiLT1FOKkvNKzDeQVAHbCI5Zlb/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1r0p8uBq3fR1Y0f_ZObMqXV8zMJpEgNbk/view?usp=sharing",
-    "size": "5.1 MB",
-    "date": "2026-01-20",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 44030
-  },
-  {
     "id": 45230,
     "name": "Wario's Woods (Europe)",
     "creator": "huhe-8554",
@@ -31273,20 +31049,6 @@
     "onScreenScraper": true,
     "isMulti": false,
     "gameId": 37420
-  },
-  {
-    "id": 162,
-    "name": "yiear",
-    "creator": "Roni",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1GyRJMQM4rbnKee0UpWQEIi31mRp17oSY/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1McWmVhbB24aaU3Fa6VIjeUK-InfEZhOB/view?usp=sharing",
-    "size": "2.2 MB",
-    "date": "2025-11-13",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 44183
   },
   {
     "id": 45229,
@@ -33614,20 +33376,6 @@
     "gameId": 40701
   },
   {
-    "id": 60434,
-    "name": "grdian",
-    "creator": "Roni",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1oOcXl4uMrLZvLWoliKo5yWVNzFB-HQ4_/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1C1G5j20VIOUh_Zkfxwj2mNRa8OxvK4rk/view?usp=sharing",
-    "size": "4.3 MB",
-    "date": "2025-11-13",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 41422
-  },
-  {
     "id": 60684,
     "name": "kamenrid",
     "creator": "Roni",
@@ -34620,20 +34368,6 @@
     "onScreenScraper": false,
     "isMulti": false,
     "gameId": 42786
-  },
-  {
-    "id": 64574,
-    "name": "orlegend",
-    "creator": "qbertaddict",
-    "system": "igs",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1G-fPiONitr5STx2H0veTWfrRtDox96f2/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1FZDSi7LFmIny8MJ3IrBXqrmYiTg2U_Gx/view?usp=sharing",
-    "size": "3.2 MB",
-    "date": "2026-07-13",
-    "onScreenScraper": false,
-    "isMulti": false,
-    "gameId": 79100
   },
   {
     "id": 64720,
@@ -37302,20 +37036,6 @@
     "onScreenScraper": false,
     "isMulti": false,
     "gameId": 47053
-  },
-  {
-    "id": 71713,
-    "name": "SNK vs. Capcom - Card Fighters' Clash - SNK Version (USA, Europe)",
-    "creator": "Akeshi",
-    "system": "neogeopocketcolor",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1B3Y-kHWXkp5FbgxV7cigEZ8fnFJyneP3/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1xj3rUrXuwt-DWE13O05DduuDvAmMg1kw/view?usp=sharing",
-    "size": "2.0 MB",
-    "date": "2026-07-16",
-    "onScreenScraper": false,
-    "isMulti": false,
-    "gameId": 47052
   },
   {
     "id": 71715,
@@ -41187,7 +40907,7 @@
   {
     "id": 81305,
     "name": "mario",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "nintendoclassicsarcade",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1JuEuD8_KOt1mRalu7YR1s5n_7-MinG4k/view?usp=sharing",
@@ -41286,7 +41006,7 @@
   {
     "id": 81314,
     "name": "psychos",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "snkclassics",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1NNaZdd4_-N3NvotNAR_Zeu7ugQSpSZk7/view?usp=sharing",
@@ -41297,7 +41017,7 @@
   {
     "id": 81315,
     "name": "mechatt",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "snkclassics",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/17SfJFAo1HKTO4e78nf-h28id6lL_yz58/view?usp=sharing",
@@ -41308,7 +41028,7 @@
   {
     "id": 81316,
     "name": "ikari3",
-    "creator": "Unknown",
+    "creator": "Sk0ney",
     "system": "snkclassics",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1XnOt2eNasIfRpqF2RIuAk687352Ypmsu/view?usp=sharing",
@@ -41319,7 +41039,7 @@
   {
     "id": 81317,
     "name": "ikari",
-    "creator": "Unknown",
+    "creator": "Sk0ney",
     "system": "snkclassics",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1VZGHBg2JuwkS3Fh-57QaDcg01iZizVoW/view?usp=sharing",
@@ -41440,7 +41160,7 @@
   {
     "id": 81330,
     "name": "nebulray",
-    "creator": "Unknown",
+    "creator": "qbertaddict",
     "system": "namcosystemnb1",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1PPgvZdS7e4dz7eujJ9uglAVTpqWpeqUi/view?usp=sharing",
@@ -41539,7 +41259,7 @@
   {
     "id": 81347,
     "name": "pengo",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "segaclassic",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1Dbej_2B5KkGffsxvWRp7WGibBpIL6uIZ/view?usp=sharing",
@@ -41814,7 +41534,7 @@
   {
     "id": 81508,
     "name": "gwarrior",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "konamibubblesystem",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1Bum7Tx23SAW_IdML-NBe4gDGV6b3PWmd/view?usp=sharing",
@@ -41858,7 +41578,7 @@
   {
     "id": 81515,
     "name": "gunbird",
-    "creator": "Unknown",
+    "creator": " Par Sk0ney",
     "system": "psikyo",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1PSJHQtRBnUcFmocRnpEzoJA8pECzRSIy/view?usp=sharing",
@@ -41880,7 +41600,7 @@
   {
     "id": 81519,
     "name": "osman",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "mitchell",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1bgkz1ryD4XJa0h1GuoQ6VQkUwWTYm4B2/view?usp=sharing",
@@ -41902,7 +41622,7 @@
   {
     "id": 81544,
     "name": "invaders",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "midway",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1P6PAK1wIG3WOgfJlcqTYTZ8c2F4YE-cG/view?usp=sharing",
@@ -41935,7 +41655,7 @@
   {
     "id": 81547,
     "name": "mk4",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "midway",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1RmCW686FENIz1Jc8wIdIxeCfGXaVD4FB/view?usp=sharing",
@@ -41957,7 +41677,7 @@
   {
     "id": 81549,
     "name": "nbajam",
-    "creator": "Unknown",
+    "creator": "sk0ney",
     "system": "midway",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1MrJsyJh7P-C71QqdQj2gGti1gVZH-PRP/view?usp=sharing",
@@ -41968,7 +41688,7 @@
   {
     "id": 81550,
     "name": "nbajamte",
-    "creator": "Unknown",
+    "creator": "sk0ney",
     "system": "midway",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1Hsm7Zfo0JBltxcJTBzZTRax5P8w0-BFz/view?usp=sharing",
@@ -41990,7 +41710,7 @@
   {
     "id": 81592,
     "name": "splat",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "williamsclassic",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1xMEoyMVc_iGsZNc0WFUnnfpbAepYUkum/view?usp=sharing",
@@ -42001,7 +41721,7 @@
   {
     "id": 81593,
     "name": "narc",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "williamsclassic",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1onkF3g1dw0KRnNZOuBmhIxnaVrgGjsTR/view?usp=sharing",
@@ -42012,7 +41732,7 @@
   {
     "id": 81594,
     "name": "joust",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "williamsclassic",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1ZbpF9xcMZbD6nUMwYlw2caDllp9Wvbx1/view?usp=sharing",
@@ -42067,7 +41787,7 @@
   {
     "id": 81879,
     "name": "hwchamp",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1oYMkWftap8RcvJ_5HCT5MlFRsiqJquke/view?usp=sharing",
@@ -42078,7 +41798,7 @@
   {
     "id": 81880,
     "name": "fpoint",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1t00q1sjbcrmpwthl_r5_uvKlv-tvIzkL/view?usp=sharing",
@@ -42089,7 +41809,7 @@
   {
     "id": 81881,
     "name": "exctleag (Alt)",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1iQdpioeWfcsBorNOG58CmM0aryqHMajL/view?usp=sharing",
@@ -42100,7 +41820,7 @@
   {
     "id": 81882,
     "name": "exctleag",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1YsZvdo1Joidgw6iJvVT9fEOMKkInOCaQ/view?usp=sharing",
@@ -42111,7 +41831,7 @@
   {
     "id": 81883,
     "name": "dunkshot",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1PQLmOwQJtsBj5cjUiZ8z4ghnP8DF7EOl/view?usp=sharing",
@@ -42320,7 +42040,7 @@
   {
     "id": 81905,
     "name": "mwalk",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1WsPWec4czfy3ff_vxLknl0bYKVqY-tVz/view?usp=sharing",
@@ -42419,7 +42139,7 @@
   {
     "id": 81915,
     "name": "chwrestl",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1KOwJidF-SoUqJZS5pGQeU-Y3Znx8qnAL/view?usp=sharing",
@@ -42485,7 +42205,7 @@
   {
     "id": 81921,
     "name": "pacplus",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1j4v-WsUt36JA8UH3nFpTb8bGFEderP8y/view?usp=sharing",
@@ -42527,20 +42247,9 @@
     "date": "2026-07-30"
   },
   {
-    "id": 81925,
-    "name": "mk4",
-    "creator": "Unknown",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/139gzUgGIUNGIS1BN8SmpvyMNImRuhGjj/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1eHwp_b7jk1hM6Y30w8Y95ZwI5SgSF8aZ/view?usp=sharing",
-    "size": "2.9 MB",
-    "date": "2026-07-30"
-  },
-  {
     "id": 81926,
     "name": "gwarrior",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1k4ksS2MBJq7sEGVauQA7cSSlUcDfPNgB/view?usp=sharing",
@@ -42606,7 +42315,7 @@
   {
     "id": 82832,
     "name": "numanath",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "namcosystemna2",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1NzKziB8oQfLdt_rPqZkshUsJ8N8cDEcV/view?usp=sharing",
@@ -42769,21 +42478,10 @@
     "date": "2026-07-30"
   },
   {
-    "id": 82992,
-    "name": "_default",
-    "creator": "Unknown",
-    "system": "namcosystem12",
-    "category": "default-themes",
-    "imageUrl": "",
-    "downloadUrl": "https://drive.google.com/file/d/1P40l07QGOm5empVgDvP2Kqx_Yqgx5utg/view?usp=sharing",
-    "size": "592.1 KB",
-    "date": "2026-07-30"
-  },
-  {
     "id": 82993,
     "name": "ptblank2",
-    "creator": "Unknown",
-    "system": "namcosystem11",
+    "creator": "Akeshi",
+    "system": "arcade-namco-namcosystem11",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1Ujp2SsfWu8MD5RVXXEVIFmMZV4_Ss_49/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1pzt4W6P9of84rTQHm-0fZz2hFdj35g3n/view?usp=sharing",
@@ -42804,7 +42502,7 @@
   {
     "id": 82995,
     "name": "wldcourt",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "namcosystem1",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1Z2qrvzXFNujrWeeCqLUvAfuu4nooiO0k/view?usp=sharing",
@@ -42815,7 +42513,7 @@
   {
     "id": 82996,
     "name": "pacmania",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "namcosystem1",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1RwHiH0UW1ZTu3ed_2RkIv7Z21CwWpowG/view?usp=sharing",
@@ -43013,7 +42711,7 @@
   {
     "id": 83021,
     "name": "orunners",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "system32",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/16GV67EmHUAUOC_cxhDdiVxL-bZykxaXR/view?usp=sharing",
@@ -43024,7 +42722,7 @@
   {
     "id": 83022,
     "name": "ga2",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "system32",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1tWVZNxe1aUyLohCicFHxK7yZeczvHtvo/view?usp=sharing",
@@ -43090,7 +42788,7 @@
   {
     "id": 83033,
     "name": "lghost",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "system18",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1kN_zZP81Ir86MdvaD_o7tL-ZIHzt9w_X/view?usp=sharing",
@@ -43145,7 +42843,7 @@
   {
     "id": 83045,
     "name": "hwchamp",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "system16",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1nZJXPIoElQamGsnjA4_f079swWkmHRec/view?usp=sharing",
@@ -43156,7 +42854,7 @@
   {
     "id": 83046,
     "name": "fpoint",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "system16",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1Eaomp02uyexkAflcLxKq4lF2i8P1xXvj/view?usp=sharing",
@@ -43167,7 +42865,7 @@
   {
     "id": 83047,
     "name": "exctleag (Alt)",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "system16",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1I8UphDH_s0-cqgC58d7YrwC2CXVlvQz7/view?usp=sharing",
@@ -43178,7 +42876,7 @@
   {
     "id": 83048,
     "name": "exctleag",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "system16",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/110pjCd6cEUEM59uU9wYuRLY7vfEGBZfN/view?usp=sharing",
@@ -43189,7 +42887,7 @@
   {
     "id": 83049,
     "name": "dunkshot",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "system16",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1ZSy55eUf2oWcsFfozoIykWIcwEo_aBGz/view?usp=sharing",
@@ -43354,7 +43052,7 @@
   {
     "id": 83258,
     "name": "elevator",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "taitoclassique",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/125_JM4WEO21Yh_INdo7LprSWdFLyt-bx/view?usp=sharing",
@@ -43431,7 +43129,7 @@
   {
     "id": 83265,
     "name": "kurikint",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "taitoclassique",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1b8uFvx59U5QF5BhE11xsyCQ0cH27P3_H/view?usp=sharing",
@@ -43442,7 +43140,7 @@
   {
     "id": 83266,
     "name": "lightbr",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "taitoclassique",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1ebQQaGsVMp8GXStIfgY8e4KcMSc7O7HK/view?usp=sharing",
@@ -43453,7 +43151,7 @@
   {
     "id": 83267,
     "name": "masterw",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "taitoclassique",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1B-39Xg45yYWFl9WxhsMUdFxO-FUts2fT/view?usp=sharing",
@@ -43475,7 +43173,7 @@
   {
     "id": 83269,
     "name": "ninjaw",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "taitoclassique",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1LEAWhGqT6YNSnqeOT1bbbB0ISfhQV0Xx/view?usp=sharing",
@@ -43486,7 +43184,7 @@
   {
     "id": 83270,
     "name": "opwolf",
-    "creator": "Unknown",
+    "creator": "qbertaddict",
     "system": "taitoclassique",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1tkOPLLIb4lyERH-sW90zTzvW7X1-mLqc/view?usp=sharing",
@@ -43497,7 +43195,7 @@
   {
     "id": 83271,
     "name": "opwolf3",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "taitoclassique",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1atItMmAFxpFeyumW9ZYSeooxtMAQtpAd/view?usp=sharing",
@@ -43508,7 +43206,7 @@
   {
     "id": 83272,
     "name": "pbobble3",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "taitoclassique",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1-_Mitun6SbSZaLEM0Xn4ftjIQ0D-hGGL/view?usp=sharing",
@@ -43519,7 +43217,7 @@
   {
     "id": 83273,
     "name": "psyforce",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "taitoclassique",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1TI8kk-wZzaj4azIXU3vwmrGnE3ZKMy0J/view?usp=sharing",
@@ -43530,7 +43228,7 @@
   {
     "id": 83274,
     "name": "puzznic",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "taitoclassique",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1esTM0o3pVv0efms5e-ytctV7bszLDXqB/view?usp=sharing",
@@ -43563,7 +43261,7 @@
   {
     "id": 83277,
     "name": "twincobr",
-    "creator": "Unknown",
+    "creator": "mrfomt",
     "system": "taitoclassique",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1caf7biZtkwQxJgyyqFEiCvV0pwbbr3zl/view?usp=sharing",
@@ -43574,7 +43272,7 @@
   {
     "id": 83278,
     "name": "twinhawk",
-    "creator": "Unknown",
+    "creator": "mrfomt",
     "system": "taitoclassique",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1YbZK1izHuTWDQx4wKDzpus2CIYauNqtc/view?usp=sharing",
@@ -43618,7 +43316,7 @@
   {
     "id": 83285,
     "name": "vasara2",
-    "creator": "Unknown",
+    "creator": "Sk0ney",
     "system": "sammy",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1DiCDeRwvuYdX4Ma_3TPNk-Tva3j5Kq9r/view?usp=sharing",
@@ -43629,7 +43327,7 @@
   {
     "id": 83286,
     "name": "vasara",
-    "creator": "Unknown",
+    "creator": "Sk0ney",
     "system": "sammy",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1mV_eV7hLzpDurO7lAFu1pP4wni-ef78y/view?usp=sharing",
@@ -43640,7 +43338,7 @@
   {
     "id": 83292,
     "name": "terracre",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "nichibutsu",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/14fO4l-kupyln44YhND5DZJa_xhTwUkHt/view?usp=sharing",
@@ -43662,7 +43360,7 @@
   {
     "id": 83294,
     "name": "ninjemak",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "nichibutsu",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1C9jxBQMoDR0zAL_l3aeIWz4KOIlLk2s4/view?usp=sharing",
@@ -43673,7 +43371,7 @@
   {
     "id": 83295,
     "name": "mshuttle",
-    "creator": "Unknown",
+    "creator": "Roni",
     "system": "nichibutsu",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1T3M2lKogJ5B2qb-t6LV0vRnpnvd2XnzR/view?usp=sharing",
