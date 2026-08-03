@@ -11068,7 +11068,7 @@
     "size": "1.9 MB",
     "date": "2026-01-14",
     "onScreenScraper": false,
-    "isMulti": false
+    "isMulti": true
   },
   {
     "id": 421,
@@ -19658,7 +19658,7 @@
     "size": "2.1 MB",
     "date": "2026-01-14",
     "onScreenScraper": false,
-    "isMulti": false
+    "isMulti": true
   },
   {
     "id": 14867,
@@ -21737,7 +21737,7 @@
     "size": "1.4 MB",
     "date": "2026-01-14",
     "onScreenScraper": false,
-    "isMulti": false
+    "isMulti": true
   },
   {
     "id": 685,
@@ -22928,7 +22928,7 @@
     "size": "1.1 MB",
     "date": "2026-01-14",
     "onScreenScraper": false,
-    "isMulti": false
+    "isMulti": true
   },
   {
     "id": 17680,
@@ -26736,8 +26736,8 @@
     "downloadUrl": "https://drive.google.com/file/d/1qwrvw9E5dW8iH24cQWLg9oYq_gRrcGQR/view?usp=sharing",
     "size": "982.8 KB",
     "date": "2026-01-14",
-    "onScreenScraper": true,
-    "isMulti": false
+    "onScreenScraper": false,
+    "isMulti": true
   },
   {
     "id": 34951,
