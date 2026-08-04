@@ -23,7 +23,7 @@ export const systemsData: SystemsDataStructure = {
     },
     arcade: {
         mame: { label: 'MAME ARCADE', systems: ['MAME', 'HBMAME' ] },
-        snk: { label: 'SNK', systems: ['SNK 68k', 'Alpha Denshi', 'Neo Geo MVS', 'Hyper Neo Geo 64'] },
+        snk: { label: 'SNK', systems: ['SNK Classics', 'SNK 68k', 'Alpha Denshi', 'Neo Geo MVS', 'Hyper Neo Geo 64'] },
         capcom: { 
             label: 'CAPCOM', 
             systems: [
@@ -65,7 +65,7 @@ export const systemsData: SystemsDataStructure = {
         dataeast: { label: 'DATA EAST', systems: ['Data East', 'Data East 16-bit'] },
         mitchell: { label: 'MITCHELL', systems: ['Mitchell'] },
         jaleco: { label: 'JALECO', systems: ['Jaleco'] },
-        videosystem: { label: 'VIDEO SYSTEM', systems: ['Video System'] },
+        videosystem: { label: 'VIDEO SYSTEM', systems: ['Video System Co.'] },
         visco: { label: 'VISCO', systems: ['Visco'] },
         seibu: { label: 'SEIBU KAIHATSU', systems: ['Seibu Kaihatsu'] },
         nichibutsu: { label: 'NICHIBUTSU', systems: ['Nichibutsu'] },
@@ -84,6 +84,8 @@ export const systemsData: SystemsDataStructure = {
         tecmo: { label: 'TECMO', systems: ['Tecmo'] },
         rawthrills: { label: 'RAW THRILLS', systems: ['Raw Thrills'] },
         igt: { label: 'IGT SLOTS', systems: ['IGT Slots'] },
+        acclaim: { label: 'ACCLAIM', systems: ['Acclaim'] },
+        exidy: { label: 'EXIDY', systems: ['Exidy'] },
         'autres-arcade': { label: 'AUTRES CONSTRUCTEURS', systems: ['AAE', 'Daphne (LaserDisc)', 'Singe (LaserDisc)', 'American Laser Games', 'Gaelco', 'IGS', 'FBNeo'] }
     },
     home: {
@@ -172,7 +174,7 @@ export const systemsData: SystemsDataStructure = {
         indie: { label: 'INDIE PORTS', systems: ['Cave Story', 'C-Dogs SDL', 'LÖVE (Love2D)'] },
         pc: { label: 'PC PORTS', systems: ['Boom 3 (Doom 3)', 'GZDoom', 'Commander Genius (Commander Keen)', 'CorsixTH (Theme Hospital)'] },
         fighting: { label: 'FIGHTING ENGINES', systems: ['Ikemen GO', 'M.U.G.E.N'] },
-        other: { label: 'AUTRES PORTS', systems: ['Solarus', 'Starship', 'Karaoke'] }
+        other: { label: 'AUTRES PORTS', systems: ['Solarus', 'Starship', 'Karaoke', 'ScummVM', 'OpenBOR'] }
     },
     fantasy: {
         fantasy: { label: 'FANTASY CONSOLES', systems: ['PICO-8', 'TIC-80', 'WASM-4', 'LowRes NX', 'Lutro', 'Uzebox', 'Vircon32'] },
