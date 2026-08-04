@@ -2717,7 +2717,7 @@
   {
     "id": 758,
     "name": "alisia dragoon (Europe)",
-    "creator": "inconnu",
+    "creator": "Bob",
     "system": "megadrivegenesis",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1GOiukFS2Ww6ySFiCI1-aMDefO7ZRGPSp/view?usp=sharing",
@@ -44467,7 +44467,9 @@
     "imageUrl": "https://drive.google.com/file/d/1iAx0hzDAaHel43ZdsSwhItPxGbIU1ADf/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1UU5ubSNondJIhr7-BkWSKHh96D3D3TSf/view?usp=sharing",
     "size": "1.4 MB",
-    "date": "2026-08-04"
+    "date": "2026-08-04",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 90629,
@@ -44478,7 +44480,9 @@
     "imageUrl": "https://drive.google.com/file/d/1Acf5353MUxbFwPYQHOukQNa0qp2ui23l/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1pfgkoAxDds6I_qWHQwjtZuZRAwib5hF5/view?usp=sharing",
     "size": "4.5 MB",
-    "date": "2026-08-04"
+    "date": "2026-08-04",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 92742,
@@ -44489,7 +44493,9 @@
     "imageUrl": "https://drive.google.com/file/d/1xenTTjfX-krGGcNmo5R1AepxtbWbu50k/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1eFAMGRJA4-V38SXI38NCkBH310N91W9F/view?usp=sharing",
     "size": "5.2 MB",
-    "date": "2026-08-04"
+    "date": "2026-08-04",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 92743,
@@ -44500,6 +44506,239 @@
     "imageUrl": "https://drive.google.com/file/d/1XLbNWfpr-Pd79sKeHuTdYMAwUoNZOgZ8/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1NLHJzRmDzOwBS4PZs7ikhDjMmqV3M6v1/view?usp=sharing",
     "size": "2.9 MB",
+    "date": "2026-08-04",
+    "onScreenScraper": false,
+    "isMulti": false
+  },
+  {
+    "id": 94971,
+    "name": "Ys IV - The Dawn of Ys",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1YgTnyM1cjifOfEa7Pyqikkt1szD_MDg9/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1d9y1bT4rr8FhAOt7Sm5L95X9W-T8BPT2/view?usp=sharing",
+    "size": "7.2 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94972,
+    "name": "Ys III - Wanderers from Ys (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1eEJ8xLEFzNeqv61XV6o0pqjSr-6Cv4dq/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1NGMuZCGMXKYb_6GnuySrPUGncB48CspV/view?usp=sharing",
+    "size": "3.0 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94973,
+    "name": "Ys Book I & II - Ancient Ys Vanished (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1segrh02AJHsKy7xKzP19Bc7ZNe0BTcHA/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ViejXv9LjpHNJYD4PfyLVKVPS9XKfjhG/view?usp=sharing",
+    "size": "1.6 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94974,
+    "name": "Wonder Boy III - Monster Lair (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1HZm49cHJ4Eg0x7XvWJG6HHzWByBGpuux/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1UB9TvDopt6JfMgjCMEsptjZDoJsEy24-/view?usp=sharing",
+    "size": "3.3 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94975,
+    "name": "Super Air Zonk (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1WnVgbIbh_FB6CxJIMuv4HxDpdF1wSUGX/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1gJLwJhXikAQ3fOOfN9O00KmOAuAGXgYs/view?usp=sharing",
+    "size": "1.8 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94976,
+    "name": "Riot Zone (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/14FOLS2tFBbftoeqrn03rFUblKZgO43-V/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1jnurK_aqhSSHq9mhK3LXSWfU-TG6J1YL/view?usp=sharing",
+    "size": "1.9 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94977,
+    "name": "Lords of Thunder (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1jcTXs1_4vUJPz36y5Ne7NKIc4dcJKSda/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/18ueYE5UKQW_Y5Qjkc38AfOL4h4K2vN1-/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94978,
+    "name": "Final Zone II (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1ToKDTqTUKejbHrsTsmVRv8Xgkm0-510x/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1nDWnMOMp6UPxgUSz-L-Sd-Chf_1Hqv9Q/view?usp=sharing",
+    "size": "2.8 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94979,
+    "name": "Fighting Street (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1B6aoRq1cXQg6BciaKIbo0cWDw2UYbZGY/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1VSIT6koQ4N7GeGHim5gWxHFxwjSSvFDE/view?usp=sharing",
+    "size": "3.1 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94980,
+    "name": "Exile 2 - Wicked Phenomenon (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/19YReec1fNXOGYJjZ9PicPZBwqamtbyPA/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1k3fDsoophuOIcVtUWY6uTa4k8M1TcHya/view?usp=sharing",
+    "size": "3.3 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94981,
+    "name": "Exile (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1AJTB-lfPu3A2aNxJsVUbpzjR7jqaNGb_/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/12u9LVohOoqZm4CLfNTmRue9bA0j9IZ3a/view?usp=sharing",
+    "size": "2.1 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94982,
+    "name": "Dynastic Hero, The (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1JKa_mJgld1Ytkvf84R-O1LClMRew3ygX/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1OCnHXiZJLYV6KKuAjEzqtBNVlKQcjByq/view?usp=sharing",
+    "size": "2.4 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94983,
+    "name": "Dungeon Explorer II (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1YfVPmdNODQaz2-ECxbcEiU0p4YMxxVzS/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1QdVqTu8cLF1ZDR9R7aJkbZQ0T_vKjIgb/view?usp=sharing",
+    "size": "3.3 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94984,
+    "name": "Dragon Slayer - The Legend of Heroes (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1ZLYX21zffnOrevtyr3dRHNv45LcKSQtY/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/167vdDmAH-O9ccGUgQ4_M7gJbzHTrR8mE/view?usp=sharing",
+    "size": "3.3 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94985,
+    "name": "Cosmic Fantasy 2 (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1JBg-zv4xEzfnXbf2shp3UfenoXkoms70/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1_H1GnAu6rkr96fIytQIlK5k39FifDgWW/view?usp=sharing",
+    "size": "1.9 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94986,
+    "name": "Castlevania - Rondo of Blood",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1XIN70GbaiUTGA7mAoxWPYgQ4f1tdE3GE/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/17pLwlpiGQqkM5bNU3EYfxk1ytyIiPEv7/view?usp=sharing",
+    "size": "5.3 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94987,
+    "name": "Camp California (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1tUkSs-kuvSxNHcqfjeYAk5JdTHvuiWnt/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Vo03fFBh8yBUoCyVWlOOWrwilG7TBrGL/view?usp=sharing",
+    "size": "2.8 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94988,
+    "name": "Buster Bros. (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/10r-3AIPGmRIYqG98AKBOGOIuP09AJ_op/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/14Cxv8bLkQab-R2uRylySRfSyoHw9vQjl/view?usp=sharing",
+    "size": "1.7 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94989,
+    "name": "Bonk 3 - Bonk's Big Adventure (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1WD3pYjO28RzqiCpOXhOMSTRM0e_by0Yo/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1zRFRil1U1IbMpuawyc4BknziOxkHVsSv/view?usp=sharing",
+    "size": "1.7 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94990,
+    "name": "Beyond Shadowgate (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1oj7sUxcrM7H6TV9CTFvFWgzQ0ymeBdh6/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1_H-nA_bFXyogWiHoypwH1umOrNY4OJQc/view?usp=sharing",
+    "size": "3.3 MB",
+    "date": "2026-08-04"
+  },
+  {
+    "id": 94991,
+    "name": "4 in 1 Super CD (USA)",
+    "creator": "KittieKatie",
+    "system": "pcenginecdturbografxcd",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1_ek0Z2XY3-wihwF_CTJzrfanFIckWy2B/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1aoetN3RnsaaKxY-bROS_kanlR5i3zEAU/view?usp=sharing",
+    "size": "6.2 MB",
     "date": "2026-08-04"
   }
 ]
