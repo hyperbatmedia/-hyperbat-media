@@ -115,7 +115,10 @@ const AdminPanel: FC<AdminPanelProps> = ({
           imageUrl: incoming.imageUrl || existing.imageUrl,
           category: incoming.category || existing.category,
           downloadUrl: incoming.downloadUrl || existing.downloadUrl,
-          date: incoming.date || existing.date,
+          // On garde la date déjà connue une fois posée : "date" = date d'ajout au
+          // catalogue, pas "dernière modif du fichier sur Drive" (qui bouge si le
+          // fichier est remplacé en place, ex: thèmes défaut retouchés à la main).
+          date: existing.date || incoming.date,
           onScreenScraper: incoming.onScreenScraper ?? existing.onScreenScraper ?? false,
           isMulti: incoming.isMulti ?? existing.isMulti ?? false,
         };
