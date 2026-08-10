@@ -44792,7 +44792,9 @@
     "imageUrl": "https://drive.google.com/file/d/1fRhXNG-tlPluAANJsQ9HVh2bFn5Y16nt/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1tKNwcxeCVoyMEkgQUCMGeSZ8_4bOABZ9/view?usp=sharing",
     "size": "1.8 MB",
-    "date": "2026-08-05"
+    "date": "2026-08-05",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 95077,
@@ -44803,7 +44805,9 @@
     "imageUrl": "https://drive.google.com/file/d/1SGSXqmDfqQlRa5NpOrbGXLghO5CAjOdE/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/17yIuIU-u6OLbE4XunN32bi9N8mDC_Gp0/view?usp=sharing",
     "size": "4.8 MB",
-    "date": "2026-08-05"
+    "date": "2026-08-05",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 95078,
@@ -44814,7 +44818,9 @@
     "imageUrl": "https://drive.google.com/file/d/1iA1sXKMYa_KJnewFisoE16OHWJaZNsgW/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1dQ_JCfYGclJihV2j22nrmvELIBlfRyZ6/view?usp=sharing",
     "size": "2.7 MB",
-    "date": "2026-08-04"
+    "date": "2026-08-04",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 95079,
@@ -44825,7 +44831,9 @@
     "imageUrl": "https://drive.google.com/file/d/17tIpx858paKf4R4hTxGmc4fwARHGy4Tt/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Sv327tzkHnDEXF_Vsrg_0P0gEbGOrDiQ/view?usp=sharing",
     "size": "4.0 MB",
-    "date": "2026-08-04"
+    "date": "2026-08-04",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 95610,
@@ -44836,7 +44844,9 @@
     "imageUrl": "https://drive.google.com/file/d/1N68z0CubSDlr_yVqrQkMJro2hfsvlgl_/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1GB4PkRwUL8F51Vyy1DVnMksSGvDVKMh4/view?usp=sharing",
     "size": "1.8 MB",
-    "date": "2026-08-05"
+    "date": "2026-08-05",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 95611,
@@ -44847,7 +44857,9 @@
     "imageUrl": "https://drive.google.com/file/d/1Jv0BcR7qIgdudtwVDZzUZpDcu312h-22/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1J2F6kyMJFY7T9ta_b6N9dWWoI5ihWLCB/view?usp=sharing",
     "size": "4.8 MB",
-    "date": "2026-08-05"
+    "date": "2026-08-05",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 95612,
@@ -44858,7 +44870,9 @@
     "imageUrl": "https://drive.google.com/file/d/1YDevzO4o0LLBrnNSrMVw8J8-TkyY32eP/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/158Ti9KmyvPsaspF-2iG1B_blVJBPrlyW/view?usp=sharing",
     "size": "2.7 MB",
-    "date": "2026-08-04"
+    "date": "2026-08-04",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 95613,
@@ -44869,7 +44883,9 @@
     "imageUrl": "https://drive.google.com/file/d/1uFcKp1c3UJktx5fmSt9r4XNA4OENmyut/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1XzHSjghbpeuJ1pCMPnomUgUB2MEabifp/view?usp=sharing",
     "size": "4.0 MB",
-    "date": "2026-08-04"
+    "date": "2026-08-04",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 96574,
@@ -44880,6 +44896,338 @@
     "imageUrl": "https://drive.google.com/file/d/17M-HZZc6hP4ptsDs2Qhwd5KmTrOpBhgj/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1TJYB8HojFZHhjQHfixSxQm1lfV3FlHLb/view?usp=sharing",
     "size": "3.9 MB",
-    "date": "2026-08-05"
+    "date": "2026-08-05",
+    "onScreenScraper": false,
+    "isMulti": false
+  },
+  {
+    "id": 96610,
+    "name": "namco2x6",
+    "creator": "Roni",
+    "system": "namcosystem2x6",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/10IM4rzBYE6rn7QlsouwwIw2KWH89bZ21/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1nLl9ANwQJd2_byUidiKrhb-I6y7wft04/view?usp=sharing",
+    "size": "4.9 MB",
+    "date": "2026-08-10"
+  },
+  {
+    "id": 96618,
+    "name": "_default",
+    "creator": "Roni",
+    "system": "namcosystem2x6",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1o9OEpQKSDupp3yfqVleatgGJJFJ4Xb9K/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1CQld3MWrU1vDrMLjfE-CrCHH6Ax26314/view?usp=sharing",
+    "size": "595.4 KB",
+    "date": "2026-08-10"
+  },
+  {
+    "id": 96649,
+    "name": "hangonjr",
+    "creator": "Roni",
+    "system": "segaclassic",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1RnGXaN5U0WJLzi0TBP0o-EBsVbpZ7FVL/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ZLsIiJyiEF_cHg-Gx5dYMSotLvBCtKd6/view?usp=sharing",
+    "size": "1.4 MB",
+    "date": "2026-08-09"
+  },
+  {
+    "id": 96650,
+    "name": "headon2",
+    "creator": "Roni",
+    "system": "segaclassic",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/17Vqo0yo2xBJIwmTKa3uST_cfOCzLtCtm/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/13L4CEr05LuQfSrWNbUarYacBHambLkD_/view?usp=sharing",
+    "size": "813.9 KB",
+    "date": "2026-08-09"
+  },
+  {
+    "id": 96651,
+    "name": "gloc",
+    "creator": "Roni",
+    "system": "segaclassic",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1QvQouFiDv3bI19XSnmCsCLbhcsPFLtKe/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ftxb3zn51rNxhslbmaiyaf3VGoI4nkDh/view?usp=sharing",
+    "size": "910.0 KB",
+    "date": "2026-08-09"
+  },
+  {
+    "id": 96652,
+    "name": "gigas",
+    "creator": "Roni",
+    "system": "segaclassic",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1julk-DULS_bq9m5MTjHkf2bdJTOqGzrc/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1_oyh4UPIIrYF3dydGAuUmDBBCWzO_sZi/view?usp=sharing",
+    "size": "2.5 MB",
+    "date": "2026-08-09"
+  },
+  {
+    "id": 96653,
+    "name": "gforce2",
+    "creator": "Roni",
+    "system": "segaclassic",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1_6DypdtZnh_iFn7r6oY0uFY4_No4eJIN/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1oWJ9H1O6w-eVT5pBOqoAHwzDrKk-PaB5/view?usp=sharing",
+    "size": "6.4 MB",
+    "date": "2026-08-09"
+  },
+  {
+    "id": 96654,
+    "name": "flicky",
+    "creator": "Roni",
+    "system": "segaclassic",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1iLnBAwkZBVomAZGekqTFOliDqh8RwUx0/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1DHHrtV6Ltnq8D9EPaSlZQETHAnbY9hXX/view?usp=sharing",
+    "size": "2.0 MB",
+    "date": "2026-08-08"
+  },
+  {
+    "id": 96655,
+    "name": "gardia",
+    "creator": "Roni",
+    "system": "segaclassic",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1z2SOdAJU_H5_zb1mDF51xg1woCCVm9OV/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1VT6SkNDRCzgWYOMK1JZNNiMSZ4m274b0/view?usp=sharing",
+    "size": "2.0 MB",
+    "date": "2026-08-07"
+  },
+  {
+    "id": 96656,
+    "name": "futspy",
+    "creator": "Roni",
+    "system": "segaclassic",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1DUIY1l6H_Mhpnr_ATLOekvOogII2bYuN/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1KqZzEMw5RXPKb-tOEnGZwhYM9fJQFFF-/view?usp=sharing",
+    "size": "1.5 MB",
+    "date": "2026-08-07"
+  },
+  {
+    "id": 96657,
+    "name": "flashgal",
+    "creator": "Roni",
+    "system": "segaclassic",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/19L2OHwyF67RTFJFTnS22Hcl6DmjMGnjh/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1LDO6aom36t6YXJ4WsjAroXruwPNj7LGS/view?usp=sharing",
+    "size": "1.6 MB",
+    "date": "2026-08-06"
+  },
+  {
+    "id": 96658,
+    "name": "dotrikun",
+    "creator": "Roni",
+    "system": "segaclassic",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1phFsQTJrN0yclC8picLA04_X8MvTTnNT/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/18mqBKti67DRUKTm7UB4R_ihApjtNhoT-/view?usp=sharing",
+    "size": "678.3 KB",
+    "date": "2026-08-06"
+  },
+  {
+    "id": 97205,
+    "name": "hangonjr",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1DpHvTLidoIYA8kUjh2VGb1Y0_wKd03dF/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Kt9DNXmmaJQTk6kliXmUFpSfqsid7-i-/view?usp=sharing",
+    "size": "1.4 MB",
+    "date": "2026-08-09"
+  },
+  {
+    "id": 97206,
+    "name": "martmast",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/14UvLmkkbvssESgTo3SjBfOYIcXo29DBU/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1fWHac49UXveU0AWyMt7juaXRp2k22Q8Z/view?usp=sharing",
+    "size": "6.0 MB",
+    "date": "2026-08-09"
+  },
+  {
+    "id": 97207,
+    "name": "headon2",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1kRXhZpVd-60ftygM5bkI3KxmLvnD499K/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1FaToVyHpIlfUKY6yxOAnjqLk_NfP0wGJ/view?usp=sharing",
+    "size": "813.9 KB",
+    "date": "2026-08-09"
+  },
+  {
+    "id": 97208,
+    "name": "gloc",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1YfH6lEDC4n6G596R4EYfkvBkdBsXX0fC/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1_-xSlaJXEhfPptUL75s0OJPIijVmMMzT/view?usp=sharing",
+    "size": "910.0 KB",
+    "date": "2026-08-09"
+  },
+  {
+    "id": 97209,
+    "name": "gigas",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1pFGWAFQ2ru5mFwKvxK5oR9rip9UORSyV/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1APAf3Wa8sxUH6eRdWAOg68wwLHYd5-Vn/view?usp=sharing",
+    "size": "2.5 MB",
+    "date": "2026-08-09"
+  },
+  {
+    "id": 97210,
+    "name": "gforce2",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1VNZFqVr6QUDIG-QuASNArXggA85snf-f/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1tvHgmbk9EZ3PbFD4Csbgp1OVJ2vEQh9q/view?usp=sharing",
+    "size": "6.4 MB",
+    "date": "2026-08-09"
+  },
+  {
+    "id": 97211,
+    "name": "flicky",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1tXV6pILzGHiORXiDW8QWrBm2qo4Ycyv5/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1t1a3Y_5zWw5xXTyqyVove8h0TMrRUJQO/view?usp=sharing",
+    "size": "2.0 MB",
+    "date": "2026-08-08"
+  },
+  {
+    "id": 97212,
+    "name": "lightbr (Alt)",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1yGDC4xW9MmOFv6kY8Yw9qfB5KWEFphY7/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1jaY3C1ghgtQjLI5Zv8Rmf6q6iNCIpKmR/view?usp=sharing",
+    "size": "4.8 MB",
+    "date": "2026-08-08"
+  },
+  {
+    "id": 97213,
+    "name": "3countb (Alt)",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1QXFqgaMVmKVS4zt_cuOnYwB33SzfvFdp/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1GLOdEPc_HEq0sdVSuQhibgXBfykdyGwm/view?usp=sharing",
+    "size": "4.1 MB",
+    "date": "2026-08-07"
+  },
+  {
+    "id": 97214,
+    "name": "gardia",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1NKzt8e1F8aEATOmQNvLUpoemdxqju0Da/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1bH2rhMtcFv-I-D3vvhVguHdap8OSimte/view?usp=sharing",
+    "size": "2.0 MB",
+    "date": "2026-08-07"
+  },
+  {
+    "id": 97215,
+    "name": "futspy",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/10U2_10NGgv3V8Qh1KmluWXoIhf1nv5QR/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1oMWwuCThyw9LOtkQrig8CqfBU911KGk5/view?usp=sharing",
+    "size": "1.5 MB",
+    "date": "2026-08-07"
+  },
+  {
+    "id": 97216,
+    "name": "flashgal",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/15Uvt5Y2LoMC26q5CTaxWDOuz4k8xDiKM/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1bsGmdx24HNBLc3Qc8r-AWQvj0zZL_9hu/view?usp=sharing",
+    "size": "1.6 MB",
+    "date": "2026-08-06"
+  },
+  {
+    "id": 97217,
+    "name": "dotrikun",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1xq8gG_IU2b5X-NrkcNJUMuvEHxmtUyiB/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1rC8BalLMpNn9ArezDEL3uccF9RkL4Y25/view?usp=sharing",
+    "size": "678.3 KB",
+    "date": "2026-08-06"
+  },
+  {
+    "id": 97218,
+    "name": "gundhara (Alt)",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/10JA2JmNMQTy2qWvgk9Z3gvra6LObGOdN/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/100tCneaWumn1JdW-WnRQaxJp3G0BBSM9/view?usp=sharing",
+    "size": "2.5 MB",
+    "date": "2026-08-06"
+  },
+  {
+    "id": 98052,
+    "name": "gundhara (Alt)",
+    "creator": "Roni",
+    "system": "banpresto",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1bSU3LTCI0fCI2sbkyIZgcdJ6jBqvF4t4/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1NtQs62_sghKfQ9SrRFNwvJWRQ6blC2z3/view?usp=sharing",
+    "size": "2.5 MB",
+    "date": "2026-08-06"
+  },
+  {
+    "id": 98174,
+    "name": "martmast",
+    "creator": "Roni",
+    "system": "igs",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1vJNoZcncwrPlHHS0OcBv4jsCvFzAD-kG/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/190uee81FMpiJTB3qlJdMR0perVInuLLh/view?usp=sharing",
+    "size": "6.0 MB",
+    "date": "2026-08-09"
+  },
+  {
+    "id": 98185,
+    "name": "3countb (Alt)",
+    "creator": "Roni",
+    "system": "neogeomvs",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1X6LbsMlrLX4RWzSz3yybB-oByW3CYuy9/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1uekaWUfzVJ_O39_gnWTX-IZVxPAapNQU/view?usp=sharing",
+    "size": "4.1 MB",
+    "date": "2026-08-07"
+  },
+  {
+    "id": 98606,
+    "name": "lightbr (Alt)",
+    "creator": "Roni",
+    "system": "taitoclassique",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/18FHO-v00qwTQMETdC5uHm66zOnJ-1qpU/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1N0C3vd2TLPdIDJIsfaRHguOL9eRUbvXe/view?usp=sharing",
+    "size": "4.8 MB",
+    "date": "2026-08-08"
   }
 ]
