@@ -102,14 +102,24 @@ async function getJson<T>(path: string, timeoutMs = 8000): Promise<T> {
 }
 
 /** Sonde l'agent. Renvoie ses infos s'il répond, null sinon (= fallback
- *  hyperbat://). Timeout court : ne doit pas retarder l'affichage. */
+ *  hyperbat://). Plusieurs tentatives : juste après install, l'agent peut
+ *  ne pas encore écouter, et Chrome/Edge bloquent parfois le 1er accès
+ *  localhost depuis HTTPS (Private Network Access) — d'où l'impression
+ *  qu'il faut ouvrir /ping à la main avant que la vitrine détecte l'agent. */
 export async function detectAgent(): Promise<AgentInfo | null> {
-  try {
-    const info = await getJson<AgentInfo>('/ping', 2500);
-    return info && info.app === 'hyperbatmedia-agent' ? info : null;
-  } catch {
-    return null;
+  const attempts = 4;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const info = await getJson<AgentInfo>('/ping', 2500);
+      if (info && info.app === 'hyperbatmedia-agent') return info;
+    } catch {
+      // retente ci-dessous
+    }
+    if (i < attempts - 1) {
+      await new Promise((r) => setTimeout(r, 700));
+    }
   }
+  return null;
 }
 
 /** Liste les ROMs du système (slug vitrine accepté, l'agent convertit),

@@ -356,8 +356,26 @@ export default function HyperBatMediaSite(): JSX.Element {
   useEffect(() => {
     if (!isRetrobat) return;
     let cancelled = false;
-    detectAgent().then((info) => { if (!cancelled) setAgentInfo(info); });
-    return () => { cancelled = true; };
+    // Sonde au chargement, puis de nouveau si la page redevient visible
+    // (ex. après avoir ouvert /ping dans un autre onglet, ou après que
+    // l'agent vient de démarrer) — sans écraser un agent déjà détecté
+    // par un échec ultérieur.
+    const probe = () => {
+      detectAgent().then((info) => {
+        if (!cancelled && info) setAgentInfo(info);
+      });
+    };
+    probe();
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') probe();
+    };
+    window.addEventListener('focus', probe);
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      cancelled = true;
+      window.removeEventListener('focus', probe);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
   }, [isRetrobat]);
 
   useEffect(() => {
