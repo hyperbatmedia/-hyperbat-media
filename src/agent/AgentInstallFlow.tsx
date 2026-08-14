@@ -7,10 +7,14 @@
 // progression téléchargement/extraction/installation.
 //
 // NAVIGATION : souris, clavier (flèches / Entrée / Échap) et manette.
-// La manette est lue directement via l'API Gamepad (D-Pad standard
-// indexes 12-15, SUD/EST depuis les paramètres d'URL btnSud/btnEst comme
-// le reste du mode kiosque, avec repli sur le mapping standard 0/1 -
-// nécessaire sur Batocera où aucun paramètre n'est calibré).
+// La manette est lue directement via l'API Gamepad, avec les mêmes règles
+// que useGamepadGridNav (la navigation de la grille) : D-Pad standard
+// indexes 12-15 OU axes 0/1 (nombre de manettes remontent leur croix via
+// les axes), boutons considérés appuyés si .pressed ou .value > 0.5,
+// répétition automatique quand une direction est maintenue. SUD/EST
+// viennent des paramètres d'URL btnSud/btnEst comme le reste du mode
+// kiosque, avec repli sur le mapping standard 0/1 - nécessaire sur
+// Batocera où aucun paramètre n'est calibré.
 //
 // ANTI-DOUBLE-DÉCLENCHEMENT : sous Windows, le launcher AHK relaie le
 // bouton SUD en VRAIE touche Entrée vers l'élément focusé (mécanisme
@@ -97,7 +101,10 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   useEffect(() => () => { mountedRef.current = false; }, []);
 
   // ── Garde anti-double-déclenchement (voir en-tête de fichier) ─────────
-  const lastActionRef = useRef(0);
+  // Initialisée à l'instant du montage : l'appui qui a OUVERT la fenêtre
+  // arrive souvent en double (Entrée AHK + Gamepad API) - le doublon, reçu
+  // juste après l'ouverture, ne doit pas cliquer le premier élément focusé.
+  const lastActionRef = useRef(Date.now());
   const guard = useCallback((fn: () => void) => {
     const now = Date.now();
     if (now - lastActionRef.current < ACTION_GUARD_MS) return;
@@ -294,25 +301,74 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   }, []);
 
   useEffect(() => {
+    const AXIS_THRESHOLD = 0.5;
+    const REPEAT_FIRST_MS = 350; // délai avant répétition (direction maintenue)
+    const REPEAT_NEXT_MS = 130;  // cadence de répétition ensuite
+
+    // Bouton appuyé : .pressed OU .value > 0.5 (gâchettes analogiques et
+    // certains pilotes ne mettent pas .pressed à true).
+    const isDown = (gp: Gamepad, i: number) => {
+      if (i < 0) return false;
+      const b = gp.buttons[i];
+      return b ? (b.pressed || b.value > AXIS_THRESHOLD) : false;
+    };
+
+    // Direction courante : D-Pad boutons 12-15 OU axes 0/1, exactement
+    // comme useGamepadGridNav (beaucoup de manettes remontent la croix
+    // via les axes plutôt que les boutons standard).
+    const readDir = (gp: Gamepad): 'up' | 'down' | 'left' | 'right' | null => {
+      const ax = gp.axes[0] || 0;
+      const ay = gp.axes[1] || 0;
+      if (isDown(gp, 12) || ay < -AXIS_THRESHOLD) return 'up';
+      if (isDown(gp, 13) || ay > AXIS_THRESHOLD) return 'down';
+      if (isDown(gp, 14) || ax < -AXIS_THRESHOLD) return 'left';
+      if (isDown(gp, 15) || ax > AXIS_THRESHOLD) return 'right';
+      return null;
+    };
+
     let prev: boolean[] | null = null;
+    let curDir: string | null = null;
+    let nextRepeat = 0;
+
+    const actDir = (dir: 'up' | 'down' | 'left' | 'right') => {
+      const hStep = stepRef.current === 'rom-pick' ? 10 : 1;
+      if (dir === 'up') move(-1);
+      else if (dir === 'down') move(1);
+      else if (dir === 'left') move(-hStep);
+      else move(hStep);
+    };
+
     const iv = setInterval(() => {
       const pads = navigator.getGamepads ? navigator.getGamepads() : [];
       let gp: Gamepad | null = null;
       for (const g of pads) { if (g && g.connected) { gp = g; break; } }
       if (!gp) return;
-      const pressed = gp.buttons.map((b) => b.pressed);
+      const pressed = gp.buttons.map((_, i) => isDown(gp!, i));
       // Premier tick : mémorise l'état SANS agir. La fenêtre vient d'être
       // ouverte par un appui SUD probablement encore enfoncé - sans ça, il
       // serait pris pour un nouvel appui et validerait aussitôt le premier
       // élément focusé.
-      if (prev === null) { prev = pressed; return; }
+      if (prev === null) { prev = pressed; curDir = readDir(gp); return; }
+
+      // Directions : déclenchement immédiat puis répétition si maintenue.
+      const now = performance.now();
+      const dir = readDir(gp);
+      if (dir) {
+        if (dir !== curDir) {
+          curDir = dir;
+          nextRepeat = now + REPEAT_FIRST_MS;
+          actDir(dir);
+        } else if (now >= nextRepeat) {
+          nextRepeat = now + REPEAT_NEXT_MS;
+          actDir(dir);
+        }
+      } else {
+        curDir = null;
+      }
+
+      // SUD / EST : front montant uniquement.
       const before = prev;
-      const just = (i: number) => !!pressed[i] && !before[i];
-      const hStep = stepRef.current === 'rom-pick' ? 10 : 1;
-      if (just(12)) move(-1);
-      if (just(13)) move(1);
-      if (just(14)) move(-hStep);
-      if (just(15)) move(hStep);
+      const just = (i: number) => i >= 0 && pressed[i] && !before[i];
       if (just(btnCfg.sud)) focusablesRef.current[focusIdxRef.current]?.click();
       if (just(btnCfg.est)) handleBack();
       prev = pressed;
@@ -367,6 +423,12 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     width: '100%', padding: '10px 12px', borderRadius: '8px',
     border: '2px solid #555', backgroundColor: '#111827', color: 'white',
     fontSize: '13px', outline: 'none',
+  };
+  // Petites "touches" du rappel des contrôles en bas de fenêtre
+  const kbdStyle: React.CSSProperties = {
+    display: 'inline-block', padding: '1px 7px', borderRadius: '4px',
+    backgroundColor: '#2b2b2b', border: '1px solid #555',
+    color: '#FFD700', fontSize: '11px', fontWeight: 700,
   };
 
   const stateLabel = (): string => {
@@ -576,8 +638,17 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
 
         {/* ── Rappel des contrôles ── */}
         {step !== 'installing' && (
-          <p style={{ color: '#555', fontSize: '10px', marginTop: '14px' }}>
-            D-Pad / flèches : naviguer • SUD / Entrée : valider • EST / Échap : annuler • souris OK
+          <p style={{
+            color: '#bbb', fontSize: '12px', marginTop: '16px', lineHeight: 2,
+            borderTop: '1px solid #333', paddingTop: '10px',
+          }}>
+            <span style={kbdStyle}>D-Pad</span> <span style={kbdStyle}>Flèches</span> naviguer
+            <span style={{ color: '#555', margin: '0 8px' }}>•</span>
+            <span style={kbdStyle}>SUD</span> <span style={kbdStyle}>Entrée</span> valider
+            <span style={{ color: '#555', margin: '0 8px' }}>•</span>
+            <span style={kbdStyle}>EST</span> <span style={kbdStyle}>Échap</span> annuler
+            <span style={{ color: '#555', margin: '0 8px' }}>•</span>
+            souris OK
           </p>
         )}
       </div>

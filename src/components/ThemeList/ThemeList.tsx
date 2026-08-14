@@ -199,11 +199,15 @@ const ThemeList: React.FC<ThemeListProps> = ({
     setCurrentPage((p) => Math.min(totalPages, p + 1));
   }, [setCurrentPage, totalPages]);
 
-  // Garde anti-double-déclenchement pour la pagination, active uniquement
-  // quand l'agent est présent : dans ce mode, un appui SUD sous Windows
-  // produit A LA FOIS un vrai Entrée relayé par l'AHK (clic natif sur le
-  // bouton focusé) ET un onSelect de useGamepadGridNav (lecture Gamepad
-  // directe) - sans garde, la page changerait de 2 à chaque appui.
+  // Garde anti-double-déclenchement, active uniquement quand l'agent est
+  // présent : dans ce mode, un appui SUD sous Windows produit A LA FOIS un
+  // vrai Entrée relayé par l'AHK (clic natif sur l'élément focusé) ET un
+  // onSelect de useGamepadGridNav (lecture Gamepad directe).
+  // La garde est PARTAGÉE par toutes les activations (pagination ET
+  // sélection d'un thème) : le premier des deux événements change par
+  // exemple de page, ce qui remet le focus dans la grille - sans garde
+  // commune, le second (quelques ms plus tard) sélectionnerait alors un
+  // jeu au lieu d'être absorbé.
   const pageActionGuardRef = useRef(0);
   const guardedPageAction = useCallback((fn: () => void) => {
     if (agentInfo) {
@@ -225,10 +229,15 @@ const ThemeList: React.FC<ThemeListProps> = ({
   // ci-dessus : pas de double effet.
   const handleGamepadSelect = useCallback(() => {
     if (!agentInfo) return;
-    if (paginationFocus === 'prev') { guardedPageAction(handlePrevPage); return; }
-    if (paginationFocus === 'next') { guardedPageAction(handleNextPage); return; }
-    const theme = themes[focusedIndex];
-    if (theme) setAgentInstallTheme(theme);
+    // TOUT passe par la garde (pas seulement la pagination) : voir le
+    // commentaire de guardedPageAction pour le scénario du double appui
+    // qui changeait de page PUIS sélectionnait un jeu.
+    guardedPageAction(() => {
+      if (paginationFocus === 'prev') { handlePrevPage(); return; }
+      if (paginationFocus === 'next') { handleNextPage(); return; }
+      const theme = themes[focusedIndex];
+      if (theme) setAgentInstallTheme(theme);
+    });
   }, [agentInfo, paginationFocus, guardedPageAction, handlePrevPage, handleNextPage, themes, focusedIndex]);
 
   const handleGamepadBack = useCallback(() => {
@@ -524,7 +533,14 @@ const ThemeList: React.FC<ThemeListProps> = ({
                     <a
                       ref={(el) => { actionRefs.current[index] = el; }}
                       href={`hyperbat://install?url=${encodeURIComponent(theme.downloadUrl)}&system=${encodeURIComponent(theme.system)}&category=${encodeURIComponent(theme.category)}&name=${encodeURIComponent(theme.name)}${theme.gameId ? `&gameId=${encodeURIComponent(String(theme.gameId))}` : ''}`}
-                      onClick={agentInfo ? (e) => { e.preventDefault(); setAgentInstallTheme(theme); } : undefined}
+                      onClick={agentInfo ? (e) => {
+                        e.preventDefault();
+                        // Même garde que la manette : un Entrée AHK retardé
+                        // (arrivé APRÈS un changement de page, quand ce
+                        // bouton vient de recevoir le focus DOM) ne doit pas
+                        // ouvrir la fenêtre d'installation.
+                        guardedPageAction(() => setAgentInstallTheme(theme));
+                      } : undefined}
                       className="flex-1 py-2 rounded flex items-center justify-center gap-2 font-bold text-xs border transition hover:brightness-110 active:scale-95"
                       style={{ backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white' }}>
                       🎮 Installer dans {agentInfo?.platform === 'batocera' ? 'Batocera' : 'RetroBat'}
