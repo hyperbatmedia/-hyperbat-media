@@ -156,3 +156,15 @@ export async function agentStartInstall(params: AgentInstallParams): Promise<{ i
 export function agentStatus(id: string): Promise<AgentJobStatus> {
   return getJson<AgentJobStatus>(`/status?id=${encodeURIComponent(id)}`, 5000);
 }
+
+/** Demande à EmulationStation de recharger ses listes (F5 sous Windows,
+ *  API web sous Batocera). À appeler de préférence juste après le clic OK
+ *  de fin d'installation — comme l'installeur AHK après le dialogue de succès. */
+export async function agentReloadEs(): Promise<boolean> {
+  try {
+    const r = await getJson<{ ok?: boolean }>('/reload-es', 12000);
+    return !!r?.ok;
+  } catch {
+    return false;
+  }
+}

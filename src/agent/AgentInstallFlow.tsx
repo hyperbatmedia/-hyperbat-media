@@ -28,7 +28,7 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import {
   AgentInfo, AgentJobStatus,
-  agentRoms, agentCheckConflict, agentStartInstall, agentStatus,
+  agentRoms, agentCheckConflict, agentStartInstall, agentStatus, agentReloadEs,
 } from './hyperbatAgent';
 
 /** Sous-ensemble de ThemeItem réellement nécessaire ici (compatible
@@ -90,6 +90,8 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   const [jobStatus, setJobStatus] = useState<AgentJobStatus | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [focusIdx, setFocusIdx] = useState(0);
+  const [esReloaded, setEsReloaded] = useState(false);
+  const [reloadingEs, setReloadingEs] = useState(false);
 
   const isCollection = theme.system === COLLECTION_SLUG || theme.category === 'collection';
   const isGameTheme = theme.category === 'game-themes' && theme.system !== COLLECTION_SLUG;
@@ -145,6 +147,22 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     // Pendant l'installation : impossible d'annuler (le job continue côté
     // agent de toute façon), on attend la fin pour garder le message final.
     if (stepRef.current === 'installing' || stepRef.current === 'init') return;
+    // Succès : EST = même chose que OK (rafraîchir ES puis fermer), comme
+    // l'unique bouton du dialogue AHK.
+    if (stepRef.current === 'done') {
+      guard(() => {
+        setReloadingEs(true);
+        void (async () => {
+          const ok = await agentReloadEs();
+          if (mountedRef.current) {
+            setEsReloaded(ok);
+            setReloadingEs(false);
+            onClose();
+          }
+        })();
+      });
+      return;
+    }
     guard(onClose);
   }, [guard, onClose]);
 
@@ -198,7 +216,14 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       }
       if (!mountedRef.current) return;
       setJobStatus(st);
-      if (st.state === 'done') { setStep('done'); return; }
+      if (st.state === 'done') {
+        // Comme l'AHK : le F5 se fait au moment du OK (geste utilisateur),
+        // pas ici en thread d'arrière-plan. esReloaded côté job reste false
+        // sous Windows ; la vitrine appellera agentReloadEs() au OK.
+        if (st.esReloaded) setEsReloaded(true);
+        setStep('done');
+        return;
+      }
       if (st.state === 'error') { setErrorMsg(errorText(st)); setStep('error'); return; }
     }
   }, [theme]);
@@ -410,6 +435,20 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     void launchInstall(finalName, romName, mode);
   };
 
+  // Miroir AHK : ReloadRetroBatThemes() apres fermeture du dialogue succes.
+  const finishWithReload = () => {
+    guard(() => {
+      if (reloadingEs) return;
+      setReloadingEs(true);
+      void (async () => {
+        const ok = esReloaded || await agentReloadEs();
+        if (mountedRef.current) setEsReloaded(ok);
+        if (mountedRef.current) setReloadingEs(false);
+        onClose();
+      })();
+    });
+  };
+
   // ── Styles partagés (palette du site) ─────────────────────────────────
   const btnStyle: React.CSSProperties = {
     padding: '10px 16px', borderRadius: '8px', border: '2px solid #FFD700',
@@ -612,13 +651,16 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
               ✓ « {pendingRef.current.romName || pendingRef.current.finalName} » installé avec succès !
             </p>
             <p style={{ color: '#aaa', fontSize: '12px', marginBottom: '14px' }}>
-              {jobStatus?.esReloaded
-                ? 'Les listes EmulationStation ont été rechargées automatiquement.'
-                : 'Pensez à rafraîchir les listes dans EmulationStation si le thème n\'apparaît pas.'}
+              {reloadingEs
+                ? 'Rafraîchissement d’EmulationStation…'
+                : esReloaded
+                  ? 'Les listes EmulationStation ont été rechargées automatiquement.'
+                  : 'Validez pour rafraîchir EmulationStation (comme F5) et fermer.'}
             </p>
             <button ref={reg} className="hbagent-focusable" style={btnStyle}
-              onClick={() => guard(onClose)}>
-              OK
+              onClick={finishWithReload}
+              disabled={reloadingEs}>
+              {reloadingEs ? 'Rafraîchissement…' : 'OK'}
             </button>
           </>
         )}
