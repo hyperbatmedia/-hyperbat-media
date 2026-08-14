@@ -463,12 +463,58 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     border: '2px solid #555', backgroundColor: '#111827', color: 'white',
     fontSize: '13px', outline: 'none',
   };
-  // Petites "touches" du rappel des contrôles en bas de fenêtre
-  const kbdStyle: React.CSSProperties = {
-    display: 'inline-block', padding: '1px 7px', borderRadius: '4px',
-    backgroundColor: '#2b2b2b', border: '1px solid #555',
-    color: '#FFD700', fontSize: '11px', fontWeight: 700,
+
+  // Icones manette (meme style que le bandeau bas de ThemeList)
+  const FaceBtn = ({ dir, color, label, action }: {
+    dir: 'sud' | 'est'; color: string; label: string; action: string;
+  }) => {
+    const dx = { sud: 0, est: 9 };
+    const dy = { sud: 9, est: 0 };
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+        <svg width="34" height="34" viewBox="-17 -17 34 34" aria-hidden="true">
+          <circle cx="0" cy="0" r="15" fill="#1a1a1a" stroke="#555" strokeWidth="1.5" />
+          <circle cx="0" cy="-9" r="2.8" fill="#444" />
+          <circle cx="0" cy="9" r="2.8" fill={dir === 'sud' ? color : '#444'} />
+          <circle cx="-9" cy="0" r="2.8" fill="#444" />
+          <circle cx="9" cy="0" r="2.8" fill={dir === 'est' ? color : '#444'} />
+          <circle cx="0" cy="0" r="2" fill="#333" />
+          <circle cx={dx[dir]} cy={dy[dir]} r="4" fill={color} opacity="0.95" />
+        </svg>
+        <span style={{ fontSize: '9px', fontWeight: 700, color: '#fff', lineHeight: 1 }}>{label}</span>
+        <span style={{ fontSize: '9px', color: '#aaa', lineHeight: 1 }}>{action}</span>
+      </div>
+    );
   };
+
+  const DPadIcon = () => (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+      <svg width="34" height="34" viewBox="-17 -17 34 34" aria-hidden="true">
+        <circle cx="0" cy="0" r="15" fill="#1a1a1a" stroke="#555" strokeWidth="1.5" />
+        <rect x="-2.5" y="-11" width="5" height="22" rx="1.5" fill="#666" />
+        <rect x="-11" y="-2.5" width="22" height="5" rx="1.5" fill="#666" />
+        <circle cx="0" cy="0" r="4" fill="#3a3a3a" stroke="#555" strokeWidth="1" />
+      </svg>
+      <span style={{ fontSize: '9px', fontWeight: 700, color: '#fff', lineHeight: 1 }}>D-PAD</span>
+      <span style={{ fontSize: '9px', color: '#aaa', lineHeight: 1 }}>Naviguer</span>
+    </div>
+  );
+
+  const KeyBadge = ({ label, action }: { label: string; action: string }) => (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+      <div style={{
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        minWidth: '34px', height: '22px', padding: '0 6px', borderRadius: '5px',
+        backgroundColor: '#2a2a2a', border: '1.5px solid #666',
+        fontSize: '9px', fontWeight: 700, color: '#fff',
+      }}>{label}</div>
+      <span style={{ fontSize: '9px', color: '#aaa', lineHeight: 1 }}>{action}</span>
+    </div>
+  );
+
+  const Sep = () => (
+    <div style={{ width: '1px', height: '52px', backgroundColor: '#2a2a2a', margin: '0 6px' }} />
+  );
 
   const stateLabel = (): string => {
     if (!jobStatus || jobStatus.state === 'starting') return 'Préparation…';
@@ -678,20 +724,23 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
           </>
         )}
 
-        {/* ── Rappel des contrôles ── */}
+        {/* ── Rappel des contrôles (meme icones que le bandeau de la vitrine) ── */}
         {step !== 'installing' && (
-          <p style={{
-            color: '#bbb', fontSize: '12px', marginTop: '16px', lineHeight: 2,
-            borderTop: '1px solid #333', paddingTop: '10px',
+          <div style={{
+            marginTop: '16px', borderTop: '1px solid #333', paddingTop: '12px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            gap: '4px', flexWrap: 'wrap',
           }}>
-            <span style={kbdStyle}>D-Pad</span> <span style={kbdStyle}>Flèches</span> naviguer
-            <span style={{ color: '#555', margin: '0 8px' }}>•</span>
-            <span style={kbdStyle}>SUD</span> <span style={kbdStyle}>Entrée</span> valider
-            <span style={{ color: '#555', margin: '0 8px' }}>•</span>
-            <span style={kbdStyle}>EST</span> <span style={kbdStyle}>Échap</span> annuler
-            <span style={{ color: '#555', margin: '0 8px' }}>•</span>
-            souris OK
-          </p>
+            <DPadIcon />
+            <Sep />
+            <FaceBtn dir="sud" color="#2ecc71" label="SUD" action="Valider" />
+            <Sep />
+            <FaceBtn dir="est" color="#e74c3c" label="EST" action="Annuler" />
+            <Sep />
+            <KeyBadge label="↑↓←→" action="Clavier" />
+            <KeyBadge label="Entrée" action="Valider" />
+            <KeyBadge label="Échap" action="Annuler" />
+          </div>
         )}
       </div>
     </div>
