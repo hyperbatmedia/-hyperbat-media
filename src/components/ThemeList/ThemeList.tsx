@@ -6,6 +6,8 @@ import { getThemeKey } from '../../utils/themeUtils';
 import Lightbox from '../Lightbox/Lightbox';
 import ScreenScraperBadge from '../ScreenScraperBadge';
 import { useGamepadGridNav } from '../../hooks/useGamepadGridNav';
+import AgentInstallFlow from '../../agent/AgentInstallFlow';
+import type { AgentInfo } from '../../agent/hyperbatAgent';
 
 import { CART_MAX } from '../../constants';
 
@@ -24,6 +26,9 @@ interface ThemeListProps {
   onCartRemove: (key: string) => void;
   sidebarCollapsed?: boolean;
   isRetrobat?: boolean;
+  /** Agent local HyperBat Media détecté (voir src/agent/hyperbatAgent.ts).
+   *  null = pas d'agent : l'installation passe par hyperbat:// comme avant. */
+  agentInfo?: AgentInfo | null;
 }
 
 const ThemeList: React.FC<ThemeListProps> = ({
@@ -31,12 +36,16 @@ const ThemeList: React.FC<ThemeListProps> = ({
   totalPages, currentPage, setCurrentPage, themesPerPage,
   systems,
   cart, onCartAdd, onCartRemove, sidebarCollapsed = false,
-  isRetrobat = false
+  isRetrobat = false,
+  agentInfo = null
 }) => {
   const [selectedTheme, setSelectedTheme] = useState<ThemeItem | null>(null);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const [revealedMature, setRevealedMature] = useState<Set<string>>(new Set());
   const [cartFullMsg, setCartFullMsg] = useState(false);
+  // Thème dont l'installation via l'agent local est en cours (fenêtre
+  // AgentInstallFlow ouverte). null = fenêtre fermée.
+  const [agentInstallTheme, setAgentInstallTheme] = useState<ThemeItem | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   // Capture unique des parametres manette/kiosque au tout premier rendu,
@@ -182,15 +191,45 @@ const ThemeList: React.FC<ThemeListProps> = ({
     }
   }, [cart, isInCart, onCartAdd, onCartRemove]);
 
-  // Le clic réel (Installer ET pagination) est désormais déclenché par un
-  // vrai Entrée envoyé par AHK sur l'élément réellement focusé (SendInput
-  // = "trusted" pour Chrome, contrairement à .click() en JS). On ne fait
-  // donc plus de .click() ici du tout, sous peine de double-déclenchement :
-  // un bouton <button> réagit nativement à Entrée quand il est focusé, donc
-  // l'AHK suffit seul pour la pagination aussi, pas besoin de dupliquer.
+  const handlePrevPage = useCallback(() => {
+    setCurrentPage((p) => Math.max(1, p - 1));
+  }, [setCurrentPage]);
+
+  const handleNextPage = useCallback(() => {
+    setCurrentPage((p) => Math.min(totalPages, p + 1));
+  }, [setCurrentPage, totalPages]);
+
+  // Garde anti-double-déclenchement pour la pagination, active uniquement
+  // quand l'agent est présent : dans ce mode, un appui SUD sous Windows
+  // produit A LA FOIS un vrai Entrée relayé par l'AHK (clic natif sur le
+  // bouton focusé) ET un onSelect de useGamepadGridNav (lecture Gamepad
+  // directe) - sans garde, la page changerait de 2 à chaque appui.
+  const pageActionGuardRef = useRef(0);
+  const guardedPageAction = useCallback((fn: () => void) => {
+    if (agentInfo) {
+      const now = Date.now();
+      if (now - pageActionGuardRef.current < 400) return;
+      pageActionGuardRef.current = now;
+    }
+    fn();
+  }, [agentInfo]);
+
+  // SANS agent : no-op volontaire - le clic réel (Installer ET pagination)
+  // est déclenché par un vrai Entrée envoyé par AHK sur l'élément réellement
+  // focusé (SendInput = "trusted" pour Chrome, contrairement à .click() en
+  // JS, exigence du protocole hyperbat://).
+  // AVEC agent : fetch() n'exige aucun geste "trusted", on déclenche donc
+  // directement ici - indispensable sur Batocera, où aucun AHK ne tourne
+  // pour relayer SUD vers Entrée. Sous Windows (AHK actif), l'ouverture de
+  // la fenêtre est idempotente et la pagination est protégée par la garde
+  // ci-dessus : pas de double effet.
   const handleGamepadSelect = useCallback(() => {
-    // no-op volontaire : voir commentaire ci-dessus
-  }, []);
+    if (!agentInfo) return;
+    if (paginationFocus === 'prev') { guardedPageAction(handlePrevPage); return; }
+    if (paginationFocus === 'next') { guardedPageAction(handleNextPage); return; }
+    const theme = themes[focusedIndex];
+    if (theme) setAgentInstallTheme(theme);
+  }, [agentInfo, paginationFocus, guardedPageAction, handlePrevPage, handleNextPage, themes, focusedIndex]);
 
   const handleGamepadBack = useCallback(() => {
     window.history.back();
@@ -216,16 +255,10 @@ const ThemeList: React.FC<ThemeListProps> = ({
     }
   }, [themes, focusedIndex, selectedTheme]);
 
-  const handlePrevPage = useCallback(() => {
-    setCurrentPage((p) => Math.max(1, p - 1));
-  }, [setCurrentPage]);
-
-  const handleNextPage = useCallback(() => {
-    setCurrentPage((p) => Math.min(totalPages, p + 1));
-  }, [setCurrentPage, totalPages]);
-
   useGamepadGridNav({
-    enabled: isRetrobat,
+    // Fenêtre d'installation agent ouverte : elle gère elle-même la manette
+    // (voir AgentInstallFlow), on suspend la navigation de la grille.
+    enabled: isRetrobat && !agentInstallTheme,
     lightboxOpen: selectedTheme !== null,
     onMove: moveFocus,
     onSelect: handleGamepadSelect,
@@ -484,13 +517,17 @@ const ThemeList: React.FC<ThemeListProps> = ({
 
                 <div className="flex gap-2">
                   {isRetrobat ? (
-                    // ── Mode RetroBat : bouton "Installer dans RetroBat" ──
+                    // ── Mode RetroBat/Batocera : bouton "Installer" ──
+                    // Agent local détecté : installation via son API (fetch),
+                    // fenêtre AgentInstallFlow. Sinon : protocole hyperbat://
+                    // historique (Windows uniquement), comportement inchangé.
                     <a
                       ref={(el) => { actionRefs.current[index] = el; }}
                       href={`hyperbat://install?url=${encodeURIComponent(theme.downloadUrl)}&system=${encodeURIComponent(theme.system)}&category=${encodeURIComponent(theme.category)}&name=${encodeURIComponent(theme.name)}${theme.gameId ? `&gameId=${encodeURIComponent(String(theme.gameId))}` : ''}`}
+                      onClick={agentInfo ? (e) => { e.preventDefault(); setAgentInstallTheme(theme); } : undefined}
                       className="flex-1 py-2 rounded flex items-center justify-center gap-2 font-bold text-xs border transition hover:brightness-110 active:scale-95"
                       style={{ backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white' }}>
-                      🎮 Installer dans RetroBat
+                      🎮 Installer dans {agentInfo?.platform === 'batocera' ? 'Batocera' : 'RetroBat'}
                     </a>
                   ) : (
                     // ── Mode normal : bouton Télécharger ──
@@ -527,7 +564,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
 
       {totalPages > 1 && (
         <div className="mt-8 flex items-center justify-center gap-2 flex-wrap">
-          <button ref={prevPageBtnRef} onClick={() => setCurrentPage(Math.max(1, currentPage - 1))} disabled={currentPage === 1}
+          <button ref={prevPageBtnRef} onClick={() => guardedPageAction(handlePrevPage)} disabled={currentPage === 1}
             className="px-4 py-2 rounded-lg font-bold border-2 transition disabled:opacity-50 disabled:cursor-not-allowed"
             style={{
               backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white',
@@ -568,7 +605,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
               </>
             )}
           </div>
-          <button ref={nextPageBtnRef} onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))} disabled={currentPage === totalPages}
+          <button ref={nextPageBtnRef} onClick={() => guardedPageAction(handleNextPage)} disabled={currentPage === totalPages}
             className="px-4 py-2 rounded-lg font-bold border-2 transition disabled:opacity-50 disabled:cursor-not-allowed"
             style={{
               backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white',
@@ -593,6 +630,16 @@ const ThemeList: React.FC<ThemeListProps> = ({
         allThemes={allFilteredThemes}
         onNavigate={setSelectedTheme}
       />
+
+      {/* ── Fenêtre d'installation via l'agent local (remplace hyperbat://
+          quand l'agent est détecté) : choix de ROM, conflits, progression ── */}
+      {agentInstallTheme && agentInfo && (
+        <AgentInstallFlow
+          theme={agentInstallTheme}
+          agentInfo={agentInfo}
+          onClose={() => setAgentInstallTheme(null)}
+        />
+      )}
 
       {/* ── Bandeau de controles manette (mode kiosk RetroBat uniquement) ── */}
       {isRetrobat && (() => {
@@ -708,6 +755,15 @@ const ThemeList: React.FC<ThemeListProps> = ({
                 <Sep/>
                 <span style={{ fontSize:'12px', fontWeight:700, color:'#FFD700', whiteSpace:'nowrap' }}>
                   Page {currentPage}/{totalPages}
+                </span>
+              </>
+            )}
+            {/* Agent local détecté : installation directe (sans hyperbat://) */}
+            {agentInfo && (
+              <>
+                <Sep/>
+                <span style={{ fontSize:'10px', fontWeight:700, color:'#2ecc71', whiteSpace:'nowrap' }}>
+                  ● Agent {agentInfo.platform === 'batocera' ? 'Batocera' : 'RetroBat'}
                 </span>
               </>
             )}

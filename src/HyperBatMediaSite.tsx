@@ -22,6 +22,8 @@ import RecapThemesPanel from './components/RecapThemesPanel/RecapThemesPanel';
 import ThemePacksPanel from './components/ThemePacksPanel/ThemePacksPanel';
 import bobSystemsData from './data/bob-systems.json';
 import { resolveBobSlug } from './data/systemAliases';
+import { detectAgent } from './agent/hyperbatAgent';
+import type { AgentInfo } from './agent/hyperbatAgent';
 
 const THEMES_PER_PAGE = 20;
 
@@ -344,6 +346,20 @@ export default function HyperBatMediaSite(): JSX.Element {
   // ─────────────────────────────────────────────────────────────────────────
   const [isRetrobat, setIsRetrobat] = useState<boolean>(false);
 
+  // ── Agent local HyperBat Media (installation directe Windows/Batocera,
+  // remplaçant de hyperbat:// - voir src/agent/hyperbatAgent.ts) ─────────
+  // Sondé UNIQUEMENT en mode kiosque (?retrobat=1) : aucun fetch vers
+  // localhost ne part pour un visiteur web normal. null = pas d'agent,
+  // le bouton "Installer" garde le comportement hyperbat:// historique.
+  const [agentInfo, setAgentInfo] = useState<AgentInfo | null>(null);
+
+  useEffect(() => {
+    if (!isRetrobat) return;
+    let cancelled = false;
+    detectAgent().then((info) => { if (!cancelled) setAgentInfo(info); });
+    return () => { cancelled = true; };
+  }, [isRetrobat]);
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const searchParam   = params.get('search');
@@ -392,7 +408,9 @@ export default function HyperBatMediaSite(): JSX.Element {
     // ici uniquement par compatibilite ascendante avec d'anciens liens.
     if (searchParam || systemParam || categoryParam || retrobatParam) {
       const preserved = new URLSearchParams();
-      const gamepadKeys = ['btnSud', 'btnEst', 'btnNord', 'btnTriggerL', 'btnTriggerR', 'btnL1', 'btnL2', 'btnHotkey', 'controllerType'];
+      // 'agent' : URL de l'agent local (envoyée par le lanceur Batocera),
+      // relue par hyperbatAgent.ts - préservée pour survivre à un reload.
+      const gamepadKeys = ['btnSud', 'btnEst', 'btnNord', 'btnTriggerL', 'btnTriggerR', 'btnL1', 'btnL2', 'btnHotkey', 'controllerType', 'agent'];
       gamepadKeys.forEach((key) => {
         const value = params.get(key);
         if (value !== null) preserved.set(key, value);
@@ -841,7 +859,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                   themesPerPage={THEMES_PER_PAGE} systems={systemsLogic.systems}
                   cart={cart} onCartAdd={handleCartAdd} onCartRemove={handleCartRemove}
                   sidebarCollapsed={sidebarCollapsed}
-                  isRetrobat={isRetrobat} />
+                  isRetrobat={isRetrobat} agentInfo={agentInfo} />
               )}
             </main>
           </div>
