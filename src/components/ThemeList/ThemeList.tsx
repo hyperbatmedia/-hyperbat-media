@@ -208,15 +208,38 @@ const ThemeList: React.FC<ThemeListProps> = ({
   // exemple de page, ce qui remet le focus dans la grille - sans garde
   // commune, le second (quelques ms plus tard) sélectionnerait alors un
   // jeu au lieu d'être absorbé.
+  // 500 ms : laisse aussi le temps d'absorber l'appui OK de fin
+  // d'installation (fermeture de la fenêtre puis re-clic "Installer").
   const pageActionGuardRef = useRef(0);
   const guardedPageAction = useCallback((fn: () => void) => {
     if (agentInfo) {
       const now = Date.now();
-      if (now - pageActionGuardRef.current < 400) return;
+      if (now - pageActionGuardRef.current < 500) return;
       pageActionGuardRef.current = now;
     }
     fn();
   }, [agentInfo]);
+
+  // Après fermeture de la fenêtre d'installation : suspendre brièvement
+  // useGamepadGridNav. Sinon, au remount du hook (enabled repasse à true),
+  // l'état "précédent" des boutons est vide et un SUD encore enfoncé (ou
+  // son doublon AHK) est pris pour un nouvel appui → réouverture de
+  // l'installation sur la carte focusée.
+  const [suppressGridNav, setSuppressGridNav] = useState(false);
+  const suppressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const closeAgentInstall = useCallback(() => {
+    pageActionGuardRef.current = Date.now();
+    setAgentInstallTheme(null);
+    setSuppressGridNav(true);
+    if (suppressTimerRef.current) clearTimeout(suppressTimerRef.current);
+    suppressTimerRef.current = setTimeout(() => {
+      setSuppressGridNav(false);
+      suppressTimerRef.current = null;
+    }, 500);
+  }, []);
+  useEffect(() => () => {
+    if (suppressTimerRef.current) clearTimeout(suppressTimerRef.current);
+  }, []);
 
   // SANS agent : no-op volontaire - le clic réel (Installer ET pagination)
   // est déclenché par un vrai Entrée envoyé par AHK sur l'élément réellement
@@ -265,9 +288,9 @@ const ThemeList: React.FC<ThemeListProps> = ({
   }, [themes, focusedIndex, selectedTheme]);
 
   useGamepadGridNav({
-    // Fenêtre d'installation agent ouverte : elle gère elle-même la manette
-    // (voir AgentInstallFlow), on suspend la navigation de la grille.
-    enabled: isRetrobat && !agentInstallTheme,
+    // Fenêtre d'installation agent ouverte OU juste fermée : suspendre
+    // la navigation de la grille (voir closeAgentInstall / suppressGridNav).
+    enabled: isRetrobat && !agentInstallTheme && !suppressGridNav,
     lightboxOpen: selectedTheme !== null,
     onMove: moveFocus,
     onSelect: handleGamepadSelect,
@@ -653,7 +676,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
         <AgentInstallFlow
           theme={agentInstallTheme}
           agentInfo={agentInfo}
-          onClose={() => setAgentInstallTheme(null)}
+          onClose={closeAgentInstall}
         />
       )}
 
