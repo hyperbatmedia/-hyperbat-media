@@ -166,6 +166,21 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     guard(onClose);
   }, [guard, onClose]);
 
+  // Miroir AHK : ReloadRetroBatThemes() apres fermeture du dialogue succes.
+  // Place AVANT le hook manette : SUD sur l'ecran "done" l'appelle directement.
+  const finishWithReload = useCallback(() => {
+    guard(() => {
+      if (reloadingEs) return;
+      setReloadingEs(true);
+      void (async () => {
+        const ok = esReloaded || await agentReloadEs();
+        if (mountedRef.current) setEsReloaded(ok);
+        if (mountedRef.current) setReloadingEs(false);
+        onClose();
+      })();
+    });
+  }, [guard, reloadingEs, esReloaded, onClose]);
+
   // ── Lancement de l'installation + suivi du job ────────────────────────
   const launchInstall = useCallback(async (
     finalName: string, romName: string, onConflict: 'replace' | 'rename' | 'abort',
@@ -392,14 +407,22 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       }
 
       // SUD / EST : front montant uniquement.
+      // Sur 'done' / 'error', appeler l'action directement (comme EST) :
+      // le .click() sur l'élément focusé rate souvent juste après le
+      // passage installing→done (focusables pas encore synchronisés).
       const before = prev;
       const just = (i: number) => i >= 0 && pressed[i] && !before[i];
-      if (just(btnCfg.sud)) focusablesRef.current[focusIdxRef.current]?.click();
+      if (just(btnCfg.sud)) {
+        const s = stepRef.current;
+        if (s === 'done') finishWithReload();
+        else if (s === 'error') guard(onClose);
+        else focusablesRef.current[focusIdxRef.current]?.click();
+      }
       if (just(btnCfg.est)) handleBack();
       prev = pressed;
     }, 80);
     return () => clearInterval(iv);
-  }, [btnCfg, move, handleBack]);
+  }, [btnCfg, move, handleBack, finishWithReload, guard, onClose]);
 
   // ── Clavier : flèches / Échap (Entrée est natif sur l'élément focusé) ──
   useEffect(() => {
@@ -433,20 +456,6 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   const resolveConflict = (mode: 'replace' | 'rename') => {
     const { romName, finalName } = pendingRef.current;
     void launchInstall(finalName, romName, mode);
-  };
-
-  // Miroir AHK : ReloadRetroBatThemes() apres fermeture du dialogue succes.
-  const finishWithReload = () => {
-    guard(() => {
-      if (reloadingEs) return;
-      setReloadingEs(true);
-      void (async () => {
-        const ok = esReloaded || await agentReloadEs();
-        if (mountedRef.current) setEsReloaded(ok);
-        if (mountedRef.current) setReloadingEs(false);
-        onClose();
-      })();
-    });
   };
 
   // ── Styles partagés (palette du site) ─────────────────────────────────
