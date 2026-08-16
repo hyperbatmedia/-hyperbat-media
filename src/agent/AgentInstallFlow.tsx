@@ -315,6 +315,9 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   }, [roms, filter]);
 
   useEffect(() => {
+    // Nouvelle etape : autoriser un SUD immediat (sinon la garde 400 ms
+    // heritee du choix de ROM bloque Remplacer / OK).
+    lastActionRef.current = 0;
     if (step === 'rom-pick' && suggested) {
       const idx = filteredRoms.indexOf(suggested);
       setFocusIdx(idx >= 0 ? idx : 0);
@@ -335,34 +338,36 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       const n = parseInt(v, 10);
       return Number.isFinite(n) && n >= 0 ? n : def;
     };
-    // Repli sur le "standard gamepad" W3C (SUD=0, EST=1) : cas Batocera,
-    // où le lanceur n'envoie aucun paramètre de calibration.
+    // Repli W3C (SUD=0, EST=1). Sur Batocera le lanceur envoie souvent
+    // une calibration (ex. btnSud=1) via l'URL.
     return { sud: num('btnSud', 0), est: num('btnEst', 1) };
   }, []);
 
+  // Rempli plus bas quand resolveConflict est declare
+  const resolveConflictRef = useRef<(mode: 'replace' | 'rename') => void>(() => {});
+
   useEffect(() => {
     const AXIS_THRESHOLD = 0.5;
-    const REPEAT_FIRST_MS = 350; // délai avant répétition (direction maintenue)
-    const REPEAT_NEXT_MS = 130;  // cadence de répétition ensuite
+    const REPEAT_FIRST_MS = 350;
+    const REPEAT_NEXT_MS = 130;
 
-    // Bouton appuyé : .pressed OU .value > 0.5 (gâchettes analogiques et
-    // certains pilotes ne mettent pas .pressed à true).
     const isDown = (gp: Gamepad, i: number) => {
       if (i < 0) return false;
       const b = gp.buttons[i];
       return b ? (b.pressed || b.value > AXIS_THRESHOLD) : false;
     };
 
-    // Direction courante : D-Pad boutons 12-15 OU axes 0/1, exactement
-    // comme useGamepadGridNav (beaucoup de manettes remontent la croix
-    // via les axes plutôt que les boutons standard).
+    // D-Pad : boutons 12-15, stick axes 0/1, et hat axes 6/7 (souvent
+    // sous Linux / Flatpak Chromium).
     const readDir = (gp: Gamepad): 'up' | 'down' | 'left' | 'right' | null => {
       const ax = gp.axes[0] || 0;
       const ay = gp.axes[1] || 0;
-      if (isDown(gp, 12) || ay < -AXIS_THRESHOLD) return 'up';
-      if (isDown(gp, 13) || ay > AXIS_THRESHOLD) return 'down';
-      if (isDown(gp, 14) || ax < -AXIS_THRESHOLD) return 'left';
-      if (isDown(gp, 15) || ax > AXIS_THRESHOLD) return 'right';
+      const hx = gp.axes.length > 6 ? (gp.axes[6] || 0) : 0;
+      const hy = gp.axes.length > 7 ? (gp.axes[7] || 0) : 0;
+      if (isDown(gp, 12) || ay < -AXIS_THRESHOLD || hy < -AXIS_THRESHOLD) return 'up';
+      if (isDown(gp, 13) || ay > AXIS_THRESHOLD || hy > AXIS_THRESHOLD) return 'down';
+      if (isDown(gp, 14) || ax < -AXIS_THRESHOLD || hx < -AXIS_THRESHOLD) return 'left';
+      if (isDown(gp, 15) || ax > AXIS_THRESHOLD || hx > AXIS_THRESHOLD) return 'right';
       return null;
     };
 
@@ -371,11 +376,36 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     let nextRepeat = 0;
 
     const actDir = (dir: 'up' | 'down' | 'left' | 'right') => {
-      const hStep = stepRef.current === 'rom-pick' ? 10 : 1;
+      const s = stepRef.current;
+      const hStep = s === 'rom-pick' ? 10 : 1;
       if (dir === 'up') move(-1);
       else if (dir === 'down') move(1);
       else if (dir === 'left') move(-hStep);
       else move(hStep);
+    };
+
+    const activateSud = () => {
+      const s = stepRef.current;
+      if (s === 'done') {
+        finishWithReload();
+        return;
+      }
+      if (s === 'error') {
+        guard(onClose);
+        return;
+      }
+      if (s === 'conflict') {
+        // Direct (comme OK) : ne pas dependre de .click() + garde du onClick
+        const idx = focusIdxRef.current;
+        if (idx === 1) guard(() => resolveConflictRef.current('rename'));
+        else if (idx === 2) guard(onClose);
+        else guard(() => resolveConflictRef.current('replace'));
+        return;
+      }
+      // rom-pick / collection-name : activer l'element focusé
+      const nodes = document.querySelectorAll<HTMLElement>('.hbagent-focusable');
+      const el = nodes[focusIdxRef.current] || focusablesRef.current[focusIdxRef.current];
+      el?.click();
     };
 
     const iv = setInterval(() => {
@@ -384,13 +414,9 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       for (const g of pads) { if (g && g.connected) { gp = g; break; } }
       if (!gp) return;
       const pressed = gp.buttons.map((_, i) => isDown(gp!, i));
-      // Premier tick : mémorise l'état SANS agir. La fenêtre vient d'être
-      // ouverte par un appui SUD probablement encore enfoncé - sans ça, il
-      // serait pris pour un nouvel appui et validerait aussitôt le premier
-      // élément focusé.
+      // Premier tick apres (re)montage : snapshot sans agir
       if (prev === null) { prev = pressed; curDir = readDir(gp); return; }
 
-      // Directions : déclenchement immédiat puis répétition si maintenue.
       const now = performance.now();
       const dir = readDir(gp);
       if (dir) {
@@ -406,23 +432,14 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         curDir = null;
       }
 
-      // SUD / EST : front montant uniquement.
-      // Sur 'done' / 'error', appeler l'action directement (comme EST) :
-      // le .click() sur l'élément focusé rate souvent juste après le
-      // passage installing→done (focusables pas encore synchronisés).
       const before = prev;
       const just = (i: number) => i >= 0 && pressed[i] && !before[i];
-      if (just(btnCfg.sud)) {
-        const s = stepRef.current;
-        if (s === 'done') finishWithReload();
-        else if (s === 'error') guard(onClose);
-        else focusablesRef.current[focusIdxRef.current]?.click();
-      }
+      if (just(btnCfg.sud)) activateSud();
       if (just(btnCfg.est)) handleBack();
       prev = pressed;
     }, 80);
     return () => clearInterval(iv);
-  }, [btnCfg, move, handleBack, finishWithReload, guard, onClose]);
+  }, [btnCfg, move, handleBack, finishWithReload, guard, onClose, step]);
 
   // ── Clavier : flèches / Échap (Entrée est natif sur l'élément focusé) ──
   useEffect(() => {
@@ -457,6 +474,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     const { romName, finalName } = pendingRef.current;
     void launchInstall(finalName, romName, mode);
   };
+  resolveConflictRef.current = resolveConflict;
 
   // ── Styles partagés (palette du site) ─────────────────────────────────
   const btnStyle: React.CSSProperties = {
