@@ -114,13 +114,22 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     fn();
   }, []);
 
-  // ── Chaîne de focus : les éléments s'enregistrent dans l'ordre du
-  // rendu ; le D-Pad / les flèches déplacent focusIdx dans cette liste et
-  // le vrai focus DOM suit (indispensable pour que l'Entrée relayée par
-  // l'AHK Windows active le bon élément).
-  const focusablesRef = useRef<HTMLElement[]>([]);
-  focusablesRef.current = [];
-  const reg = (el: HTMLElement | null) => { if (el) focusablesRef.current.push(el); };
+  // ── Chaîne de focus : query DOM dans la modale (pas un tableau vidé a
+  // chaque render — sinon le poll manette 80 ms tombe sur length=0 et
+  // move() reste a 0 = bloque sur Remplacer ; seul EST/Annuler marchait).
+  const getFocusables = useCallback((): HTMLElement[] => {
+    const root = document.querySelector('[data-hbagent-flow]');
+    const scope = root || document;
+    return Array.from(
+      scope.querySelectorAll<HTMLElement>('.hbagent-focusable'),
+    ).filter((el) => {
+      if ((el as HTMLButtonElement).disabled) return false;
+      return el.getClientRects().length > 0;
+    });
+  }, []);
+
+  // Classe hbagent-focusable suffit ; ref no-op pour ne pas toucher tout le JSX.
+  const reg = (_el: HTMLElement | null) => {};
 
   const focusIdxRef = useRef(0);
   focusIdxRef.current = focusIdx;
@@ -129,57 +138,54 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
 
   const move = useCallback((delta: number) => {
     setFocusIdx((i) => {
-      const max = focusablesRef.current.length - 1;
+      const max = getFocusables().length - 1;
       if (max < 0) return 0;
       return Math.min(Math.max(i + delta, 0), max);
     });
-  }, []);
+  }, [getFocusables]);
 
   useEffect(() => {
-    const el = focusablesRef.current[focusIdx];
+    const nodes = getFocusables();
+    const el = nodes[focusIdx];
     if (el) {
       el.focus({ preventScroll: true });
       el.scrollIntoView({ block: 'nearest' });
     }
-  }, [focusIdx, step, filter, roms]);
-
-  const handleBack = useCallback(() => {
-    // Pendant l'installation : impossible d'annuler (le job continue côté
-    // agent de toute façon), on attend la fin pour garder le message final.
-    if (stepRef.current === 'installing' || stepRef.current === 'init') return;
-    // Succès : EST = même chose que OK (rafraîchir ES puis fermer), comme
-    // l'unique bouton du dialogue AHK.
-    if (stepRef.current === 'done') {
-      guard(() => {
-        setReloadingEs(true);
-        void (async () => {
-          const ok = await agentReloadEs();
-          if (mountedRef.current) {
-            setEsReloaded(ok);
-            setReloadingEs(false);
-            onClose();
-          }
-        })();
-      });
-      return;
-    }
-    guard(onClose);
-  }, [guard, onClose]);
+  }, [focusIdx, step, filter, roms, getFocusables]);
 
   // Miroir AHK : ReloadRetroBatThemes() apres fermeture du dialogue succes.
-  // Place AVANT le hook manette : SUD sur l'ecran "done" l'appelle directement.
+  // Place AVANT le hook manette : SUD/EST sur l'ecran "done" l'appelle.
+  // Delai mini d'affichage : sous Batocera /reload-es repond souvent en
+  // quelques ms — sans pause, "Rafraichissement…" n'apparait pas et le SUD
+  // encore enfonce rebondit sur Installer a la fermeture.
+  const RELOAD_UI_MIN_MS = 1200;
   const finishWithReload = useCallback(() => {
     guard(() => {
       if (reloadingEs) return;
       setReloadingEs(true);
       void (async () => {
+        const started = Date.now();
         const ok = esReloaded || await agentReloadEs();
+        const left = RELOAD_UI_MIN_MS - (Date.now() - started);
+        if (left > 0) await new Promise((r) => setTimeout(r, left));
         if (mountedRef.current) setEsReloaded(ok);
         if (mountedRef.current) setReloadingEs(false);
         onClose();
       })();
     });
   }, [guard, reloadingEs, esReloaded, onClose]);
+
+  const handleBack = useCallback(() => {
+    // Pendant l'installation : impossible d'annuler (le job continue côté
+    // agent de toute façon), on attend la fin pour garder le message final.
+    if (stepRef.current === 'installing' || stepRef.current === 'init') return;
+    // Succès : EST = même chose que OK (délai + fermeture), comme l'AHK.
+    if (stepRef.current === 'done') {
+      finishWithReload();
+      return;
+    }
+    guard(onClose);
+  }, [guard, onClose, finishWithReload]);
 
   // ── Lancement de l'installation + suivi du job ────────────────────────
   const launchInstall = useCallback(async (
@@ -403,8 +409,8 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         return;
       }
       // rom-pick / collection-name : activer l'element focusé
-      const nodes = document.querySelectorAll<HTMLElement>('.hbagent-focusable');
-      const el = nodes[focusIdxRef.current] || focusablesRef.current[focusIdxRef.current];
+      const nodes = getFocusables();
+      const el = nodes[focusIdxRef.current];
       el?.click();
     };
 
@@ -439,7 +445,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       prev = pressed;
     }, 80);
     return () => clearInterval(iv);
-  }, [btnCfg, move, handleBack, finishWithReload, guard, onClose, step]);
+  }, [btnCfg, move, handleBack, finishWithReload, guard, onClose, step, getFocusables]);
 
   // ── Clavier : flèches / Échap (Entrée est natif sur l'élément focusé) ──
   useEffect(() => {
@@ -551,7 +557,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   };
 
   return (
-    <div style={{
+    <div data-hbagent-flow style={{
       position: 'fixed', inset: 0, zIndex: 10000,
       backgroundColor: 'rgba(0,0,0,0.85)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',

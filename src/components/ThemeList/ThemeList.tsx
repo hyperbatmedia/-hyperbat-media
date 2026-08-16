@@ -208,13 +208,14 @@ const ThemeList: React.FC<ThemeListProps> = ({
   // exemple de page, ce qui remet le focus dans la grille - sans garde
   // commune, le second (quelques ms plus tard) sélectionnerait alors un
   // jeu au lieu d'être absorbé.
-  // 500 ms : laisse aussi le temps d'absorber l'appui OK de fin
-  // d'installation (fermeture de la fenêtre puis re-clic "Installer").
+  // 1500 ms : couvre le delai mini "Rafraichissement…" (~1,2 s) + marge —
+  // sinon le SUD qui a valide OK est relu comme un nouvel Installer.
+  const GRID_ACTION_GUARD_MS = 1500;
   const pageActionGuardRef = useRef(0);
   const guardedPageAction = useCallback((fn: () => void) => {
     if (agentInfo) {
       const now = Date.now();
-      if (now - pageActionGuardRef.current < 500) return;
+      if (now - pageActionGuardRef.current < GRID_ACTION_GUARD_MS) return;
       pageActionGuardRef.current = now;
     }
     fn();
@@ -235,7 +236,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
     suppressTimerRef.current = setTimeout(() => {
       setSuppressGridNav(false);
       suppressTimerRef.current = null;
-    }, 500);
+    }, GRID_ACTION_GUARD_MS);
   }, []);
   useEffect(() => () => {
     if (suppressTimerRef.current) clearTimeout(suppressTimerRef.current);
