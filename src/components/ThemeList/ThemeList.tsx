@@ -29,6 +29,16 @@ interface ThemeListProps {
   /** Agent local HyperBat Media détecté (voir src/agent/hyperbatAgent.ts).
    *  null = pas d'agent : l'installation passe par hyperbat:// comme avant. */
   agentInfo?: AgentInfo | null;
+  /** Recherche thèmes (au-dessus de la grille). */
+  searchInputRef?: React.RefObject<HTMLInputElement | null> | React.MutableRefObject<HTMLInputElement | null>;
+  searchHasValue?: boolean;
+  onSearchClear?: () => void;
+  onSearchGamepadFocusChange?: (focused: boolean) => void;
+  /** Recherche systèmes (sidebar gauche). Voir aussi Sidebar.tsx (prop searchInputRef). */
+  sidebarSearchInputRef?: React.MutableRefObject<HTMLInputElement | null>;
+  sidebarSearchHasValue?: boolean;
+  onSidebarSearchClear?: () => void;
+  onSidebarSearchGamepadFocusChange?: (focused: boolean) => void;
 }
 
 const ThemeList: React.FC<ThemeListProps> = ({
@@ -37,7 +47,15 @@ const ThemeList: React.FC<ThemeListProps> = ({
   systems,
   cart, onCartAdd, onCartRemove, sidebarCollapsed = false,
   isRetrobat = false,
-  agentInfo = null
+  agentInfo = null,
+  searchInputRef,
+  searchHasValue = false,
+  onSearchClear,
+  onSearchGamepadFocusChange,
+  sidebarSearchInputRef,
+  sidebarSearchHasValue = false,
+  onSidebarSearchClear,
+  onSidebarSearchGamepadFocusChange,
 }) => {
   const [selectedTheme, setSelectedTheme] = useState<ThemeItem | null>(null);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
@@ -83,8 +101,58 @@ const ThemeList: React.FC<ThemeListProps> = ({
   // depuis la derniere ligne de la grille - utile pour la borne arcade
   // (qui n'a pas de bouton dedie L2/R2) et utilisable aussi par une manette.
   const [paginationFocus, setPaginationFocus] = useState<'prev' | 'next' | null>(null);
+  // Focus manette hors grille : recherche thèmes | recherche systèmes (sidebar).
+  type ChromeFocus = 'main' | 'sidebar' | null;
+  const [chromeFocus, setChromeFocus] = useState<ChromeFocus>(null);
   const prevPageBtnRef = useRef<HTMLButtonElement | null>(null);
   const nextPageBtnRef = useRef<HTMLButtonElement | null>(null);
+
+  const resolveSidebarInput = useCallback((): HTMLInputElement | null => {
+    if (sidebarCollapsed) return null;
+    return (
+      sidebarSearchInputRef?.current
+      ?? document.querySelector<HTMLInputElement>('[data-hbat-sidebar-search]')
+    );
+  }, [sidebarCollapsed, sidebarSearchInputRef]);
+
+  useEffect(() => {
+    onSearchGamepadFocusChange?.(chromeFocus === 'main');
+    onSidebarSearchGamepadFocusChange?.(chromeFocus === 'sidebar');
+  }, [chromeFocus, onSearchGamepadFocusChange, onSidebarSearchGamepadFocusChange]);
+
+  // Clic souris ailleurs : ne pas rester accroché sur une zone recherche.
+  useEffect(() => {
+    if (!isRetrobat) return;
+    const main = searchInputRef?.current;
+    const side = resolveSidebarInput();
+    const onMainBlur = () => {
+      window.setTimeout(() => {
+        if (document.activeElement !== main) {
+          setChromeFocus((c) => (c === 'main' ? null : c));
+        }
+      }, 0);
+    };
+    const onSideBlur = () => {
+      window.setTimeout(() => {
+        if (document.activeElement !== side) {
+          setChromeFocus((c) => (c === 'sidebar' ? null : c));
+        }
+      }, 0);
+    };
+    main?.addEventListener('blur', onMainBlur);
+    side?.addEventListener('blur', onSideBlur);
+    return () => {
+      main?.removeEventListener('blur', onMainBlur);
+      side?.removeEventListener('blur', onSideBlur);
+    };
+  }, [isRetrobat, searchInputRef, resolveSidebarInput]);
+
+  // Sidebar repliee : quitter le focus recherche systemes
+  useEffect(() => {
+    if (sidebarCollapsed) {
+      setChromeFocus((c) => (c === 'sidebar' ? null : c));
+    }
+  }, [sidebarCollapsed]);
 
   // Recalcule le nombre de colonnes réellement affichées (miroir des classes Tailwind ci-dessous)
   useEffect(() => {
@@ -102,31 +170,70 @@ const ThemeList: React.FC<ThemeListProps> = ({
     return () => window.removeEventListener('resize', computeColumns);
   }, [viewMode, sidebarCollapsed]);
 
-  // Revient en haut de la grille à chaque changement de page/filtre
+  // Revient en haut de la grille à chaque changement de page/filtre.
+  // Ne touche pas chromeFocus : sinon chaque frappe dans la recherche
+  // renverrait le focus manette sur Installer.
   useEffect(() => { setFocusedIndex(0); setPaginationFocus(null); }, [themes]);
 
-  // Garde la carte (ou le bouton pagination) sélectionné visible à l'écran
+  // Garde la carte (ou pagination / recherche) sélectionné visible
   useEffect(() => {
     if (!isRetrobat) return;
+    if (chromeFocus === 'main') {
+      searchInputRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    if (chromeFocus === 'sidebar') {
+      resolveSidebarInput()?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
     if (paginationFocus === 'prev') { prevPageBtnRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
     if (paginationFocus === 'next') { nextPageBtnRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
     cardRefs.current[focusedIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, [focusedIndex, isRetrobat, paginationFocus]);
+  }, [focusedIndex, isRetrobat, paginationFocus, chromeFocus, searchInputRef, resolveSidebarInput]);
 
-  // Donne le vrai focus DOM (pas juste visuel) au bouton "Installer" de la
-  // carte sélectionnée. Indispensable pour hyperbat:// : un clic déclenché
-  // par script (.click()) n'est pas "trusted" pour Chrome et ne peut pas
-  // lancer un protocole externe une fois l'activation utilisateur consommée.
-  // Un vrai Entrée envoyé par AHK (SendInput, donc trusted) sur un élément
-  // réellement focusé déclenche en revanche un clic natif autorisé.
+  // Focus DOM : Installer (hyperbat://) ou champ recherche manette.
   useEffect(() => {
     if (!isRetrobat) return;
+    if (chromeFocus === 'main') {
+      searchInputRef?.current?.focus({ preventScroll: true });
+      return;
+    }
+    if (chromeFocus === 'sidebar') {
+      resolveSidebarInput()?.focus({ preventScroll: true });
+      return;
+    }
     if (paginationFocus === 'prev') { prevPageBtnRef.current?.focus({ preventScroll: true }); return; }
     if (paginationFocus === 'next') { nextPageBtnRef.current?.focus({ preventScroll: true }); return; }
     actionRefs.current[focusedIndex]?.focus({ preventScroll: true });
-  }, [focusedIndex, isRetrobat, paginationFocus]);
+  }, [focusedIndex, isRetrobat, paginationFocus, chromeFocus, searchInputRef, resolveSidebarInput]);
 
   const moveFocus = useCallback((direction: 'up' | 'down' | 'left' | 'right') => {
+    const sideInput = resolveSidebarInput();
+    const mainInput = searchInputRef?.current ?? null;
+
+    // Zone recherche thèmes
+    if (chromeFocus === 'main') {
+      if (direction === 'down') {
+        setChromeFocus(null);
+        setPaginationFocus(null);
+      } else if (direction === 'left' && sideInput) {
+        setChromeFocus('sidebar');
+      }
+      return;
+    }
+
+    // Zone recherche systèmes (sidebar)
+    if (chromeFocus === 'sidebar') {
+      if (direction === 'right') {
+        setChromeFocus(mainInput ? 'main' : null);
+        if (!mainInput) setPaginationFocus(null);
+      } else if (direction === 'down') {
+        setChromeFocus(null);
+        setPaginationFocus(null);
+      }
+      return;
+    }
+
     // Zone pagination active : gauche/droite bascule Precedent <-> Suivant,
     // haut retourne dans la grille (derniere ligne, meme colonne qu'avant).
     if (paginationFocus) {
@@ -135,44 +242,46 @@ const ThemeList: React.FC<ThemeListProps> = ({
       } else if (direction === 'up') {
         setPaginationFocus(null);
       }
-      // 'down' depuis la pagination : rien, deja tout en bas
       return;
     }
 
     setFocusedIndex((prev) => {
       const count = themes.length;
-      if (count === 0) return prev;
+      if (count === 0) {
+        if (direction === 'up' && mainInput) setChromeFocus('main');
+        else if (direction === 'left' && sideInput) setChromeFocus('sidebar');
+        return prev;
+      }
       const col = prev % columns;
-      if (direction === 'left' && col > 0) return prev - 1;
+      if (direction === 'left') {
+        if (col > 0) return prev - 1;
+        // Premiere colonne → recherche systemes
+        if (sideInput) {
+          setChromeFocus('sidebar');
+          return prev;
+        }
+        return prev;
+      }
       if (direction === 'right' && col < columns - 1 && prev + 1 < count) return prev + 1;
       if (direction === 'up') {
         if (prev - columns >= 0) return prev - columns;
-        // Deja sur la premiere ligne : meme logique symetrique que 'down'
-        // ci-dessous, au cas ou l'utilisateur a scrolle manuellement (ou
-        // via 'down') et veut remonter voir le haut de la carte/page.
+        // Premiere ligne → barre de recherche themes
+        if (mainInput) {
+          setChromeFocus('main');
+          return prev;
+        }
         if (typeof window !== 'undefined') window.scrollBy({ top: -220, behavior: 'smooth' });
         return prev;
       }
       if (direction === 'down') {
         if (prev + columns < count) return prev + columns;
-        // Derniere ligne : si pagination disponible, on y bascule le focus
         if (totalPages > 1) { setPaginationFocus('prev'); return prev; }
-        // Sinon (une seule page - frequent quand il y a peu de themes) :
-        // le D-Pad ne peut plus changer de carte, mais la carte
-        // actuellement focus peut etre plus haute que la zone visible
-        // (image + description + bouton Installer, coupes par le bandeau
-        // de controles fixe en bas d'ecran) - remonte par un testeur :
-        // "je veux voir le theme complet". Un simple retour a l'index
-        // inchange ne re-declenche pas le scrollIntoView (React n'effectue
-        // pas l'effet si la valeur ne change pas), donc rien ne se
-        // passait. On scrolle manuellement la page vers le bas pour
-        // reveler le reste de la carte.
         if (typeof window !== 'undefined') window.scrollBy({ top: 220, behavior: 'smooth' });
         return prev;
       }
       return prev;
     });
-  }, [themes.length, columns, paginationFocus, totalPages]);
+  }, [themes.length, columns, paginationFocus, totalPages, chromeFocus, searchInputRef, resolveSidebarInput]);
 
   const isInCart = useCallback((theme: ThemeItem) =>
     cart.some(t => getThemeKey(t) === getThemeKey(theme)), [cart]);
@@ -253,6 +362,8 @@ const ThemeList: React.FC<ThemeListProps> = ({
   // ci-dessus : pas de double effet.
   const handleGamepadSelect = useCallback(() => {
     if (!agentInfo) return;
+    // Recherche focusée : SUD ne lance pas une install (le clavier sert à taper).
+    if (chromeFocus) return;
     // TOUT passe par la garde (pas seulement la pagination) : voir le
     // commentaire de guardedPageAction pour le scénario du double appui
     // qui changeait de page PUIS sélectionnait un jeu.
@@ -262,13 +373,30 @@ const ThemeList: React.FC<ThemeListProps> = ({
       const theme = themes[focusedIndex];
       if (theme) setAgentInstallTheme(theme);
     });
-  }, [agentInfo, paginationFocus, guardedPageAction, handlePrevPage, handleNextPage, themes, focusedIndex]);
+  }, [agentInfo, paginationFocus, guardedPageAction, handlePrevPage, handleNextPage, themes, focusedIndex, chromeFocus]);
 
   const handleGamepadBack = useCallback(() => {
+    if (chromeFocus === 'main') {
+      if (searchHasValue && onSearchClear) {
+        onSearchClear();
+        return;
+      }
+      setChromeFocus(null);
+      return;
+    }
+    if (chromeFocus === 'sidebar') {
+      if (sidebarSearchHasValue && onSidebarSearchClear) {
+        onSidebarSearchClear();
+        return;
+      }
+      setChromeFocus(null);
+      return;
+    }
     window.history.back();
-  }, []);
+  }, [chromeFocus, searchHasValue, onSearchClear, sidebarSearchHasValue, onSidebarSearchClear]);
 
   const handleGamepadPreview = useCallback(() => {
+    if (chromeFocus) return;
     // Si la lightbox est deja ouverte : la fermer (toggle)
     if (selectedTheme !== null) {
       setSelectedTheme(null);
@@ -286,7 +414,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
     } else {
       setSelectedTheme(theme);
     }
-  }, [themes, focusedIndex, selectedTheme]);
+  }, [themes, focusedIndex, selectedTheme, chromeFocus]);
 
   useGamepadGridNav({
     // Fenêtre d'installation agent ouverte OU juste fermée : suspendre
@@ -417,7 +545,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
         {themes.map((theme, index) => {
           const key = getThemeKey(theme);
           const inCart = isInCart(theme);
-          const isGamepadFocused = isRetrobat && index === focusedIndex;
+          const isGamepadFocused = isRetrobat && !chromeFocus && !paginationFocus && index === focusedIndex;
 
           return (
             <div
@@ -776,8 +904,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
             {/* NORD - Aperçu — jaune Xbox (Y) */}
             <BtnIcon dir="nord" color="#f1c40f" active={btnNordOk} label="NORD" action="Aperçu"/>
             <Sep/>
-            {/* D-PAD : navigue aussi jusqu'aux boutons Precedent/Suivant en bas
-                de la liste (borne arcade ET manette peuvent l'utiliser) */}
+            {/* D-PAD : grille + pagination bas + recherche (haut 1re ligne) */}
             <DPad/>
             {/* Trigger gauche/droite : raccourci direct de pagination,
                 manette uniquement (pas de badge dedie pour la borne, qui

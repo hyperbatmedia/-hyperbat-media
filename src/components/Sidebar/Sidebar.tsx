@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useEffect, useState } from 'react';
+import React, { useMemo, useRef, useEffect, useState, useCallback } from 'react';
 import { Search, ChevronDown, X, Star, BookOpen } from 'lucide-react';
 import { SystemRow } from '../../types';
 import { getSystemColors } from './sidebar.colors';
@@ -34,6 +34,11 @@ interface SidebarProps {
   allThemes?: Array<{ id: number; system: string; category: string; [key: string]: any }>;
   isDarkMode: boolean;
   onCollapsedChange?: (collapsed: boolean) => void;
+  /** Ref partagée avec ThemeList (navigation manette → recherche systèmes).
+   *  MutableRefObject (pas RefObject) : on doit pouvoir écrire .current. */
+  searchInputRef?: React.MutableRefObject<HTMLInputElement | null>;
+  /** Contour blanc quand le D-Pad a focusé ce champ (?retrobat=1). */
+  searchGamepadFocused?: boolean;
 }
 
 // ── Icône Discord réutilisable ────────────────────────────────────────────────
@@ -94,7 +99,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   systems, sidebarSearch, setSidebarSearch, selectedSystem, selectedCategory,
   handleSystemSelect, setSelectedCategory, expandedSections, toggleSection,
   expandedSubsections, toggleSubsection, expandedSystems, toggleSystemCategories,
-  allThemes = [], isDarkMode, onCollapsedChange
+  allThemes = [], isDarkMode, onCollapsedChange,
+  searchInputRef: searchInputRefProp,
+  searchGamepadFocused = false,
 }) => {
   const { links, isLoading: isLoadingLinks } = useLinksLoader();
 
@@ -151,7 +158,15 @@ const Sidebar: React.FC<SidebarProps> = ({
   // ── Recherche ─────────────────────────────────────────────────────────────
   const normalizedSearch = useMemo(() => sidebarSearch.trim().toLowerCase(), [sidebarSearch]);
   const isSearchActive   = normalizedSearch.length > 0;
-  const searchInputRef   = useRef<HTMLInputElement>(null);
+  // Ref locale (Ctrl+K). Callback ref pour aussi remplir la ref parent (manette)
+  // sans conflit de types RefObject<HTMLInputElement | null> vs LegacyRef.
+  const searchInputRefLocal = useRef<HTMLInputElement | null>(null);
+  const setSearchInputNode = useCallback((node: HTMLInputElement | null) => {
+    searchInputRefLocal.current = node;
+    if (searchInputRefProp) {
+      searchInputRefProp.current = node;
+    }
+  }, [searchInputRefProp]);
   const systemButtonsRef = useRef<Map<string, HTMLButtonElement>>(new Map());
   const clearSearch      = () => setSidebarSearch('');
 
@@ -159,13 +174,13 @@ const Sidebar: React.FC<SidebarProps> = ({
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey && e.key === 'k') || e.key === '/') {
         e.preventDefault();
-        searchInputRef.current?.focus();
+        searchInputRefLocal.current?.focus();
         return;
       }
       if (e.key === 'Escape' && isSearchActive) {
         e.preventDefault();
         setSidebarSearch('');
-        searchInputRef.current?.blur();
+        searchInputRefLocal.current?.blur();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -637,12 +652,23 @@ const Sidebar: React.FC<SidebarProps> = ({
                       <div className="my-2 px-2">
                         <div className="relative">
                           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#FFA500' }} />
-                          <input ref={searchInputRef} id="sidebar-search" name="sidebar-search" type="text"
+                          <input
+                            ref={setSearchInputNode}
+                            data-hbat-sidebar-search=""
+                            id="sidebar-search"
+                            name="sidebar-search"
+                            type="text"
                             placeholder="Rechercher un système... (Ctrl+K)"
-                            value={sidebarSearch} onChange={e => setSidebarSearch(e.target.value)}
+                            value={sidebarSearch}
+                            onChange={e => setSidebarSearch(e.target.value)}
                             className={`w-full rounded-lg pl-10 pr-10 py-2 text-sm border-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-500
                               ${isDarkMode ? 'bg-gray-800 text-white border-gray-700' : 'bg-white text-gray-900 border-gray-300'}`}
-                            aria-label="Rechercher un système" autoComplete="off" />
+                            style={searchGamepadFocused
+                              ? { outline: '3px solid #fff', outlineOffset: '2px' }
+                              : undefined}
+                            aria-label="Rechercher un système"
+                            autoComplete="off"
+                          />
                           {isSearchActive && (
                             <button onClick={clearSearch}
                               className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-700 rounded transition focus:outline-none focus:ring-2 focus:ring-orange-500"

@@ -289,6 +289,10 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
 
 export default function HyperBatMediaSite(): JSX.Element {
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const [searchGamepadFocused, setSearchGamepadFocused] = useState(false);
+  const sidebarSearchInputRef = useRef<HTMLInputElement | null>(null);
+  const [sidebarSearchGamepadFocused, setSidebarSearchGamepadFocused] = useState(false);
   const [viewMode] = useState<'grid' | 'list'>('grid');
   const [sidebarSearch, setSidebarSearch] = useState<string>('');
   const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
@@ -815,6 +819,8 @@ export default function HyperBatMediaSite(): JSX.Element {
                   expandedSystems={systemsLogic.expandedSystems} toggleSystemCategories={systemsLogic.toggleSystemCategories}
                   allThemes={themes} isDarkMode={isDarkMode}
                   onCollapsedChange={setSidebarCollapsed}
+                  searchInputRef={sidebarSearchInputRef}
+                  searchGamepadFocused={sidebarSearchGamepadFocused && isRetrobat}
                 />
               </div>
             )}
@@ -822,10 +828,22 @@ export default function HyperBatMediaSite(): JSX.Element {
               {!showAdminPanel && (
                 <div className="relative w-full mb-6">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: '#FFA500' }} />
-                  <input type="text" placeholder="Rechercher un thème, un jeu, un créateur, un système..." value={searchTerm}
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    placeholder="Rechercher un thème, un jeu, un créateur, un système..."
+                    value={searchTerm}
                     onChange={(e) => handleSearchChange(e.target.value)}
                     className="w-full rounded-lg pl-12 pr-12 py-3 border-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    style={{ backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.border }} />
+                    style={{
+                      backgroundColor: colors.inputBg,
+                      color: colors.text,
+                      borderColor: colors.border,
+                      ...(searchGamepadFocused && isRetrobat
+                        ? { outline: '3px solid #fff', outlineOffset: '2px' }
+                        : {}),
+                    }}
+                  />
                   {searchTerm && (
                     <button onClick={() => setSearchTerm('')} className="absolute right-4 top-1/2 -translate-y-1/2 transition hover:brightness-110"
                       style={{ color: colors.textSecondary }} title="Effacer la recherche">
@@ -877,7 +895,16 @@ export default function HyperBatMediaSite(): JSX.Element {
                   themesPerPage={THEMES_PER_PAGE} systems={systemsLogic.systems}
                   cart={cart} onCartAdd={handleCartAdd} onCartRemove={handleCartRemove}
                   sidebarCollapsed={sidebarCollapsed}
-                  isRetrobat={isRetrobat} agentInfo={agentInfo} />
+                  isRetrobat={isRetrobat} agentInfo={agentInfo}
+                  searchInputRef={searchInputRef}
+                  searchHasValue={!!searchTerm}
+                  onSearchClear={() => setSearchTerm('')}
+                  onSearchGamepadFocusChange={setSearchGamepadFocused}
+                  sidebarSearchInputRef={sidebarSearchInputRef}
+                  sidebarSearchHasValue={!!sidebarSearch}
+                  onSidebarSearchClear={() => setSidebarSearch('')}
+                  onSidebarSearchGamepadFocusChange={setSidebarSearchGamepadFocused}
+                />
               )}
             </main>
           </div>
