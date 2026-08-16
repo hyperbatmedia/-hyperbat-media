@@ -897,10 +897,14 @@ export default function HyperBatMediaSite(): JSX.Element {
                   sidebarCollapsed={sidebarCollapsed}
                   isRetrobat={isRetrobat} agentInfo={agentInfo}
                   searchInputRef={searchInputRef}
+                  searchValue={searchTerm}
+                  onSearchChange={setSearchTerm}
                   searchHasValue={!!searchTerm}
                   onSearchClear={() => setSearchTerm('')}
                   onSearchGamepadFocusChange={setSearchGamepadFocused}
                   sidebarSearchInputRef={sidebarSearchInputRef}
+                  sidebarSearchValue={sidebarSearch}
+                  onSidebarSearchChange={setSidebarSearch}
                   sidebarSearchHasValue={!!sidebarSearch}
                   onSidebarSearchClear={() => setSidebarSearch('')}
                   onSidebarSearchGamepadFocusChange={setSidebarSearchGamepadFocused}

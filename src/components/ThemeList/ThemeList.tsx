@@ -8,6 +8,7 @@ import ScreenScraperBadge from '../ScreenScraperBadge';
 import { useGamepadGridNav } from '../../hooks/useGamepadGridNav';
 import AgentInstallFlow from '../../agent/AgentInstallFlow';
 import type { AgentInfo } from '../../agent/hyperbatAgent';
+import GamepadVirtualKeyboard from './GamepadVirtualKeyboard';
 
 import { CART_MAX } from '../../constants';
 
@@ -31,11 +32,15 @@ interface ThemeListProps {
   agentInfo?: AgentInfo | null;
   /** Recherche thèmes (au-dessus de la grille). */
   searchInputRef?: React.RefObject<HTMLInputElement | null> | React.MutableRefObject<HTMLInputElement | null>;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
   searchHasValue?: boolean;
   onSearchClear?: () => void;
   onSearchGamepadFocusChange?: (focused: boolean) => void;
   /** Recherche systèmes (sidebar gauche). Voir aussi Sidebar.tsx (prop searchInputRef). */
   sidebarSearchInputRef?: React.MutableRefObject<HTMLInputElement | null>;
+  sidebarSearchValue?: string;
+  onSidebarSearchChange?: (value: string) => void;
   sidebarSearchHasValue?: boolean;
   onSidebarSearchClear?: () => void;
   onSidebarSearchGamepadFocusChange?: (focused: boolean) => void;
@@ -49,10 +54,14 @@ const ThemeList: React.FC<ThemeListProps> = ({
   isRetrobat = false,
   agentInfo = null,
   searchInputRef,
+  searchValue = '',
+  onSearchChange,
   searchHasValue = false,
   onSearchClear,
   onSearchGamepadFocusChange,
   sidebarSearchInputRef,
+  sidebarSearchValue = '',
+  onSidebarSearchChange,
   sidebarSearchHasValue = false,
   onSidebarSearchClear,
   onSidebarSearchGamepadFocusChange,
@@ -64,6 +73,10 @@ const ThemeList: React.FC<ThemeListProps> = ({
   // Thème dont l'installation via l'agent local est en cours (fenêtre
   // AgentInstallFlow ouverte). null = fenêtre fermée.
   const [agentInstallTheme, setAgentInstallTheme] = useState<ThemeItem | null>(null);
+  // Clavier virtuel manette (une instance) — ouvert depuis une barre de recherche.
+  const [oskOpen, setOskOpen] = useState(false);
+  const [oskInitial, setOskInitial] = useState('');
+  const [oskTarget, setOskTarget] = useState<'main' | 'sidebar'>('main');
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   // Capture unique des parametres manette/kiosque au tout premier rendu,
@@ -361,9 +374,14 @@ const ThemeList: React.FC<ThemeListProps> = ({
   // la fenêtre est idempotente et la pagination est protégée par la garde
   // ci-dessus : pas de double effet.
   const handleGamepadSelect = useCallback(() => {
+    // Recherche focusée (kiosque) : SUD ouvre le clavier virtuel (agent ou non).
+    if (isRetrobat && chromeFocus) {
+      setOskTarget(chromeFocus);
+      setOskInitial(chromeFocus === 'main' ? searchValue : sidebarSearchValue);
+      setOskOpen(true);
+      return;
+    }
     if (!agentInfo) return;
-    // Recherche focusée : SUD ne lance pas une install (le clavier sert à taper).
-    if (chromeFocus) return;
     // TOUT passe par la garde (pas seulement la pagination) : voir le
     // commentaire de guardedPageAction pour le scénario du double appui
     // qui changeait de page PUIS sélectionnait un jeu.
@@ -373,9 +391,10 @@ const ThemeList: React.FC<ThemeListProps> = ({
       const theme = themes[focusedIndex];
       if (theme) setAgentInstallTheme(theme);
     });
-  }, [agentInfo, paginationFocus, guardedPageAction, handlePrevPage, handleNextPage, themes, focusedIndex, chromeFocus]);
+  }, [agentInfo, paginationFocus, guardedPageAction, handlePrevPage, handleNextPage, themes, focusedIndex, chromeFocus, isRetrobat, searchValue, sidebarSearchValue]);
 
   const handleGamepadBack = useCallback(() => {
+    if (oskOpen) return; // EST géré par le clavier
     if (chromeFocus === 'main') {
       if (searchHasValue && onSearchClear) {
         onSearchClear();
@@ -393,9 +412,10 @@ const ThemeList: React.FC<ThemeListProps> = ({
       return;
     }
     window.history.back();
-  }, [chromeFocus, searchHasValue, onSearchClear, sidebarSearchHasValue, onSidebarSearchClear]);
+  }, [oskOpen, chromeFocus, searchHasValue, onSearchClear, sidebarSearchHasValue, onSidebarSearchClear]);
 
   const handleGamepadPreview = useCallback(() => {
+    if (oskOpen) return; // NORD géré par le clavier
     if (chromeFocus) return;
     // Si la lightbox est deja ouverte : la fermer (toggle)
     if (selectedTheme !== null) {
@@ -414,12 +434,12 @@ const ThemeList: React.FC<ThemeListProps> = ({
     } else {
       setSelectedTheme(theme);
     }
-  }, [themes, focusedIndex, selectedTheme, chromeFocus]);
+  }, [themes, focusedIndex, selectedTheme, chromeFocus, oskOpen]);
 
   useGamepadGridNav({
-    // Fenêtre d'installation agent ouverte OU juste fermée : suspendre
-    // la navigation de la grille (voir closeAgentInstall / suppressGridNav).
-    enabled: isRetrobat && !agentInstallTheme && !suppressGridNav,
+    // Fenêtre d'installation / clavier virtuel / juste fermée : suspendre
+    // la navigation de la grille.
+    enabled: isRetrobat && !agentInstallTheme && !suppressGridNav && !oskOpen,
     lightboxOpen: selectedTheme !== null,
     onMove: moveFocus,
     onSelect: handleGamepadSelect,
@@ -439,6 +459,19 @@ const ThemeList: React.FC<ThemeListProps> = ({
       if (idx < allFilteredThemes.length - 1) setSelectedTheme(allFilteredThemes[idx + 1]);
     },
   });
+
+  const handleOskChange = useCallback((value: string) => {
+    if (oskTarget === 'main') onSearchChange?.(value);
+    else onSidebarSearchChange?.(value);
+  }, [oskTarget, onSearchChange, onSidebarSearchChange]);
+
+  const handleOskConfirm = useCallback(() => {
+    setOskOpen(false);
+  }, []);
+
+  const handleOskCancel = useCallback(() => {
+    setOskOpen(false);
+  }, []);
 
   useEffect(() => {
     setLoadedImages(new Set());
@@ -809,6 +842,17 @@ const ThemeList: React.FC<ThemeListProps> = ({
         />
       )}
 
+      {isRetrobat && (
+        <GamepadVirtualKeyboard
+          open={oskOpen}
+          initialValue={oskInitial}
+          title={oskTarget === 'sidebar' ? 'Recherche systèmes' : 'Recherche thèmes'}
+          onChange={handleOskChange}
+          onConfirm={handleOskConfirm}
+          onCancel={handleOskCancel}
+        />
+      )}
+
       {/* ── Bandeau de controles manette (mode kiosk RetroBat uniquement) ── */}
       {isRetrobat && (() => {
         const { hasTriggers, btnSudOk, btnEstOk, btnNordOk, btnTriggerLOk, btnTriggerROk } = gamepadConfig;
@@ -895,8 +939,8 @@ const ThemeList: React.FC<ThemeListProps> = ({
               <span style={{ fontSize:'8px', color:'#666', marginTop:'1px' }}>(F9 clavier)</span>
             </div>
             <Sep/>
-            {/* SUD - Installer — vert Xbox (A) */}
-            <BtnIcon dir="sud"  color="#2ecc71" active={btnSudOk}  label="SUD"  action="Installer"/>
+            {/* SUD - Installer / Clavier si recherche focusée */}
+            <BtnIcon dir="sud"  color="#2ecc71" active={btnSudOk}  label="SUD"  action={chromeFocus ? 'Clavier' : 'Installer'}/>
             <Sep/>
             {/* EST - Retour — rouge Xbox (B) */}
             <BtnIcon dir="est"  color="#e74c3c" active={btnEstOk}  label="EST"  action="Retour"/>
