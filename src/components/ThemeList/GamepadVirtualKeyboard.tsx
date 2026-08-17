@@ -1,5 +1,4 @@
 // Fichier: src/components/ThemeList/GamepadVirtualKeyboard.tsx
-// (ou à côté de ThemeList.tsx selon l'arborescence du projet)
 //
 // Clavier virtuel manette — mode kiosque (?retrobat=1) uniquement.
 // Ouverture gérée par le parent (SUD sur barre de recherche).

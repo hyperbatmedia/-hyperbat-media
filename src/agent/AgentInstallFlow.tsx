@@ -30,6 +30,7 @@ import {
   AgentInfo, AgentJobStatus,
   agentRoms, agentCheckConflict, agentStartInstall, agentStatus, agentReloadEs,
 } from './hyperbatAgent';
+import GamepadVirtualKeyboard from '../components/ThemeList/GamepadVirtualKeyboard';
 
 /** Sous-ensemble de ThemeItem réellement nécessaire ici (compatible
  *  structurellement : pas d'import de ../../types pour garder ce module
@@ -90,6 +91,15 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   const [jobStatus, setJobStatus] = useState<AgentJobStatus | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [focusIdx, setFocusIdx] = useState(0);
+  // Clavier virtuel (filtre ROM / nom manuel / nom collection)
+  type OskField = 'filter' | 'manual' | 'collection';
+  const [oskOpen, setOskOpen] = useState(false);
+  const [oskField, setOskField] = useState<OskField>('manual');
+  const [oskInitial, setOskInitial] = useState('');
+  const oskOpenRef = useRef(false);
+  oskOpenRef.current = oskOpen;
+  // Après OK/EST du clavier : ignorer SUD/EST tant qu'ils restent enfoncés.
+  const oskWaitReleaseRef = useRef(false);
   const [esReloaded, setEsReloaded] = useState(false);
   const [reloadingEs, setReloadingEs] = useState(false);
 
@@ -127,9 +137,6 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       return el.getClientRects().length > 0;
     });
   }, []);
-
-  // Classe hbagent-focusable suffit ; ref no-op pour ne pas toucher tout le JSX.
-  const reg = (_el: HTMLElement | null) => {};
 
   const focusIdxRef = useRef(0);
   focusIdxRef.current = focusIdx;
@@ -382,6 +389,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     let nextRepeat = 0;
 
     const actDir = (dir: 'up' | 'down' | 'left' | 'right') => {
+      if (oskOpenRef.current) return;
       const s = stepRef.current;
       const hStep = s === 'rom-pick' ? 10 : 1;
       if (dir === 'up') move(-1);
@@ -391,6 +399,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     };
 
     const activateSud = () => {
+      if (oskOpenRef.current) return;
       const s = stepRef.current;
       if (s === 'done') {
         finishWithReload();
@@ -408,9 +417,22 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         else guard(() => resolveConflictRef.current('replace'));
         return;
       }
-      // rom-pick / collection-name : activer l'element focusé
+      // rom-pick / collection-name : input → clavier virtuel ; sinon .click()
       const nodes = getFocusables();
       const el = nodes[focusIdxRef.current];
+      if (el instanceof HTMLInputElement) {
+        const field = (el.dataset.hbagentOsk || '') as OskField | '';
+        if (field === 'filter' || field === 'manual' || field === 'collection') {
+          setOskField(field);
+          setOskInitial(
+            field === 'filter' ? filter
+              : field === 'manual' ? manualName
+                : collectionName,
+          );
+          setOskOpen(true);
+          return;
+        }
+      }
       el?.click();
     };
 
@@ -420,6 +442,25 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       for (const g of pads) { if (g && g.connected) { gp = g; break; } }
       if (!gp) return;
       const pressed = gp.buttons.map((_, i) => isDown(gp!, i));
+      // Pendant le clavier virtuel : snapshot seulement (évite un faux
+      // front SUD/EST à la fermeture).
+      if (oskOpenRef.current) {
+        prev = pressed;
+        curDir = readDir(gp);
+        return;
+      }
+      // OK/EST du clavier : le bouton est encore enfoncé au 1er tick après
+      // fermeture — attendre le relâchement avant de relire SUD (sinon
+      // rebond : clavier se rouvre, ou Valider se déclenche).
+      if (oskWaitReleaseRef.current) {
+        const sudHeld = btnCfg.sud >= 0 && pressed[btnCfg.sud];
+        const estHeld = btnCfg.est >= 0 && pressed[btnCfg.est];
+        prev = pressed;
+        curDir = readDir(gp);
+        if (sudHeld || estHeld) return;
+        oskWaitReleaseRef.current = false;
+        return;
+      }
       // Premier tick apres (re)montage : snapshot sans agir
       if (prev === null) { prev = pressed; curDir = readDir(gp); return; }
 
@@ -445,7 +486,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       prev = pressed;
     }, 80);
     return () => clearInterval(iv);
-  }, [btnCfg, move, handleBack, finishWithReload, guard, onClose, step, getFocusables]);
+  }, [btnCfg, move, handleBack, finishWithReload, guard, onClose, step, getFocusables, filter, manualName, collectionName]);
 
   // ── Clavier : flèches / Échap (Entrée est natif sur l'élément focusé) ──
   useEffect(() => {
@@ -499,15 +540,15 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
 
   // Icones manette (meme style que le bandeau bas de ThemeList)
   const FaceBtn = ({ dir, color, label, action }: {
-    dir: 'sud' | 'est'; color: string; label: string; action: string;
+    dir: 'sud' | 'est' | 'nord'; color: string; label: string; action: string;
   }) => {
-    const dx = { sud: 0, est: 9 };
-    const dy = { sud: 9, est: 0 };
+    const dx = { sud: 0, est: 9, nord: 0 };
+    const dy = { sud: 9, est: 0, nord: -9 };
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
         <svg width="34" height="34" viewBox="-17 -17 34 34" aria-hidden="true">
           <circle cx="0" cy="0" r="15" fill="#1a1a1a" stroke="#555" strokeWidth="1.5" />
-          <circle cx="0" cy="-9" r="2.8" fill="#444" />
+          <circle cx="0" cy="-9" r="2.8" fill={dir === 'nord' ? color : '#444'} />
           <circle cx="0" cy="9" r="2.8" fill={dir === 'sud' ? color : '#444'} />
           <circle cx="-9" cy="0" r="2.8" fill="#444" />
           <circle cx="9" cy="0" r="2.8" fill={dir === 'est' ? color : '#444'} />
@@ -597,8 +638,12 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
             {romsFound && (
               <>
                 <input
-                  type="text" value={filter} placeholder="Filtrer la liste… (clavier/souris)"
+                  type="text"
+                  value={filter}
+                  placeholder="Filtrer la liste… (SUD = clavier virtuel)"
                   onChange={(e) => setFilter(e.target.value)}
+                  className="hbagent-focusable"
+                  data-hbagent-osk="filter"
                   style={{ ...inputStyle, marginBottom: '8px' }}
                 />
                 <div style={{
@@ -608,7 +653,6 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                   {filteredRoms.map((rom) => (
                     <button
                       key={rom}
-                      ref={reg}
                       className="hbagent-focusable"
                       onClick={() => guard(() => chooseRom(rom))}
                       style={{
@@ -629,19 +673,19 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
             )}
             <input
               type="text" value={manualName}
-              ref={reg}
               className="hbagent-focusable"
+              data-hbagent-osk="manual"
               onChange={(e) => setManualName(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') guard(() => chooseRom(manualName)); }}
               placeholder="…ou saisissez le nom exact de la ROM (sans extension)"
               style={{ ...inputStyle, marginBottom: '10px' }}
             />
             <div style={{ display: 'flex', gap: '10px' }}>
-              <button ref={reg} className="hbagent-focusable" style={btnStyle}
+              <button className="hbagent-focusable" style={btnStyle}
                 onClick={() => guard(() => chooseRom(manualName))}>
                 Valider la saisie
               </button>
-              <button ref={reg} className="hbagent-focusable" style={btnAltStyle}
+              <button className="hbagent-focusable" style={btnAltStyle}
                 onClick={() => guard(onClose)}>
                 Annuler
               </button>
@@ -657,18 +701,18 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
             </p>
             <input
               type="text" value={collectionName}
-              ref={reg}
               className="hbagent-focusable"
+              data-hbagent-osk="collection"
               onChange={(e) => setCollectionName(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') guard(validateCollection); }}
               style={{ ...inputStyle, marginBottom: '12px' }}
             />
             <div style={{ display: 'flex', gap: '10px' }}>
-              <button ref={reg} className="hbagent-focusable" style={btnStyle}
+              <button className="hbagent-focusable" style={btnStyle}
                 onClick={() => guard(validateCollection)}>
                 Valider
               </button>
-              <button ref={reg} className="hbagent-focusable" style={btnAltStyle}
+              <button className="hbagent-focusable" style={btnAltStyle}
                 onClick={() => guard(onClose)}>
                 Annuler
               </button>
@@ -686,15 +730,15 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
               Que voulez-vous faire ?
             </p>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <button ref={reg} className="hbagent-focusable" style={btnStyle}
+              <button className="hbagent-focusable" style={btnStyle}
                 onClick={() => guard(() => resolveConflict('replace'))}>
                 Remplacer
               </button>
-              <button ref={reg} className="hbagent-focusable" style={btnStyle}
+              <button className="hbagent-focusable" style={btnStyle}
                 onClick={() => guard(() => resolveConflict('rename'))}>
                 Renommer l'ancien
               </button>
-              <button ref={reg} className="hbagent-focusable" style={btnAltStyle}
+              <button className="hbagent-focusable" style={btnAltStyle}
                 onClick={() => guard(onClose)}>
                 Annuler
               </button>
@@ -736,7 +780,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                   ? 'Les listes EmulationStation ont été rechargées automatiquement.'
                   : 'Validez pour rafraîchir EmulationStation (comme F5) et fermer.'}
             </p>
-            <button ref={reg} className="hbagent-focusable" style={btnStyle}
+            <button className="hbagent-focusable" style={btnStyle}
               onClick={finishWithReload}
               disabled={reloadingEs}>
               {reloadingEs ? 'Rafraîchissement…' : 'OK'}
@@ -750,7 +794,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
             <p style={{ color: '#e74c3c', fontSize: '13px', whiteSpace: 'pre-line', marginBottom: '14px' }}>
               {errorMsg}
             </p>
-            <button ref={reg} className="hbagent-focusable" style={btnStyle}
+            <button className="hbagent-focusable" style={btnStyle}
               onClick={() => guard(onClose)}>
               Fermer
             </button>
@@ -766,16 +810,45 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
           }}>
             <DPadIcon />
             <Sep />
-            <FaceBtn dir="sud" color="#2ecc71" label="SUD" action="Valider" />
+            <FaceBtn dir="sud" color="#2ecc71" label="SUD" action="Valider / Clavier" />
             <Sep />
             <FaceBtn dir="est" color="#e74c3c" label="EST" action="Annuler" />
             <Sep />
-            <KeyBadge label="↑↓←→" action="Clavier" />
+            <FaceBtn dir="nord" color="#f1c40f" label="NORD" action="Effacer (clavier)" />
+            <Sep />
+            <KeyBadge label="↑↓←→" action="Naviguer" />
             <KeyBadge label="Entrée" action="Valider" />
             <KeyBadge label="Échap" action="Annuler" />
           </div>
         )}
       </div>
+
+      <GamepadVirtualKeyboard
+        open={oskOpen}
+        initialValue={oskInitial}
+        title={
+          oskField === 'filter' ? 'Filtrer les ROMs'
+            : oskField === 'collection' ? 'Nom de la collection'
+              : 'Nom de la ROM'
+        }
+        onChange={(value: string) => {
+          if (oskField === 'filter') setFilter(value);
+          else if (oskField === 'manual') setManualName(value);
+          else setCollectionName(value);
+        }}
+        onConfirm={() => {
+          oskOpenRef.current = false;
+          oskWaitReleaseRef.current = true;
+          lastActionRef.current = Date.now();
+          setOskOpen(false);
+        }}
+        onCancel={() => {
+          oskOpenRef.current = false;
+          oskWaitReleaseRef.current = true;
+          lastActionRef.current = Date.now();
+          setOskOpen(false);
+        }}
+      />
     </div>
   );
 };

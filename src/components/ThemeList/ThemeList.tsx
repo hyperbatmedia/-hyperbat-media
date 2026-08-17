@@ -350,9 +350,8 @@ const ThemeList: React.FC<ThemeListProps> = ({
   // l'installation sur la carte focusée.
   const [suppressGridNav, setSuppressGridNav] = useState(false);
   const suppressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const closeAgentInstall = useCallback(() => {
+  const armGridNavSuppress = useCallback(() => {
     pageActionGuardRef.current = Date.now();
-    setAgentInstallTheme(null);
     setSuppressGridNav(true);
     if (suppressTimerRef.current) clearTimeout(suppressTimerRef.current);
     suppressTimerRef.current = setTimeout(() => {
@@ -360,6 +359,11 @@ const ThemeList: React.FC<ThemeListProps> = ({
       suppressTimerRef.current = null;
     }, GRID_ACTION_GUARD_MS);
   }, []);
+
+  const closeAgentInstall = useCallback(() => {
+    setAgentInstallTheme(null);
+    armGridNavSuppress();
+  }, [armGridNavSuppress]);
   useEffect(() => () => {
     if (suppressTimerRef.current) clearTimeout(suppressTimerRef.current);
   }, []);
@@ -376,6 +380,11 @@ const ThemeList: React.FC<ThemeListProps> = ({
   const handleGamepadSelect = useCallback(() => {
     // Recherche focusée (kiosque) : SUD ouvre le clavier virtuel (agent ou non).
     if (isRetrobat && chromeFocus) {
+      // Garde : le SUD qui a validé OK du clavier est encore enfoncé au
+      // remount de useGamepadGridNav → sans ça le clavier se rouvre.
+      if (suppressGridNav) return;
+      if (Date.now() - pageActionGuardRef.current < GRID_ACTION_GUARD_MS) return;
+      pageActionGuardRef.current = Date.now();
       setOskTarget(chromeFocus);
       setOskInitial(chromeFocus === 'main' ? searchValue : sidebarSearchValue);
       setOskOpen(true);
@@ -391,7 +400,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
       const theme = themes[focusedIndex];
       if (theme) setAgentInstallTheme(theme);
     });
-  }, [agentInfo, paginationFocus, guardedPageAction, handlePrevPage, handleNextPage, themes, focusedIndex, chromeFocus, isRetrobat, searchValue, sidebarSearchValue]);
+  }, [agentInfo, paginationFocus, guardedPageAction, handlePrevPage, handleNextPage, themes, focusedIndex, chromeFocus, isRetrobat, searchValue, sidebarSearchValue, suppressGridNav]);
 
   const handleGamepadBack = useCallback(() => {
     if (oskOpen) return; // EST géré par le clavier
@@ -467,11 +476,13 @@ const ThemeList: React.FC<ThemeListProps> = ({
 
   const handleOskConfirm = useCallback(() => {
     setOskOpen(false);
-  }, []);
+    armGridNavSuppress();
+  }, [armGridNavSuppress]);
 
   const handleOskCancel = useCallback(() => {
     setOskOpen(false);
-  }, []);
+    armGridNavSuppress();
+  }, [armGridNavSuppress]);
 
   useEffect(() => {
     setLoadedImages(new Set());
