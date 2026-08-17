@@ -343,30 +343,86 @@ const ThemeList: React.FC<ThemeListProps> = ({
     fn();
   }, [agentInfo]);
 
-  // Après fermeture de la fenêtre d'installation : suspendre brièvement
-  // useGamepadGridNav. Sinon, au remount du hook (enabled repasse à true),
-  // l'état "précédent" des boutons est vide et un SUD encore enfoncé (ou
-  // son doublon AHK) est pris pour un nouvel appui → réouverture de
-  // l'installation sur la carte focusée.
+  // Après fermeture de l'OSK / de l'installation : suspendre
+  // useGamepadGridNav jusqu'au relâchement de SUD et EST. Un délai fixe
+  // (ex. 1500 ms) ne suffit pas : si le bouton est encore enfoncé au
+  // remount, l'état "précédent" est vide et l'appui est relu → le
+  // clavier se rouvre tout seul.
   const [suppressGridNav, setSuppressGridNav] = useState(false);
   const suppressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const waitReleasePollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const oskOpenRef = useRef(false);
+  oskOpenRef.current = oskOpen;
+
+  const clearNavSuppressTimers = useCallback(() => {
+    if (waitReleasePollRef.current) {
+      clearInterval(waitReleasePollRef.current);
+      waitReleasePollRef.current = null;
+    }
+    if (suppressTimerRef.current) {
+      clearTimeout(suppressTimerRef.current);
+      suppressTimerRef.current = null;
+    }
+  }, []);
+
   const armGridNavSuppress = useCallback(() => {
     pageActionGuardRef.current = Date.now();
     setSuppressGridNav(true);
-    if (suppressTimerRef.current) clearTimeout(suppressTimerRef.current);
-    suppressTimerRef.current = setTimeout(() => {
-      setSuppressGridNav(false);
-      suppressTimerRef.current = null;
-    }, GRID_ACTION_GUARD_MS);
-  }, []);
+    clearNavSuppressTimers();
+
+    const p = new URLSearchParams(window.location.search);
+    const num = (key: string, def: number) => {
+      const v = p.get(key);
+      if (v === null) return def;
+      const n = parseInt(v, 10);
+      return Number.isFinite(n) && n >= 0 ? n : def;
+    };
+    const btnSud = num('btnSud', 0);
+    const btnEst = num('btnEst', 1);
+    const AXIS = 0.5;
+    const isDown = (gp: Gamepad, i: number) => {
+      if (i < 0) return false;
+      const b = gp.buttons[i];
+      return b ? (b.pressed || b.value > AXIS) : false;
+    };
+
+    const resume = () => {
+      clearNavSuppressTimers();
+      oskLog('ThemeList SUD/EST relaches, reprise nav');
+      suppressTimerRef.current = setTimeout(() => {
+        setSuppressGridNav(false);
+        suppressTimerRef.current = null;
+      }, 200);
+    };
+
+    let idleTicks = 0;
+    const started = Date.now();
+    waitReleasePollRef.current = setInterval(() => {
+      if (Date.now() - started > 8000) {
+        resume();
+        return;
+      }
+      const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let gp: Gamepad | null = null;
+      for (const g of pads) { if (g && g.connected) { gp = g; break; } }
+      if (!gp) {
+        idleTicks += 1;
+        if (idleTicks >= 20) resume();
+        return;
+      }
+      idleTicks = 0;
+      if (isDown(gp, btnSud) || isDown(gp, btnEst)) return;
+      resume();
+    }, 50);
+  }, [clearNavSuppressTimers]);
 
   const closeAgentInstall = useCallback(() => {
     setAgentInstallTheme(null);
     armGridNavSuppress();
   }, [armGridNavSuppress]);
   useEffect(() => () => {
-    if (suppressTimerRef.current) clearTimeout(suppressTimerRef.current);
-  }, []);
+    clearNavSuppressTimers();
+  }, [clearNavSuppressTimers]);
 
   // SANS agent : no-op volontaire - le clic réel (Installer ET pagination)
   // est déclenché par un vrai Entrée envoyé par AHK sur l'élément réellement
@@ -380,15 +436,10 @@ const ThemeList: React.FC<ThemeListProps> = ({
   const handleGamepadSelect = useCallback(() => {
     // Recherche focusée (kiosque) : SUD ouvre le clavier virtuel (agent ou non).
     if (isRetrobat && chromeFocus) {
-      if (suppressGridNav) {
-        oskLog('SUD ignore: suppressGridNav');
+      if (suppressGridNav || oskOpenRef.current) {
+        oskLog('SUD ignore: suppressGridNav/osk');
         return;
       }
-      if (Date.now() - pageActionGuardRef.current < GRID_ACTION_GUARD_MS) {
-        oskLog('SUD ignore: garde');
-        return;
-      }
-      pageActionGuardRef.current = Date.now();
       oskLog(`SUD ouvre OSK recherche (${chromeFocus})`);
       setOskTarget(chromeFocus);
       setOskInitial(chromeFocus === 'main' ? searchValue : sidebarSearchValue);
@@ -480,13 +531,15 @@ const ThemeList: React.FC<ThemeListProps> = ({
   }, [oskTarget, onSearchChange, onSidebarSearchChange]);
 
   const handleOskConfirm = useCallback(() => {
-    oskLog('ThemeList onConfirm -> close + suppress 1500ms');
+    oskLog('ThemeList onConfirm -> close + wait SUD release');
+    oskOpenRef.current = false;
     setOskOpen(false);
     armGridNavSuppress();
   }, [armGridNavSuppress]);
 
   const handleOskCancel = useCallback(() => {
-    oskLog('ThemeList onCancel -> close + suppress 1500ms');
+    oskLog('ThemeList onCancel -> close + wait SUD release');
+    oskOpenRef.current = false;
     setOskOpen(false);
     armGridNavSuppress();
   }, [armGridNavSuppress]);

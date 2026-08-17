@@ -124,6 +124,12 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
 
   const rowsRef = useRef(rows);
   rowsRef.current = rows;
+  const onChangeRef = useRef(onChange);
+  const onConfirmRef = useRef(onConfirm);
+  const onCancelRef = useRef(onCancel);
+  onChangeRef.current = onChange;
+  onConfirmRef.current = onConfirm;
+  onCancelRef.current = onCancel;
 
   useEffect(() => {
     if (!open) return;
@@ -140,8 +146,8 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
   const setDraftAndNotify = useCallback((next: string) => {
     setDraft(next);
     draftRef.current = next;
-    onChange(next);
-  }, [onChange]);
+    onChangeRef.current(next);
+  }, []);
 
   const activateKey = useCallback((key: KeyDef) => {
     if (key.type === 'char') {
@@ -163,9 +169,9 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
     }
     if (key.type === 'ok') {
       oskLog('key OK -> onConfirm');
-      onConfirm();
+      onConfirmRef.current();
     }
-  }, [setDraftAndNotify, onConfirm]);
+  }, [setDraftAndNotify]);
 
   const moveFocus = useCallback((dir: 'up' | 'down' | 'left' | 'right') => {
     const r = rowsRef.current;
@@ -264,8 +270,8 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
       }
       if (just(btnEst)) {
         oskLog('EST gamepad -> cancel');
-        onChange(initialRef.current);
-        onCancel();
+        onChangeRef.current(initialRef.current);
+        onCancelRef.current();
       }
       if (just(btnNord)) {
         oskLog('NORD gamepad -> clear');
@@ -275,7 +281,7 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
     }, 80);
 
     return () => clearInterval(iv);
-  }, [open, moveFocus, activateKey, onChange, onCancel, setDraftAndNotify]);
+  }, [open, moveFocus, activateKey, setDraftAndNotify]);
 
   useEffect(() => {
     if (!open) return;
@@ -284,15 +290,15 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
         e.preventDefault();
         e.stopPropagation();
         oskLog('keydown Escape -> cancel (AHK/clavier?)');
-        onChange(initialRef.current);
-        onCancel();
+        onChangeRef.current(initialRef.current);
+        onCancelRef.current();
         return;
       }
+      // RetroBat : l'AHK envoie Entrée à chaque SUD. Ce n'est pas OK.
       if (e.key === 'Enter') {
         e.preventDefault();
         e.stopPropagation();
-        oskLog('ENTREE clavier/AHK -> ferme (RetroBat?)');
-        onConfirm();
+        oskLog('ENTREE ignoree (AHK RetroBat, pas OK)');
         return;
       }
       if (e.key === 'Backspace') {
@@ -307,7 +313,7 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
     };
     window.addEventListener('keydown', onKey, true);
     return () => window.removeEventListener('keydown', onKey, true);
-  }, [open, onChange, onCancel, onConfirm, setDraftAndNotify]);
+  }, [open, setDraftAndNotify]);
 
   if (!open) return null;
 
