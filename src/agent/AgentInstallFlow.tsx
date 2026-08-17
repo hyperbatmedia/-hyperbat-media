@@ -30,7 +30,7 @@ import {
   AgentInfo, AgentJobStatus,
   agentRoms, agentCheckConflict, agentStartInstall, agentStatus, agentReloadEs,
 } from './hyperbatAgent';
-import GamepadVirtualKeyboard from '../components/ThemeList/GamepadVirtualKeyboard';
+import GamepadVirtualKeyboard, { oskLog } from '../components/ThemeList/GamepadVirtualKeyboard';
 
 /** Sous-ensemble de ThemeItem réellement nécessaire ici (compatible
  *  structurellement : pas d'import de ../../types pour garder ce module
@@ -430,6 +430,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                 : collectionName,
           );
           setOskOpen(true);
+          oskLog(`InstallFlow SUD ouvre OSK (${field})`);
           return;
         }
       }
@@ -458,6 +459,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         prev = pressed;
         curDir = readDir(gp);
         if (sudHeld || estHeld) return;
+        oskLog('InstallFlow SUD/EST relaches, reprise nav');
         oskWaitReleaseRef.current = false;
         return;
       }
@@ -837,12 +839,14 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
           else setCollectionName(value);
         }}
         onConfirm={() => {
+          oskLog('InstallFlow onConfirm');
           oskOpenRef.current = false;
           oskWaitReleaseRef.current = true;
           lastActionRef.current = Date.now();
           setOskOpen(false);
         }}
         onCancel={() => {
+          oskLog('InstallFlow onCancel');
           oskOpenRef.current = false;
           oskWaitReleaseRef.current = true;
           lastActionRef.current = Date.now();

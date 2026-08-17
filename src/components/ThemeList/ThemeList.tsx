@@ -8,7 +8,7 @@ import ScreenScraperBadge from '../ScreenScraperBadge';
 import { useGamepadGridNav } from '../../hooks/useGamepadGridNav';
 import AgentInstallFlow from '../../agent/AgentInstallFlow';
 import type { AgentInfo } from '../../agent/hyperbatAgent';
-import GamepadVirtualKeyboard from './GamepadVirtualKeyboard';
+import GamepadVirtualKeyboard, { oskLog } from './GamepadVirtualKeyboard';
 
 import { CART_MAX } from '../../constants';
 
@@ -380,11 +380,16 @@ const ThemeList: React.FC<ThemeListProps> = ({
   const handleGamepadSelect = useCallback(() => {
     // Recherche focusée (kiosque) : SUD ouvre le clavier virtuel (agent ou non).
     if (isRetrobat && chromeFocus) {
-      // Garde : le SUD qui a validé OK du clavier est encore enfoncé au
-      // remount de useGamepadGridNav → sans ça le clavier se rouvre.
-      if (suppressGridNav) return;
-      if (Date.now() - pageActionGuardRef.current < GRID_ACTION_GUARD_MS) return;
+      if (suppressGridNav) {
+        oskLog('SUD ignore: suppressGridNav');
+        return;
+      }
+      if (Date.now() - pageActionGuardRef.current < GRID_ACTION_GUARD_MS) {
+        oskLog('SUD ignore: garde');
+        return;
+      }
       pageActionGuardRef.current = Date.now();
+      oskLog(`SUD ouvre OSK recherche (${chromeFocus})`);
       setOskTarget(chromeFocus);
       setOskInitial(chromeFocus === 'main' ? searchValue : sidebarSearchValue);
       setOskOpen(true);
@@ -475,11 +480,13 @@ const ThemeList: React.FC<ThemeListProps> = ({
   }, [oskTarget, onSearchChange, onSidebarSearchChange]);
 
   const handleOskConfirm = useCallback(() => {
+    oskLog('ThemeList onConfirm -> close + suppress 1500ms');
     setOskOpen(false);
     armGridNavSuppress();
   }, [armGridNavSuppress]);
 
   const handleOskCancel = useCallback(() => {
+    oskLog('ThemeList onCancel -> close + suppress 1500ms');
     setOskOpen(false);
     armGridNavSuppress();
   }, [armGridNavSuppress]);

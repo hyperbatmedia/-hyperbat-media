@@ -7,7 +7,33 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-export type KeyboardLayoutId = 'azerty' | 'qwerty';
+type KeyboardLayoutId = 'azerty' | 'qwerty';
+
+// Journal visible SUR le clavier (temporaire).
+const LOG_MAX = 10;
+let logLines: string[] = [];
+const logListeners = new Set<() => void>();
+
+/** @deprecated journal debug clavier — à retirer ensuite */
+// eslint-disable-next-line react-refresh/only-export-components
+export function oskLog(msg: string): void {
+  const now = new Date();
+  const t = `${String(now.getSeconds()).padStart(2, '0')}.${String(now.getMilliseconds()).padStart(3, '0')}`;
+  logLines = [...logLines.slice(-(LOG_MAX - 1)), `${t} ${msg}`];
+  // eslint-disable-next-line no-console
+  console.log('[HBM-OSK]', msg);
+  logListeners.forEach((fn) => fn());
+  try {
+    const q = new URLSearchParams(window.location.search).get('agent');
+    const base = (q || 'http://127.0.0.1:8195').replace(/\/$/, '');
+    void fetch(`${base}/osk-log`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: msg,
+      keepalive: true,
+    }).catch(() => { /* agent absent */ });
+  } catch { /* ignore */ }
+}
 
 type KeyDef =
   | { id: string; label: string; type: 'char'; value: string; flex?: number }
@@ -72,6 +98,13 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
   onConfirm,
   onCancel,
 }) => {
+  const [logTick, setLogTick] = useState(0);
+  useEffect(() => {
+    const fn = () => setLogTick((n) => n + 1);
+    logListeners.add(fn);
+    return () => { logListeners.delete(fn); };
+  }, []);
+  void logTick;
   const [layout, setLayout] = useState<KeyboardLayoutId>('azerty');
   const [draft, setDraft] = useState(initialValue);
   const [focusRow, setFocusRow] = useState(1);
@@ -94,13 +127,15 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
 
   useEffect(() => {
     if (!open) return;
+    oskLog(`OSK open « ${title} »`);
     setDraft(initialValue);
     draftRef.current = initialValue;
     initialRef.current = initialValue;
     setLayout('azerty');
     setFocusRow(1);
     setFocusCol(0);
-  }, [open, initialValue]);
+    return () => { oskLog('OSK unmount'); };
+  }, [open, initialValue, title]);
 
   const setDraftAndNotify = useCallback((next: string) => {
     setDraft(next);
@@ -127,6 +162,7 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
       return;
     }
     if (key.type === 'ok') {
+      oskLog('key OK -> onConfirm');
       onConfirm();
     }
   }, [setDraftAndNotify, onConfirm]);
@@ -195,7 +231,12 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
       for (const g of pads) { if (g && g.connected) { gp = g; break; } }
       if (!gp) return;
       const pressed = gp.buttons.map((_, i) => isDown(gp!, i));
-      if (prev === null) { prev = pressed; curDir = readDir(gp); return; }
+      if (prev === null) {
+        oskLog(`pad 1er tick ignore sud=${pressed[btnSud] ? 1 : 0}`);
+        prev = pressed;
+        curDir = readDir(gp);
+        return;
+      }
 
       const now = performance.now();
       const dir = readDir(gp);
@@ -218,13 +259,16 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
         const fc = focusColRef.current;
         const line = rowsRef.current[fr] || [];
         const key = line[Math.min(fc, Math.max(0, line.length - 1))];
+        oskLog(`SUD touche « ${key?.label ?? '?'} » (${key?.type ?? '?'})`);
         if (key) activateKey(key);
       }
       if (just(btnEst)) {
+        oskLog('EST gamepad -> cancel');
         onChange(initialRef.current);
         onCancel();
       }
       if (just(btnNord)) {
+        oskLog('NORD gamepad -> clear');
         setDraftAndNotify('');
       }
       prev = pressed;
@@ -239,6 +283,7 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
       if (e.key === 'Escape') {
         e.preventDefault();
         e.stopPropagation();
+        oskLog('keydown Escape -> cancel (AHK/clavier?)');
         onChange(initialRef.current);
         onCancel();
         return;
@@ -246,6 +291,7 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
       if (e.key === 'Enter') {
         e.preventDefault();
         e.stopPropagation();
+        oskLog('ENTREE clavier/AHK -> ferme (RetroBat?)');
         onConfirm();
         return;
       }
@@ -294,6 +340,22 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
           <div style={{ color: '#888', fontSize: '11px' }}>
             Disposition : <span style={{ color: '#fff' }}>{layout.toUpperCase()}</span>
           </div>
+        </div>
+
+        <div style={{
+          backgroundColor: '#0b0b0b',
+          border: '1px solid #333',
+          borderRadius: '8px',
+          padding: '6px 10px',
+          marginBottom: '8px',
+          color: '#8f8',
+          fontSize: '11px',
+          fontFamily: 'ui-monospace, Consolas, monospace',
+          lineHeight: 1.35,
+          maxHeight: '88px',
+          overflow: 'hidden',
+        }}>
+          {logLines.slice(-8).map((l, i) => <div key={`${i}-${l}`}>{l}</div>)}
         </div>
 
         <div style={{
