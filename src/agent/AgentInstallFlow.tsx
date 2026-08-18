@@ -61,6 +61,28 @@ type Step =
 const ACTION_GUARD_MS = 400;
 const COLLECTION_SLUG = 'collectionspersonnalises';
 
+/** 0 = champ Filtrer, puis les boutons ROM. Le ⭐ est donc a index+1. */
+function romPickFocusIndex(romList: string[], suggested: string, romsFound: boolean): number {
+  if (!romsFound || !suggested) return 0;
+  const idx = romList.indexOf(suggested);
+  return idx >= 0 ? idx + 1 : 0;
+}
+
+/** Centre un bouton ROM dans la liste scrollable ; sinon nearest (champs/boutons). */
+function scrollFocusableIntoView(el: HTMLElement) {
+  el.focus({ preventScroll: true });
+  const list = el.closest('[data-hbagent-romlist]') as HTMLElement | null;
+  if (!list) {
+    el.scrollIntoView({ block: 'nearest' });
+    return;
+  }
+  const elRect = el.getBoundingClientRect();
+  const listRect = list.getBoundingClientRect();
+  const elCenter = list.scrollTop + (elRect.top - listRect.top) + elRect.height / 2;
+  const maxScroll = Math.max(0, list.scrollHeight - list.clientHeight);
+  list.scrollTop = Math.max(0, Math.min(elCenter - list.clientHeight / 2, maxScroll));
+}
+
 const errorText = (st: AgentJobStatus): string => {
   switch (st.error) {
     case 'conflict':
@@ -154,10 +176,10 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   useEffect(() => {
     const nodes = getFocusables();
     const el = nodes[focusIdx];
-    if (el) {
-      el.focus({ preventScroll: true });
-      el.scrollIntoView({ block: 'nearest' });
-    }
+    if (!el) return;
+    // rAF : la liste ROM n'a sa vraie hauteur qu'apres layout.
+    const id = window.requestAnimationFrame(() => scrollFocusableIntoView(el));
+    return () => window.cancelAnimationFrame(id);
   }, [focusIdx, step, filter, roms, getFocusables]);
 
   // Miroir AHK : ReloadRetroBatThemes() apres fermeture du dialogue succes.
@@ -299,9 +321,11 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
           );
           if (!mountedRef.current) return;
           setRoms(r.roms);
-          setRomsFound(r.found && r.roms.length > 0);
+          const found = r.found && r.roms.length > 0;
+          setRomsFound(found);
           setSuggested(r.suggested);
           setManualName(r.suggested || theme.name);
+          setFocusIdx(romPickFocusIndex(r.roms, r.suggested, found));
           setStep('rom-pick');
         } catch {
           if (!mountedRef.current) return;
@@ -331,9 +355,8 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     // Nouvelle etape : autoriser un SUD immediat (sinon la garde 400 ms
     // heritee du choix de ROM bloque Remplacer / OK).
     lastActionRef.current = 0;
-    if (step === 'rom-pick' && suggested) {
-      const idx = filteredRoms.indexOf(suggested);
-      setFocusIdx(idx >= 0 ? idx : 0);
+    if (step === 'rom-pick') {
+      setFocusIdx(romPickFocusIndex(filteredRoms, suggested, romsFound));
     } else {
       setFocusIdx(0);
     }
@@ -610,6 +633,9 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
           outline: 3px solid #FFD700 !important;
           outline-offset: 2px;
         }
+        .hbagent-rom-item:focus {
+          outline: none !important;
+        }
       `}</style>
       <div style={{
         width: 'min(600px, 94vw)', maxHeight: '82vh', overflow: 'hidden',
@@ -648,25 +674,33 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                   data-hbagent-osk="filter"
                   style={{ ...inputStyle, marginBottom: '8px' }}
                 />
-                <div style={{
+                <div data-hbagent-romlist style={{
                   overflowY: 'auto', maxHeight: '34vh', marginBottom: '10px',
                   border: '1px solid #333', borderRadius: '8px',
                 }}>
-                  {filteredRoms.map((rom) => (
+                  {filteredRoms.map((rom, romIdx) => {
+                    const isFav = rom === suggested;
+                    const isSel = focusIdx === romIdx + 1;
+                    return (
                     <button
                       key={rom}
-                      className="hbagent-focusable"
+                      className="hbagent-focusable hbagent-rom-item"
                       onClick={() => guard(() => chooseRom(rom))}
                       style={{
                         display: 'block', width: '100%', textAlign: 'left',
                         padding: '8px 12px', fontSize: '12px', cursor: 'pointer',
-                        backgroundColor: rom === suggested ? 'rgba(255,140,0,0.18)' : 'transparent',
-                        color: rom === suggested ? '#FFD700' : '#ddd',
+                        backgroundColor: isSel
+                          ? 'rgba(255,140,0,0.42)'
+                          : isFav
+                            ? 'rgba(255,140,0,0.18)'
+                            : 'transparent',
+                        color: isFav || isSel ? '#FFD700' : '#ddd',
                         border: 'none', borderBottom: '1px solid #262626',
                       }}>
-                      {rom === suggested ? '⭐ ' : ''}{rom}
+                      {isFav ? '⭐ ' : ''}{rom}
                     </button>
-                  ))}
+                    );
+                  })}
                   {filteredRoms.length === 0 && (
                     <p style={{ color: '#888', fontSize: '12px', padding: '10px' }}>Aucune ROM ne correspond au filtre.</p>
                   )}
