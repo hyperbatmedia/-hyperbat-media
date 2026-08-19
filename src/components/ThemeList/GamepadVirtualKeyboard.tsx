@@ -75,11 +75,13 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
   const [draft, setDraft] = useState(initialValue);
   const [focusRow, setFocusRow] = useState(0);
   const [focusCol, setFocusCol] = useState(0);
-  const [debugLog, setDebugLog] = useState<string[]>([]);
+  const [debugLog, setDebugLog] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('osk-debug') || '[]'); } catch (_) { return []; }
+  });
   const debugPush = useCallback((msg: string) => {
     const line = `${(performance.now()|0)} ${msg}`;
     setDebugLog(prev => {
-      const next = [...prev.slice(-7), line];
+      const next = [...prev.slice(-11), line];
       try { localStorage.setItem('osk-debug', JSON.stringify(next)); } catch (_) { /* ignore */ }
       return next;
     });
@@ -108,6 +110,7 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
 
   useEffect(() => {
     if (!open) return;
+    debugPushRef.current('OPEN init=' + initialValue);
     setDraft(initialValue);
     draftRef.current = initialValue;
     setLayout('letters');
@@ -115,6 +118,11 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
     setFocusRow(0);
     setFocusCol(0);
   }, [open, initialValue]);
+
+  useEffect(() => {
+    debugPushRef.current('MOUNT');
+    return () => debugPushRef.current('UNMOUNT');
+  }, []);
 
   const setDraftAndNotify = useCallback((next: string) => {
     setDraft(next);
