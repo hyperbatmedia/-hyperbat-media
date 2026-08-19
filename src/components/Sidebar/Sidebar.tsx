@@ -39,6 +39,8 @@ interface SidebarProps {
   searchInputRef?: React.MutableRefObject<HTMLInputElement | null>;
   /** Contour blanc quand le D-Pad a focusé ce champ (?retrobat=1). */
   searchGamepadFocused?: boolean;
+  /** Placeholder du champ recherche systèmes. */
+  searchPlaceholder?: string;
 }
 
 // ── Icône Discord réutilisable ────────────────────────────────────────────────
@@ -102,6 +104,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   allThemes = [], isDarkMode, onCollapsedChange,
   searchInputRef: searchInputRefProp,
   searchGamepadFocused = false,
+  searchPlaceholder = 'Rechercher un système... (Ctrl+K)',
 }) => {
   const { links, isLoading: isLoadingLinks } = useLinksLoader();
 
@@ -658,7 +661,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                             id="sidebar-search"
                             name="sidebar-search"
                             type="text"
-                            placeholder="Rechercher un système... (Ctrl+K)"
+                            placeholder={searchPlaceholder}
                             value={sidebarSearch}
                             onChange={e => setSidebarSearch(e.target.value)}
                             className={`w-full rounded-lg pl-10 pr-10 py-2 text-sm border-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-500

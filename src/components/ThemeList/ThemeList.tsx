@@ -8,7 +8,7 @@ import ScreenScraperBadge from '../ScreenScraperBadge';
 import { useGamepadGridNav } from '../../hooks/useGamepadGridNav';
 import AgentInstallFlow from '../../agent/AgentInstallFlow';
 import type { AgentInfo } from '../../agent/hyperbatAgent';
-import GamepadVirtualKeyboard, { oskLog } from './GamepadVirtualKeyboard';
+import GamepadVirtualKeyboard from './GamepadVirtualKeyboard';
 
 import { CART_MAX } from '../../constants';
 
@@ -379,6 +379,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
     };
     const btnSud = num('btnSud', 0);
     const btnEst = num('btnEst', 1);
+    const btnNord = num('btnNord', 3);
     const AXIS = 0.5;
     const isDown = (gp: Gamepad, i: number) => {
       if (i < 0) return false;
@@ -388,7 +389,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
 
     const resume = () => {
       clearNavSuppressTimers();
-      oskLog('ThemeList SUD/EST relaches, reprise nav');
       suppressTimerRef.current = setTimeout(() => {
         setSuppressGridNav(false);
         suppressTimerRef.current = null;
@@ -411,7 +411,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
         return;
       }
       idleTicks = 0;
-      if (isDown(gp, btnSud) || isDown(gp, btnEst)) return;
+      if (isDown(gp, btnSud) || isDown(gp, btnEst) || isDown(gp, btnNord)) return;
       resume();
     }, 50);
   }, [clearNavSuppressTimers]);
@@ -437,10 +437,8 @@ const ThemeList: React.FC<ThemeListProps> = ({
     // Recherche focusée (kiosque) : SUD ouvre le clavier virtuel (agent ou non).
     if (isRetrobat && chromeFocus) {
       if (suppressGridNav || oskOpenRef.current) {
-        oskLog('SUD ignore: suppressGridNav/osk');
         return;
       }
-      oskLog(`SUD ouvre OSK recherche (${chromeFocus})`);
       setOskTarget(chromeFocus);
       setOskInitial(chromeFocus === 'main' ? searchValue : sidebarSearchValue);
       setOskOpen(true);
@@ -480,7 +478,14 @@ const ThemeList: React.FC<ThemeListProps> = ({
   }, [oskOpen, chromeFocus, searchHasValue, onSearchClear, sidebarSearchHasValue, onSidebarSearchClear]);
 
   const handleGamepadPreview = useCallback(() => {
-    if (oskOpen) return; // NORD géré par le clavier
+    if (oskOpen) return; // NORD géré par le clavier (ferme)
+    if (isRetrobat && chromeFocus) {
+      if (suppressGridNav || oskOpenRef.current) return;
+      setOskTarget(chromeFocus);
+      setOskInitial(chromeFocus === 'main' ? searchValue : sidebarSearchValue);
+      setOskOpen(true);
+      return;
+    }
     if (chromeFocus) return;
     // Si la lightbox est deja ouverte : la fermer (toggle)
     if (selectedTheme !== null) {
@@ -499,7 +504,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
     } else {
       setSelectedTheme(theme);
     }
-  }, [themes, focusedIndex, selectedTheme, chromeFocus, oskOpen]);
+  }, [themes, focusedIndex, selectedTheme, chromeFocus, oskOpen, isRetrobat, searchValue, sidebarSearchValue, suppressGridNav]);
 
   useGamepadGridNav({
     // Fenêtre d'installation / clavier virtuel / juste fermée : suspendre
@@ -531,14 +536,12 @@ const ThemeList: React.FC<ThemeListProps> = ({
   }, [oskTarget, onSearchChange, onSidebarSearchChange]);
 
   const handleOskConfirm = useCallback(() => {
-    oskLog('ThemeList onConfirm -> close + wait SUD release');
     oskOpenRef.current = false;
     setOskOpen(false);
     armGridNavSuppress();
   }, [armGridNavSuppress]);
 
   const handleOskCancel = useCallback(() => {
-    oskLog('ThemeList onCancel -> close + wait SUD release');
     oskOpenRef.current = false;
     setOskOpen(false);
     armGridNavSuppress();
@@ -1017,7 +1020,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
             <BtnIcon dir="est"  color="#e74c3c" active={btnEstOk}  label="EST"  action="Retour"/>
             <Sep/>
             {/* NORD - Aperçu — jaune Xbox (Y) */}
-            <BtnIcon dir="nord" color="#f1c40f" active={btnNordOk} label="NORD" action="Aperçu"/>
+            <BtnIcon dir="nord" color="#f1c40f" active={btnNordOk} label="NORD" action={chromeFocus ? 'Clavier' : 'Aperçu'}/>
             <Sep/>
             {/* D-PAD : grille + pagination bas + recherche (haut 1re ligne) */}
             <DPad/>

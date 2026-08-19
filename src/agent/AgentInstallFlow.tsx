@@ -30,7 +30,7 @@ import {
   AgentInfo, AgentJobStatus,
   agentRoms, agentCheckConflict, agentStartInstall, agentStatus, agentReloadEs,
 } from './hyperbatAgent';
-import GamepadVirtualKeyboard, { oskLog } from '../components/ThemeList/GamepadVirtualKeyboard';
+import GamepadVirtualKeyboard from '../components/ThemeList/GamepadVirtualKeyboard';
 
 /** Sous-ensemble de ThemeItem réellement nécessaire ici (compatible
  *  structurellement : pas d'import de ../../types pour garder ce module
@@ -376,7 +376,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     };
     // Repli W3C (SUD=0, EST=1). Sur Batocera le lanceur envoie souvent
     // une calibration (ex. btnSud=1) via l'URL.
-    return { sud: num('btnSud', 0), est: num('btnEst', 1) };
+    return { sud: num('btnSud', 0), est: num('btnEst', 1), nord: num('btnNord', 3) };
   }, []);
 
   // Rempli plus bas quand resolveConflict est declare
@@ -453,11 +453,28 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                 : collectionName,
           );
           setOskOpen(true);
-          oskLog(`InstallFlow SUD ouvre OSK (${field})`);
           return;
         }
       }
       el?.click();
+    };
+
+    const activateNord = () => {
+      if (oskOpenRef.current) return;
+      const s = stepRef.current;
+      if (s !== 'rom-pick' && s !== 'collection-name') return;
+      const nodes = getFocusables();
+      const el = nodes[focusIdxRef.current];
+      if (!(el instanceof HTMLInputElement)) return;
+      const field = (el.dataset.hbagentOsk || '') as OskField | '';
+      if (field !== 'filter' && field !== 'manual' && field !== 'collection') return;
+      setOskField(field);
+      setOskInitial(
+        field === 'filter' ? filter
+          : field === 'manual' ? manualName
+            : collectionName,
+      );
+      setOskOpen(true);
     };
 
     const iv = setInterval(() => {
@@ -479,10 +496,10 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       if (oskWaitReleaseRef.current) {
         const sudHeld = btnCfg.sud >= 0 && pressed[btnCfg.sud];
         const estHeld = btnCfg.est >= 0 && pressed[btnCfg.est];
+        const nordHeld = btnCfg.nord >= 0 && pressed[btnCfg.nord];
         prev = pressed;
         curDir = readDir(gp);
-        if (sudHeld || estHeld) return;
-        oskLog('InstallFlow SUD/EST relaches, reprise nav');
+        if (sudHeld || estHeld || nordHeld) return;
         oskWaitReleaseRef.current = false;
         return;
       }
@@ -508,6 +525,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       const just = (i: number) => i >= 0 && pressed[i] && !before[i];
       if (just(btnCfg.sud)) activateSud();
       if (just(btnCfg.est)) handleBack();
+      if (just(btnCfg.nord)) activateNord();
       prev = pressed;
     }, 80);
     return () => clearInterval(iv);
@@ -668,7 +686,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                 <input
                   type="text"
                   value={filter}
-                  placeholder="Filtrer la liste… (SUD = clavier virtuel)"
+                  placeholder="Filtrer la liste… (SUD ou NORD = clavier)"
                   onChange={(e) => setFilter(e.target.value)}
                   className="hbagent-focusable"
                   data-hbagent-osk="filter"
@@ -713,7 +731,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
               data-hbagent-osk="manual"
               onChange={(e) => setManualName(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') guard(() => chooseRom(manualName)); }}
-              placeholder="…ou saisissez le nom exact de la ROM (sans extension)"
+              placeholder="…ou saisissez le nom (SUD ou NORD = clavier)"
               style={{ ...inputStyle, marginBottom: '10px' }}
             />
             <div style={{ display: 'flex', gap: '10px' }}>
@@ -733,7 +751,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         {step === 'collection-name' && (
           <>
             <p style={{ color: 'white', fontSize: '13px', marginBottom: '10px' }}>
-              Nom de la collection (ex : Sonic, Mario, Castlevania…) :
+              Nom de la collection (SUD ou NORD = clavier) :
             </p>
             <input
               type="text" value={collectionName}
@@ -850,7 +868,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
             <Sep />
             <FaceBtn dir="est" color="#e74c3c" label="EST" action="Annuler" />
             <Sep />
-            <FaceBtn dir="nord" color="#f1c40f" label="NORD" action="Effacer (clavier)" />
+            <FaceBtn dir="nord" color="#f1c40f" label="NORD" action="Clavier" />
             <Sep />
             <KeyBadge label="↑↓←→" action="Naviguer" />
             <KeyBadge label="Entrée" action="Valider" />
@@ -873,14 +891,12 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
           else setCollectionName(value);
         }}
         onConfirm={() => {
-          oskLog('InstallFlow onConfirm');
           oskOpenRef.current = false;
           oskWaitReleaseRef.current = true;
           lastActionRef.current = Date.now();
           setOskOpen(false);
         }}
         onCancel={() => {
-          oskLog('InstallFlow onCancel');
           oskOpenRef.current = false;
           oskWaitReleaseRef.current = true;
           lastActionRef.current = Date.now();
