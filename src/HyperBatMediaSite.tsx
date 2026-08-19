@@ -26,7 +26,7 @@ import { detectAgent } from './agent/hyperbatAgent';
 import type { AgentInfo } from './agent/hyperbatAgent';
 import {
   isKioskNavigablePill,
-  KIOSK_NAVIGABLE_PILL_IDS,
+  kioskFocusStyle,
   type KioskVisualFocus,
 } from './kioskNavConfig';
 
@@ -608,9 +608,7 @@ export default function HyperBatMediaSite(): JSX.Element {
     );
   }
 
-  const kioskPillFocusId = isRetrobat && kioskVisual?.pillFocusIndex != null
-    ? KIOSK_NAVIGABLE_PILL_IDS[kioskVisual.pillFocusIndex]
-    : null;
+  const kioskPillFocusId = isRetrobat ? kioskVisual?.pillFocusId ?? null : null;
   const kioskToolbarSortFocused = isRetrobat && kioskVisual?.toolbarFocus === 'sort';
   const kioskToolbarDarkFocused = isRetrobat && kioskVisual?.toolbarFocus === 'dark';
   const kioskFocusedSystemId = isRetrobat && kioskVisual?.sidebarSystemFocusIndex != null
@@ -657,7 +655,7 @@ export default function HyperBatMediaSite(): JSX.Element {
           borderColor: !isExport && systemsLogic.selectedCategory === id ? '#FFFF00' : id === 'multi' ? '#c084fc' : '#FFD700',
           borderWidth: !isExport && systemsLogic.selectedCategory === id ? '3px' : '2px',
           boxShadow: !isExport && systemsLogic.selectedCategory === id ? '0 0 10px rgba(255,215,0,0.3)' : 'none',
-          ...(pillFocused ? { outline: '3px solid #fff', outlineOffset: '2px' } : {}),
+          ...kioskFocusStyle(pillFocused),
         }}>
         {icon && <span style={{ fontSize: '10px' }}>{icon}</span>}
         {Icon && <Icon className="w-2.5 h-2.5" style={{ color: '#e0e0e0' }} />}
@@ -806,7 +804,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                       borderWidth: sortBy === 'date' ? '3px' : '2px',
                       boxShadow: sortBy === 'date' ? '0 0 10px rgba(255,215,0,0.4)' : 'none',
                       color: '#e0e0e0',
-                      ...(kioskToolbarSortFocused ? { outline: '3px solid #fff', outlineOffset: '2px' } : {}),
+                      ...kioskFocusStyle(!!kioskToolbarSortFocused),
                     }}
                     title={sortBy === 'name' ? 'Trier par date' : 'Trier par nom'}>
                     {sortBy === 'name' ? <SortAsc className="w-5 h-5" /> : <Calendar className="w-5 h-5" />}
@@ -819,7 +817,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                       backgroundColor: '#D97706',
                       borderColor: '#FFD700',
                       color: '#e0e0e0',
-                      ...(kioskToolbarDarkFocused ? { outline: '3px solid #fff', outlineOffset: '2px' } : {}),
+                      ...kioskFocusStyle(!!kioskToolbarDarkFocused),
                     }}
                     title={isDarkMode ? 'Mode clair' : 'Mode sombre'}>
                     {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -883,9 +881,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                       backgroundColor: colors.inputBg,
                       color: colors.text,
                       borderColor: colors.border,
-                      ...(searchGamepadFocused && isRetrobat
-                        ? { outline: '3px solid #fff', outlineOffset: '2px' }
-                        : {}),
+                      ...kioskFocusStyle(!!searchGamepadFocused && isRetrobat),
                     }}
                   />
                   {searchTerm && (

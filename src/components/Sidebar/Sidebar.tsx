@@ -10,7 +10,7 @@ import {
 import { useLinksLoader } from '../../hooks/useLinksLoader';
 import type { ModalConfig } from '../../hooks/useLinksLoader';
 import ContentModal from '../ContentModal/ContentModal';
-import { isKioskNavigableSidebarSystem } from '../../kioskNavConfig';
+import { isKioskNavigableSidebarSystem, kioskFocusStyle } from '../../kioskNavConfig';
 
 import arcadeImg from '../../assets/icons/arcade.png';
 import portableImg from '../../assets/icons/console_portable.png';
@@ -464,7 +464,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 ${isSelected || isTopButton ? 'text-white' : `${defaultTextColor} ${defaultHoverText}`}`}
               style={{
                 ...textStyle,
-                ...(kioskFocused ? { outline: '3px solid #fff', outlineOffset: '2px' } : {}),
+                ...kioskFocusStyle(!!kioskFocused),
               }}
               aria-label={`${system.name}${themeCount > 0 ? `, ${themeCount} thèmes` : ''}`}
               aria-current={isSelected ? 'page' : undefined}
@@ -707,9 +707,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                             onChange={e => setSidebarSearch(e.target.value)}
                             className={`w-full rounded-lg pl-10 pr-10 py-2 text-sm border-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-500
                               ${isDarkMode ? 'bg-gray-800 text-white border-gray-700' : 'bg-white text-gray-900 border-gray-300'}`}
-                            style={searchGamepadFocused
-                              ? { outline: '3px solid #fff', outlineOffset: '2px' }
-                              : undefined}
+                            style={searchGamepadFocused ? kioskFocusStyle(true) : undefined}
                             aria-label="Rechercher un système"
                             autoComplete="off"
                           />
