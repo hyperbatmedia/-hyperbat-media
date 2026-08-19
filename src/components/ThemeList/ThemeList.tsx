@@ -1,5 +1,5 @@
 // Fichier: src/components/ThemeList/ThemeList.tsx
-import React, { useState, useRef, useEffect, useLayoutEffect, useCallback, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Download, Plus } from 'lucide-react';
 import { ThemeItem, SystemRow } from '../../types';
 import { getThemeKey } from '../../utils/themeUtils';
@@ -102,7 +102,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
   const [oskInitial, setOskInitial] = useState('');
   const [oskTarget, setOskTarget] = useState<'main' | 'sidebar'>('main');
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const gridContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Capture unique des parametres manette/kiosque au tout premier rendu,
   // avant qu'un eventuel window.history.replaceState() ailleurs (ex:
@@ -238,40 +237,21 @@ const ThemeList: React.FC<ThemeListProps> = ({
     sidebarSystemFocusIndex, chromeFocus, paginationFocus,
   ]);
 
-  // Colonnes réelles de la grille (mesure DOM — évite décalage avec innerWidth).
-  const measureGridColumns = useCallback(() => {
-    const grid = gridContainerRef.current;
-    if (!grid || viewMode !== 'grid') {
-      setColumns(1);
-      return;
-    }
-    const cards = grid.querySelectorAll('.theme-card');
-    if (cards.length <= 1) {
-      setColumns(Math.max(1, cards.length));
-      return;
-    }
-    const firstTop = (cards[0] as HTMLElement).getBoundingClientRect().top;
-    let cols = 1;
-    for (let i = 1; i < cards.length; i++) {
-      const top = (cards[i] as HTMLElement).getBoundingClientRect().top;
-      if (top > firstTop + 8) break;
-      cols++;
-    }
-    setColumns(cols);
-  }, [viewMode]);
-
-  useLayoutEffect(() => {
-    measureGridColumns();
-    const grid = gridContainerRef.current;
-    if (!grid) return;
-    const ro = new ResizeObserver(() => measureGridColumns());
-    ro.observe(grid);
-    window.addEventListener('resize', measureGridColumns);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener('resize', measureGridColumns);
+  // Recalcule le nombre de colonnes réellement affichées (miroir des classes Tailwind ci-dessous)
+  useEffect(() => {
+    const computeColumns = () => {
+      if (viewMode !== 'grid') { setColumns(1); return; }
+      const w = window.innerWidth;
+      if (sidebarCollapsed) {
+        setColumns(w >= 768 ? 5 : 2);
+      } else {
+        setColumns(w >= 1024 ? 4 : w >= 768 ? 3 : 2);
+      }
     };
-  }, [themes, sidebarCollapsed, viewMode, measureGridColumns]);
+    computeColumns();
+    window.addEventListener('resize', computeColumns);
+    return () => window.removeEventListener('resize', computeColumns);
+  }, [viewMode, sidebarCollapsed]);
 
   // Revient en haut de la grille à chaque changement de page/filtre.
   // Ne touche pas chromeFocus : sinon chaque frappe dans la recherche
@@ -903,7 +883,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
         </div>
       )}
 
-      <div ref={gridContainerRef} className={viewMode === 'grid'
+      <div className={viewMode === 'grid'
         ? sidebarCollapsed
           ? 'grid grid-cols-2 md:grid-cols-5 gap-4'
           : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'
