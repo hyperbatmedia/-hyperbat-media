@@ -63,6 +63,28 @@ export interface GamepadVirtualKeyboardProps {
   onCancel: () => void;
 }
 
+/** Picto bouton facial (même style que le bandeau vitrine). */
+const FaceBtnHint = ({ dir, color, action }: {
+  dir: 'sud' | 'est' | 'nord'; color: string; action: string;
+}) => {
+  const dx = { sud: 0, est: 9, nord: 0 };
+  const dy = { sud: 9, est: 0, nord: -9 };
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+      <svg width="34" height="34" viewBox="-17 -17 34 34" aria-hidden="true">
+        <circle cx="0" cy="0" r="15" fill="#1a1a1a" stroke="#555" strokeWidth="1.5" />
+        <circle cx="0" cy="-9" r="2.8" fill={dir === 'nord' ? color : '#444'} />
+        <circle cx="0" cy="9" r="2.8" fill={dir === 'sud' ? color : '#444'} />
+        <circle cx="-9" cy="0" r="2.8" fill="#444" />
+        <circle cx="9" cy="0" r="2.8" fill={dir === 'est' ? color : '#444'} />
+        <circle cx="0" cy="0" r="2" fill="#333" />
+        <circle cx={dx[dir]} cy={dy[dir]} r="4" fill={color} opacity="0.95" />
+      </svg>
+      <span style={{ fontSize: '9px', color: '#aaa', lineHeight: 1 }}>{action}</span>
+    </div>
+  );
+};
+
 const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
   open,
   initialValue,
@@ -366,7 +388,7 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
                       minWidth: 0,
                       height: '42px',
                       borderRadius: '8px',
-                      border: focused ? '2px solid #fff' : '1px solid #444',
+                      border: focused ? '2px solid #fff' : '2px solid #444',
                       backgroundColor: isOk
                         ? '#c45f00'
                         : focused || isShiftOn
@@ -388,12 +410,13 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
         </div>
 
         <div style={{
-          display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap',
+          display: 'flex', justifyContent: 'center', alignItems: 'flex-end',
+          gap: '20px', flexWrap: 'wrap',
           marginTop: '10px', color: '#aaa', fontSize: '11px',
         }}>
-          <span><b style={{ color: '#2ecc71' }}>SUD</b> touche</span>
-          <span><b style={{ color: '#e74c3c' }}>EST</b> effacer</span>
-          <span><b style={{ color: '#f1c40f' }}>NORD</b> fermer</span>
+          <FaceBtnHint dir="sud" color="#2ecc71" action="touche" />
+          <FaceBtnHint dir="est" color="#e74c3c" action="effacer" />
+          <FaceBtnHint dir="nord" color="#f1c40f" action="fermer" />
           <span><b style={{ color: '#fff' }}>OK</b> valider</span>
         </div>
       </div>
