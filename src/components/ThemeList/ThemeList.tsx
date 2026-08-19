@@ -607,15 +607,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
     return categoryMap[categoryId] || categoryId;
   };
 
-  if (filteredThemesLength === 0) {
-    return (
-      <div className="text-center py-20 text-gray-400">
-        <p className="text-lg">Aucun thème trouvé</p>
-        <p className="text-sm mt-2">Essayez de modifier votre recherche</p>
-      </div>
-    );
-  }
-
   return (
     <>
       <style>{`
@@ -637,6 +628,13 @@ const ThemeList: React.FC<ThemeListProps> = ({
         .cart-full-msg { animation: popIn 0.2s ease-out; }
       `}</style>
 
+      {filteredThemesLength === 0 ? (
+        <div className="text-center py-20 text-gray-400">
+          <p className="text-lg">Aucun thème trouvé</p>
+          <p className="text-sm mt-2">Essayez de modifier votre recherche</p>
+        </div>
+      ) : (
+        <>
       {cartFullMsg && (
         <div className="cart-full-msg fixed top-6 left-1/2 z-50 px-5 py-3 rounded-lg border-2 font-bold text-sm shadow-lg"
           style={{ transform: 'translateX(-50%)', backgroundColor: '#1a1a1a', borderColor: '#FF8C00', color: '#FF8C00' }}>
@@ -897,6 +895,8 @@ const ThemeList: React.FC<ThemeListProps> = ({
           {Math.min(currentPage * themesPerPage, filteredThemesLength)} sur{' '}
           <span className="font-bold text-orange-400">{filteredThemesLength.toLocaleString()}</span> thème(s)
         </div>
+      )}
+        </>
       )}
 
       <Lightbox

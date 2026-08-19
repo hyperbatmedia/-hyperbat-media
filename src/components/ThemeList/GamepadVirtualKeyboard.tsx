@@ -75,17 +75,6 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
   const [draft, setDraft] = useState(initialValue);
   const [focusRow, setFocusRow] = useState(0);
   const [focusCol, setFocusCol] = useState(0);
-  const [debugLog, setDebugLog] = useState<string[]>(() => {
-    try { return JSON.parse(localStorage.getItem('osk-debug') || '[]'); } catch (_) { return []; }
-  });
-  const debugPush = useCallback((msg: string) => {
-    const line = `${(performance.now()|0)} ${msg}`;
-    setDebugLog(prev => {
-      const next = [...prev.slice(-11), line];
-      try { localStorage.setItem('osk-debug', JSON.stringify(next)); } catch (_) { /* ignore */ }
-      return next;
-    });
-  }, []);
   const draftRef = useRef(draft);
   draftRef.current = draft;
   const focusRowRef = useRef(focusRow);
@@ -103,14 +92,11 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
   rowsRef.current = rows;
   const onChangeRef = useRef(onChange);
   const onConfirmRef = useRef(onConfirm);
-  const debugPushRef = useRef(debugPush);
   onChangeRef.current = onChange;
   onConfirmRef.current = onConfirm;
-  debugPushRef.current = debugPush;
 
   useEffect(() => {
     if (!open) return;
-    debugPushRef.current('OPEN init=' + initialValue);
     setDraft(initialValue);
     draftRef.current = initialValue;
     setLayout('letters');
@@ -118,11 +104,6 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
     setFocusRow(0);
     setFocusCol(0);
   }, [open, initialValue]);
-
-  useEffect(() => {
-    debugPushRef.current('MOUNT');
-    return () => debugPushRef.current('UNMOUNT');
-  }, []);
 
   const setDraftAndNotify = useCallback((next: string) => {
     setDraft(next);
@@ -171,7 +152,6 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
       return;
     }
     if (key.type === 'ok') {
-      debugPushRef.current('OK→ferme');
       closeKeep();
     }
   }, [setDraftAndNotify, closeKeep]);
@@ -268,18 +248,12 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
         const line = rowsRef.current[fr] || [];
         const safeC = Math.min(fc, Math.max(0, line.length - 1));
         const key = line[safeC];
-        const allDown = pressed.map((v, i) => v ? i : null).filter(v => v !== null).join(',');
-        debugPushRef.current(`SUD r${fr}c${fc}→${safeC} key=${key?.id||'?'} btns=[${allDown}]`);
         if (key) activateKey(key);
       }
       if (just(btnEst)) {
-        debugPushRef.current('EST backspace');
         setDraftAndNotify(draftRef.current.slice(0, -1));
       }
       if (just(btnNord)) {
-        const allDown = pressed.map((v, i) => v ? i : null).filter(v => v !== null).join(',');
-        const prevNord = prev ? prev[btnNord] : '?';
-        debugPushRef.current(`NORD! btns=[${allDown}] prev[${btnNord}]=${prevNord}`);
         closeKeep();
       }
       prev = pressed;
@@ -294,7 +268,6 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
       if (e.key === 'Escape') {
         e.preventDefault();
         e.stopPropagation();
-        debugPushRef.current('ESC clavier→ferme');
         closeKeep();
         return;
       }
@@ -317,22 +290,7 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
     return () => window.removeEventListener('keydown', onKey, true);
   }, [open, setDraftAndNotify, closeKeep]);
 
-  const debugOverlay = debugLog.length > 0 ? (
-    <div style={{
-      position: 'fixed', top: 0, left: 0,
-      zIndex: 99999, padding: '6px 10px',
-      backgroundColor: '#000', border: '2px solid #f00',
-      borderRadius: '0 0 8px 0', fontSize: '11px', fontFamily: 'monospace',
-      color: '#0f0', maxWidth: '600px', pointerEvents: 'none',
-    }}>
-      <div style={{ color: '#f44', fontWeight: 700, marginBottom: '2px' }}>
-        OSK {open ? 'ouvert' : 'FERMÉ'}
-      </div>
-      {debugLog.map((line, i) => <div key={i}>{line}</div>)}
-    </div>
-  ) : null;
-
-  if (!open) return debugOverlay;
+  if (!open) return null;
 
   const safeCol = Math.min(focusCol, Math.max(0, (rows[focusRow]?.length || 1) - 1));
   const displayLabel = (key: KeyDef): string => {
@@ -343,8 +301,6 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
   };
 
   return (
-    <>
-    {debugOverlay}
     <div
       role="dialog"
       aria-label={title}
@@ -440,20 +396,8 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
           <span><b style={{ color: '#f1c40f' }}>NORD</b> fermer</span>
           <span><b style={{ color: '#fff' }}>OK</b> valider</span>
         </div>
-
-        {debugLog.length > 0 && (
-          <div style={{
-            marginTop: '8px', padding: '6px 10px',
-            backgroundColor: '#0a0a0a', border: '1px solid #333',
-            borderRadius: '6px', fontSize: '10px', fontFamily: 'monospace',
-            color: '#0f0', maxHeight: '90px', overflowY: 'auto',
-          }}>
-            {debugLog.map((line, i) => <div key={i}>{line}</div>)}
-          </div>
-        )}
       </div>
     </div>
-    </>
   );
 };
 

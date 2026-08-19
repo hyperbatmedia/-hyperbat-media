@@ -821,6 +821,9 @@ export default function HyperBatMediaSite(): JSX.Element {
                   onCollapsedChange={setSidebarCollapsed}
                   searchInputRef={sidebarSearchInputRef}
                   searchGamepadFocused={sidebarSearchGamepadFocused && isRetrobat}
+                  searchPlaceholder={isRetrobat
+                    ? 'Rechercher un système… (SUD ou NORD = clavier)'
+                    : 'Rechercher un système... (Ctrl+K)'}
                 />
               </div>
             )}
@@ -831,7 +834,9 @@ export default function HyperBatMediaSite(): JSX.Element {
                   <input
                     ref={searchInputRef}
                     type="text"
-                    placeholder="Rechercher un thème, un jeu, un créateur, un système..."
+                    placeholder={isRetrobat
+                      ? 'Rechercher un thème… (SUD ou NORD = clavier)'
+                      : 'Rechercher un thème, un jeu, un créateur, un système...'}
                     value={searchTerm}
                     onChange={(e) => handleSearchChange(e.target.value)}
                     className="w-full rounded-lg pl-12 pr-12 py-3 border-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
