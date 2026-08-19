@@ -933,6 +933,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                   allFilteredThemes={filteredThemes} filteredThemesLength={filteredThemes.length}
                   totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage}
                   themesPerPage={THEMES_PER_PAGE} systems={systemsLogic.systems}
+                  selectedSystem={systemsLogic.selectedSystem}
                   cart={cart} onCartAdd={handleCartAdd} onCartRemove={handleCartRemove}
                   sidebarCollapsed={sidebarCollapsed}
                   isRetrobat={isRetrobat} agentInfo={agentInfo}

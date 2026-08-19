@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useEffect, useState, useCallback } from 'react';
+import React, { useMemo, useRef, useEffect, useLayoutEffect, useState, useCallback } from 'react';
 import { Search, ChevronDown, X, Star, BookOpen } from 'lucide-react';
 import { SystemRow } from '../../types';
 import { getSystemColors } from './sidebar.colors';
@@ -286,9 +286,22 @@ const Sidebar: React.FC<SidebarProps> = ({
       .map(system => system.id);
   }, [isRetrobat, collapsed, visibleSystems, linksBySystemId]);
 
-  useEffect(() => {
-    onKioskNavigableSystemIdsChange?.(kioskNavigableSystemIds);
-  }, [kioskNavigableSystemIds, onKioskNavigableSystemIdsChange]);
+  // Ne remonter que les systèmes réellement rendus dans le DOM (sections ouvertes).
+  useLayoutEffect(() => {
+    if (!isRetrobat || collapsed) {
+      onKioskNavigableSystemIdsChange?.([]);
+      return;
+    }
+    const ids = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-kiosk-sidebar-system]'),
+    )
+      .map((el) => el.dataset.kioskSidebarSystem)
+      .filter((id): id is string => !!id);
+    onKioskNavigableSystemIdsChange?.(ids.length > 0 ? ids : kioskNavigableSystemIds);
+  }, [
+    isRetrobat, collapsed, visibleSystems, expandedSections, expandedSubsections,
+    selectedSystem, sidebarSearch, kioskNavigableSystemIds, onKioskNavigableSystemIdsChange,
+  ]);
 
   // ── Renderers ─────────────────────────────────────────────────────────────
   const renderHeader = (system: SystemRow) => {

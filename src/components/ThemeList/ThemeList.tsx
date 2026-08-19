@@ -1,5 +1,5 @@
 // Fichier: src/components/ThemeList/ThemeList.tsx
-import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect, useCallback, useMemo } from 'react';
 import { Download, Plus } from 'lucide-react';
 import { ThemeItem, SystemRow } from '../../types';
 import { getThemeKey } from '../../utils/themeUtils';
@@ -27,6 +27,8 @@ interface ThemeListProps {
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   themesPerPage: number;
   systems: SystemRow[];
+  /** Système actuellement filtré (navigation sidebar kiosque). */
+  selectedSystem?: string;
   cart: ThemeItem[];
   onCartAdd: (theme: ThemeItem) => void;
   onCartRemove: (key: string) => void;
@@ -63,7 +65,7 @@ interface ThemeListProps {
 const ThemeList: React.FC<ThemeListProps> = ({
   viewMode, themes, allFilteredThemes, filteredThemesLength,
   totalPages, currentPage, setCurrentPage, themesPerPage,
-  systems,
+  systems, selectedSystem = 'all',
   cart, onCartAdd, onCartRemove, sidebarCollapsed = false,
   isRetrobat = false,
   agentInfo = null,
@@ -100,6 +102,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
   const [oskInitial, setOskInitial] = useState('');
   const [oskTarget, setOskTarget] = useState<'main' | 'sidebar'>('main');
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const gridContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Capture unique des parametres manette/kiosque au tout premier rendu,
   // avant qu'un eventuel window.history.replaceState() ailleurs (ex:
@@ -192,11 +195,29 @@ const ThemeList: React.FC<ThemeListProps> = ({
     }
   }, [sidebarCollapsed]);
 
-  const clearKioskExtraFocus = useCallback(() => {
+  const clearPillAndToolbarFocus = useCallback(() => {
     setPillFocusId(null);
     setToolbarFocus(null);
-    setSidebarSystemFocusIndex(null);
   }, []);
+
+  const clearKioskExtraFocus = useCallback(() => {
+    clearPillAndToolbarFocus();
+    setSidebarSystemFocusIndex(null);
+  }, [clearPillAndToolbarFocus]);
+
+  const resolveSidebarSystemFocusIndex = useCallback((): number => {
+    const idx = kioskSidebarSystemIds.indexOf(selectedSystem);
+    return idx >= 0 ? idx : 0;
+  }, [kioskSidebarSystemIds, selectedSystem]);
+
+  const enterSidebarSystemsFromGrid = useCallback(() => {
+    if (kioskSidebarSystemIds.length === 0) return false;
+    setSidebarSystemFocusIndex(resolveSidebarSystemFocusIndex());
+    clearPillAndToolbarFocus();
+    setChromeFocus(null);
+    setPaginationFocus(null);
+    return true;
+  }, [kioskSidebarSystemIds.length, resolveSidebarSystemFocusIndex, clearPillAndToolbarFocus]);
 
   const kioskSystemCount = kioskSidebarSystemIds.length;
   const hasKioskToolbar = isRetrobat && !!kioskSortButtonRef && !!kioskDarkButtonRef;
@@ -217,21 +238,40 @@ const ThemeList: React.FC<ThemeListProps> = ({
     sidebarSystemFocusIndex, chromeFocus, paginationFocus,
   ]);
 
-  // Recalcule le nombre de colonnes réellement affichées (miroir des classes Tailwind ci-dessous)
-  useEffect(() => {
-    const computeColumns = () => {
-      if (viewMode !== 'grid') { setColumns(1); return; }
-      const w = window.innerWidth;
-      if (sidebarCollapsed) {
-        setColumns(w >= 768 ? 5 : 2);
-      } else {
-        setColumns(w >= 1024 ? 4 : w >= 768 ? 3 : 2);
-      }
+  // Colonnes réelles de la grille (mesure DOM — évite décalage avec innerWidth).
+  const measureGridColumns = useCallback(() => {
+    const grid = gridContainerRef.current;
+    if (!grid || viewMode !== 'grid') {
+      setColumns(1);
+      return;
+    }
+    const cards = grid.querySelectorAll('.theme-card');
+    if (cards.length <= 1) {
+      setColumns(Math.max(1, cards.length));
+      return;
+    }
+    const firstTop = (cards[0] as HTMLElement).getBoundingClientRect().top;
+    let cols = 1;
+    for (let i = 1; i < cards.length; i++) {
+      const top = (cards[i] as HTMLElement).getBoundingClientRect().top;
+      if (top > firstTop + 8) break;
+      cols++;
+    }
+    setColumns(cols);
+  }, [viewMode]);
+
+  useLayoutEffect(() => {
+    measureGridColumns();
+    const grid = gridContainerRef.current;
+    if (!grid) return;
+    const ro = new ResizeObserver(() => measureGridColumns());
+    ro.observe(grid);
+    window.addEventListener('resize', measureGridColumns);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', measureGridColumns);
     };
-    computeColumns();
-    window.addEventListener('resize', computeColumns);
-    return () => window.removeEventListener('resize', computeColumns);
-  }, [viewMode, sidebarCollapsed]);
+  }, [themes, sidebarCollapsed, viewMode, measureGridColumns]);
 
   // Revient en haut de la grille à chaque changement de page/filtre.
   // Ne touche pas chromeFocus : sinon chaque frappe dans la recherche
@@ -269,7 +309,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
     }
     if (paginationFocus === 'prev') { prevPageBtnRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); return; }
     if (paginationFocus === 'next') { nextPageBtnRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); return; }
-    cardRefs.current[focusedIndex]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    cardRefs.current[focusedIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [
     focusedIndex, isRetrobat, paginationFocus, chromeFocus, searchInputRef, resolveSidebarInput,
     pillFocusId, toolbarFocus, sidebarSystemFocusIndex, kioskSidebarSystemIds,
@@ -370,7 +410,8 @@ const ThemeList: React.FC<ThemeListProps> = ({
         }
       } else if (direction === 'right') {
         setSidebarSystemFocusIndex(null);
-        if (mainInput) setChromeFocus('main');
+        setChromeFocus(null);
+        setPaginationFocus(null);
       }
       return;
     }
@@ -400,7 +441,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
         setChromeFocus(null);
         setPaginationFocus(null);
         if (isRetrobat && kioskSystemCount > 0) {
-          setSidebarSystemFocusIndex(0);
+          setSidebarSystemFocusIndex(resolveSidebarSystemFocusIndex());
         }
       } else if (direction === 'up' && isRetrobat && hasKioskToolbar) {
         setChromeFocus(null);
@@ -431,22 +472,19 @@ const ThemeList: React.FC<ThemeListProps> = ({
           clearKioskExtraFocus();
         } else if (direction === 'left' && sideInput) {
           setChromeFocus('sidebar');
-          clearKioskExtraFocus();
+          clearPillAndToolbarFocus();
+          setSidebarSystemFocusIndex(null);
         }
         return prev;
       }
       const col = prev % columns;
       if (direction === 'left') {
         if (col > 0) return prev - 1;
-        if (isRetrobat && kioskSystemCount > 0) {
-          setSidebarSystemFocusIndex(0);
-          clearKioskExtraFocus();
-          setChromeFocus(null);
-          return prev;
-        }
+        if (isRetrobat && enterSidebarSystemsFromGrid()) return prev;
         if (sideInput) {
           setChromeFocus('sidebar');
-          clearKioskExtraFocus();
+          clearPillAndToolbarFocus();
+          setSidebarSystemFocusIndex(null);
           return prev;
         }
         return prev;
@@ -459,13 +497,11 @@ const ThemeList: React.FC<ThemeListProps> = ({
           clearKioskExtraFocus();
           return prev;
         }
-        if (typeof window !== 'undefined') window.scrollBy({ top: -220, behavior: 'smooth' });
         return prev;
       }
       if (direction === 'down') {
         if (prev + columns < count) return prev + columns;
         if (totalPages > 1) { setPaginationFocus('prev'); return prev; }
-        if (typeof window !== 'undefined') window.scrollBy({ top: 220, behavior: 'smooth' });
         return prev;
       }
       return prev;
@@ -473,7 +509,8 @@ const ThemeList: React.FC<ThemeListProps> = ({
   }, [
     themes.length, columns, paginationFocus, totalPages, chromeFocus, searchInputRef,
     resolveSidebarInput, isRetrobat, pillFocusId, toolbarFocus, sidebarSystemFocusIndex,
-    kioskSystemCount, hasKioskToolbar, clearKioskExtraFocus,
+    kioskSystemCount, hasKioskToolbar, clearKioskExtraFocus, clearPillAndToolbarFocus,
+    enterSidebarSystemsFromGrid, resolveSidebarSystemFocusIndex,
     kioskSortButtonRef, kioskDarkButtonRef,
   ]);
 
@@ -866,7 +903,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
         </div>
       )}
 
-      <div className={viewMode === 'grid'
+      <div ref={gridContainerRef} className={viewMode === 'grid'
         ? sidebarCollapsed
           ? 'grid grid-cols-2 md:grid-cols-5 gap-4'
           : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'
