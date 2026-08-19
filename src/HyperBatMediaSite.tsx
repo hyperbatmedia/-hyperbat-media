@@ -24,6 +24,11 @@ import bobSystemsData from './data/bob-systems.json';
 import { resolveBobSlug } from './data/systemAliases';
 import { detectAgent } from './agent/hyperbatAgent';
 import type { AgentInfo } from './agent/hyperbatAgent';
+import {
+  isKioskNavigablePill,
+  KIOSK_NAVIGABLE_PILL_IDS,
+  type KioskVisualFocus,
+} from './kioskNavConfig';
 
 const THEMES_PER_PAGE = 20;
 
@@ -311,6 +316,10 @@ export default function HyperBatMediaSite(): JSX.Element {
   const [showPushFromClose, setShowPushFromClose] = useState<boolean>(false);
   const [cart, setCart] = useState<ThemeItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
+  const [kioskVisual, setKioskVisual] = useState<KioskVisualFocus | null>(null);
+  const [kioskSidebarSystemIds, setKioskSidebarSystemIds] = useState<string[]>([]);
+  const kioskSortButtonRef = useRef<HTMLButtonElement | null>(null);
+  const kioskDarkButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const handleCartAdd = useCallback((theme: ThemeItem) => {
     setCart(prev => {
@@ -599,6 +608,15 @@ export default function HyperBatMediaSite(): JSX.Element {
     );
   }
 
+  const kioskPillFocusId = isRetrobat && kioskVisual?.pillFocusIndex != null
+    ? KIOSK_NAVIGABLE_PILL_IDS[kioskVisual.pillFocusIndex]
+    : null;
+  const kioskToolbarSortFocused = isRetrobat && kioskVisual?.toolbarFocus === 'sort';
+  const kioskToolbarDarkFocused = isRetrobat && kioskVisual?.toolbarFocus === 'dark';
+  const kioskFocusedSystemId = isRetrobat && kioskVisual?.sidebarSystemFocusIndex != null
+    ? kioskSidebarSystemIds[kioskVisual.sidebarSystemFocusIndex] ?? null
+    : null;
+
   // Rendu d'une pastille de stat (Artwork, Magazines, Collection...), factorisé
   // pour être réutilisé identique qu'elle soit seule ou empilée avec une autre.
   const renderPill = ({ id, label, count, special, icon, Icon, total, isExport }: {
@@ -610,56 +628,63 @@ export default function HyperBatMediaSite(): JSX.Element {
     Icon?: ComponentType<{ className?: string; style?: CSSProperties }>;
     total?: number;
     isExport?: boolean;
-  }) => (
-    <button key={id}
-      onClick={() => {
-        if (isExport) {
-          const rows = filteredThemes.map(t => ({ name: t.name, system: t.system, gameId: t.gameId ?? null }));
-          const blob = new Blob([JSON.stringify(rows, null, 2)], { type: 'application/json' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url; a.download = `hyperbatmedia-name-system-gameid-${new Date().toISOString().split('T')[0]}.json`; a.click();
-          URL.revokeObjectURL(url);
-          return;
-        }
-        systemsLogic.handleSystemSelect('all'); systemsLogic.setSelectedCategory(id);
-      }}
-      title={isExport ? "Export JSON name/system/gameId (respecte les filtres actuels) — pour l'outil de renommage local" : undefined}
-      className="px-5 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
-      style={{
-        minWidth: '108px',
-        background: special ? '#2a2a2a' : id === 'multi'
-          ? systemsLogic.selectedCategory === 'multi' ? 'linear-gradient(to right, #7e22ce, #be185d)' : 'linear-gradient(to right, #6b21a8, #9d174d)'
-          : '#D97706',
-        borderColor: !isExport && systemsLogic.selectedCategory === id ? '#FFFF00' : id === 'multi' ? '#c084fc' : '#FFD700',
-        borderWidth: !isExport && systemsLogic.selectedCategory === id ? '3px' : '2px',
-        boxShadow: !isExport && systemsLogic.selectedCategory === id ? '0 0 10px rgba(255,215,0,0.3)' : 'none'
-      }}>
-      {icon && <span style={{ fontSize: '10px' }}>{icon}</span>}
-      {Icon && <Icon className="w-2.5 h-2.5" style={{ color: '#e0e0e0' }} />}
-      <div>
-        {special ? (
-          <>
-            <p className="text-xs font-black">
-              <span style={{ color: '#FFD700' }}>SCREEN</span>
-              <span style={{ background: 'linear-gradient(180deg, #6abf00 0%, #2d6a00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>SCRAPER</span>
-            </p>
-            <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{count}/{total}</p>
-          </>
-        ) : isExport ? (
-          <>
-            <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>Export</p>
-            <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>json</p>
-          </>
-        ) : (
-          <>
-            <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>{label}</p>
-            <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{total ? `${count}/${total}` : count}</p>
-          </>
-        )}
-      </div>
-    </button>
-  );
+  }) => {
+    const navigable = !isExport && isKioskNavigablePill(id);
+    const pillFocused = isRetrobat && navigable && id === kioskPillFocusId;
+    return (
+      <button key={id}
+        data-kiosk-pill={navigable ? id : undefined}
+        tabIndex={isRetrobat && !navigable ? -1 : undefined}
+        onClick={() => {
+          if (isExport) {
+            const rows = filteredThemes.map(t => ({ name: t.name, system: t.system, gameId: t.gameId ?? null }));
+            const blob = new Blob([JSON.stringify(rows, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `hyperbatmedia-name-system-gameid-${new Date().toISOString().split('T')[0]}.json`; a.click();
+            URL.revokeObjectURL(url);
+            return;
+          }
+          systemsLogic.handleSystemSelect('all'); systemsLogic.setSelectedCategory(id);
+        }}
+        title={isExport ? "Export JSON name/system/gameId (respecte les filtres actuels) — pour l'outil de renommage local" : undefined}
+        className="px-5 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
+        style={{
+          minWidth: '108px',
+          background: special ? '#2a2a2a' : id === 'multi'
+            ? systemsLogic.selectedCategory === 'multi' ? 'linear-gradient(to right, #7e22ce, #be185d)' : 'linear-gradient(to right, #6b21a8, #9d174d)'
+            : '#D97706',
+          borderColor: !isExport && systemsLogic.selectedCategory === id ? '#FFFF00' : id === 'multi' ? '#c084fc' : '#FFD700',
+          borderWidth: !isExport && systemsLogic.selectedCategory === id ? '3px' : '2px',
+          boxShadow: !isExport && systemsLogic.selectedCategory === id ? '0 0 10px rgba(255,215,0,0.3)' : 'none',
+          ...(pillFocused ? { outline: '3px solid #fff', outlineOffset: '2px' } : {}),
+        }}>
+        {icon && <span style={{ fontSize: '10px' }}>{icon}</span>}
+        {Icon && <Icon className="w-2.5 h-2.5" style={{ color: '#e0e0e0' }} />}
+        <div>
+          {special ? (
+            <>
+              <p className="text-xs font-black">
+                <span style={{ color: '#FFD700' }}>SCREEN</span>
+                <span style={{ background: 'linear-gradient(180deg, #6abf00 0%, #2d6a00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>SCRAPER</span>
+              </p>
+              <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{count}/{total}</p>
+            </>
+          ) : isExport ? (
+            <>
+              <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>Export</p>
+              <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>json</p>
+            </>
+          ) : (
+            <>
+              <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>{label}</p>
+              <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>{total ? `${count}/${total}` : count}</p>
+            </>
+          )}
+        </div>
+      </button>
+    );
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden transition-colors duration-300" style={{ backgroundColor: colors.bg, color: colors.text }}>
@@ -720,6 +745,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                 <div className="flex flex-col gap-3">
                   {renderPill({ id: 'collection', label: 'Collection', count: themeStats.collectionThemes, Icon: Package })}
                   <button onClick={() => setShowRecapPanel(true)}
+                    tabIndex={isRetrobat ? -1 : undefined}
                     className="px-5 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
                     style={{ minWidth: '108px', background: 'linear-gradient(to right, #b91c1c, #dc2626)', borderColor: '#f87171' }}>
                     <AlertTriangle className="w-2.5 h-2.5" style={{ color: '#fecaca' }} />
@@ -733,6 +759,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                   {renderPill({ id: 'system-themes', label: 'Thèmes système', count: themeStats.systemThemes, Icon: Monitor })}
                   {packsData.packs.length > 0 && (
                     <button onClick={() => setShowPacksPanel(true)}
+                      tabIndex={isRetrobat ? -1 : undefined}
                       className="px-5 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer relative"
                       style={{ minWidth: '108px', background: 'linear-gradient(to right, #0369a1, #0891b2)', borderColor: '#38bdf8' }}>
                       <span className="absolute -top-3 -right-2 font-black text-white px-1.5 py-0.5 rounded-md border"
@@ -770,26 +797,35 @@ export default function HyperBatMediaSite(): JSX.Element {
             {!showAdminPanel && (
               <div>
                 <div className="flex gap-2 justify-center mb-6">
-                  <button onClick={() => setSortBy(sortBy === 'name' ? 'date' : 'name')}
+                  <button ref={kioskSortButtonRef}
+                    onClick={() => setSortBy(sortBy === 'name' ? 'date' : 'name')}
                     className="p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
                     style={{
                       backgroundColor: '#D97706',
                       borderColor: sortBy === 'date' ? '#FFFF00' : '#FFD700',
                       borderWidth: sortBy === 'date' ? '3px' : '2px',
                       boxShadow: sortBy === 'date' ? '0 0 10px rgba(255,215,0,0.4)' : 'none',
-                      color: '#e0e0e0'
+                      color: '#e0e0e0',
+                      ...(kioskToolbarSortFocused ? { outline: '3px solid #fff', outlineOffset: '2px' } : {}),
                     }}
                     title={sortBy === 'name' ? 'Trier par date' : 'Trier par nom'}>
                     {sortBy === 'name' ? <SortAsc className="w-5 h-5" /> : <Calendar className="w-5 h-5" />}
                     <span className="text-xs font-bold">{sortBy === 'name' ? 'A-Z' : 'DATE'}</span>
                   </button>
-                  <button onClick={() => setIsDarkMode(!isDarkMode)}
+                  <button ref={kioskDarkButtonRef}
+                    onClick={() => setIsDarkMode(!isDarkMode)}
                     className="p-3 rounded-lg transition border-2 hover:brightness-110"
-                    style={{ backgroundColor: '#D97706', borderColor: '#FFD700', color: '#e0e0e0' }}
+                    style={{
+                      backgroundColor: '#D97706',
+                      borderColor: '#FFD700',
+                      color: '#e0e0e0',
+                      ...(kioskToolbarDarkFocused ? { outline: '3px solid #fff', outlineOffset: '2px' } : {}),
+                    }}
                     title={isDarkMode ? 'Mode clair' : 'Mode sombre'}>
                     {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                   </button>
                   <button onClick={() => setCartOpen(true)}
+                    tabIndex={isRetrobat ? -1 : undefined}
                     className="relative p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
                     style={{
                       backgroundColor: '#D97706',
@@ -824,6 +860,9 @@ export default function HyperBatMediaSite(): JSX.Element {
                   searchPlaceholder={isRetrobat
                     ? 'Rechercher un système… (SUD ou NORD = clavier)'
                     : 'Rechercher un système... (Ctrl+K)'}
+                  isRetrobat={isRetrobat}
+                  kioskFocusedSystemId={kioskFocusedSystemId}
+                  onKioskNavigableSystemIdsChange={setKioskSidebarSystemIds}
                 />
               </div>
             )}
@@ -913,6 +952,17 @@ export default function HyperBatMediaSite(): JSX.Element {
                   sidebarSearchHasValue={!!sidebarSearch}
                   onSidebarSearchClear={() => setSidebarSearch('')}
                   onSidebarSearchGamepadFocusChange={setSidebarSearchGamepadFocused}
+                  kioskSidebarSystemIds={kioskSidebarSystemIds}
+                  onKioskPillActivate={(id) => {
+                    systemsLogic.handleSystemSelect('all');
+                    systemsLogic.setSelectedCategory(id);
+                  }}
+                  onKioskSidebarSystemActivate={(id) => systemsLogic.handleSystemSelect(id)}
+                  onKioskToolbarSort={() => setSortBy(sortBy === 'name' ? 'date' : 'name')}
+                  onKioskToolbarDark={() => setIsDarkMode(!isDarkMode)}
+                  onKioskVisualFocusChange={setKioskVisual}
+                  kioskSortButtonRef={kioskSortButtonRef}
+                  kioskDarkButtonRef={kioskDarkButtonRef}
                 />
               )}
             </main>

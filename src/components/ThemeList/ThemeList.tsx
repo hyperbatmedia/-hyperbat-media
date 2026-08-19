@@ -9,6 +9,8 @@ import { useGamepadGridNav } from '../../hooks/useGamepadGridNav';
 import AgentInstallFlow from '../../agent/AgentInstallFlow';
 import type { AgentInfo } from '../../agent/hyperbatAgent';
 import GamepadVirtualKeyboard from './GamepadVirtualKeyboard';
+import type { KioskVisualFocus } from '../../kioskNavConfig';
+import { KIOSK_NAVIGABLE_PILL_IDS } from '../../kioskNavConfig';
 
 import { CART_MAX } from '../../constants';
 
@@ -44,6 +46,15 @@ interface ThemeListProps {
   sidebarSearchHasValue?: boolean;
   onSidebarSearchClear?: () => void;
   onSidebarSearchGamepadFocusChange?: (focused: boolean) => void;
+  /** Kiosque : pastilles + barre latérale + tri (voir kioskNavConfig.ts). */
+  kioskSidebarSystemIds?: string[];
+  onKioskPillActivate?: (pillId: string) => void;
+  onKioskSidebarSystemActivate?: (systemId: string) => void;
+  onKioskToolbarSort?: () => void;
+  onKioskToolbarDark?: () => void;
+  onKioskVisualFocusChange?: (focus: KioskVisualFocus) => void;
+  kioskSortButtonRef?: React.RefObject<HTMLButtonElement | null>;
+  kioskDarkButtonRef?: React.RefObject<HTMLButtonElement | null>;
 }
 
 const ThemeList: React.FC<ThemeListProps> = ({
@@ -65,6 +76,14 @@ const ThemeList: React.FC<ThemeListProps> = ({
   sidebarSearchHasValue = false,
   onSidebarSearchClear,
   onSidebarSearchGamepadFocusChange,
+  kioskSidebarSystemIds = [],
+  onKioskPillActivate,
+  onKioskSidebarSystemActivate,
+  onKioskToolbarSort,
+  onKioskToolbarDark,
+  onKioskVisualFocusChange,
+  kioskSortButtonRef,
+  kioskDarkButtonRef,
 }) => {
   const [selectedTheme, setSelectedTheme] = useState<ThemeItem | null>(null);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
@@ -117,6 +136,9 @@ const ThemeList: React.FC<ThemeListProps> = ({
   // Focus manette hors grille : recherche thèmes | recherche systèmes (sidebar).
   type ChromeFocus = 'main' | 'sidebar' | null;
   const [chromeFocus, setChromeFocus] = useState<ChromeFocus>(null);
+  const [pillFocusIndex, setPillFocusIndex] = useState<number | null>(null);
+  const [toolbarFocus, setToolbarFocus] = useState<'sort' | 'dark' | null>(null);
+  const [sidebarSystemFocusIndex, setSidebarSystemFocusIndex] = useState<number | null>(null);
   const prevPageBtnRef = useRef<HTMLButtonElement | null>(null);
   const nextPageBtnRef = useRef<HTMLButtonElement | null>(null);
 
@@ -167,6 +189,32 @@ const ThemeList: React.FC<ThemeListProps> = ({
     }
   }, [sidebarCollapsed]);
 
+  const clearKioskExtraFocus = useCallback(() => {
+    setPillFocusIndex(null);
+    setToolbarFocus(null);
+    setSidebarSystemFocusIndex(null);
+  }, []);
+
+  const kioskPillCount = KIOSK_NAVIGABLE_PILL_IDS.length;
+  const kioskSystemCount = kioskSidebarSystemIds.length;
+  const hasKioskToolbar = isRetrobat && !!kioskSortButtonRef && !!kioskDarkButtonRef;
+
+  useEffect(() => {
+    if (!isRetrobat || !onKioskVisualFocusChange) return;
+    onKioskVisualFocusChange({
+      pillFocusIndex,
+      toolbarFocus,
+      sidebarSystemFocusIndex,
+      chromeFocus,
+      paginationFocus,
+      gridFocused: !chromeFocus && pillFocusIndex === null && toolbarFocus === null
+        && sidebarSystemFocusIndex === null && !paginationFocus,
+    });
+  }, [
+    isRetrobat, onKioskVisualFocusChange, pillFocusIndex, toolbarFocus,
+    sidebarSystemFocusIndex, chromeFocus, paginationFocus,
+  ]);
+
   // Recalcule le nombre de colonnes réellement affichées (miroir des classes Tailwind ci-dessous)
   useEffect(() => {
     const computeColumns = () => {
@@ -188,9 +236,27 @@ const ThemeList: React.FC<ThemeListProps> = ({
   // renverrait le focus manette sur Installer.
   useEffect(() => { setFocusedIndex(0); setPaginationFocus(null); }, [themes]);
 
-  // Garde la carte (ou pagination / recherche) sélectionné visible
+  // Garde la carte (ou pagination / recherche / kiosque) sélectionné visible
   useEffect(() => {
     if (!isRetrobat) return;
+    if (pillFocusIndex !== null) {
+      document.querySelector(`[data-kiosk-pill="${KIOSK_NAVIGABLE_PILL_IDS[pillFocusIndex]}"]`)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    if (toolbarFocus === 'sort') {
+      kioskSortButtonRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    if (toolbarFocus === 'dark') {
+      kioskDarkButtonRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    if (sidebarSystemFocusIndex !== null && kioskSidebarSystemIds[sidebarSystemFocusIndex]) {
+      document.querySelector(`[data-kiosk-sidebar-system="${kioskSidebarSystemIds[sidebarSystemFocusIndex]}"]`)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
     if (chromeFocus === 'main') {
       searchInputRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
@@ -202,11 +268,36 @@ const ThemeList: React.FC<ThemeListProps> = ({
     if (paginationFocus === 'prev') { prevPageBtnRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
     if (paginationFocus === 'next') { nextPageBtnRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
     cardRefs.current[focusedIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, [focusedIndex, isRetrobat, paginationFocus, chromeFocus, searchInputRef, resolveSidebarInput]);
+  }, [
+    focusedIndex, isRetrobat, paginationFocus, chromeFocus, searchInputRef, resolveSidebarInput,
+    pillFocusIndex, toolbarFocus, sidebarSystemFocusIndex, kioskSidebarSystemIds,
+    kioskSortButtonRef, kioskDarkButtonRef,
+  ]);
 
-  // Focus DOM : Installer (hyperbat://) ou champ recherche manette.
+  // Focus DOM : évite qu'un bouton exclu reçoive Entrée AHK par accident.
   useEffect(() => {
     if (!isRetrobat) return;
+    if (pillFocusIndex !== null) {
+      (document.querySelector(`[data-kiosk-pill="${KIOSK_NAVIGABLE_PILL_IDS[pillFocusIndex]}"]`) as HTMLElement | null)
+        ?.focus({ preventScroll: true });
+      return;
+    }
+    if (toolbarFocus === 'sort') {
+      kioskSortButtonRef?.current?.focus({ preventScroll: true });
+      return;
+    }
+    if (toolbarFocus === 'dark') {
+      kioskDarkButtonRef?.current?.focus({ preventScroll: true });
+      return;
+    }
+    if (sidebarSystemFocusIndex !== null) {
+      const id = kioskSidebarSystemIds[sidebarSystemFocusIndex];
+      if (id) {
+        (document.querySelector(`[data-kiosk-sidebar-system="${id}"]`) as HTMLElement | null)
+          ?.focus({ preventScroll: true });
+      }
+      return;
+    }
     if (chromeFocus === 'main') {
       searchInputRef?.current?.focus({ preventScroll: true });
       return;
@@ -218,19 +309,85 @@ const ThemeList: React.FC<ThemeListProps> = ({
     if (paginationFocus === 'prev') { prevPageBtnRef.current?.focus({ preventScroll: true }); return; }
     if (paginationFocus === 'next') { nextPageBtnRef.current?.focus({ preventScroll: true }); return; }
     actionRefs.current[focusedIndex]?.focus({ preventScroll: true });
-  }, [focusedIndex, isRetrobat, paginationFocus, chromeFocus, searchInputRef, resolveSidebarInput]);
+  }, [
+    focusedIndex, isRetrobat, paginationFocus, chromeFocus, searchInputRef, resolveSidebarInput,
+    pillFocusIndex, toolbarFocus, sidebarSystemFocusIndex, kioskSidebarSystemIds,
+    kioskSortButtonRef, kioskDarkButtonRef,
+  ]);
 
   const moveFocus = useCallback((direction: 'up' | 'down' | 'left' | 'right') => {
     const sideInput = resolveSidebarInput();
     const mainInput = searchInputRef?.current ?? null;
+
+    // ── Pastilles filtre (kiosque) ──
+    if (isRetrobat && pillFocusIndex !== null) {
+      if (direction === 'left') {
+        setPillFocusIndex((i) => Math.max(0, (i ?? 0) - 1));
+      } else if (direction === 'right') {
+        setPillFocusIndex((i) => Math.min(kioskPillCount - 1, (i ?? 0) + 1));
+      } else if (direction === 'down') {
+        setPillFocusIndex(null);
+        if (hasKioskToolbar) setToolbarFocus('sort');
+        else if (mainInput) setChromeFocus('main');
+      } else if (direction === 'up') {
+        setPillFocusIndex(null);
+      }
+      return;
+    }
+
+    // ── Tri / mode clair-sombre (kiosque) ──
+    if (isRetrobat && toolbarFocus) {
+      if (direction === 'left' || direction === 'right') {
+        setToolbarFocus((t) => (t === 'sort' ? 'dark' : 'sort'));
+      } else if (direction === 'down') {
+        setToolbarFocus(null);
+        if (sideInput) {
+          setChromeFocus('sidebar');
+        } else if (mainInput) {
+          setChromeFocus('main');
+        }
+      } else if (direction === 'up') {
+        setToolbarFocus(null);
+        setPillFocusIndex(0);
+      }
+      return;
+    }
+
+    // ── Liste systèmes sidebar (kiosque) ──
+    if (isRetrobat && sidebarSystemFocusIndex !== null) {
+      if (direction === 'up') {
+        if (sidebarSystemFocusIndex > 0) {
+          setSidebarSystemFocusIndex(sidebarSystemFocusIndex - 1);
+        } else if (sideInput) {
+          setSidebarSystemFocusIndex(null);
+          setChromeFocus('sidebar');
+        }
+      } else if (direction === 'down') {
+        if (sidebarSystemFocusIndex < kioskSystemCount - 1) {
+          setSidebarSystemFocusIndex(sidebarSystemFocusIndex + 1);
+        } else {
+          setSidebarSystemFocusIndex(null);
+          setPaginationFocus(null);
+        }
+      } else if (direction === 'right') {
+        setSidebarSystemFocusIndex(null);
+        if (mainInput) setChromeFocus('main');
+      }
+      return;
+    }
 
     // Zone recherche thèmes
     if (chromeFocus === 'main') {
       if (direction === 'down') {
         setChromeFocus(null);
         setPaginationFocus(null);
+        clearKioskExtraFocus();
       } else if (direction === 'left' && sideInput) {
         setChromeFocus('sidebar');
+      } else if (direction === 'up' && isRetrobat) {
+        setChromeFocus(null);
+        if (hasKioskToolbar) setToolbarFocus('sort');
+        else if (kioskPillCount > 0) setPillFocusIndex(0);
       }
       return;
     }
@@ -243,6 +400,12 @@ const ThemeList: React.FC<ThemeListProps> = ({
       } else if (direction === 'down') {
         setChromeFocus(null);
         setPaginationFocus(null);
+        if (isRetrobat && kioskSystemCount > 0) {
+          setSidebarSystemFocusIndex(0);
+        }
+      } else if (direction === 'up' && isRetrobat && hasKioskToolbar) {
+        setChromeFocus(null);
+        setToolbarFocus('sort');
       }
       return;
     }
@@ -261,16 +424,27 @@ const ThemeList: React.FC<ThemeListProps> = ({
     setFocusedIndex((prev) => {
       const count = themes.length;
       if (count === 0) {
-        if (direction === 'up' && mainInput) setChromeFocus('main');
-        else if (direction === 'left' && sideInput) setChromeFocus('sidebar');
+        if (direction === 'up' && mainInput) {
+          setChromeFocus('main');
+          clearKioskExtraFocus();
+        } else if (direction === 'left' && sideInput) {
+          setChromeFocus('sidebar');
+          clearKioskExtraFocus();
+        }
         return prev;
       }
       const col = prev % columns;
       if (direction === 'left') {
         if (col > 0) return prev - 1;
-        // Premiere colonne → recherche systemes
+        if (isRetrobat && kioskSystemCount > 0) {
+          setSidebarSystemFocusIndex(0);
+          clearKioskExtraFocus();
+          setChromeFocus(null);
+          return prev;
+        }
         if (sideInput) {
           setChromeFocus('sidebar');
+          clearKioskExtraFocus();
           return prev;
         }
         return prev;
@@ -278,9 +452,9 @@ const ThemeList: React.FC<ThemeListProps> = ({
       if (direction === 'right' && col < columns - 1 && prev + 1 < count) return prev + 1;
       if (direction === 'up') {
         if (prev - columns >= 0) return prev - columns;
-        // Premiere ligne → barre de recherche themes
         if (mainInput) {
           setChromeFocus('main');
+          clearKioskExtraFocus();
           return prev;
         }
         if (typeof window !== 'undefined') window.scrollBy({ top: -220, behavior: 'smooth' });
@@ -294,7 +468,11 @@ const ThemeList: React.FC<ThemeListProps> = ({
       }
       return prev;
     });
-  }, [themes.length, columns, paginationFocus, totalPages, chromeFocus, searchInputRef, resolveSidebarInput]);
+  }, [
+    themes.length, columns, paginationFocus, totalPages, chromeFocus, searchInputRef,
+    resolveSidebarInput, isRetrobat, pillFocusIndex, toolbarFocus, sidebarSystemFocusIndex,
+    kioskPillCount, kioskSystemCount, hasKioskToolbar, clearKioskExtraFocus,
+  ]);
 
   const isInCart = useCallback((theme: ThemeItem) =>
     cart.some(t => getThemeKey(t) === getThemeKey(theme)), [cart]);
@@ -434,11 +612,29 @@ const ThemeList: React.FC<ThemeListProps> = ({
   // la fenêtre est idempotente et la pagination est protégée par la garde
   // ci-dessus : pas de double effet.
   const handleGamepadSelect = useCallback(() => {
+    if (suppressGridNav || oskOpenRef.current) return;
+
+    if (isRetrobat && pillFocusIndex !== null) {
+      const id = KIOSK_NAVIGABLE_PILL_IDS[pillFocusIndex];
+      if (id) onKioskPillActivate?.(id);
+      return;
+    }
+    if (isRetrobat && toolbarFocus === 'sort') {
+      onKioskToolbarSort?.();
+      return;
+    }
+    if (isRetrobat && toolbarFocus === 'dark') {
+      onKioskToolbarDark?.();
+      return;
+    }
+    if (isRetrobat && sidebarSystemFocusIndex !== null) {
+      const id = kioskSidebarSystemIds[sidebarSystemFocusIndex];
+      if (id) onKioskSidebarSystemActivate?.(id);
+      return;
+    }
+
     // Recherche focusée (kiosque) : SUD ouvre le clavier virtuel (agent ou non).
     if (isRetrobat && chromeFocus) {
-      if (suppressGridNav || oskOpenRef.current) {
-        return;
-      }
       setOskTarget(chromeFocus);
       setOskInitial(chromeFocus === 'main' ? searchValue : sidebarSearchValue);
       setOskOpen(true);
@@ -454,10 +650,36 @@ const ThemeList: React.FC<ThemeListProps> = ({
       const theme = themes[focusedIndex];
       if (theme) setAgentInstallTheme(theme);
     });
-  }, [agentInfo, paginationFocus, guardedPageAction, handlePrevPage, handleNextPage, themes, focusedIndex, chromeFocus, isRetrobat, searchValue, sidebarSearchValue, suppressGridNav]);
+  }, [
+    agentInfo, paginationFocus, guardedPageAction, handlePrevPage, handleNextPage, themes,
+    focusedIndex, chromeFocus, isRetrobat, searchValue, sidebarSearchValue, suppressGridNav,
+    pillFocusIndex, toolbarFocus, sidebarSystemFocusIndex, kioskSidebarSystemIds,
+    onKioskPillActivate, onKioskToolbarSort, onKioskToolbarDark, onKioskSidebarSystemActivate,
+  ]);
+
+  const kioskSudAction = (() => {
+    if (chromeFocus) return 'Clavier';
+    if (pillFocusIndex !== null) return 'Filtrer';
+    if (toolbarFocus === 'sort') return 'Tri';
+    if (toolbarFocus === 'dark') return 'Mode';
+    if (sidebarSystemFocusIndex !== null) return 'Système';
+    return 'Installer';
+  })();
 
   const handleGamepadBack = useCallback(() => {
     if (oskOpen) return; // EST géré par le clavier
+    if (pillFocusIndex !== null) {
+      setPillFocusIndex(null);
+      return;
+    }
+    if (toolbarFocus) {
+      setToolbarFocus(null);
+      return;
+    }
+    if (sidebarSystemFocusIndex !== null) {
+      setSidebarSystemFocusIndex(null);
+      return;
+    }
     if (chromeFocus === 'main') {
       if (searchHasValue && onSearchClear) {
         onSearchClear();
@@ -475,7 +697,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
       return;
     }
     window.history.back();
-  }, [oskOpen, chromeFocus, searchHasValue, onSearchClear, sidebarSearchHasValue, onSidebarSearchClear]);
+  }, [oskOpen, pillFocusIndex, toolbarFocus, sidebarSystemFocusIndex, chromeFocus, searchHasValue, onSearchClear, sidebarSearchHasValue, onSidebarSearchClear]);
 
   const handleGamepadPreview = useCallback(() => {
     if (oskOpen) return; // NORD géré par le clavier (ferme)
@@ -650,7 +872,9 @@ const ThemeList: React.FC<ThemeListProps> = ({
         {themes.map((theme, index) => {
           const key = getThemeKey(theme);
           const inCart = isInCart(theme);
-          const isGamepadFocused = isRetrobat && !chromeFocus && !paginationFocus && index === focusedIndex;
+          const isGamepadFocused = isRetrobat && !chromeFocus && pillFocusIndex === null
+            && toolbarFocus === null && sidebarSystemFocusIndex === null
+            && !paginationFocus && index === focusedIndex;
 
           return (
             <div
@@ -814,6 +1038,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                     </a>
                   )}
                   <button
+                    tabIndex={isRetrobat ? -1 : undefined}
                     onClick={() => handleCartToggle(theme)}
                     title={inCart ? 'Retirer de la sélection' : cart.length >= CART_MAX ? 'Sélection pleine' : 'Ajouter à la sélection'}
                     className="px-3 py-2 rounded border-2 transition hover:brightness-110 active:scale-95 flex items-center justify-center gap-1 text-xs font-bold"
@@ -1014,13 +1239,13 @@ const ThemeList: React.FC<ThemeListProps> = ({
             </div>
             <Sep/>
             {/* SUD - Installer / Clavier si recherche focusée */}
-            <BtnIcon dir="sud"  color="#2ecc71" active={btnSudOk}  label="SUD"  action={chromeFocus ? 'Clavier' : 'Installer'}/>
+            <BtnIcon dir="sud"  color="#2ecc71" active={btnSudOk}  label="SUD"  action={kioskSudAction}/>
             <Sep/>
             {/* EST - Retour — rouge Xbox (B) */}
             <BtnIcon dir="est"  color="#e74c3c" active={btnEstOk}  label="EST"  action="Retour"/>
             <Sep/>
-            {/* NORD - Aperçu — jaune Xbox (Y) */}
-            <BtnIcon dir="nord" color="#f1c40f" active={btnNordOk} label="NORD" action={chromeFocus ? 'Clavier' : 'Aperçu'}/>
+            {/* NORD - Aperçu / Clavier */}
+            <BtnIcon dir="nord" color="#f1c40f" active={btnNordOk} label="NORD" action={chromeFocus ? 'Clavier' : (pillFocusIndex !== null || toolbarFocus || sidebarSystemFocusIndex !== null) ? '—' : 'Aperçu'}/>
             <Sep/>
             {/* D-PAD : grille + pagination bas + recherche (haut 1re ligne) */}
             <DPad/>

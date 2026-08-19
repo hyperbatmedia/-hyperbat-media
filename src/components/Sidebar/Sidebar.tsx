@@ -10,6 +10,7 @@ import {
 import { useLinksLoader } from '../../hooks/useLinksLoader';
 import type { ModalConfig } from '../../hooks/useLinksLoader';
 import ContentModal from '../ContentModal/ContentModal';
+import { isKioskNavigableSidebarSystem } from '../../kioskNavConfig';
 
 import arcadeImg from '../../assets/icons/arcade.png';
 import portableImg from '../../assets/icons/console_portable.png';
@@ -41,6 +42,12 @@ interface SidebarProps {
   searchGamepadFocused?: boolean;
   /** Placeholder du champ recherche systèmes. */
   searchPlaceholder?: string;
+  /** Mode kiosque (?retrobat=1) — navigation manette. */
+  isRetrobat?: boolean;
+  /** ID système sidebar avec contour manette. */
+  kioskFocusedSystemId?: string | null;
+  /** Liste ordonnée des systèmes navigables (ThemeList). */
+  onKioskNavigableSystemIdsChange?: (ids: string[]) => void;
 }
 
 // ── Icône Discord réutilisable ────────────────────────────────────────────────
@@ -105,6 +112,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   searchInputRef: searchInputRefProp,
   searchGamepadFocused = false,
   searchPlaceholder = 'Rechercher un système... (Ctrl+K)',
+  isRetrobat = false,
+  kioskFocusedSystemId = null,
+  onKioskNavigableSystemIdsChange,
 }) => {
   const { links, isLoading: isLoadingLinks } = useLinksLoader();
 
@@ -264,6 +274,22 @@ const Sidebar: React.FC<SidebarProps> = ({
     return [...topButtons, ...sorted];
   }, [systems, normalizedSearch, isSearchActive]);
 
+  const kioskNavigableSystemIds = useMemo(() => {
+    if (!isRetrobat || collapsed) return [];
+    return visibleSystems
+      .filter(system => {
+        if (system.isHeader || system.isSubHeader) return false;
+        const isTopButton = TOP_BUTTON_IDS.includes(system.id as any);
+        const link = isTopButton && system.id !== 'all' ? linksBySystemId[system.id] : undefined;
+        return isKioskNavigableSidebarSystem(system, link);
+      })
+      .map(system => system.id);
+  }, [isRetrobat, collapsed, visibleSystems, linksBySystemId]);
+
+  useEffect(() => {
+    onKioskNavigableSystemIdsChange?.(kioskNavigableSystemIds);
+  }, [kioskNavigableSystemIds, onKioskNavigableSystemIdsChange]);
+
   // ── Renderers ─────────────────────────────────────────────────────────────
   const renderHeader = (system: SystemRow) => {
     if (isSearchActive) return null;
@@ -356,6 +382,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     const hasCategories = !!(system.categories?.length);
     const isTopButton   = TOP_BUTTON_IDS.includes(system.id as any);
     const correspondingLink = isTopButton && system.id !== 'all' ? linksBySystemId[system.id] : null;
+    const kioskNavigable = isRetrobat && isKioskNavigableSidebarSystem(system, correspondingLink ?? undefined);
+    const kioskFocused = kioskNavigable && kioskFocusedSystemId === system.id;
 
     const parts              = system.id.split('-');
     const normalizedSystemId = parts[parts.length - 1].toLowerCase().replace(/[^a-z0-9]+/g, '');
@@ -407,6 +435,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               // ── Bouton modal (Tutoriels, Outils, Autres thèmes Bob) ──
               <button
                 onClick={() => openModal(correspondingLink.modal!)}
+                tabIndex={isRetrobat ? -1 : undefined}
                 className={`flex-1 text-left text-sm min-w-0 pr-2 focus:outline-none rounded
                   ${isSelected || isTopButton ? 'text-white' : `${defaultTextColor} ${defaultHoverText}`}`}
                 style={textStyle}
@@ -417,6 +446,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             ) : (
               // ── Lien externe classique (Thèmes HyperBat → GitHub) ──
               <a href={correspondingLink.url} target="_blank" rel="noopener noreferrer"
+                tabIndex={isRetrobat ? -1 : undefined}
                 className={`flex-1 text-left text-sm min-w-0 pr-2 focus:outline-none rounded
                   ${isSelected || isTopButton ? 'text-white' : `${defaultTextColor} ${defaultHoverText}`}`}
                 style={textStyle} aria-label={system.name}>
@@ -426,11 +456,16 @@ const Sidebar: React.FC<SidebarProps> = ({
           ) : (
             <button
               ref={el => { if (el) systemButtonsRef.current.set(system.id, el); else systemButtonsRef.current.delete(system.id); }}
+              data-kiosk-sidebar-system={kioskNavigable ? system.id : undefined}
+              tabIndex={isRetrobat && !kioskNavigable ? -1 : undefined}
               onClick={e => { handleSystemSelect(system.id); e.currentTarget.blur(); }}
               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSystemSelect(system.id); e.currentTarget.blur(); } }}
               className={`flex-1 text-left text-sm min-w-0 pr-2 focus:outline-none rounded
                 ${isSelected || isTopButton ? 'text-white' : `${defaultTextColor} ${defaultHoverText}`}`}
-              style={textStyle}
+              style={{
+                ...textStyle,
+                ...(kioskFocused ? { outline: '3px solid #fff', outlineOffset: '2px' } : {}),
+              }}
               aria-label={`${system.name}${themeCount > 0 ? `, ${themeCount} thèmes` : ''}`}
               aria-current={isSelected ? 'page' : undefined}
             >
@@ -554,6 +589,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   const isARRM = link.name.toLowerCase().includes('arrm');
                   return (
                     <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer"
+                      tabIndex={isRetrobat ? -1 : undefined}
                       className={`rounded-lg transition-all duration-200 border-2 hover:shadow-lg hover:brightness-125 focus:outline-none focus:ring-2
                         ${isARRM ? 'px-2.5 py-2 bg-yellow-500 hover:bg-yellow-600 border-yellow-600 focus:ring-yellow-400' : 'p-2 bg-[#5865F2] hover:bg-[#4752C4] border-[#5865F2] focus:ring-blue-400'}`}
                       title={link.name}>
@@ -568,11 +604,13 @@ const Sidebar: React.FC<SidebarProps> = ({
               ) : (
                 <>
                   <a href={EXTERNAL_LINKS.discord} target="_blank" rel="noopener noreferrer"
+                    tabIndex={isRetrobat ? -1 : undefined}
                     className="p-2 rounded-lg bg-[#5865F2] hover:bg-[#4752C4] transition-all duration-200 border-2 border-[#5865F2] hover:border-[#4752C4] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                     title="Rejoindre notre Discord">
                     <DiscordIcon size={20} />
                   </a>
                   <a href={EXTERNAL_LINKS.arrm} target="_blank" rel="noopener noreferrer"
+                    tabIndex={isRetrobat ? -1 : undefined}
                     className="px-2.5 py-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 transition-all duration-200 border-2 border-yellow-600 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     title="ARRM">
                     <span className="text-sm font-bold" style={{ color: '#0091bd' }}>ARRM</span>
@@ -591,6 +629,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 const isARRM = link.name.toLowerCase().includes('arrm');
                 return (
                   <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer"
+                    tabIndex={isRetrobat ? -1 : undefined}
                     title={link.name}
                     className={`flex items-center justify-center rounded-lg transition-all duration-200 hover:brightness-125 focus:outline-none focus:ring-2
                       ${isARRM ? 'bg-yellow-500 hover:bg-yellow-600 focus:ring-yellow-400' : 'bg-[#5865F2] hover:bg-[#4752C4] focus:ring-blue-400'}`}
@@ -606,12 +645,14 @@ const Sidebar: React.FC<SidebarProps> = ({
             ) : (
               <>
                 <a href={EXTERNAL_LINKS.discord} target="_blank" rel="noopener noreferrer"
+                  tabIndex={isRetrobat ? -1 : undefined}
                   title="Rejoindre notre Discord"
                   className="flex items-center justify-center rounded-lg bg-[#5865F2] hover:bg-[#4752C4] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   style={{ width: 36, height: 36 }}>
                   <DiscordIcon size={20} />
                 </a>
                 <a href={EXTERNAL_LINKS.arrm} target="_blank" rel="noopener noreferrer"
+                  tabIndex={isRetrobat ? -1 : undefined}
                   title="ARRM"
                   className="flex items-center justify-center rounded-lg bg-yellow-500 hover:bg-yellow-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                   style={{ width: 36, height: 28 }}>
