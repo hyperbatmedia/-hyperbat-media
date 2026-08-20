@@ -63,25 +63,26 @@ export function parseKioskSidebarNavId(
   return { kind, parts: rest.split(':') };
 }
 
-/** Défile le panneau sidebar (overflow interne), pas seulement la page. */
-export function scrollKioskSidebarNavIntoView(navId: string): void {
+/** Défile le panneau sidebar (overflow interne) pour centrer l'entrée focusée.
+ *  Retourne false si l'élément n'est pas encore dans le DOM. */
+export function scrollKioskSidebarNavIntoView(navId: string): boolean {
   const el = document.querySelector(
     `[data-kiosk-sidebar-nav="${CSS.escape(navId)}"]`,
   ) as HTMLElement | null;
-  if (!el) return;
+  if (!el) return false;
+
   const scrollParent = el.closest('[data-kiosk-sidebar-scroll]') as HTMLElement | null;
   if (!scrollParent) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    return;
+    el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
+    return true;
   }
+
   const er = el.getBoundingClientRect();
   const sr = scrollParent.getBoundingClientRect();
-  const pad = 10;
-  if (er.top < sr.top + pad) {
-    scrollParent.scrollTop += er.top - sr.top - pad;
-  } else if (er.bottom > sr.bottom - pad) {
-    scrollParent.scrollTop += er.bottom - sr.bottom + pad;
-  }
+  // Centrer l'élément dans le panneau (plus fiable que nearest après un dépliage).
+  const delta = (er.top + er.height / 2) - (sr.top + sr.height / 2);
+  scrollParent.scrollTop += delta;
+  return true;
 }
 
 type KioskDirection = 'up' | 'down' | 'left' | 'right';

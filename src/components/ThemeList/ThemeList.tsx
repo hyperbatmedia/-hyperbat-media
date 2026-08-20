@@ -284,16 +284,43 @@ const ThemeList: React.FC<ThemeListProps> = ({
   // renverrait le focus manette sur Installer.
   useEffect(() => { setFocusedIndex(0); setPaginationFocus(null); }, [themes]);
 
-  // Déplier sections / catégories avant focus sidebar.
+  // Déplier + scroller la sidebar après layout (le dépliage décale le DOM).
   useEffect(() => {
     if (!isRetrobat || sidebarNavFocusIndex === null) return;
     const navId = kioskSidebarNavIds[sidebarNavFocusIndex];
-    if (navId) onKioskSidebarNavPrepare?.(navId);
+    if (!navId) return;
+
+    onKioskSidebarNavPrepare?.(navId);
+
+    let cancelled = false;
+    const tryScroll = () => {
+      if (cancelled) return;
+      scrollKioskSidebarNavIntoView(navId);
+    };
+
+    tryScroll();
+    const raf1 = requestAnimationFrame(() => {
+      tryScroll();
+      requestAnimationFrame(tryScroll);
+    });
+    const t1 = window.setTimeout(tryScroll, 40);
+    const t2 = window.setTimeout(tryScroll, 120);
+    const t3 = window.setTimeout(tryScroll, 250);
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf1);
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      window.clearTimeout(t3);
+    };
   }, [isRetrobat, sidebarNavFocusIndex, kioskSidebarNavIds, onKioskSidebarNavPrepare]);
 
   // Garde la carte (ou pagination / recherche / kiosque) sélectionné visible
   useEffect(() => {
     if (!isRetrobat) return;
+    // Sidebar : scroll dédié dans l'effet prepare ci-dessus.
+    if (sidebarNavFocusIndex !== null) return;
     if (pillFocusId !== null) {
       document.querySelector(`[data-kiosk-pill="${pillFocusId}"]`)
         ?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -305,10 +332,6 @@ const ThemeList: React.FC<ThemeListProps> = ({
     }
     if (toolbarFocus === 'dark') {
       kioskDarkButtonRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      return;
-    }
-    if (sidebarNavFocusIndex !== null && kioskSidebarNavIds[sidebarNavFocusIndex]) {
-      scrollKioskSidebarNavIntoView(kioskSidebarNavIds[sidebarNavFocusIndex]);
       return;
     }
     if (chromeFocus === 'main') {
@@ -324,7 +347,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
     cardRefs.current[focusedIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [
     focusedIndex, isRetrobat, paginationFocus, chromeFocus, searchInputRef, resolveSidebarInput,
-    pillFocusId, toolbarFocus, sidebarNavFocusIndex, kioskSidebarNavIds,
+    pillFocusId, toolbarFocus, sidebarNavFocusIndex,
     kioskSortButtonRef, kioskDarkButtonRef,
   ]);
 
