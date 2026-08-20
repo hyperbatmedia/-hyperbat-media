@@ -297,7 +297,6 @@ export default function HyperBatMediaSite(): JSX.Element {
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [searchGamepadFocused, setSearchGamepadFocused] = useState(false);
   const sidebarSearchInputRef = useRef<HTMLInputElement | null>(null);
-  const [sidebarSearchGamepadFocused, setSidebarSearchGamepadFocused] = useState(false);
   const [viewMode] = useState<'grid' | 'list'>('grid');
   const [sidebarSearch, setSidebarSearch] = useState<string>('');
   const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
@@ -317,7 +316,6 @@ export default function HyperBatMediaSite(): JSX.Element {
   const [cart, setCart] = useState<ThemeItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [kioskVisual, setKioskVisual] = useState<KioskVisualFocus | null>(null);
-  const [kioskSidebarNavIds, setKioskSidebarNavIds] = useState<string[]>([]);
   const kioskSortButtonRef = useRef<HTMLButtonElement | null>(null);
   const kioskDarkButtonRef = useRef<HTMLButtonElement | null>(null);
 
@@ -611,9 +609,6 @@ export default function HyperBatMediaSite(): JSX.Element {
   const kioskPillFocusId = isRetrobat ? kioskVisual?.pillFocusId ?? null : null;
   const kioskToolbarSortFocused = isRetrobat && kioskVisual?.toolbarFocus === 'sort';
   const kioskToolbarDarkFocused = isRetrobat && kioskVisual?.toolbarFocus === 'dark';
-  const kioskFocusedNavId = isRetrobat && kioskVisual?.sidebarNavFocusIndex != null
-    ? kioskSidebarNavIds[kioskVisual.sidebarNavFocusIndex] ?? null
-    : null;
 
   // Rendu d'une pastille de stat (Artwork, Magazines, Collection...), factorisé
   // pour être réutilisé identique qu'elle soit seule ou empilée avec une autre.
@@ -854,13 +849,8 @@ export default function HyperBatMediaSite(): JSX.Element {
                   allThemes={themes} isDarkMode={isDarkMode}
                   onCollapsedChange={setSidebarCollapsed}
                   searchInputRef={sidebarSearchInputRef}
-                  searchGamepadFocused={sidebarSearchGamepadFocused && isRetrobat}
-                  searchPlaceholder={isRetrobat
-                    ? 'Rechercher un système… (SUD ou NORD = clavier)'
-                    : 'Rechercher un système... (Ctrl+K)'}
+                  searchPlaceholder="Rechercher un système... (Ctrl+K)"
                   isRetrobat={isRetrobat}
-                  kioskFocusedNavId={kioskFocusedNavId}
-                  onKioskSidebarNavIdsChange={setKioskSidebarNavIds}
                 />
               </div>
             )}
@@ -933,8 +923,6 @@ export default function HyperBatMediaSite(): JSX.Element {
                   allFilteredThemes={filteredThemes} filteredThemesLength={filteredThemes.length}
                   totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage}
                   themesPerPage={THEMES_PER_PAGE} systems={systemsLogic.systems}
-                  selectedSystem={systemsLogic.selectedSystem}
-                  selectedCategory={systemsLogic.selectedCategory}
                   cart={cart} onCartAdd={handleCartAdd} onCartRemove={handleCartRemove}
                   sidebarCollapsed={sidebarCollapsed}
                   isRetrobat={isRetrobat} agentInfo={agentInfo}
@@ -944,24 +932,9 @@ export default function HyperBatMediaSite(): JSX.Element {
                   searchHasValue={!!searchTerm}
                   onSearchClear={() => setSearchTerm('')}
                   onSearchGamepadFocusChange={setSearchGamepadFocused}
-                  sidebarSearchInputRef={sidebarSearchInputRef}
-                  sidebarSearchValue={sidebarSearch}
-                  onSidebarSearchChange={setSidebarSearch}
-                  sidebarSearchHasValue={!!sidebarSearch}
-                  onSidebarSearchClear={() => setSidebarSearch('')}
-                  onSidebarSearchGamepadFocusChange={setSidebarSearchGamepadFocused}
-                  kioskSidebarNavIds={kioskSidebarNavIds}
                   onKioskPillActivate={(id) => {
                     systemsLogic.handleSystemSelect('all');
                     systemsLogic.setSelectedCategory(id);
-                  }}
-                  onKioskSidebarSectionToggle={(section) => systemsLogic.toggleSection(section)}
-                  onKioskSidebarSubsectionToggle={(subsection) => systemsLogic.toggleSubsection(subsection)}
-                  onKioskSidebarSystemActivate={(id) => systemsLogic.handleSystemSelect(id)}
-                  onKioskSidebarSystemCategoriesToggle={(id) => systemsLogic.toggleSystemCategories(id)}
-                  onKioskSidebarCategoryActivate={(systemId, categoryId) => {
-                    systemsLogic.handleSystemSelect(systemId);
-                    systemsLogic.setSelectedCategory(categoryId);
                   }}
                   onKioskToolbarSort={() => setSortBy(sortBy === 'name' ? 'date' : 'name')}
                   onKioskToolbarDark={() => setIsDarkMode(!isDarkMode)}

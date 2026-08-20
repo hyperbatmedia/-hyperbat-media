@@ -1,4 +1,5 @@
 // Navigation manette mode kiosque (?retrobat=1) — zones exclues / autorisées.
+// La sidebar (systèmes) n'est PAS navigable à la manette.
 
 /** Pastilles filtre : hors parcours manette. */
 export const KIOSK_EXCLUDED_PILL_IDS = new Set([
@@ -22,68 +23,15 @@ export function isKioskNavigablePill(id: string): boolean {
   return !KIOSK_EXCLUDED_PILL_IDS.has(id);
 }
 
-/** Entrée sidebar sélectionnable (système réel), pas modale / lien externe. */
-export function isKioskNavigableSidebarSystem(
-  system: { id: string; isHeader?: boolean; isSubHeader?: boolean },
-  link: { modal?: unknown; url?: string } | undefined,
-): boolean {
-  if (system.isHeader || system.isSubHeader) return false;
-  if (link?.modal) return false;
-  if (link?.url) return false;
-  return true;
-}
-
 export type KioskVisualFocus = {
   /** ID pastille focusée (navigation spatiale). */
   pillFocusId: string | null;
   toolbarFocus: 'sort' | 'dark' | null;
-  /** Index dans kioskSidebarNavIds (section, sous-section, système, catégorie). */
-  sidebarNavFocusIndex: number | null;
-  chromeFocus: 'main' | 'sidebar' | null;
+  /** Recherche thèmes uniquement (pas la sidebar). */
+  chromeFocus: 'main' | null;
   paginationFocus: 'prev' | 'next' | null;
   gridFocused: boolean;
 };
-
-export type KioskSidebarNavKind = 'section' | 'subsection' | 'system' | 'category';
-
-/** Identifiant stable d'une entrée sidebar (ordre DOM). */
-export function kioskSidebarNavId(kind: KioskSidebarNavKind, ...parts: string[]): string {
-  return `${kind}:${parts.join(':')}`;
-}
-
-export function parseKioskSidebarNavId(
-  id: string,
-): { kind: KioskSidebarNavKind; parts: string[] } | null {
-  const colon = id.indexOf(':');
-  if (colon <= 0) return null;
-  const kind = id.slice(0, colon) as KioskSidebarNavKind;
-  if (!['section', 'subsection', 'system', 'category'].includes(kind)) return null;
-  const rest = id.slice(colon + 1);
-  if (!rest) return null;
-  return { kind, parts: rest.split(':') };
-}
-
-/** Défile le panneau sidebar (overflow interne) pour centrer l'entrée focusée.
- *  Retourne false si l'élément n'est pas encore dans le DOM. */
-export function scrollKioskSidebarNavIntoView(navId: string): boolean {
-  const el = document.querySelector(
-    `[data-kiosk-sidebar-nav="${CSS.escape(navId)}"]`,
-  ) as HTMLElement | null;
-  if (!el) return false;
-
-  const scrollParent = el.closest('[data-kiosk-sidebar-scroll]') as HTMLElement | null;
-  if (!scrollParent) {
-    el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
-    return true;
-  }
-
-  const er = el.getBoundingClientRect();
-  const sr = scrollParent.getBoundingClientRect();
-  // Centrer l'élément dans le panneau (plus fiable que nearest après un dépliage).
-  const delta = (er.top + er.height / 2) - (sr.top + sr.height / 2);
-  scrollParent.scrollTop += delta;
-  return true;
-}
 
 type KioskDirection = 'up' | 'down' | 'left' | 'right';
 
