@@ -27,7 +27,6 @@ import type { AgentInfo } from './agent/hyperbatAgent';
 import {
   isKioskNavigablePill,
   kioskFocusStyle,
-  parseKioskSidebarNavId,
   type KioskVisualFocus,
 } from './kioskNavConfig';
 
@@ -337,43 +336,6 @@ export default function HyperBatMediaSite(): JSX.Element {
   const { packsData, setPacksData, savePacksData } = useThemePacksStorage();
   const systemsLogic = useSystemsLogic();
   const colors = useMemo(() => getThemeColors(isDarkMode), [isDarkMode]);
-
-  const prepareKioskSidebarNav = useCallback((navId: string) => {
-    const parsed = parseKioskSidebarNavId(navId);
-    if (!parsed) return;
-    const {
-      systems, expandedSections, expandedSubsections, expandedSystems,
-      toggleSection, toggleSubsection, toggleSystemCategories,
-    } = systemsLogic;
-
-    if (parsed.kind === 'section') {
-      if (!expandedSections[parsed.parts[0]]) toggleSection(parsed.parts[0]);
-      return;
-    }
-    if (parsed.kind === 'subsection') {
-      const [section, subsection] = parsed.parts;
-      if (section && !expandedSections[section]) toggleSection(section);
-      if (subsection && !expandedSubsections[subsection]) toggleSubsection(subsection);
-      return;
-    }
-
-    const systemId = parsed.parts[0];
-    const sys = systems.find((s) => s.id === systemId);
-    if (sys?.section && !expandedSections[sys.section]) toggleSection(sys.section);
-    if (
-      sys?.subsection
-      && sys.subsection !== 'collections'
-      && sys.subsection !== 'magazines'
-      && !expandedSubsections[sys.subsection]
-    ) {
-      toggleSubsection(sys.subsection);
-    }
-    const needsCategories = parsed.kind === 'category'
-      || (parsed.kind === 'system' && systemsLogic.selectedSystem === systemId);
-    if (needsCategories && sys?.categories?.length && !expandedSystems[systemId]) {
-      toggleSystemCategories(systemId);
-    }
-  }, [systemsLogic]);
 
   // Empêche la fermeture accidentelle de l'onglet/navigateur pendant que
   // l'admin est ouvert (le verrou GitHub resterait posé jusqu'à expiration
@@ -993,10 +955,10 @@ export default function HyperBatMediaSite(): JSX.Element {
                     systemsLogic.handleSystemSelect('all');
                     systemsLogic.setSelectedCategory(id);
                   }}
-                  onKioskSidebarNavPrepare={prepareKioskSidebarNav}
                   onKioskSidebarSectionToggle={(section) => systemsLogic.toggleSection(section)}
                   onKioskSidebarSubsectionToggle={(subsection) => systemsLogic.toggleSubsection(subsection)}
                   onKioskSidebarSystemActivate={(id) => systemsLogic.handleSystemSelect(id)}
+                  onKioskSidebarSystemCategoriesToggle={(id) => systemsLogic.toggleSystemCategories(id)}
                   onKioskSidebarCategoryActivate={(systemId, categoryId) => {
                     systemsLogic.handleSystemSelect(systemId);
                     systemsLogic.setSelectedCategory(categoryId);
