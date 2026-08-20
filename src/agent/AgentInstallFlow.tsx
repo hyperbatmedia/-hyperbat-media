@@ -463,17 +463,24 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       if (oskOpenRef.current) return;
       const s = stepRef.current;
       if (s !== 'rom-pick' && s !== 'collection-name') return;
-      const nodes = getFocusables();
-      const el = nodes[focusIdxRef.current];
-      if (!(el instanceof HTMLInputElement)) return;
-      const field = (el.dataset.hbagentOsk || '') as OskField | '';
-      if (field !== 'filter' && field !== 'manual' && field !== 'collection') return;
-      setOskField(field);
-      setOskInitial(
-        field === 'filter' ? filter
-          : field === 'manual' ? manualName
-            : collectionName,
-      );
+
+      // rom-pick : NORD ouvre toujours le clavier du champ pertinent
+      // (Filtrer si la liste des ROMs est disponible, sinon Saisie
+      // manuelle), quel que soit l'élément actuellement focusé dans la
+      // liste - évite d'avoir à remonter tout en haut pour y accéder.
+      if (s === 'rom-pick') {
+        const field: OskField = romsFound ? 'filter' : 'manual';
+        setFocusIdx(0);
+        setOskField(field);
+        setOskInitial(field === 'filter' ? filter : manualName);
+        setOskOpen(true);
+        return;
+      }
+
+      // collection-name : un seul champ de saisie.
+      setFocusIdx(0);
+      setOskField('collection');
+      setOskInitial(collectionName);
       setOskOpen(true);
     };
 
@@ -529,7 +536,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       prev = pressed;
     }, 80);
     return () => clearInterval(iv);
-  }, [btnCfg, move, handleBack, finishWithReload, guard, onClose, step, getFocusables, filter, manualName, collectionName]);
+  }, [btnCfg, move, handleBack, finishWithReload, guard, onClose, step, getFocusables, filter, manualName, collectionName, romsFound]);
 
   // ── Clavier : flèches / Échap (Entrée est natif sur l'élément focusé) ──
   useEffect(() => {
