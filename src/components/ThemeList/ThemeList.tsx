@@ -13,6 +13,9 @@ import type { KioskVisualFocus } from '../../kioskNavConfig';
 import {
   findKioskPillNeighbor,
   findNearestKioskPillFromElement,
+  kioskSidebarNavId,
+  parseKioskSidebarNavId,
+  scrollKioskSidebarNavIntoView,
 } from '../../kioskNavConfig';
 
 import { CART_MAX } from '../../constants';
@@ -29,6 +32,8 @@ interface ThemeListProps {
   systems: SystemRow[];
   /** Système actuellement filtré (navigation sidebar kiosque). */
   selectedSystem?: string;
+  /** Catégorie filtrée (navigation sidebar kiosque). */
+  selectedCategory?: string;
   cart: ThemeItem[];
   onCartAdd: (theme: ThemeItem) => void;
   onCartRemove: (key: string) => void;
@@ -52,9 +57,13 @@ interface ThemeListProps {
   onSidebarSearchClear?: () => void;
   onSidebarSearchGamepadFocusChange?: (focused: boolean) => void;
   /** Kiosque : pastilles + barre latérale + tri (voir kioskNavConfig.ts). */
-  kioskSidebarSystemIds?: string[];
+  kioskSidebarNavIds?: string[];
   onKioskPillActivate?: (pillId: string) => void;
+  onKioskSidebarNavPrepare?: (navId: string) => void;
+  onKioskSidebarSectionToggle?: (sectionKey: string) => void;
+  onKioskSidebarSubsectionToggle?: (subsection: string) => void;
   onKioskSidebarSystemActivate?: (systemId: string) => void;
+  onKioskSidebarCategoryActivate?: (systemId: string, categoryId: string) => void;
   onKioskToolbarSort?: () => void;
   onKioskToolbarDark?: () => void;
   onKioskVisualFocusChange?: (focus: KioskVisualFocus) => void;
@@ -65,7 +74,7 @@ interface ThemeListProps {
 const ThemeList: React.FC<ThemeListProps> = ({
   viewMode, themes, allFilteredThemes, filteredThemesLength,
   totalPages, currentPage, setCurrentPage, themesPerPage,
-  systems, selectedSystem = 'all',
+  systems, selectedSystem = 'all', selectedCategory = 'all',
   cart, onCartAdd, onCartRemove, sidebarCollapsed = false,
   isRetrobat = false,
   agentInfo = null,
@@ -81,9 +90,13 @@ const ThemeList: React.FC<ThemeListProps> = ({
   sidebarSearchHasValue = false,
   onSidebarSearchClear,
   onSidebarSearchGamepadFocusChange,
-  kioskSidebarSystemIds = [],
+  kioskSidebarNavIds = [],
   onKioskPillActivate,
+  onKioskSidebarNavPrepare,
+  onKioskSidebarSectionToggle,
+  onKioskSidebarSubsectionToggle,
   onKioskSidebarSystemActivate,
+  onKioskSidebarCategoryActivate,
   onKioskToolbarSort,
   onKioskToolbarDark,
   onKioskVisualFocusChange,
@@ -143,7 +156,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
   const [chromeFocus, setChromeFocus] = useState<ChromeFocus>(null);
   const [pillFocusId, setPillFocusId] = useState<string | null>(null);
   const [toolbarFocus, setToolbarFocus] = useState<'sort' | 'dark' | null>(null);
-  const [sidebarSystemFocusIndex, setSidebarSystemFocusIndex] = useState<number | null>(null);
+  const [sidebarNavFocusIndex, setSidebarNavFocusIndex] = useState<number | null>(null);
   const prevPageBtnRef = useRef<HTMLButtonElement | null>(null);
   const nextPageBtnRef = useRef<HTMLButtonElement | null>(null);
 
@@ -201,24 +214,37 @@ const ThemeList: React.FC<ThemeListProps> = ({
 
   const clearKioskExtraFocus = useCallback(() => {
     clearPillAndToolbarFocus();
-    setSidebarSystemFocusIndex(null);
+    setSidebarNavFocusIndex(null);
   }, [clearPillAndToolbarFocus]);
 
-  const resolveSidebarSystemFocusIndex = useCallback((): number => {
-    const idx = kioskSidebarSystemIds.indexOf(selectedSystem);
-    return idx >= 0 ? idx : 0;
-  }, [kioskSidebarSystemIds, selectedSystem]);
+  const resolveSidebarNavFocusIndex = useCallback((): number => {
+    if (kioskSidebarNavIds.length === 0) return 0;
+    if (selectedCategory !== 'all') {
+      const catIdx = kioskSidebarNavIds.indexOf(
+        kioskSidebarNavId('category', selectedSystem, selectedCategory),
+      );
+      if (catIdx >= 0) return catIdx;
+    }
+    const sysIdx = kioskSidebarNavIds.indexOf(kioskSidebarNavId('system', selectedSystem));
+    if (sysIdx >= 0) return sysIdx;
+    return 0;
+  }, [kioskSidebarNavIds, selectedSystem, selectedCategory]);
 
-  const enterSidebarSystemsFromGrid = useCallback(() => {
-    if (kioskSidebarSystemIds.length === 0) return false;
-    setSidebarSystemFocusIndex(resolveSidebarSystemFocusIndex());
+  const enterSidebarNavFromGrid = useCallback(() => {
+    if (kioskSidebarNavIds.length === 0) return false;
+    const idx = resolveSidebarNavFocusIndex();
+    onKioskSidebarNavPrepare?.(kioskSidebarNavIds[idx]);
+    setSidebarNavFocusIndex(idx);
     clearPillAndToolbarFocus();
     setChromeFocus(null);
     setPaginationFocus(null);
     return true;
-  }, [kioskSidebarSystemIds.length, resolveSidebarSystemFocusIndex, clearPillAndToolbarFocus]);
+  }, [
+    kioskSidebarNavIds, resolveSidebarNavFocusIndex, onKioskSidebarNavPrepare,
+    clearPillAndToolbarFocus,
+  ]);
 
-  const kioskSystemCount = kioskSidebarSystemIds.length;
+  const kioskNavCount = kioskSidebarNavIds.length;
   const hasKioskToolbar = isRetrobat && !!kioskSortButtonRef && !!kioskDarkButtonRef;
 
   useEffect(() => {
@@ -226,15 +252,15 @@ const ThemeList: React.FC<ThemeListProps> = ({
     onKioskVisualFocusChange({
       pillFocusId,
       toolbarFocus,
-      sidebarSystemFocusIndex,
+      sidebarNavFocusIndex,
       chromeFocus,
       paginationFocus,
       gridFocused: !chromeFocus && pillFocusId === null && toolbarFocus === null
-        && sidebarSystemFocusIndex === null && !paginationFocus,
+        && sidebarNavFocusIndex === null && !paginationFocus,
     });
   }, [
     isRetrobat, onKioskVisualFocusChange, pillFocusId, toolbarFocus,
-    sidebarSystemFocusIndex, chromeFocus, paginationFocus,
+    sidebarNavFocusIndex, chromeFocus, paginationFocus,
   ]);
 
   // Recalcule le nombre de colonnes réellement affichées (miroir des classes Tailwind ci-dessous)
@@ -258,6 +284,13 @@ const ThemeList: React.FC<ThemeListProps> = ({
   // renverrait le focus manette sur Installer.
   useEffect(() => { setFocusedIndex(0); setPaginationFocus(null); }, [themes]);
 
+  // Déplier sections / catégories avant focus sidebar.
+  useEffect(() => {
+    if (!isRetrobat || sidebarNavFocusIndex === null) return;
+    const navId = kioskSidebarNavIds[sidebarNavFocusIndex];
+    if (navId) onKioskSidebarNavPrepare?.(navId);
+  }, [isRetrobat, sidebarNavFocusIndex, kioskSidebarNavIds, onKioskSidebarNavPrepare]);
+
   // Garde la carte (ou pagination / recherche / kiosque) sélectionné visible
   useEffect(() => {
     if (!isRetrobat) return;
@@ -274,9 +307,8 @@ const ThemeList: React.FC<ThemeListProps> = ({
       kioskDarkButtonRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       return;
     }
-    if (sidebarSystemFocusIndex !== null && kioskSidebarSystemIds[sidebarSystemFocusIndex]) {
-      document.querySelector(`[data-kiosk-sidebar-system="${kioskSidebarSystemIds[sidebarSystemFocusIndex]}"]`)
-        ?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (sidebarNavFocusIndex !== null && kioskSidebarNavIds[sidebarNavFocusIndex]) {
+      scrollKioskSidebarNavIntoView(kioskSidebarNavIds[sidebarNavFocusIndex]);
       return;
     }
     if (chromeFocus === 'main') {
@@ -292,7 +324,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
     cardRefs.current[focusedIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [
     focusedIndex, isRetrobat, paginationFocus, chromeFocus, searchInputRef, resolveSidebarInput,
-    pillFocusId, toolbarFocus, sidebarSystemFocusIndex, kioskSidebarSystemIds,
+    pillFocusId, toolbarFocus, sidebarNavFocusIndex, kioskSidebarNavIds,
     kioskSortButtonRef, kioskDarkButtonRef,
   ]);
 
@@ -312,10 +344,10 @@ const ThemeList: React.FC<ThemeListProps> = ({
       kioskDarkButtonRef?.current?.focus({ preventScroll: true });
       return;
     }
-    if (sidebarSystemFocusIndex !== null) {
-      const id = kioskSidebarSystemIds[sidebarSystemFocusIndex];
-      if (id) {
-        (document.querySelector(`[data-kiosk-sidebar-system="${id}"]`) as HTMLElement | null)
+    if (sidebarNavFocusIndex !== null) {
+      const navId = kioskSidebarNavIds[sidebarNavFocusIndex];
+      if (navId) {
+        (document.querySelector(`[data-kiosk-sidebar-nav="${CSS.escape(navId)}"]`) as HTMLElement | null)
           ?.focus({ preventScroll: true });
       }
       return;
@@ -333,7 +365,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
     actionRefs.current[focusedIndex]?.focus({ preventScroll: true });
   }, [
     focusedIndex, isRetrobat, paginationFocus, chromeFocus, searchInputRef, resolveSidebarInput,
-    pillFocusId, toolbarFocus, sidebarSystemFocusIndex, kioskSidebarSystemIds,
+    pillFocusId, toolbarFocus, sidebarNavFocusIndex, kioskSidebarNavIds,
     kioskSortButtonRef, kioskDarkButtonRef,
   ]);
 
@@ -372,24 +404,21 @@ const ThemeList: React.FC<ThemeListProps> = ({
       return;
     }
 
-    // ── Liste systèmes sidebar (kiosque) ──
-    if (isRetrobat && sidebarSystemFocusIndex !== null) {
+    // ── Sidebar kiosque (sections, sous-sections, systèmes, catégories) ──
+    if (isRetrobat && sidebarNavFocusIndex !== null) {
       if (direction === 'up') {
-        if (sidebarSystemFocusIndex > 0) {
-          setSidebarSystemFocusIndex(sidebarSystemFocusIndex - 1);
+        if (sidebarNavFocusIndex > 0) {
+          setSidebarNavFocusIndex(sidebarNavFocusIndex - 1);
         } else if (sideInput) {
-          setSidebarSystemFocusIndex(null);
+          setSidebarNavFocusIndex(null);
           setChromeFocus('sidebar');
         }
       } else if (direction === 'down') {
-        if (sidebarSystemFocusIndex < kioskSystemCount - 1) {
-          setSidebarSystemFocusIndex(sidebarSystemFocusIndex + 1);
-        } else {
-          setSidebarSystemFocusIndex(null);
-          setPaginationFocus(null);
+        if (sidebarNavFocusIndex < kioskNavCount - 1) {
+          setSidebarNavFocusIndex(sidebarNavFocusIndex + 1);
         }
       } else if (direction === 'right') {
-        setSidebarSystemFocusIndex(null);
+        setSidebarNavFocusIndex(null);
         setChromeFocus(null);
         setPaginationFocus(null);
       }
@@ -420,8 +449,8 @@ const ThemeList: React.FC<ThemeListProps> = ({
       } else if (direction === 'down') {
         setChromeFocus(null);
         setPaginationFocus(null);
-        if (isRetrobat && kioskSystemCount > 0) {
-          setSidebarSystemFocusIndex(resolveSidebarSystemFocusIndex());
+        if (isRetrobat && kioskNavCount > 0) {
+          setSidebarNavFocusIndex(resolveSidebarNavFocusIndex());
         }
       } else if (direction === 'up' && isRetrobat && hasKioskToolbar) {
         setChromeFocus(null);
@@ -453,18 +482,18 @@ const ThemeList: React.FC<ThemeListProps> = ({
         } else if (direction === 'left' && sideInput) {
           setChromeFocus('sidebar');
           clearPillAndToolbarFocus();
-          setSidebarSystemFocusIndex(null);
+          setSidebarNavFocusIndex(null);
         }
         return prev;
       }
       const col = prev % columns;
       if (direction === 'left') {
         if (col > 0) return prev - 1;
-        if (isRetrobat && enterSidebarSystemsFromGrid()) return prev;
+        if (isRetrobat && enterSidebarNavFromGrid()) return prev;
         if (sideInput) {
           setChromeFocus('sidebar');
           clearPillAndToolbarFocus();
-          setSidebarSystemFocusIndex(null);
+          setSidebarNavFocusIndex(null);
           return prev;
         }
         return prev;
@@ -488,9 +517,9 @@ const ThemeList: React.FC<ThemeListProps> = ({
     });
   }, [
     themes.length, columns, paginationFocus, totalPages, chromeFocus, searchInputRef,
-    resolveSidebarInput, isRetrobat, pillFocusId, toolbarFocus, sidebarSystemFocusIndex,
-    kioskSystemCount, hasKioskToolbar, clearKioskExtraFocus, clearPillAndToolbarFocus,
-    enterSidebarSystemsFromGrid, resolveSidebarSystemFocusIndex,
+    resolveSidebarInput, isRetrobat, pillFocusId, toolbarFocus, sidebarNavFocusIndex,
+    kioskNavCount, hasKioskToolbar, clearKioskExtraFocus, clearPillAndToolbarFocus,
+    enterSidebarNavFromGrid, resolveSidebarNavFocusIndex,
     kioskSortButtonRef, kioskDarkButtonRef,
   ]);
 
@@ -646,9 +675,25 @@ const ThemeList: React.FC<ThemeListProps> = ({
       onKioskToolbarDark?.();
       return;
     }
-    if (isRetrobat && sidebarSystemFocusIndex !== null) {
-      const id = kioskSidebarSystemIds[sidebarSystemFocusIndex];
-      if (id) onKioskSidebarSystemActivate?.(id);
+    if (isRetrobat && sidebarNavFocusIndex !== null) {
+      const navId = kioskSidebarNavIds[sidebarNavFocusIndex];
+      const parsed = navId ? parseKioskSidebarNavId(navId) : null;
+      if (parsed) {
+        switch (parsed.kind) {
+          case 'section':
+            onKioskSidebarSectionToggle?.(parsed.parts[0]);
+            break;
+          case 'subsection':
+            onKioskSidebarSubsectionToggle?.(parsed.parts[1] ?? parsed.parts[0]);
+            break;
+          case 'system':
+            onKioskSidebarSystemActivate?.(parsed.parts[0]);
+            break;
+          case 'category':
+            onKioskSidebarCategoryActivate?.(parsed.parts[0], parsed.parts[1]);
+            break;
+        }
+      }
       return;
     }
 
@@ -672,8 +717,10 @@ const ThemeList: React.FC<ThemeListProps> = ({
   }, [
     agentInfo, paginationFocus, guardedPageAction, handlePrevPage, handleNextPage, themes,
     focusedIndex, chromeFocus, isRetrobat, searchValue, sidebarSearchValue, suppressGridNav,
-    pillFocusId, toolbarFocus, sidebarSystemFocusIndex, kioskSidebarSystemIds,
-    onKioskPillActivate, onKioskToolbarSort, onKioskToolbarDark, onKioskSidebarSystemActivate,
+    pillFocusId, toolbarFocus, sidebarNavFocusIndex, kioskSidebarNavIds,
+    onKioskPillActivate, onKioskToolbarSort, onKioskToolbarDark,
+    onKioskSidebarSectionToggle, onKioskSidebarSubsectionToggle,
+    onKioskSidebarSystemActivate, onKioskSidebarCategoryActivate,
   ]);
 
   const kioskSudAction = (() => {
@@ -681,7 +728,13 @@ const ThemeList: React.FC<ThemeListProps> = ({
     if (pillFocusId !== null) return 'Filtrer';
     if (toolbarFocus === 'sort') return 'Tri';
     if (toolbarFocus === 'dark') return 'Mode';
-    if (sidebarSystemFocusIndex !== null) return 'Système';
+    if (sidebarNavFocusIndex !== null) {
+      const navId = kioskSidebarNavIds[sidebarNavFocusIndex];
+      const parsed = navId ? parseKioskSidebarNavId(navId) : null;
+      if (parsed?.kind === 'section' || parsed?.kind === 'subsection') return 'Ouvrir';
+      if (parsed?.kind === 'category') return 'Catégorie';
+      return 'Système';
+    }
     return 'Installer';
   })();
 
@@ -695,8 +748,8 @@ const ThemeList: React.FC<ThemeListProps> = ({
       setToolbarFocus(null);
       return;
     }
-    if (sidebarSystemFocusIndex !== null) {
-      setSidebarSystemFocusIndex(null);
+    if (sidebarNavFocusIndex !== null) {
+      setSidebarNavFocusIndex(null);
       return;
     }
     if (chromeFocus === 'main') {
@@ -716,7 +769,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
       return;
     }
     window.history.back();
-  }, [oskOpen, pillFocusId, toolbarFocus, sidebarSystemFocusIndex, chromeFocus, searchHasValue, onSearchClear, sidebarSearchHasValue, onSidebarSearchClear]);
+  }, [oskOpen, pillFocusId, toolbarFocus, sidebarNavFocusIndex, chromeFocus, searchHasValue, onSearchClear, sidebarSearchHasValue, onSidebarSearchClear]);
 
   const handleGamepadPreview = useCallback(() => {
     if (oskOpen) return; // NORD géré par le clavier (ferme)
@@ -892,7 +945,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
           const key = getThemeKey(theme);
           const inCart = isInCart(theme);
           const isGamepadFocused = isRetrobat && !chromeFocus && pillFocusId === null
-            && toolbarFocus === null && sidebarSystemFocusIndex === null
+            && toolbarFocus === null && sidebarNavFocusIndex === null
             && !paginationFocus && index === focusedIndex;
 
           return (
@@ -1264,7 +1317,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
             <BtnIcon dir="est"  color="#e74c3c" active={btnEstOk}  label="EST"  action="Retour"/>
             <Sep/>
             {/* NORD - Aperçu / Clavier */}
-            <BtnIcon dir="nord" color="#f1c40f" active={btnNordOk} label="NORD" action={chromeFocus ? 'Clavier' : (pillFocusId !== null || toolbarFocus || sidebarSystemFocusIndex !== null) ? '—' : 'Aperçu'}/>
+            <BtnIcon dir="nord" color="#f1c40f" active={btnNordOk} label="NORD" action={chromeFocus ? 'Clavier' : (pillFocusId !== null || toolbarFocus || sidebarNavFocusIndex !== null) ? '—' : 'Aperçu'}/>
             <Sep/>
             {/* D-PAD : grille + pagination bas + recherche (haut 1re ligne) */}
             <DPad/>

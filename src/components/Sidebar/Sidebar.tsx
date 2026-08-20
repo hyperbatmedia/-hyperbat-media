@@ -10,7 +10,7 @@ import {
 import { useLinksLoader } from '../../hooks/useLinksLoader';
 import type { ModalConfig } from '../../hooks/useLinksLoader';
 import ContentModal from '../ContentModal/ContentModal';
-import { isKioskNavigableSidebarSystem, kioskFocusStyle } from '../../kioskNavConfig';
+import { isKioskNavigableSidebarSystem, kioskFocusStyle, kioskSidebarNavId } from '../../kioskNavConfig';
 
 import arcadeImg from '../../assets/icons/arcade.png';
 import portableImg from '../../assets/icons/console_portable.png';
@@ -44,10 +44,10 @@ interface SidebarProps {
   searchPlaceholder?: string;
   /** Mode kiosque (?retrobat=1) — navigation manette. */
   isRetrobat?: boolean;
-  /** ID système sidebar avec contour manette. */
-  kioskFocusedSystemId?: string | null;
-  /** Liste ordonnée des systèmes navigables (ThemeList). */
-  onKioskNavigableSystemIdsChange?: (ids: string[]) => void;
+  /** Entrée sidebar focusée (data-kiosk-sidebar-nav). */
+  kioskFocusedNavId?: string | null;
+  /** Liste ordonnée des entrées navigables (ThemeList). */
+  onKioskSidebarNavIdsChange?: (ids: string[]) => void;
 }
 
 // ── Icône Discord réutilisable ────────────────────────────────────────────────
@@ -113,8 +113,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   searchGamepadFocused = false,
   searchPlaceholder = 'Rechercher un système... (Ctrl+K)',
   isRetrobat = false,
-  kioskFocusedSystemId = null,
-  onKioskNavigableSystemIdsChange,
+  kioskFocusedNavId = null,
+  onKioskSidebarNavIdsChange,
 }) => {
   const { links, isLoading: isLoadingLinks } = useLinksLoader();
 
@@ -274,33 +274,22 @@ const Sidebar: React.FC<SidebarProps> = ({
     return [...topButtons, ...sorted];
   }, [systems, normalizedSearch, isSearchActive]);
 
-  const kioskNavigableSystemIds = useMemo(() => {
-    if (!isRetrobat || collapsed) return [];
-    return visibleSystems
-      .filter(system => {
-        if (system.isHeader || system.isSubHeader) return false;
-        const isTopButton = TOP_BUTTON_IDS.includes(system.id as any);
-        const link = isTopButton && system.id !== 'all' ? linksBySystemId[system.id] : undefined;
-        return isKioskNavigableSidebarSystem(system, link);
-      })
-      .map(system => system.id);
-  }, [isRetrobat, collapsed, visibleSystems, linksBySystemId]);
-
-  // Ne remonter que les systèmes réellement rendus dans le DOM (sections ouvertes).
+  // Entrées réellement présentes dans le DOM (ordre de navigation manette).
   useLayoutEffect(() => {
     if (!isRetrobat || collapsed) {
-      onKioskNavigableSystemIdsChange?.([]);
+      onKioskSidebarNavIdsChange?.([]);
       return;
     }
     const ids = Array.from(
-      document.querySelectorAll<HTMLElement>('[data-kiosk-sidebar-system]'),
+      document.querySelectorAll<HTMLElement>('[data-kiosk-sidebar-nav]'),
     )
-      .map((el) => el.dataset.kioskSidebarSystem)
+      .map((el) => el.dataset.kioskSidebarNav)
       .filter((id): id is string => !!id);
-    onKioskNavigableSystemIdsChange?.(ids.length > 0 ? ids : kioskNavigableSystemIds);
+    onKioskSidebarNavIdsChange?.(ids);
   }, [
     isRetrobat, collapsed, visibleSystems, expandedSections, expandedSubsections,
-    selectedSystem, sidebarSearch, kioskNavigableSystemIds, onKioskNavigableSystemIdsChange,
+    expandedSystems, selectedSystem, selectedCategory, sidebarSearch,
+    onKioskSidebarNavIdsChange,
   ]);
 
   // ── Renderers ─────────────────────────────────────────────────────────────
@@ -310,6 +299,10 @@ const Sidebar: React.FC<SidebarProps> = ({
     const isExpanded   = expandedSections[sectionKey];
     const sectionCount = themeCountBySection.sectionCounts[sectionKey] || 0;
     const label        = stripEmoji(system.name);
+    const sectionNavId = isRetrobat && !isSearchActive
+      ? kioskSidebarNavId('section', sectionKey)
+      : null;
+    const sectionFocused = sectionNavId !== null && kioskFocusedNavId === sectionNavId;
 
     if (collapsed) {
       return (
@@ -329,9 +322,12 @@ const Sidebar: React.FC<SidebarProps> = ({
     return (
       <button
         onClick={() => toggleSection(sectionKey)}
+        data-kiosk-sidebar-nav={sectionNavId ?? undefined}
+        tabIndex={isRetrobat ? -1 : undefined}
         className={`w-full text-left pt-3 pb-1 px-2 rounded transition flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-orange-500 ${
           isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-200'
         }`}
+        style={sectionFocused ? kioskFocusStyle(true) : undefined}
         aria-expanded={isExpanded}
       >
         <h4 className="font-bold text-sm tracking-wider flex items-center gap-2 min-w-0" style={{ color: '#FFD700' }}>
@@ -357,12 +353,19 @@ const Sidebar: React.FC<SidebarProps> = ({
     // ex: "arcade-snk" au lieu de "snk" seul
     const subKey          = `${system.section || ''}-${system.subsection || ''}`;
     const subsectionCount = themeCountBySection.subsectionCounts[subKey] || 0;
+    const subNavId = isRetrobat && !isSearchActive
+      ? kioskSidebarNavId('subsection', system.section || '', system.subsection || '')
+      : null;
+    const subFocused = subNavId !== null && kioskFocusedNavId === subNavId;
     return (
       <button
         onClick={() => toggleSubsection(system.subsection || '')}
+        data-kiosk-sidebar-nav={subNavId ?? undefined}
+        tabIndex={isRetrobat ? -1 : undefined}
         className={`w-full text-left pt-2 pb-1 px-3 ml-2 rounded transition flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-orange-500 ${
           isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-200'
         }`}
+        style={subFocused ? kioskFocusStyle(true) : undefined}
         aria-expanded={isExpanded}
       >
         <h5 className="font-bold text-sm tracking-normal flex items-center gap-1 min-w-0" style={{ color: '#FF8C00' }}>
@@ -396,7 +399,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     const isTopButton   = TOP_BUTTON_IDS.includes(system.id as any);
     const correspondingLink = isTopButton && system.id !== 'all' ? linksBySystemId[system.id] : null;
     const kioskNavigable = isRetrobat && isKioskNavigableSidebarSystem(system, correspondingLink ?? undefined);
-    const kioskFocused = kioskNavigable && kioskFocusedSystemId === system.id;
+    const systemNavId = kioskNavigable ? kioskSidebarNavId('system', system.id) : null;
+    const kioskFocused = systemNavId !== null && kioskFocusedNavId === systemNavId;
 
     const parts              = system.id.split('-');
     const normalizedSystemId = parts[parts.length - 1].toLowerCase().replace(/[^a-z0-9]+/g, '');
@@ -469,7 +473,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           ) : (
             <button
               ref={el => { if (el) systemButtonsRef.current.set(system.id, el); else systemButtonsRef.current.delete(system.id); }}
-              data-kiosk-sidebar-system={kioskNavigable ? system.id : undefined}
+              data-kiosk-sidebar-nav={systemNavId ?? undefined}
               tabIndex={isRetrobat && !kioskNavigable ? -1 : undefined}
               onClick={e => { handleSystemSelect(system.id); e.currentTarget.blur(); }}
               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSystemSelect(system.id); e.currentTarget.blur(); } }}
@@ -497,6 +501,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           {hasCategories && (
             <button
               onClick={() => toggleSystemCategories(system.id)}
+              tabIndex={isRetrobat ? -1 : undefined}
               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSystemCategories(system.id); } }}
               className="flex-shrink-0 p-1 rounded hover:bg-black/20 focus:outline-none focus:ring-2 focus:ring-orange-500"
               title={expandedSystems[system.id] ? 'Masquer les catégories' : 'Afficher les catégories'}
@@ -510,16 +515,21 @@ const Sidebar: React.FC<SidebarProps> = ({
           )}
         </div>
 
-        {hasCategories && (
+        {hasCategories && expandedSystems[system.id] && (
           <div
-            className={`sidebar-section-content ${expandedSystems[system.id] ? 'open' : 'closed'} ml-4 mt-1 space-y-1 border-l-2 pl-2`}
+            className="sidebar-section-content open ml-4 mt-1 space-y-1 border-l-2 pl-2"
             style={{ borderColor: colors.bg }}
           >
             <button
               onClick={() => setSelectedCategory('all')}
+              data-kiosk-sidebar-nav={isRetrobat ? kioskSidebarNavId('category', system.id, 'all') : undefined}
+              tabIndex={isRetrobat ? -1 : undefined}
               className={`w-full text-left px-3 py-1.5 rounded text-sm transition focus:outline-none focus:ring-2 focus:ring-orange-500
                 ${selectedCategory === 'all' ? 'text-white font-semibold' : isDarkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-200'}`}
-              style={selectedCategory === 'all' ? { backgroundColor: `${colors.bg}80` } : {}}
+              style={{
+                ...(selectedCategory === 'all' ? { backgroundColor: `${colors.bg}80` } : {}),
+                ...kioskFocusStyle(isRetrobat && kioskFocusedNavId === kioskSidebarNavId('category', system.id, 'all')),
+              }}
             >
               <span className="flex items-center gap-1">
                 Toutes les catégories
@@ -536,12 +546,19 @@ const Sidebar: React.FC<SidebarProps> = ({
               .filter(cat => cat.id === 'collection' ? system.section === 'collections' : true)
               .map(cat => {
                 const categoryCount = categoryCounts[cat.id] || 0;
+                const catNavId = isRetrobat ? kioskSidebarNavId('category', system.id, cat.id) : null;
+                const catFocused = catNavId !== null && kioskFocusedNavId === catNavId;
                 return (
                   <button key={cat.id}
                     onClick={() => setSelectedCategory(cat.id)}
+                    data-kiosk-sidebar-nav={catNavId ?? undefined}
+                    tabIndex={isRetrobat ? -1 : undefined}
                     className={`w-full text-left px-3 py-1.5 rounded text-sm transition focus:outline-none focus:ring-2 focus:ring-orange-500
                       ${selectedCategory === cat.id ? 'text-white font-semibold' : isDarkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-200'}`}
-                    style={selectedCategory === cat.id ? { backgroundColor: `${colors.bg}80` } : {}}
+                    style={{
+                      ...(selectedCategory === cat.id ? { backgroundColor: `${colors.bg}80` } : {}),
+                      ...kioskFocusStyle(catFocused),
+                    }}
                   >
                     <span className="flex items-center gap-1">
                       {cat.name}
@@ -679,7 +696,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         )}
 
         {/* Contenu scrollable */}
-        <div className="pr-1 pl-1 custom-scrollbar flex-1" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+        <div className="pr-1 pl-1 custom-scrollbar flex-1" data-kiosk-sidebar-scroll style={{ overflowY: 'auto', overflowX: 'hidden' }}>
           {visibleSystems.length === 0 && isSearchActive ? (
             <div className="text-center py-8 px-4">
               <p className="text-gray-300 text-sm mb-3">
