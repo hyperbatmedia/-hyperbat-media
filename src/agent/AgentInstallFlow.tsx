@@ -116,6 +116,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   // Dernière ROM survolée à la souris : sert uniquement à préremplir le
   // clavier virtuel à l'ouverture (pas la barre elle-même — voir SUD/NORD).
   const hoveredRomRef = useRef('');
+  const lastMouseXYRef = useRef({ x: -1, y: -1 });
   const [collectionName, setCollectionName] = useState(theme.name);
   const [jobStatus, setJobStatus] = useState<AgentJobStatus | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
@@ -770,6 +771,24 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
             {romsFound && filteredRoms.length > 0 && (
               <div data-hbagent-romlist
                 onMouseLeave={() => setHoverIdx(null)}
+                onMouseMove={(e) => { lastMouseXYRef.current = { x: e.clientX, y: e.clientY }; }}
+                onScroll={(e) => {
+                  // Scroller à la molette ne déplace pas le curseur, donc
+                  // aucun onMouseEnter ne se déclenche sur la ligne qui
+                  // arrive sous lui : on recalcule ici la ligne réellement
+                  // sous la dernière position connue de la souris.
+                  const { x, y } = lastMouseXYRef.current;
+                  const target = document.elementFromPoint(x, y)?.closest('.hbagent-rom-item') as HTMLElement | null;
+                  if (target && e.currentTarget.contains(target)) {
+                    const idx = Number(target.dataset.romIdx);
+                    if (Number.isFinite(idx)) {
+                      setHoverIdx(idx);
+                      hoveredRomRef.current = target.dataset.romName || '';
+                    }
+                  } else {
+                    setHoverIdx(null);
+                  }
+                }}
                 style={{
                 overflowY: 'auto', maxHeight: '34vh', marginBottom: '10px',
                 border: '1px solid #333', borderRadius: '8px',
@@ -781,6 +800,8 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                   <button
                     key={rom}
                     className="hbagent-focusable hbagent-rom-item"
+                    data-rom-idx={romIdx + 1}
+                    data-rom-name={rom}
                     onClick={() => guard(() => chooseRom(rom))}
                     onMouseEnter={() => { setHoverIdx(romIdx + 1); hoveredRomRef.current = rom; }}
                     style={{
