@@ -429,7 +429,11 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     const actDir = (dir: 'up' | 'down' | 'left' | 'right') => {
       if (oskOpenRef.current) return;
       const s = stepRef.current;
-      const hStep = s === 'rom-pick' ? 10 : 1;
+      // Même règle que pour le clavier : le saut ±10 (pagination rapide)
+      // ne s'applique qu'aux éléments de la liste ROM, sinon gauche/droite
+      // depuis Valider/Annuler sauterait hors de la rangée.
+      const el = getFocusables()[focusIdxRef.current];
+      const hStep = s === 'rom-pick' && el?.classList.contains('hbagent-rom-item') ? 10 : 1;
       if (dir === 'up') move(-1);
       else if (dir === 'down') move(1);
       else if (dir === 'left') move(-hStep);
@@ -543,10 +547,15 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const inInput = e.target instanceof HTMLInputElement;
+      // Le saut ±10 (pagination rapide) ne doit s'appliquer que lorsqu'on est
+      // sur un élément de la liste ROM — sinon ← / → depuis Valider/Annuler
+      // sautent hors de la rangée au lieu de juste basculer entre les deux.
+      const onRomItem = (e.target as HTMLElement | null)?.classList.contains('hbagent-rom-item');
+      const bigJump = stepRef.current === 'rom-pick' && onRomItem;
       if (e.key === 'ArrowUp') { e.preventDefault(); e.stopPropagation(); move(-1); }
       else if (e.key === 'ArrowDown') { e.preventDefault(); e.stopPropagation(); move(1); }
-      else if (e.key === 'ArrowLeft' && !inInput) { e.preventDefault(); e.stopPropagation(); move(stepRef.current === 'rom-pick' ? -10 : -1); }
-      else if (e.key === 'ArrowRight' && !inInput) { e.preventDefault(); e.stopPropagation(); move(stepRef.current === 'rom-pick' ? 10 : 1); }
+      else if (e.key === 'ArrowLeft' && !inInput) { e.preventDefault(); e.stopPropagation(); move(bigJump ? -10 : -1); }
+      else if (e.key === 'ArrowRight' && !inInput) { e.preventDefault(); e.stopPropagation(); move(bigJump ? 10 : 1); }
       else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); handleBack(); }
     };
     window.addEventListener('keydown', onKey, true);
@@ -795,7 +804,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
               <button
                 className="hbagent-focusable"
                 style={{
-                  ...btnStyle,
+                  ...btnStyle, flex: 1,
                   opacity: validateTarget ? 1 : 0.4,
                   cursor: validateTarget ? 'pointer' : 'default',
                 }}
@@ -803,7 +812,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                 onClick={() => validateTarget && guard(() => chooseRom(validateTarget))}>
                 Valider
               </button>
-              <button className="hbagent-focusable" style={btnAltStyle}
+              <button className="hbagent-focusable" style={{ ...btnAltStyle, flex: 1 }}
                 onClick={() => guard(onClose)}>
                 Annuler
               </button>
