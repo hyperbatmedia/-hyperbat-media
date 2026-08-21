@@ -116,12 +116,6 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   // Dernière ROM survolée à la souris : sert uniquement à préremplir le
   // clavier virtuel à l'ouverture (pas la barre elle-même — voir SUD/NORD).
   const hoveredRomRef = useRef('');
-  // true si le dernier changement de focusIdx vient d'un survol souris :
-  // dans ce cas on ne doit PAS recentrer la liste (l'élément est déjà
-  // visible sous le curseur — le recentrage la ferait défiler toute seule
-  // et créerait une boucle : centrage → curseur sur une autre ligne →
-  // nouveau survol → nouveau centrage…).
-  const focusFromMouseRef = useRef(false);
   const [collectionName, setCollectionName] = useState(theme.name);
   const [jobStatus, setJobStatus] = useState<AgentJobStatus | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
@@ -187,7 +181,6 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   }, [getFocusables]);
 
   useEffect(() => {
-    if (focusFromMouseRef.current) { focusFromMouseRef.current = false; return; }
     const nodes = getFocusables();
     const el = nodes[focusIdx];
     if (!el) return;
@@ -195,6 +188,14 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     const id = window.requestAnimationFrame(() => scrollFocusableIntoView(el));
     return () => window.cancelAnimationFrame(id);
   }, [focusIdx, step, filter, roms, getFocusables]);
+
+  // Surlignage au survol souris : état séparé de focusIdx, pour ne
+  // JAMAIS déclencher le recentrage automatique de la liste (qui est
+  // réservé à la navigation clavier/manette). C'est ce recentrage qui,
+  // appliqué à un survol, faisait défiler la liste toute seule sous le
+  // curseur (centrage → curseur sur une autre ligne → nouveau survol →
+  // nouveau centrage…).
+  const [hoverIdx, setHoverIdx] = useState<number | null>(null);
 
   // Miroir AHK : ReloadRetroBatThemes() apres fermeture du dialogue succes.
   // Place AVANT le hook manette : SUD/EST sur l'ecran "done" l'appelle.
@@ -394,6 +395,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     if (step !== 'rom-pick') return;
     const max = getFocusables().length - 1;
     setFocusIdx((prev) => Math.min(prev, Math.max(max, 0)));
+    setHoverIdx(null);
   }, [filteredRoms, filter, step, getFocusables]);
 
   // ── Manette : D-Pad + SUD/EST, avec détection de front montant ───────
@@ -766,19 +768,21 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
               </span>
             </div>
             {romsFound && filteredRoms.length > 0 && (
-              <div data-hbagent-romlist style={{
+              <div data-hbagent-romlist
+                onMouseLeave={() => setHoverIdx(null)}
+                style={{
                 overflowY: 'auto', maxHeight: '34vh', marginBottom: '10px',
                 border: '1px solid #333', borderRadius: '8px',
               }}>
                 {filteredRoms.map((rom, romIdx) => {
                   const isFav = rom === suggested;
-                  const isSel = focusIdx === romIdx + 1;
+                  const isSel = (hoverIdx !== null ? hoverIdx : focusIdx) === romIdx + 1;
                   return (
                   <button
                     key={rom}
                     className="hbagent-focusable hbagent-rom-item"
                     onClick={() => guard(() => chooseRom(rom))}
-                    onMouseEnter={() => { focusFromMouseRef.current = true; setFocusIdx(romIdx + 1); hoveredRomRef.current = rom; }}
+                    onMouseEnter={() => { setHoverIdx(romIdx + 1); hoveredRomRef.current = rom; }}
                     style={{
                       display: 'block', width: '100%', textAlign: 'left',
                       padding: '8px 12px', fontSize: '12px', cursor: 'pointer',
