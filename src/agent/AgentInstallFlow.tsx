@@ -666,6 +666,15 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     }}>{label}</div>
   );
 
+  // Équivalent clavier d'un contrôle manette : même style à deux lignes
+  // (libellé de touche + action) que FaceBtn, pour rester cohérent.
+  const KeyControl = ({ label, action }: { label: string; action: string }) => (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+      <KeyBadge label={label} />
+      <span style={{ fontSize: '9px', color: '#aaa', lineHeight: 1 }}>{action}</span>
+    </div>
+  );
+
   const Sep = () => (
     <div style={{ width: '1px', height: '52px', backgroundColor: '#2a2a2a', margin: '0 6px' }} />
   );
@@ -978,24 +987,19 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
             display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
             gap: '4px', flexWrap: 'wrap',
           }}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-              <DPadIcon />
-              <KeyBadge label="↑↓←→" />
-            </div>
+            <DPadIcon />
             <Sep />
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-              <FaceBtn dir="sud" color="#2ecc71" label="SUD" action="Valider / Clavier" />
-              <KeyBadge label="Entrée" />
-            </div>
+            <FaceBtn dir="sud" color="#2ecc71" label="SUD" action="Valider / Clavier" />
             <Sep />
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-              <FaceBtn dir="est" color="#e74c3c" label="EST" action="Annuler" />
-              <KeyBadge label="Échap" />
-            </div>
+            <FaceBtn dir="est" color="#e74c3c" label="EST" action="Annuler" />
             <Sep />
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-              <FaceBtn dir="nord" color="#f1c40f" label="NORD" action="Clavier" />
-            </div>
+            <FaceBtn dir="nord" color="#f1c40f" label="NORD" action="Clavier" />
+            <Sep />
+            <KeyControl label="↑↓←→" action="Naviguer" />
+            <Sep />
+            <KeyControl label="Entrée" action="Valider" />
+            <Sep />
+            <KeyControl label="Échap" action="Annuler" />
           </div>
         )}
       </div>
