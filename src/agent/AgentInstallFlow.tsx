@@ -116,6 +116,12 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   // Dernière ROM survolée à la souris : sert uniquement à préremplir le
   // clavier virtuel à l'ouverture (pas la barre elle-même — voir SUD/NORD).
   const hoveredRomRef = useRef('');
+  // true si le dernier changement de focusIdx vient d'un survol souris :
+  // dans ce cas on ne doit PAS recentrer la liste (l'élément est déjà
+  // visible sous le curseur — le recentrage la ferait défiler toute seule
+  // et créerait une boucle : centrage → curseur sur une autre ligne →
+  // nouveau survol → nouveau centrage…).
+  const focusFromMouseRef = useRef(false);
   const [collectionName, setCollectionName] = useState(theme.name);
   const [jobStatus, setJobStatus] = useState<AgentJobStatus | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
@@ -181,6 +187,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   }, [getFocusables]);
 
   useEffect(() => {
+    if (focusFromMouseRef.current) { focusFromMouseRef.current = false; return; }
     const nodes = getFocusables();
     const el = nodes[focusIdx];
     if (!el) return;
@@ -771,7 +778,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                     key={rom}
                     className="hbagent-focusable hbagent-rom-item"
                     onClick={() => guard(() => chooseRom(rom))}
-                    onMouseEnter={() => { setFocusIdx(romIdx + 1); hoveredRomRef.current = rom; }}
+                    onMouseEnter={() => { focusFromMouseRef.current = true; setFocusIdx(romIdx + 1); hoveredRomRef.current = rom; }}
                     style={{
                       display: 'block', width: '100%', textAlign: 'left',
                       padding: '8px 12px', fontSize: '12px', cursor: 'pointer',
