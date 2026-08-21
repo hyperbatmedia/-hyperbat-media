@@ -577,13 +577,16 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   // ── Styles partagés (palette du site) ─────────────────────────────────
 
   const btnStyle: React.CSSProperties = {
-    padding: '10px 16px', borderRadius: '8px', border: '2px solid #FFD700',
-    backgroundColor: '#FF8C00', color: 'white', fontWeight: 700, fontSize: '13px',
+    padding: '11px 16px', borderRadius: '8px', border: 'none',
+    background: 'linear-gradient(90deg, #FF8C00, #FFD700)',
+    color: '#1a1a1a', fontWeight: 700, fontSize: '13px',
     cursor: 'pointer',
   };
-  const btnAltStyle: React.CSSProperties = {
-    ...btnStyle, backgroundColor: '#1f2937', borderColor: '#555', color: '#ddd',
-  };
+  // Annuler reprend désormais le même dégradé que Valider : sur cette
+  // fenêtre pilotée au clavier/manette, c'est l'anneau de focus
+  // (.hbagent-focusable:focus) qui distingue le bouton actif, pas la
+  // couleur du bouton lui-même.
+  const btnAltStyle: React.CSSProperties = btnStyle;
   const inputStyle: React.CSSProperties = {
     width: '100%', padding: '10px 12px', borderRadius: '8px',
     border: '2px solid #555', backgroundColor: '#111827', color: 'white',
@@ -788,7 +791,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                 )}
               </>
             )}
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div style={{ display: 'flex', gap: '10px', borderTop: '1px solid #FF8C00', paddingTop: '12px' }}>
               <button
                 className="hbagent-focusable"
                 style={{
