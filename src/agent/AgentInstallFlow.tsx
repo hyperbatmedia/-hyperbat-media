@@ -709,16 +709,26 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                 ? <>Choisissez ou saisissez la ROM{suggested ? ' (⭐ = suggestion)' : ''} :</>
                 : <>Dossier ROMs introuvable — saisissez le nom manuellement :</>}
             </p>
-            <input
-              type="text"
-              value={filter}
-              placeholder="Rechercher ou saisir le nom… (SUD ou NORD = clavier)"
-              onChange={(e) => setFilter(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter' && filteredRoms.length === 0) guard(() => chooseRom(filter)); }}
-              className="hbagent-focusable"
-              data-hbagent-osk="filter"
-              style={{ ...inputStyle, marginBottom: '8px' }}
-            />
+            <div style={{ position: 'relative', marginBottom: '8px' }}>
+              <input
+                type="text"
+                value={filter}
+                placeholder="Rechercher ou saisir le nom…"
+                onChange={(e) => setFilter(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter' && filteredRoms.length === 0) guard(() => chooseRom(filter)); }}
+                className="hbagent-focusable"
+                data-hbagent-osk="filter"
+                style={{ ...inputStyle, marginBottom: 0, paddingRight: '34px' }}
+              />
+              <span
+                title="SUD ou NORD = clavier virtuel"
+                style={{
+                  position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)',
+                  fontSize: '14px', color: '#888', pointerEvents: 'none',
+                }}>
+                ⌨
+              </span>
+            </div>
             {romsFound && filteredRoms.length > 0 && (
               <div data-hbagent-romlist style={{
                 overflowY: 'auto', maxHeight: '34vh', marginBottom: '10px',
@@ -775,11 +785,11 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                 className="hbagent-focusable"
                 style={{
                   ...btnStyle,
-                  opacity: (filteredRoms.length === 1 || (filteredRoms.length === 0 && filter.trim())) ? 1 : 0.4,
-                  cursor: (filteredRoms.length === 1 || (filteredRoms.length === 0 && filter.trim())) ? 'pointer' : 'default',
+                  opacity: filter.trim() ? 1 : 0.4,
+                  cursor: filter.trim() ? 'pointer' : 'default',
                 }}
-                disabled={!(filteredRoms.length === 1 || (filteredRoms.length === 0 && filter.trim()))}
-                onClick={() => guard(() => chooseRom(filteredRoms.length === 1 ? filteredRoms[0] : filter))}>
+                disabled={!filter.trim()}
+                onClick={() => guard(() => chooseRom(filter))}>
                 Valider
               </button>
               <button className="hbagent-focusable" style={btnAltStyle}
