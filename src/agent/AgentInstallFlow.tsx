@@ -575,6 +575,10 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   resolveConflictRef.current = resolveConflict;
 
   // ── Styles partagés (palette du site) ─────────────────────────────────
+  // Dégradé jaune doré → orange profond, calqué sur les couleurs réelles
+  // du logo Hyperbat Media (échantillonné : #F9D543 → #FDC806 → #FD7F05 → #F2461C).
+  const GRAD_DIAG = 'linear-gradient(135deg, #FFD700 0%, #FF8C00 55%, #F2461C 100%)';
+
   const btnStyle: React.CSSProperties = {
     padding: '10px 16px', borderRadius: '8px', border: '2px solid #FFD700',
     backgroundColor: '#FF8C00', color: 'white', fontWeight: 700, fontSize: '13px',
@@ -661,7 +665,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         }
         [data-hbagent-romlist] {
           scrollbar-width: thin;
-          scrollbar-color: #FF8C00 #1a1a1a;
+          scrollbar-color: #FD7F05 #1a1a1a;
         }
         [data-hbagent-romlist]::-webkit-scrollbar {
           width: 8px;
@@ -670,18 +674,19 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
           background: #1a1a1a;
         }
         [data-hbagent-romlist]::-webkit-scrollbar-thumb {
-          background-color: #FF8C00;
+          background: linear-gradient(180deg, #FFD700 0%, #FF8C00 55%, #F2461C 100%);
           border-radius: 4px;
         }
         [data-hbagent-romlist]::-webkit-scrollbar-thumb:hover {
-          background-color: #FFA733;
+          background: linear-gradient(180deg, #FFE066 0%, #FFA733 55%, #F76A3C 100%);
         }
       `}</style>
       <div style={{
         width: 'min(600px, 94vw)', maxHeight: '82vh', overflow: 'hidden',
         display: 'flex', flexDirection: 'column',
         backgroundColor: '#1a1a1a', borderRadius: '12px',
-        border: '2px solid #FF8C00', padding: '20px',
+        border: '2px solid transparent', borderImage: `${GRAD_DIAG} 1`,
+        padding: '20px',
         boxShadow: '0 25px 60px rgba(0,0,0,0.8)',
       }}>
         {/* ── Titre ── */}
