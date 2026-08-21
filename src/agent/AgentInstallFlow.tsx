@@ -575,9 +575,6 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   resolveConflictRef.current = resolveConflict;
 
   // ── Styles partagés (palette du site) ─────────────────────────────────
-  // Dégradé jaune doré → orange profond, calqué sur les couleurs réelles
-  // du logo Hyperbat Media (échantillonné : #F9D543 → #FDC806 → #FD7F05 → #F2461C).
-  const GRAD_DIAG = 'linear-gradient(135deg, #FFD700 0%, #FF8C00 55%, #F2461C 100%)';
 
   const btnStyle: React.CSSProperties = {
     padding: '10px 16px', borderRadius: '8px', border: '2px solid #FFD700',
@@ -665,7 +662,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         }
         [data-hbagent-romlist] {
           scrollbar-width: thin;
-          scrollbar-color: #FD7F05 #1a1a1a;
+          scrollbar-color: #FF8C00 #1a1a1a;
         }
         [data-hbagent-romlist]::-webkit-scrollbar {
           width: 8px;
@@ -674,24 +671,19 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
           background: #1a1a1a;
         }
         [data-hbagent-romlist]::-webkit-scrollbar-thumb {
-          background: linear-gradient(180deg, #FFD700 0%, #FF8C00 55%, #F2461C 100%);
+          background-color: #FF8C00;
           border-radius: 4px;
         }
         [data-hbagent-romlist]::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(180deg, #FFE066 0%, #FFA733 55%, #F76A3C 100%);
+          background-color: #FFA733;
         }
       `}</style>
       <div style={{
-        width: 'min(600px, 94vw)', maxHeight: '82vh',
-        borderRadius: '18px', padding: '2px',
-        background: GRAD_DIAG,
-        boxShadow: '0 25px 60px rgba(0,0,0,0.8)',
-      }}>
-      <div style={{
-        maxHeight: 'calc(82vh - 4px)', overflow: 'hidden',
+        width: 'min(600px, 94vw)', maxHeight: '82vh', overflow: 'hidden',
         display: 'flex', flexDirection: 'column',
         backgroundColor: '#1a1a1a', borderRadius: '16px',
-        padding: '20px',
+        border: '2px solid #FF8C00', padding: '20px',
+        boxShadow: '0 25px 60px rgba(0,0,0,0.8)',
       }}>
         {/* ── Titre ── */}
         <h2 style={{ color: '#F8D470', fontWeight: 800, fontSize: '16px', marginBottom: '4px' }}>
@@ -749,7 +741,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                           ? 'rgba(255,140,0,0.18)'
                           : 'transparent',
                       color: isFav || isSel ? '#FFD700' : '#ddd',
-                      border: 'none', borderBottom: '1px solid #262626',
+                      border: 'none', borderBottom: '1px solid #3f3f3f',
                     }}>
                     {isFav ? '⭐ ' : ''}{rom}
                   </button>
@@ -779,6 +771,17 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
               </>
             )}
             <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                className="hbagent-focusable"
+                style={{
+                  ...btnStyle,
+                  opacity: (filteredRoms.length === 1 || (filteredRoms.length === 0 && filter.trim())) ? 1 : 0.4,
+                  cursor: (filteredRoms.length === 1 || (filteredRoms.length === 0 && filter.trim())) ? 'pointer' : 'default',
+                }}
+                disabled={!(filteredRoms.length === 1 || (filteredRoms.length === 0 && filter.trim()))}
+                onClick={() => guard(() => chooseRom(filteredRoms.length === 1 ? filteredRoms[0] : filter))}>
+                Valider
+              </button>
               <button className="hbagent-focusable" style={btnAltStyle}
                 onClick={() => guard(onClose)}>
                 Annuler
@@ -922,7 +925,6 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
             </div>
           </div>
         )}
-      </div>
       </div>
 
       <GamepadVirtualKeyboard
