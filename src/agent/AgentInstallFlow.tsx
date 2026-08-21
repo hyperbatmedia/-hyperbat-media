@@ -682,12 +682,16 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         }
       `}</style>
       <div style={{
-        width: 'min(600px, 94vw)', maxHeight: '82vh', overflow: 'hidden',
-        display: 'flex', flexDirection: 'column',
-        backgroundColor: '#1a1a1a', borderRadius: '12px',
-        border: '2px solid transparent', borderImage: `${GRAD_DIAG} 1`,
-        padding: '20px',
+        width: 'min(600px, 94vw)', maxHeight: '82vh',
+        borderRadius: '18px', padding: '2px',
+        background: GRAD_DIAG,
         boxShadow: '0 25px 60px rgba(0,0,0,0.8)',
+      }}>
+      <div style={{
+        maxHeight: 'calc(82vh - 4px)', overflow: 'hidden',
+        display: 'flex', flexDirection: 'column',
+        backgroundColor: '#1a1a1a', borderRadius: '16px',
+        padding: '20px',
       }}>
         {/* ── Titre ── */}
         <h2 style={{ color: '#F8D470', fontWeight: 800, fontSize: '16px', marginBottom: '4px' }}>
@@ -918,6 +922,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
             </div>
           </div>
         )}
+      </div>
       </div>
 
       <GamepadVirtualKeyboard
