@@ -659,6 +659,23 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         .hbagent-rom-item:focus {
           outline: none !important;
         }
+        [data-hbagent-romlist] {
+          scrollbar-width: thin;
+          scrollbar-color: #FF8C00 #1a1a1a;
+        }
+        [data-hbagent-romlist]::-webkit-scrollbar {
+          width: 8px;
+        }
+        [data-hbagent-romlist]::-webkit-scrollbar-track {
+          background: #1a1a1a;
+        }
+        [data-hbagent-romlist]::-webkit-scrollbar-thumb {
+          background-color: #FF8C00;
+          border-radius: 4px;
+        }
+        [data-hbagent-romlist]::-webkit-scrollbar-thumb:hover {
+          background-color: #FFA733;
+        }
       `}</style>
       <div style={{
         width: 'min(600px, 94vw)', maxHeight: '82vh', overflow: 'hidden',
