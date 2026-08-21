@@ -108,15 +108,14 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   const [romsFound, setRomsFound] = useState(true);
   const [suggested, setSuggested] = useState('');
   const [filter, setFilter] = useState('');
-  const [manualName, setManualName] = useState('');
   const [collectionName, setCollectionName] = useState(theme.name);
   const [jobStatus, setJobStatus] = useState<AgentJobStatus | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [focusIdx, setFocusIdx] = useState(0);
   // Clavier virtuel (filtre ROM / nom manuel / nom collection)
-  type OskField = 'filter' | 'manual' | 'collection';
+  type OskField = 'filter' | 'collection';
   const [oskOpen, setOskOpen] = useState(false);
-  const [oskField, setOskField] = useState<OskField>('manual');
+  const [oskField, setOskField] = useState<OskField>('filter');
   const [oskInitial, setOskInitial] = useState('');
   const oskOpenRef = useRef(false);
   oskOpenRef.current = oskOpen;
@@ -208,13 +207,12 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     // Pendant l'installation : impossible d'annuler (le job continue côté
     // agent de toute façon), on attend la fin pour garder le message final.
     if (stepRef.current === 'installing' || stepRef.current === 'init') return;
-    // Succès : EST = même chose que OK (délai + fermeture), comme l'AHK.
-    if (stepRef.current === 'done') {
-      finishWithReload();
-      return;
-    }
+    // Sur tous les autres écrans, y compris 'done' : fermeture immédiate
+    // sans action supplémentaire. Sur 'done' en particulier, ça ferme SANS
+    // recharger EmulationStation (contrairement au bouton OK qui déclenche
+    // le rafraîchissement) - retour rapide à la vitrine.
     guard(onClose);
-  }, [guard, onClose, finishWithReload]);
+  }, [guard, onClose]);
 
   // ── Lancement de l'installation + suivi du job ────────────────────────
   const launchInstall = useCallback(async (
@@ -324,7 +322,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
           const found = r.found && r.roms.length > 0;
           setRomsFound(found);
           setSuggested(r.suggested);
-          setManualName(r.suggested || theme.name);
+          setFilter(found ? '' : (r.suggested || theme.name));
           setFocusIdx(romPickFocusIndex(r.roms, r.suggested, found));
           setStep('rom-pick');
         } catch {
@@ -361,9 +359,26 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       setFocusIdx(0);
     }
     // Volontairement pas de dépendance sur filteredRoms : on ne veut
-    // recadrer le focus qu'au changement d'étape, pas à chaque frappe.
+    // recadrer le focus SUR LA SUGGESTION qu'au changement d'étape, pas à
+    // chaque frappe (sinon on écraserait la position choisie par
+    // l'utilisateur). Le recadrage "garde-fou" (borne valide) à chaque
+    // frappe est géré séparément ci-dessous.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, suggested]);
+
+  // Le nombre d'éléments focusables de l'étape rom-pick change à chaque
+  // frappe dans le champ (la liste se réduit/s'agrandit avec le filtre,
+  // le bouton "Utiliser tel quel" apparaît/disparaît). Sans ce recadrage,
+  // focusIdx peut se retrouver au-delà du dernier élément existant (plus
+  // de surlignage visible) ou, pire, retomber sur un index qui pointe
+  // maintenant vers une ROM différente de celle réellement focusée avant
+  // la frappe. On borne simplement l'index à la plage valide après
+  // chaque rendu : ne déplace le focus que si sa position n'existe plus.
+  useEffect(() => {
+    if (step !== 'rom-pick') return;
+    const max = getFocusables().length - 1;
+    setFocusIdx((prev) => Math.min(prev, Math.max(max, 0)));
+  }, [filteredRoms, filter, step, getFocusables]);
 
   // ── Manette : D-Pad + SUD/EST, avec détection de front montant ───────
   const btnCfg = useMemo(() => {
@@ -445,13 +460,9 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       const el = nodes[focusIdxRef.current];
       if (el instanceof HTMLInputElement) {
         const field = (el.dataset.hbagentOsk || '') as OskField | '';
-        if (field === 'filter' || field === 'manual' || field === 'collection') {
+        if (field === 'filter' || field === 'collection') {
           setOskField(field);
-          setOskInitial(
-            field === 'filter' ? filter
-              : field === 'manual' ? manualName
-                : collectionName,
-          );
+          setOskInitial(field === 'filter' ? filter : collectionName);
           setOskOpen(true);
           return;
         }
@@ -464,23 +475,13 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       const s = stepRef.current;
       if (s !== 'rom-pick' && s !== 'collection-name') return;
 
-      // rom-pick : NORD ouvre toujours le clavier du champ pertinent
-      // (Filtrer si la liste des ROMs est disponible, sinon Saisie
-      // manuelle), quel que soit l'élément actuellement focusé dans la
-      // liste - évite d'avoir à remonter tout en haut pour y accéder.
-      if (s === 'rom-pick') {
-        const field: OskField = romsFound ? 'filter' : 'manual';
-        setFocusIdx(0);
-        setOskField(field);
-        setOskInitial(field === 'filter' ? filter : manualName);
-        setOskOpen(true);
-        return;
-      }
-
-      // collection-name : un seul champ de saisie.
+      // Un seul champ de saisie par étape désormais (filter en rom-pick,
+      // collectionName en collection-name) : NORD l'ouvre directement,
+      // quel que soit l'élément actuellement focusé dans la liste -
+      // évite d'avoir à remonter tout en haut pour y accéder.
       setFocusIdx(0);
-      setOskField('collection');
-      setOskInitial(collectionName);
+      setOskField(s === 'rom-pick' ? 'filter' : 'collection');
+      setOskInitial(s === 'rom-pick' ? filter : collectionName);
       setOskOpen(true);
     };
 
@@ -536,7 +537,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       prev = pressed;
     }, 80);
     return () => clearInterval(iv);
-  }, [btnCfg, move, handleBack, finishWithReload, guard, onClose, step, getFocusables, filter, manualName, collectionName, romsFound]);
+  }, [btnCfg, move, handleBack, finishWithReload, guard, onClose, step, getFocusables, filter, collectionName]);
 
   // ── Clavier : flèches / Échap (Entrée est natif sur l'élément focusé) ──
   useEffect(() => {
@@ -624,16 +625,13 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     </div>
   );
 
-  const KeyBadge = ({ label, action }: { label: string; action: string }) => (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
-      <div style={{
-        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        minWidth: '34px', height: '22px', padding: '0 6px', borderRadius: '5px',
-        backgroundColor: '#2a2a2a', border: '1.5px solid #666',
-        fontSize: '9px', fontWeight: 700, color: '#fff',
-      }}>{label}</div>
-      <span style={{ fontSize: '9px', color: '#aaa', lineHeight: 1 }}>{action}</span>
-    </div>
+  const KeyBadge = ({ label }: { label: string }) => (
+    <div style={{
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+      minWidth: '34px', height: '22px', padding: '0 6px', borderRadius: '5px',
+      backgroundColor: '#2a2a2a', border: '1.5px solid #666',
+      fontSize: '9px', fontWeight: 700, color: '#fff',
+    }}>{label}</div>
   );
 
   const Sep = () => (
@@ -673,7 +671,12 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         <h2 style={{ color: '#F8D470', fontWeight: 800, fontSize: '16px', marginBottom: '4px' }}>
           {step === 'done' ? 'Installation réussie !' : step === 'error' ? 'Installation impossible' : 'Installer dans ' + (agentInfo.platform === 'batocera' ? 'Batocera' : 'RetroBat')}
         </h2>
-        <p style={{ color: '#aaa', fontSize: '12px', marginBottom: '14px' }}>{theme.name}</p>
+        {/* Rappel du thème choisi dans la vitrine, affiché pendant toute
+            la procédure (utile si l'utilisateur enchaîne plusieurs
+            installations et peut oublier quel thème est en cours). */}
+        <p style={{ color: '#aaa', fontSize: '12px', marginBottom: '14px' }}>
+          <span style={{ color: '#777' }}>Nom sur la vitrine : </span>{theme.name}
+        </p>
 
         {/* ── Étape : attente ── */}
         {step === 'init' && (
@@ -685,67 +688,71 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
           <>
             <p style={{ color: 'white', fontSize: '13px', marginBottom: '10px' }}>
               {romsFound
-                ? <>Choisissez la ROM correspondante{suggested ? ' (⭐ = suggestion)' : ''} :</>
+                ? <>Choisissez ou saisissez la ROM{suggested ? ' (⭐ = suggestion)' : ''} :</>
                 : <>Dossier ROMs introuvable — saisissez le nom manuellement :</>}
             </p>
-            {romsFound && (
+            <input
+              type="text"
+              value={filter}
+              placeholder="Rechercher ou saisir le nom… (SUD ou NORD = clavier)"
+              onChange={(e) => setFilter(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter' && filteredRoms.length === 0) guard(() => chooseRom(filter)); }}
+              className="hbagent-focusable"
+              data-hbagent-osk="filter"
+              style={{ ...inputStyle, marginBottom: '8px' }}
+            />
+            {romsFound && filteredRoms.length > 0 && (
+              <div data-hbagent-romlist style={{
+                overflowY: 'auto', maxHeight: '34vh', marginBottom: '10px',
+                border: '1px solid #333', borderRadius: '8px',
+              }}>
+                {filteredRoms.map((rom, romIdx) => {
+                  const isFav = rom === suggested;
+                  const isSel = focusIdx === romIdx + 1;
+                  return (
+                  <button
+                    key={rom}
+                    className="hbagent-focusable hbagent-rom-item"
+                    onClick={() => guard(() => chooseRom(rom))}
+                    style={{
+                      display: 'block', width: '100%', textAlign: 'left',
+                      padding: '8px 12px', fontSize: '12px', cursor: 'pointer',
+                      backgroundColor: isSel
+                        ? 'rgba(255,140,0,0.42)'
+                        : isFav
+                          ? 'rgba(255,140,0,0.18)'
+                          : 'transparent',
+                      color: isFav || isSel ? '#FFD700' : '#ddd',
+                      border: 'none', borderBottom: '1px solid #262626',
+                    }}>
+                    {isFav ? '⭐ ' : ''}{rom}
+                  </button>
+                  );
+                })}
+              </div>
+            )}
+            {filteredRoms.length === 0 && (
               <>
-                <input
-                  type="text"
-                  value={filter}
-                  placeholder="Filtrer la liste… (SUD ou NORD = clavier)"
-                  onChange={(e) => setFilter(e.target.value)}
-                  className="hbagent-focusable"
-                  data-hbagent-osk="filter"
-                  style={{ ...inputStyle, marginBottom: '8px' }}
-                />
-                <div data-hbagent-romlist style={{
-                  overflowY: 'auto', maxHeight: '34vh', marginBottom: '10px',
-                  border: '1px solid #333', borderRadius: '8px',
-                }}>
-                  {filteredRoms.map((rom, romIdx) => {
-                    const isFav = rom === suggested;
-                    const isSel = focusIdx === romIdx + 1;
-                    return (
-                    <button
-                      key={rom}
-                      className="hbagent-focusable hbagent-rom-item"
-                      onClick={() => guard(() => chooseRom(rom))}
-                      style={{
-                        display: 'block', width: '100%', textAlign: 'left',
-                        padding: '8px 12px', fontSize: '12px', cursor: 'pointer',
-                        backgroundColor: isSel
-                          ? 'rgba(255,140,0,0.42)'
-                          : isFav
-                            ? 'rgba(255,140,0,0.18)'
-                            : 'transparent',
-                        color: isFav || isSel ? '#FFD700' : '#ddd',
-                        border: 'none', borderBottom: '1px solid #262626',
-                      }}>
-                      {isFav ? '⭐ ' : ''}{rom}
-                    </button>
-                    );
-                  })}
-                  {filteredRoms.length === 0 && (
-                    <p style={{ color: '#888', fontSize: '12px', padding: '10px' }}>Aucune ROM ne correspond au filtre.</p>
-                  )}
-                </div>
+                {romsFound && filter.trim() && (
+                  <p style={{ color: '#888', fontSize: '12px', marginBottom: '8px' }}>Aucune ROM ne correspond.</p>
+                )}
+                {filter.trim() && (
+                  <button
+                    className="hbagent-focusable"
+                    onClick={() => guard(() => chooseRom(filter))}
+                    style={{
+                      display: 'block', width: '100%', textAlign: 'left',
+                      padding: '8px 12px', fontSize: '12px', cursor: 'pointer',
+                      backgroundColor: 'rgba(255,140,0,0.12)',
+                      color: '#FFD700', marginBottom: '10px',
+                      border: '1px dashed #FF8C00', borderRadius: '8px',
+                    }}>
+                    + Utiliser « {filter.trim()} » tel quel
+                  </button>
+                )}
               </>
             )}
-            <input
-              type="text" value={manualName}
-              className="hbagent-focusable"
-              data-hbagent-osk="manual"
-              onChange={(e) => setManualName(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter') guard(() => chooseRom(manualName)); }}
-              placeholder="…ou saisissez le nom (SUD ou NORD = clavier)"
-              style={{ ...inputStyle, marginBottom: '10px' }}
-            />
             <div style={{ display: 'flex', gap: '10px' }}>
-              <button className="hbagent-focusable" style={btnStyle}
-                onClick={() => guard(() => chooseRom(manualName))}>
-                Valider la saisie
-              </button>
               <button className="hbagent-focusable" style={btnAltStyle}
                 onClick={() => guard(onClose)}>
                 Annuler
@@ -866,20 +873,27 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         {step !== 'installing' && (
           <div style={{
             marginTop: '16px', borderTop: '1px solid #333', paddingTop: '12px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
             gap: '4px', flexWrap: 'wrap',
           }}>
-            <DPadIcon />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+              <DPadIcon />
+              <KeyBadge label="↑↓←→" />
+            </div>
             <Sep />
-            <FaceBtn dir="sud" color="#2ecc71" label="SUD" action="Valider / Clavier" />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+              <FaceBtn dir="sud" color="#2ecc71" label="SUD" action="Valider / Clavier" />
+              <KeyBadge label="Entrée" />
+            </div>
             <Sep />
-            <FaceBtn dir="est" color="#e74c3c" label="EST" action="Annuler" />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+              <FaceBtn dir="est" color="#e74c3c" label="EST" action="Annuler" />
+              <KeyBadge label="Échap" />
+            </div>
             <Sep />
-            <FaceBtn dir="nord" color="#f1c40f" label="NORD" action="Clavier" />
-            <Sep />
-            <KeyBadge label="↑↓←→" action="Naviguer" />
-            <KeyBadge label="Entrée" action="Valider" />
-            <KeyBadge label="Échap" action="Annuler" />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+              <FaceBtn dir="nord" color="#f1c40f" label="NORD" action="Clavier" />
+            </div>
           </div>
         )}
       </div>
@@ -887,14 +901,9 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       <GamepadVirtualKeyboard
         open={oskOpen}
         initialValue={oskInitial}
-        title={
-          oskField === 'filter' ? 'Filtrer les ROMs'
-            : oskField === 'collection' ? 'Nom de la collection'
-              : 'Nom de la ROM'
-        }
+        title={oskField === 'filter' ? 'ROM (rechercher ou saisir)' : 'Nom de la collection'}
         onChange={(value: string) => {
           if (oskField === 'filter') setFilter(value);
-          else if (oskField === 'manual') setManualName(value);
           else setCollectionName(value);
         }}
         onConfirm={() => {
