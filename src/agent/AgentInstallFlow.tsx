@@ -702,7 +702,15 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         )}
 
         {/* ── Étape : choix de la ROM (game-themes) ── */}
-        {step === 'rom-pick' && (
+        {step === 'rom-pick' && (() => {
+          // L'élément actuellement surligné/focusé dans la liste (focusIdx
+          // pointe dessus dès l'ouverture, sur la suggestion par défaut).
+          // Valider doit d'abord confirmer CET élément si aucun texte n'a
+          // été tapé pour le remplacer - sinon le bouton ne fait rien
+          // quand rien n'a été saisi mais qu'une ligne est déjà surlignée.
+          const selectedRom = filteredRoms[focusIdx - 1];
+          const validateTarget = filter.trim() ? filter : selectedRom;
+          return (
           <>
             <p style={{ color: 'white', fontSize: '13px', marginBottom: '10px' }}>
               {romsFound
@@ -715,7 +723,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                 value={filter}
                 placeholder="Rechercher ou saisir le nom…"
                 onChange={(e) => setFilter(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter' && filteredRoms.length === 0) guard(() => chooseRom(filter)); }}
+                onKeyDown={(e) => { if (e.key === 'Enter' && validateTarget) guard(() => chooseRom(validateTarget)); }}
                 className="hbagent-focusable"
                 data-hbagent-osk="filter"
                 style={{ ...inputStyle, marginBottom: 0, paddingRight: '34px' }}
@@ -785,11 +793,11 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                 className="hbagent-focusable"
                 style={{
                   ...btnStyle,
-                  opacity: filter.trim() ? 1 : 0.4,
-                  cursor: filter.trim() ? 'pointer' : 'default',
+                  opacity: validateTarget ? 1 : 0.4,
+                  cursor: validateTarget ? 'pointer' : 'default',
                 }}
-                disabled={!filter.trim()}
-                onClick={() => guard(() => chooseRom(filter))}>
+                disabled={!validateTarget}
+                onClick={() => validateTarget && guard(() => chooseRom(validateTarget))}>
                 Valider
               </button>
               <button className="hbagent-focusable" style={btnAltStyle}
@@ -798,7 +806,8 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
               </button>
             </div>
           </>
-        )}
+          );
+        })()}
 
         {/* ── Étape : nom de la collection ── */}
         {step === 'collection-name' && (
