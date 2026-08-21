@@ -108,6 +108,14 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   const [romsFound, setRomsFound] = useState(true);
   const [suggested, setSuggested] = useState('');
   const [filter, setFilter] = useState('');
+  // Texte qui filtre réellement la liste ROM : ne change qu'à la frappe
+  // (contrairement à `filter`, qui se préremplit aussi au survol souris —
+  // voir plus bas). Séparé pour que survoler une ROM ne fasse pas
+  // disparaître les autres lignes de la liste sous le curseur.
+  const [searchQuery, setSearchQuery] = useState('');
+  // Dernière ROM survolée à la souris : sert uniquement à préremplir le
+  // clavier virtuel à l'ouverture (pas la barre elle-même — voir SUD/NORD).
+  const hoveredRomRef = useRef('');
   const [collectionName, setCollectionName] = useState(theme.name);
   const [jobStatus, setJobStatus] = useState<AgentJobStatus | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
@@ -323,6 +331,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
           setRomsFound(found);
           setSuggested(r.suggested);
           setFilter(found ? '' : (r.suggested || theme.name));
+          setSearchQuery(found ? '' : (r.suggested || theme.name));
           setFocusIdx(romPickFocusIndex(r.roms, r.suggested, found));
           setStep('rom-pick');
         } catch {
@@ -345,9 +354,9 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
 
   // ── Focus initial à chaque changement d'étape ─────────────────────────
   const filteredRoms = useMemo(() => {
-    const f = filter.trim().toLowerCase();
+    const f = searchQuery.trim().toLowerCase();
     return f ? roms.filter((r) => r.toLowerCase().includes(f)) : roms;
-  }, [roms, filter]);
+  }, [roms, searchQuery]);
 
   useEffect(() => {
     // Nouvelle etape : autoriser un SUD immediat (sinon la garde 400 ms
@@ -466,7 +475,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         const field = (el.dataset.hbagentOsk || '') as OskField | '';
         if (field === 'filter' || field === 'collection') {
           setOskField(field);
-          setOskInitial(field === 'filter' ? filter : collectionName);
+          setOskInitial(field === 'filter' ? (filter.trim() ? filter : hoveredRomRef.current) : collectionName);
           setOskOpen(true);
           return;
         }
@@ -485,7 +494,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       // évite d'avoir à remonter tout en haut pour y accéder.
       setFocusIdx(0);
       setOskField(s === 'rom-pick' ? 'filter' : 'collection');
-      setOskInitial(s === 'rom-pick' ? filter : collectionName);
+      setOskInitial(s === 'rom-pick' ? (filter.trim() ? filter : hoveredRomRef.current) : collectionName);
       setOskOpen(true);
     };
 
@@ -734,7 +743,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                 type="text"
                 value={filter}
                 placeholder="Rechercher ou saisir le nom…"
-                onChange={(e) => setFilter(e.target.value)}
+                onChange={(e) => { setFilter(e.target.value); setSearchQuery(e.target.value); }}
                 onKeyDown={(e) => { if (e.key === 'Enter' && validateTarget) guard(() => chooseRom(validateTarget)); }}
                 className="hbagent-focusable"
                 data-hbagent-osk="filter"
@@ -762,6 +771,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                     key={rom}
                     className="hbagent-focusable hbagent-rom-item"
                     onClick={() => guard(() => chooseRom(rom))}
+                    onMouseEnter={() => { setFocusIdx(romIdx + 1); hoveredRomRef.current = rom; }}
                     style={{
                       display: 'block', width: '100%', textAlign: 'left',
                       padding: '8px 12px', fontSize: '12px', cursor: 'pointer',
