@@ -46071,7 +46071,9 @@
     "imageUrl": "https://drive.google.com/file/d/1n1ckalCAMQVCFdMH1sZGw_8yMQSHvqNL/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1mpUghFWj01qL3IIXsAo9u2vZ_-HGNz6E/view?usp=sharing",
     "size": "821.4 KB",
-    "date": "2026-08-22"
+    "date": "2026-08-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 104301,
@@ -46082,7 +46084,9 @@
     "imageUrl": "https://drive.google.com/file/d/1rx3E6auSZBen59l6tWJg7VAdlFtBZ8M7/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1yacN1l1YJDVs3ejhYBCp5_Mxqt3iwkLo/view?usp=sharing",
     "size": "2.1 MB",
-    "date": "2026-08-22"
+    "date": "2026-08-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 104509,
@@ -46093,7 +46097,9 @@
     "imageUrl": "https://drive.google.com/file/d/1eFeSf8oxZfx8xSmLlFuW8A5iGS-zKSCb/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1wlQR9dWBFqMH9uaaedpO6iJyvyzXQVWt/view?usp=sharing",
     "size": "1.2 MB",
-    "date": "2026-08-22"
+    "date": "2026-08-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 104686,
@@ -46104,7 +46110,9 @@
     "imageUrl": "https://drive.google.com/file/d/1Qtu_Zilb9Cz8-My6-y1JYvLl062YuN5o/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Q3ldHkr8_lKiFyxX8J6KajCcUkyUeO-8/view?usp=sharing",
     "size": "1.9 MB",
-    "date": "2026-08-22"
+    "date": "2026-08-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 104820,
@@ -46115,7 +46123,9 @@
     "imageUrl": "https://drive.google.com/file/d/1vw8r6cf9YDPQKBE9CtcY60yHAegYqedV/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1ToGP2GaWtE1xxuBHe5LCy-4inZHeri-m/view?usp=sharing",
     "size": "1.4 MB",
-    "date": "2026-08-22"
+    "date": "2026-08-22",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 104823,
@@ -46126,6 +46136,19 @@
     "imageUrl": "https://drive.google.com/file/d/1XPlv2jx1yBLArl5fimffJ3Sx417Q9oJl/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1gM-t_sH7pOpxFics7EhFdAGFOSwxsMAL/view?usp=sharing",
     "size": "12.2 MB",
+    "date": "2026-08-22",
+    "onScreenScraper": false,
+    "isMulti": false
+  },
+  {
+    "id": 107460,
+    "name": "_default",
+    "creator": "Roni",
+    "system": "pcfx",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/17LyTWIV34zK7jwpirF2TA4Ye6tyrHHSL/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1lTKc-8YLXJmEq1SLpy1uhfGGPNC0amvJ/view?usp=sharing",
+    "size": "952.8 KB",
     "date": "2026-08-22"
   }
 ]
