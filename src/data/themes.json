@@ -33264,7 +33264,8 @@
     "date": "2026-07-09",
     "onScreenScraper": false,
     "isMulti": false,
-    "gameId": 78868
+    "gameId": 78868,
+    "mature": true
   },
   {
     "id": 62744,
@@ -33292,7 +33293,8 @@
     "date": "2026-07-09",
     "onScreenScraper": false,
     "isMulti": false,
-    "gameId": 78868
+    "gameId": 78868,
+    "mature": true
   },
   {
     "id": 63335,
@@ -35511,7 +35513,8 @@
     "date": "2026-07-16",
     "onScreenScraper": false,
     "isMulti": false,
-    "gameId": 41353
+    "gameId": 41353,
+    "mature": true
   },
   {
     "id": 69380,
@@ -35916,7 +35919,8 @@
     "date": "2026-07-16",
     "onScreenScraper": false,
     "isMulti": false,
-    "gameId": 41353
+    "gameId": 41353,
+    "mature": true
   },
   {
     "id": 69771,
@@ -37950,7 +37954,8 @@
     "size": "716.9 KB",
     "date": "2026-07-28",
     "onScreenScraper": false,
-    "isMulti": false
+    "isMulti": false,
+    "mature": true
   },
   {
     "id": 79621,
@@ -38042,7 +38047,8 @@
     "size": "2.3 MB",
     "date": "2026-07-28",
     "onScreenScraper": false,
-    "isMulti": false
+    "isMulti": false,
+    "mature": true
   },
   {
     "id": 79633,
@@ -38055,7 +38061,8 @@
     "size": "3.2 MB",
     "date": "2026-07-28",
     "onScreenScraper": false,
-    "isMulti": false
+    "isMulti": false,
+    "mature": true
   },
   {
     "id": 79634,
@@ -38263,7 +38270,8 @@
     "size": "24.5 MB",
     "date": "2026-07-28",
     "onScreenScraper": false,
-    "isMulti": false
+    "isMulti": false,
+    "mature": true
   },
   {
     "id": 80087,
@@ -38394,7 +38402,8 @@
     "size": "2.3 MB",
     "date": "2026-07-28",
     "onScreenScraper": false,
-    "isMulti": false
+    "isMulti": false,
+    "mature": true
   },
   {
     "id": 80097,
@@ -38407,7 +38416,8 @@
     "size": "3.2 MB",
     "date": "2026-07-28",
     "onScreenScraper": false,
-    "isMulti": false
+    "isMulti": false,
+    "mature": true
   },
   {
     "id": 80098,
@@ -39629,7 +39639,8 @@
     "size": "2.4 MB",
     "date": "2026-07-29",
     "onScreenScraper": false,
-    "isMulti": false
+    "isMulti": false,
+    "mature": true
   },
   {
     "id": 81405,
@@ -39642,7 +39653,8 @@
     "size": "4.0 MB",
     "date": "2026-07-29",
     "onScreenScraper": false,
-    "isMulti": false
+    "isMulti": false,
+    "mature": true
   },
   {
     "id": 81447,
@@ -40695,7 +40707,8 @@
     "size": "2.4 MB",
     "date": "2026-07-29",
     "onScreenScraper": false,
-    "isMulti": false
+    "isMulti": false,
+    "mature": true
   },
   {
     "id": 81929,
@@ -40708,7 +40721,8 @@
     "size": "4.0 MB",
     "date": "2026-07-29",
     "onScreenScraper": false,
-    "isMulti": false
+    "isMulti": false,
+    "mature": true
   },
   {
     "id": 82829,
