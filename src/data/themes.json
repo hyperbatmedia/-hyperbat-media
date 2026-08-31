@@ -1999,20 +1999,6 @@
     "gameId": 1586
   },
   {
-    "id": 1190,
-    "name": "After Burner (World)",
-    "creator": "Mrfomt",
-    "system": "mastersystem",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1TCGEulk5RYMnWE7Mwo_yFJNY9cursZbF/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1oUREXTTmHrorS_7sTV_C1RjVru7XdjzR/view?usp=sharing",
-    "size": "3.3 MB",
-    "date": "2025-10-28",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 832
-  },
-  {
     "id": 26509,
     "name": "After Dark",
     "creator": "Akeshi",
@@ -46339,7 +46325,7 @@
   {
     "id": 108161,
     "name": "spidman",
-    "creator": "Roni",
+    "creator": "OldGamer",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1OgKLDm4F1-2JcEHSMVD7Cxf0CcyOvEE_/view?usp=sharing",
@@ -46638,7 +46624,7 @@
   {
     "id": 109367,
     "name": "spidman",
-    "creator": "Roni",
+    "creator": "OldGamer",
     "system": "system32",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1kzk5PPoiEElOU1vRbQ3XkQrIPSxkGyDW/view?usp=sharing",
@@ -46710,19 +46696,6 @@
     "downloadUrl": "https://drive.google.com/file/d/1yIYCC6xZkzovo02sqYJRlLwdeKUozEM8/view?usp=sharing",
     "size": "2.9 MB",
     "date": "2026-08-24",
-    "onScreenScraper": false,
-    "isMulti": false
-  },
-  {
-    "id": 109379,
-    "name": "model1",
-    "creator": "Roni",
-    "system": "model1",
-    "category": "system-themes",
-    "imageUrl": "",
-    "downloadUrl": "https://drive.google.com/file/d/1PO3Aj3xxOyaUwPLDhQlwpo42tilF3nDR/view?usp=sharing",
-    "size": "1.7 MB",
-    "date": "2026-08-23",
     "onScreenScraper": false,
     "isMulti": false
   },
@@ -46800,7 +46773,9 @@
     "imageUrl": "https://drive.google.com/file/d/1-KBxbXWjGbAqN4yJEtensota4T7xZW5O/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1rADh0d4R_XSS84VS7n5WQJ4wx7TMx_Jg/view?usp=sharing",
     "size": "11.9 MB",
-    "date": "2026-08-31"
+    "date": "2026-08-31",
+    "onScreenScraper": false,
+    "isMulti": false
   },
   {
     "id": 112443,
@@ -46811,6 +46786,239 @@
     "imageUrl": "https://drive.google.com/file/d/1dzOhdcoINJFVuwHSGT47TZUCLPIyeEoj/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1ArxF_ajzunvLKcIl5Cif6inezuOzw9ZB/view?usp=sharing",
     "size": "1.2 MB",
+    "date": "2026-08-31",
+    "onScreenScraper": false,
+    "isMulti": false
+  },
+  {
+    "id": 112514,
+    "name": "xmen",
+    "creator": "OldGamer",
+    "system": "konamiclassics",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/177_bWxUrZ2CJN2uRF2EmtdpRptpbgNoi/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/18Tt0ZvQOKbQYMkDPfe05J363_nN3gXl3/view?usp=sharing",
+    "size": "19.0 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 112515,
+    "name": "simpsons",
+    "creator": "OldGamer",
+    "system": "konamiclassics",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/10FUBNz0E67rRa1ifiM7a9N3y943p1Sm7/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1yMOU5G8mxQc8WZLoXWdaxItONYzltXnU/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 112516,
+    "name": "tmnt2",
+    "creator": "OldGamer",
+    "system": "konamiclassics",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/15NVyfjY-CBb_2CW6f-a3TcL0UtIrNXor/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Msa_kK0NSKnyT3Bhq-F8MIFLcMxBcQMW/view?usp=sharing",
+    "size": "2.0 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 112517,
+    "name": "tmnt",
+    "creator": "OldGamer",
+    "system": "konamiclassics",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1uw_C_9bLcLxYZ4d-rO_6Px86AHh93NGC/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1CG98HKOes_piMwuC_Oh7zGRJ4urDOdnq/view?usp=sharing",
+    "size": "1.4 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 113139,
+    "name": "xmen",
+    "creator": "OldGamer",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1ETOIoCxpvOfRRkbAROViz70wHDfSl7ye/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1ww4b91_dkGfs1uhzHfZE4zewSifLbPqm/view?usp=sharing",
+    "size": "19.0 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 113140,
+    "name": "simpsons",
+    "creator": "OldGamer",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1a85bXv1Y9KbzmQdwLCG7uImwT6bhPba_/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1z0pJusv8ys50lLsCMBIDWoLcVlnSvSua/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 113141,
+    "name": "tmnt2",
+    "creator": "OldGamer",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1hAyVbQ0dEnOuofnEhsIJv-EzVWCleiO2/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Wlw4Y1yC72IHK_dfHc2Lk3mkme4-ltlh/view?usp=sharing",
+    "size": "2.0 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 113142,
+    "name": "tmnt",
+    "creator": "OldGamer",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1fA00yvIVXaexmY3eUufSiZpv_tb53w00/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1IvKBFEPHDIylZ0FCL8ntzwKRe5jCsHMx/view?usp=sharing",
+    "size": "1.4 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 113975,
+    "name": "ddpdojt",
+    "creator": "OldGamer",
+    "system": "cave",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1E3xgdgSQMOhLcoYFhvNgrxDEp2rxwVlD/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1WXRzQ7JIG5me3oeSx-8zkiHj98lrxVdG/view?usp=sharing",
+    "size": "1.4 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 114812,
+    "name": "Triad Stone (U)",
+    "creator": "OldGamer",
+    "system": "laseractive",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1pzses9OwlQlOnO0bxubnFRMKd1VzzxBB/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1-3DExokhy_mhXOh9mlaPsca3JQTeMbg8/view?usp=sharing",
+    "size": "9.5 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 114852,
+    "name": "Otomedius Excellent (USA, Canada)",
+    "creator": "OldGamer",
+    "system": "xbox360",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1teKrphWhmLv9PzWfCcC0VWwcPtUDPPc1/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1YDZvwiouutm_jGTPLO1VDMRFC2_yBOUh/view?usp=sharing",
+    "size": "6.6 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 115106,
+    "name": "Donkey Kong Country 3 - Dixie Kong's Double Trouble! (USA) (En,Fr)",
+    "creator": "OldGamer",
+    "system": "supernintendo",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1X3JmsN5UiHMCjcXE6J23G3aid0dMvu0P/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1934cw77LLF5bo9nqWSVGNRK4HBVHEnzH/view?usp=sharing",
+    "size": "3.2 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 115107,
+    "name": "Donkey Kong Country 2 - Diddy's Kong Quest (USA) (En,Fr) (Rev 1)",
+    "creator": "OldGamer",
+    "system": "supernintendo",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Gsiqj9a4pm1MBJF8gq6vkxpg_EIBoXAd/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1LHv6ah-I_U3Z4TV-Oyb7krwz0jBlUdub/view?usp=sharing",
+    "size": "2.5 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 115213,
+    "name": "Legend of Zelda, The - Ocarina of Time (USA) (Rev 2)",
+    "creator": "OldGamer",
+    "system": "nintendo64",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/16d3-V_C2xJI0tgDK3VrOrq3O3esSmudg/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1xKBLjuwdC6xx3DTsg3ntHzrOkf10SzXf/view?usp=sharing",
+    "size": "10.9 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 115627,
+    "name": "Mario Kart - Double Dash!! (Europe) (En,Fr,De,Es,It)",
+    "creator": "OldGamer",
+    "system": "gamecube",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/12Jgzn7O0r6EFJZ6TC9sGetNeEd2brMuO/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1B1p4xdTCJ65E16EMzHAzKJKeM6PNcLNy/view?usp=sharing",
+    "size": "2.5 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 115628,
+    "name": "Paper Mario - The Thousand-Year Door (USA)",
+    "creator": "OldGamer",
+    "system": "gamecube",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1oirhLh2pGUKIZbpEmMcKoxRsDl05cw8F/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/14jKjP6GFRxVCC26QVfSJ80hhMXNoyUDZ/view?usp=sharing",
+    "size": "2.3 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 115629,
+    "name": "Metroid Prime (USA) (v1.00)",
+    "creator": "OldGamer",
+    "system": "gamecube",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1AwrudgpBFJzmLRsUO4N5yUMBuaTAWH0g/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1X0ExHvTWjjYH7pziUPoN48tonOAN0-eU/view?usp=sharing",
+    "size": "1.5 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 115630,
+    "name": "Legend of Zelda, The - The Wind Waker (USA)",
+    "creator": "OldGamer",
+    "system": "gamecube",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1ZViSDb72yJeGDXwisjbAUIiUJHonTlig/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1yqfT6KGLythgsBpF1v0U6b5rDDqYOBQc/view?usp=sharing",
+    "size": "1.5 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 115631,
+    "name": "F-Zero GX (Europe) (En,Fr,De,Es,It)",
+    "creator": "OldGamer",
+    "system": "gamecube",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/18A3eCXSmUJNd9o76jB27ZJ4grR3cT9aR/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1LjVecGGJgIsA_C-z1WamaYfZliWxNQ4Y/view?usp=sharing",
+    "size": "2.6 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 115632,
+    "name": "Super Mario Sunshine (USA)",
+    "creator": "OldGamer",
+    "system": "gamecube",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1_Bk7J6qM_k8l94cVPJ2wxZ4bu8mX6EbN/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1pKZ0JiYDl5_O5Zzk78SjgDssLO_2SQaa/view?usp=sharing",
+    "size": "2.2 MB",
+    "date": "2026-08-31"
+  },
+  {
+    "id": 115633,
+    "name": "Final Fantasy - Crystal Chronicles (USA)",
+    "creator": "OldGamer",
+    "system": "gamecube",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1y0uPB4p-ZHCWIrX7HqI8bg09NjAopJw5/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1k-7pADJLq0Z_eTfj3vN_oG46cyR3qAsx/view?usp=sharing",
+    "size": "2.2 MB",
     "date": "2026-08-31"
   }
 ]
