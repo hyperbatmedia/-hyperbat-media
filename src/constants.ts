@@ -132,6 +132,7 @@ export const systemsData: SystemsDataStructure = {
         sony: { label: 'SONY PLAYSTATION', systems: ['PlayStation', 'PlayStation 2', 'PlayStation 3', 'PlayStation 4', 'PlayStation 5'] },
         panasonic: { label: 'PANASONIC', systems: ['3DO'] },
         philips: { label: 'PHILIPS', systems: ['CD-i', 'Videopac / Odyssey 2', 'VC 4000'] },
+        pioneer: { label: 'PIONEER', systems: ['LaserActive'] },
         commodore: { label: 'COMMODORE', systems: ['Amiga CD32', 'Amiga CDTV'] },
         funtech: { label: 'FUNTECH', systems: ['Super A\'Can'] },
         apple: { label: 'APPLE / BANDAI', systems: ['Pippin'] },
