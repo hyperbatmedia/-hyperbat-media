@@ -238,7 +238,7 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
         </p>
         <div className="space-y-3 mb-4">
           <div className="grid grid-cols-2 gap-2">
-            {['Alain', 'Bob', 'Dav', 'Christophe'].map(n => (
+            {['Alain', 'Bob', 'Dav', 'Roni', 'Christophe'].map(n => (
               <button key={n} type="button" onClick={() => { setName(n); setError(''); }}
                 className={`py-3 rounded-xl font-black text-lg transition-all border-2 ${
                   name === n
