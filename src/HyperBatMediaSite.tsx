@@ -840,9 +840,9 @@ export default function HyperBatMediaSite(): JSX.Element {
                   <button onClick={() => { window.location.href = window.location.pathname + '?soumettre'; }}
                     className="relative p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
                     style={{
-                      backgroundColor: '#D97706',
+                      background: 'linear-gradient(135deg, #FF8C00 0%, #FFD700 100%)',
                       borderColor: '#FFD700',
-                      color: '#e0e0e0'
+                      color: '#1a1a1a'
                     }}
                     title="Proposer un thème">
                     <Upload className="w-5 h-5" />
