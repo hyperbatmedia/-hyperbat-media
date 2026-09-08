@@ -5,6 +5,7 @@ import {
   RefreshCw,
   Database,
   Package,
+  Inbox,
   LucideIcon
 } from 'lucide-react';
 import { ThemeItem, SystemRow, Category, ThemePacksData } from '../../types';
@@ -13,9 +14,10 @@ import DriveTab from './DriveTab';
 import SyncTab from './SyncTab';
 import ScreenScraperSyncTab from './ScreenScraperSyncTab';
 import ThemePacksTab from './ThemePacksTab';
+import SubmissionsTab from './SubmissionsTab';
 import { extractDriveFileId, isUnknownCreator } from './DriveTab/DriveHelpers';
 
-export type AdminTab = 'manage' | 'drive-import' | 'sync' | 'screenscraper-sync' | 'theme-packs';
+export type AdminTab = 'manage' | 'drive-import' | 'sync' | 'screenscraper-sync' | 'theme-packs' | 'submissions';
 
 interface AdminPanelProps {
   themes: ThemeItem[];
@@ -164,6 +166,7 @@ const AdminPanel: FC<AdminPanelProps> = ({
           <TabButton tab="sync" currentTab={adminTab} setAdminTab={setAdminTab} icon={RefreshCw} label="Synchronisation" />
           <TabButton tab="screenscraper-sync" currentTab={adminTab} setAdminTab={setAdminTab} icon={Database} label="ScreenScraper Sync" />
           <TabButton tab="theme-packs" currentTab={adminTab} setAdminTab={setAdminTab} icon={Package} label="Packs mensuels" />
+          <TabButton tab="submissions" currentTab={adminTab} setAdminTab={setAdminTab} icon={Inbox} label="Soumissions" />
         </div>
 
         {adminTab === 'theme-packs' && (
@@ -195,6 +198,15 @@ const AdminPanel: FC<AdminPanelProps> = ({
           <SyncTab
             existingThemes={themes}
             onDeleteThemes={handleDeleteThemes}
+          />
+        )}
+
+        {adminTab === 'submissions' && (
+          <SubmissionsTab
+            systems={systems}
+            categories={categories}
+            existingThemesCount={themes.length}
+            onApprove={(newTheme) => handleImportThemes([{ ...newTheme, id: 0 }])}
           />
         )}
 

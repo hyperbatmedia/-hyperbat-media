@@ -6,7 +6,7 @@
 
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import type { ComponentType, CSSProperties } from 'react';
-import { Search, Gamepad2, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download, AlertTriangle, Gift } from 'lucide-react';
+import { Search, Gamepad2, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download, AlertTriangle, Gift, Upload } from 'lucide-react';
 
 import { ThemeItem } from './types';
 import { categories, CART_MAX } from './constants';
@@ -836,6 +836,17 @@ export default function HyperBatMediaSite(): JSX.Element {
                           style={{ backgroundColor: '#FFD700', color: '#1a1a1a' }}>{cart.length}</span>
                       </>
                     )}
+                  </button>
+                  <button onClick={() => { window.location.href = window.location.pathname + '?soumettre'; }}
+                    className="relative p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
+                    style={{
+                      backgroundColor: '#D97706',
+                      borderColor: '#FFD700',
+                      color: '#e0e0e0'
+                    }}
+                    title="Proposer un thème">
+                    <Upload className="w-5 h-5" />
+                    <span className="text-xs font-bold hidden sm:inline">Proposer un thème</span>
                   </button>
                 </div>
                 <Sidebar
