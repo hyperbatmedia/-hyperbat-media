@@ -108,7 +108,10 @@ export default function SubmissionsTab({ systems, categories, onApprove }: Submi
         imageUrl: data.theme.imageUrl,
         downloadUrl: data.theme.downloadUrl,
         size: data.theme.size,
-        date: new Date().toISOString(),
+        // formatDateFR() (utilisé partout ailleurs pour l'affichage) attend
+        // un simple "YYYY-MM-DD" et le découpe avec split('-') — un
+        // toISOString() complet ("...T19:42:32.147Z") casse cet affichage.
+        date: new Date().toISOString().slice(0, 10),
       });
 
       setItems((prev) => prev.filter((i) => i.id !== item.id));

@@ -33,6 +33,14 @@ const COLORS = {
 
 const flameGradient = 'linear-gradient(180deg, #FF8C00 0%, #FFD700 100%)';
 
+// Retour à l'accueil : ce site n'a pas de vraies routes (GitHub Pages ne sert
+// qu'un seul index.html), la page de soumission est affichée via le
+// paramètre d'URL "?soumettre" (voir src/main.tsx). Revenir à l'accueil
+// consiste donc simplement à retirer ce paramètre.
+function goHome() {
+  window.location.href = window.location.pathname;
+}
+
 type ThemeEntry = {
   key: string;
   nom: string;
@@ -82,6 +90,10 @@ export default function ThemeSubmissionPage() {
   const [themes, setThemes] = useState<ThemeEntry[]>([createEmptyTheme()]);
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  // Conserve le pseudo utilisé pour le dernier envoi réussi, pour pouvoir
+  // personnaliser le message de remerciement même après que le champ
+  // "pseudo" ait été réinitialisé (voir handleSubmit).
+  const [lastPseudo, setLastPseudo] = useState('');
 
   const updateTheme = (key: string, patch: Partial<ThemeEntry>) => {
     setThemes((prev) => prev.map((t) => (t.key === key ? { ...t, ...patch } : t)));
@@ -140,6 +152,7 @@ export default function ThemeSubmissionPage() {
       if (!data.ok) throw new Error(data.error || 'Erreur inconnue du robot.');
 
       setStatus('done');
+      setLastPseudo(pseudo.trim());
       setThemes([createEmptyTheme()]);
       setPseudo('');
     } catch (err) {
@@ -158,9 +171,18 @@ export default function ThemeSubmissionPage() {
   if (status === 'done') {
     return (
       <div
-        className="min-h-screen flex items-center justify-center px-4"
+        className="relative min-h-screen flex flex-col items-center justify-center px-4"
         style={{ backgroundColor: COLORS.bg, color: COLORS.text }}
       >
+        <button
+          type="button"
+          onClick={goHome}
+          className="absolute top-6 left-4 sm:left-8 text-sm font-bold hover:opacity-80 transition-opacity"
+          style={{ color: COLORS.textSecondary }}
+        >
+          ← Retour à l'accueil
+        </button>
+
         <div className="max-w-md text-center">
           <p
             className="text-3xl font-black mb-3"
@@ -170,20 +192,30 @@ export default function ThemeSubmissionPage() {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Merci !
+            Merci{lastPseudo ? ` ${lastPseudo}` : ''} !
           </p>
           <p style={{ color: COLORS.textSecondary }} className="font-medium mb-6">
             Ton/tes thème(s) a/ont bien été envoyé(s) — il(s) sera(ont) vérifié(s) avant
             d'apparaître sur le site.
           </p>
-          <button
-            type="button"
-            onClick={() => setStatus('idle')}
-            className="rounded-lg px-6 py-3 text-sm font-bold shadow-lg border"
-            style={primaryButtonStyle}
-          >
-            Proposer un autre thème
-          </button>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              type="button"
+              onClick={() => setStatus('idle')}
+              className="rounded-lg px-6 py-3 text-sm font-bold shadow-lg border"
+              style={primaryButtonStyle}
+            >
+              Proposer un autre thème
+            </button>
+            <button
+              type="button"
+              onClick={goHome}
+              className="rounded-lg px-6 py-3 text-sm font-bold border"
+              style={{ borderColor: `${COLORS.border}55`, color: COLORS.text }}
+            >
+              Retour à l'accueil
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -192,6 +224,15 @@ export default function ThemeSubmissionPage() {
   return (
     <div className="min-h-screen px-4 py-10" style={{ backgroundColor: COLORS.bg, color: COLORS.text }}>
       <div className="max-w-xl mx-auto">
+        <button
+          type="button"
+          onClick={goHome}
+          className="text-sm font-bold hover:opacity-80 transition-opacity mb-4"
+          style={{ color: COLORS.textSecondary }}
+        >
+          ← Retour à l'accueil
+        </button>
+
         <h1 className="text-3xl font-extrabold mb-1" style={{ color: COLORS.border }}>
           Proposer des thèmes
         </h1>
