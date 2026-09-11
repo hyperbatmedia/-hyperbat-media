@@ -8,11 +8,17 @@
 //   corriger nom/système/catégorie/créateur avant validation.
 // - "Approuver" déplace les fichiers dans le bon dossier définitif (le
 //   robot s'en charge) et ajoute le thème au catalogue via onApprove.
-// - "Rejeter" marque le dépôt comme rejeté ; le fichier reste dans
-//   "En attente" pour un ménage manuel plus tard.
+// - "Supprimer" (avec confirmation) supprime réellement le dépôt : fichiers
+//   envoyés à la corbeille Drive, ligne retirée de la feuille — ce n'est
+//   plus un simple statut "rejeté" avec fichiers laissés en place.
+//
+// RAPPEL IMPORTANT (bandeau fixe ci-dessous) : approuver un thème ne le
+// publie PAS sur le site tout seul — il faut ensuite aller dans l'onglet
+// "Gérer" et cliquer sur Push, sinon le thème reste invisible pour les
+// visiteurs même s'il a l'air "fait" ici.
 
 import { useEffect, useState } from 'react';
-import { RefreshCw, Edit2, X, Check, Ban, Inbox } from 'lucide-react';
+import { RefreshCw, Edit2, X, Check, Trash2, Inbox, AlertTriangle } from 'lucide-react';
 import { SystemRow, Category, NewThemeForm } from '../../types';
 import { AutocompleteSelect } from '../shared/AutocompleteSelect';
 import { ROBOT_ENDPOINT } from '../../config/robotEndpoint';
@@ -41,6 +47,7 @@ export default function SubmissionsTab({ systems, categories, onApprove }: Submi
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [editing, setEditing] = useState<PendingSubmission | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<PendingSubmission | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
 
   const availableSystems = systems.filter((s) => !s.isHeader && !s.isSubHeader);
@@ -109,10 +116,15 @@ export default function SubmissionsTab({ systems, categories, onApprove }: Submi
       setError(err instanceof Error ? err.message : 'Erreur pendant l\'approbation.');
     } finally {
       setBusyId(null);
+      loadItems(); // toujours se resynchroniser sur l'état réel du serveur
     }
   };
 
-  const handleReject = async (item: PendingSubmission) => {
+  // Appelée seulement après confirmation (voir ConfirmDeleteModal). Supprime
+  // vraiment le dépôt : fichiers à la corbeille Drive + ligne retirée du Sheet
+  // (c'est Code.gs qui fait ce travail, ici on ne fait que déclencher l'appel).
+  const handleDelete = async (item: PendingSubmission) => {
+    setConfirmDelete(null);
     setBusyId(item.id);
     setError('');
     try {
@@ -121,12 +133,13 @@ export default function SubmissionsTab({ systems, categories, onApprove }: Submi
         body: JSON.stringify({ action: 'reject', id: item.id }),
       });
       const data = await res.json();
-      if (!data.ok) throw new Error(data.error || 'Rejet impossible.');
+      if (!data.ok) throw new Error(data.error || 'Suppression impossible.');
       setItems((prev) => prev.filter((i) => i.id !== item.id));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur pendant le rejet.');
+      setError(err instanceof Error ? err.message : 'Erreur pendant la suppression.');
     } finally {
       setBusyId(null);
+      loadItems(); // toujours se resynchroniser sur l'état réel du serveur
     }
   };
 
@@ -148,6 +161,17 @@ export default function SubmissionsTab({ systems, categories, onApprove }: Submi
 
   return (
     <div>
+      {/* Bandeau fixe — toujours visible tant que l'onglet Soumissions est
+          ouvert, pas seulement après une action. Non fermable, exprès. */}
+      <div className="flex items-start gap-3 bg-amber-900/30 border-2 border-amber-500/60 rounded-xl p-4 mb-6">
+        <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+        <p className="text-amber-300 text-sm font-semibold">
+          Rappel : approuver un thème ici ne le publie pas tout seul sur le site.
+          Une fois tes approbations faites, va dans l'onglet <span className="font-black">"Gérer"</span> et
+          clique sur <span className="font-black">Push</span> pour les rendre visibles pour les visiteurs.
+        </p>
+      </div>
+
       <div className="flex items-center justify-between mb-6">
         <p className="text-gray-300 font-bold">
           {items.length} dépôt{items.length > 1 ? 's' : ''} en attente
@@ -182,7 +206,7 @@ export default function SubmissionsTab({ systems, categories, onApprove }: Submi
               busy={busyId === item.id}
               onEdit={() => setEditing(item)}
               onApprove={() => handleApprove(item)}
-              onReject={() => handleReject(item)}
+              onRequestDelete={() => setConfirmDelete(item)}
             />
           ))}
         </div>
@@ -197,6 +221,14 @@ export default function SubmissionsTab({ systems, categories, onApprove }: Submi
           onClose={() => setEditing(null)}
         />
       )}
+
+      {confirmDelete && (
+        <ConfirmDeleteModal
+          item={confirmDelete}
+          onConfirm={() => handleDelete(confirmDelete)}
+          onCancel={() => setConfirmDelete(null)}
+        />
+      )}
     </div>
   );
 }
@@ -207,13 +239,13 @@ const SubmissionCard = ({
   busy,
   onEdit,
   onApprove,
-  onReject,
+  onRequestDelete,
 }: {
   item: PendingSubmission;
   busy: boolean;
   onEdit: () => void;
   onApprove: () => void;
-  onReject: () => void;
+  onRequestDelete: () => void;
 }) => (
   <div className="group relative bg-gradient-to-br from-gray-900 to-gray-950 rounded-xl overflow-hidden border-2 border-gray-700/50 hover:border-orange-500/50 transition-all duration-300">
     <div className="relative h-40 overflow-hidden bg-gray-950">
@@ -250,13 +282,55 @@ const SubmissionCard = ({
           Approuver
         </button>
         <button
-          onClick={onReject}
+          onClick={onRequestDelete}
           disabled={busy}
           className="p-2 bg-transparent border border-red-500 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors disabled:opacity-50"
-          title="Rejeter"
+          title="Supprimer"
         >
-          <Ban className="w-4 h-4" />
+          <Trash2 className="w-4 h-4" />
         </button>
+      </div>
+    </div>
+  </div>
+);
+
+// ── ConfirmDeleteModal ────────────────────────────────────────────────────────
+// Confirmation avant suppression réelle : fichiers à la corbeille Drive +
+// ligne retirée du Sheet. Action plus définitive qu'un simple "rejeté", donc
+// on demande confirmation avant de déclencher l'appel au robot.
+const ConfirmDeleteModal = ({
+  item,
+  onConfirm,
+  onCancel,
+}: {
+  item: PendingSubmission;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) => (
+  <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={onCancel}>
+    <div
+      className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-red-500 max-w-sm w-full shadow-2xl"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="p-6 text-center space-y-4">
+        <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mx-auto">
+          <Trash2 className="w-6 h-6 text-red-400" />
+        </div>
+        <div>
+          <h2 className="text-lg font-black text-white mb-1">Supprimer ce dépôt ?</h2>
+          <p className="text-gray-400 text-sm">
+            <span className="font-bold text-white">"{item.nom}"</span> par {item.createur || 'un créateur inconnu'} —
+            le zip et l'image partiront à la corbeille Drive, et la ligne sera retirée de la feuille Soumissions.
+          </p>
+        </div>
+        <div className="flex gap-3 pt-2">
+          <button onClick={onCancel} className="flex-1 py-2.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold text-sm">
+            Annuler
+          </button>
+          <button onClick={onConfirm} className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-sm">
+            Supprimer
+          </button>
+        </div>
       </div>
     </div>
   </div>
