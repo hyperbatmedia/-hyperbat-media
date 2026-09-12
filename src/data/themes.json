@@ -48637,5 +48637,16 @@
     "date": "2026-09-12",
     "onScreenScraper": false,
     "isMulti": false
+  },
+  {
+    "id": 124832,
+    "name": "daytona2",
+    "creator": "huhe-8554",
+    "system": "model3",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/17SdasglW43nG6rcM39II3tJhNgsXG1H7/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1c9fHdRFevVVqkO25P25JAToD9rgt_pfc/view?usp=sharing",
+    "size": "2.9 Mo",
+    "date": "2026-09-12"
   }
 ]
