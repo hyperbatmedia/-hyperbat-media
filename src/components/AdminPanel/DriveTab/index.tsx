@@ -6,7 +6,7 @@ import {
 import { 
   DriveTheme, generateSystemMapping, findMatchingSystem, formatSize, 
   extractFolderId, convertToDirectLink, findMatchingImage, fetchWithRetry, 
-  saveUrls, loadUrls, saveDriveApiKey, loadDriveApiKey, extractCreatorFromArchive,
+  saveUrls, loadUrls, saveDriveApiKey, loadDriveApiKey,
   detectCategoryFromPath
 } from './DriveHelpers';
 
@@ -31,7 +31,6 @@ interface DriveTabProps {
 }
 
 type SortOption = 'name' | 'system' | 'size';
-type CreatorExtractionMode = 'never' | 'always';
 
 const getSystemColor = (systemName: string): string => {
   if (systemName.includes('MAME') || systemName.includes('CPS')) return 'from-purple-600 to-pink-600';
@@ -163,7 +162,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
   const [systemsProgress, setSystemsProgress] = useState<Record<string, any>>({});
   const [stats, setStats] = useState({
     totalFolders: 0, processedFolders: 0, totalThemes: 0, activeRequests: 0,
-    speed: 0, startTime: 0, errors: 0, creatorsExtracted: 0, quotaErrors: 0, totalRequests: 0
+    speed: 0, startTime: 0, errors: 0, quotaErrors: 0, totalRequests: 0
   });
   const [logs, setLogs] = useState<Array<{ time: string; message: string; type: string }>>([]);
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -172,12 +171,12 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
   const [selectedSystemFilter, setSelectedSystemFilter] = useState('all');
   const [sortBy, setSortBy] = useState<SortOption>('name');
   const [sortAsc, setSortAsc] = useState(true);
-  const [creatorExtractionMode, setCreatorExtractionMode] = useState<CreatorExtractionMode>('never');
+  const [autoImport, setAutoImport] = useState(true);
+  const autoImportPendingRef = useRef(false);
   
   /** Total requêtes API pendant l’analyse en cours (pour logs finaux, évite state périmé) */
   const analysisTotalRequestsRef = useRef(0);
   const analysisQuotaErrorsRef = useRef(0);
-  const analysisCreatorsRef = useRef(0);
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const isPausedRef = useRef(false);
@@ -185,9 +184,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
   const logsEndRef = useRef<HTMLDivElement>(null);
   const systemMapping = useRef(generateSystemMapping()).current;
   const themeIdCounter = useRef(Date.now());
-  const creatorCacheRef = useRef<Map<string, string>>(new Map());
-  const downloadQueueRef = useRef<Array<() => Promise<any>>>([]);
-  const isProcessingQueueRef = useRef(false);
   const quotaManagerRef = useRef({
     requestCount: 0,
     startTime: Date.now(),
@@ -202,6 +198,24 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
   useEffect(() => { saveUrls(driveUrls); }, [driveUrls]);
   useEffect(() => { if (apiKey?.length >= 39) saveDriveApiKey(apiKey); }, [apiKey]);
   useEffect(() => { if (autoScroll) logsEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [logs, autoScroll]);
+
+  // Import automatique : dès que l'analyse se termine (isAnalyzing passe de
+  // true à false), si l'option était activée AU MOMENT DU LANCEMENT (voir
+  // autoImportPendingRef, posé dans startAnalysis), on importe directement
+  // tout ce qui a été trouvé — équivalent à "Tout sélectionner" + "Importer"
+  // fait à la main. On passe `themes` directement à handleImport plutôt que
+  // de passer par setSelectedThemes puis handleImport() : les deux se
+  // seraient enchaînés sur le même rendu, avec selectedThemes encore à son
+  // ancienne valeur (mise à jour de state asynchrone).
+  useEffect(() => {
+    if (isAnalyzing) return;
+    if (!autoImportPendingRef.current) return;
+    autoImportPendingRef.current = false;
+    if (themes.length === 0) return;
+    addLog(`🚀 Import automatique de ${themes.length} thème(s)...`, 'info');
+    handleImport(themes);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAnalyzing]);
   useEffect(() => {
     if (!isAnalyzing || stats.startTime === 0) return;
     const interval = setInterval(() => {
@@ -396,110 +410,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     return allFiles;
   };
 
-  const processDownloadQueue = async () => {
-    if (isProcessingQueueRef.current || downloadQueueRef.current.length === 0) return;
-    isProcessingQueueRef.current = true;
-    
-    while (downloadQueueRef.current.length > 0) {
-      await waitIfPaused();
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      
-      const task = downloadQueueRef.current.shift();
-      if (task) {
-        try {
-          await task();
-        } catch (error: any) {
-          const errorMsg = error.message?.toLowerCase() || '';
-          if (errorMsg.includes('429') || errorMsg.includes('quota')) {
-            addLog(`⚠️ Erreur quota sur téléchargement`, 'error');
-            await new Promise(resolve => setTimeout(resolve, 180000));
-            quotaManagerRef.current.requestCount = 0;
-            quotaManagerRef.current.consecutiveErrors++;
-          }
-        }
-      }
-    }
-    
-    isProcessingQueueRef.current = false;
-  };
-
-  const queueDownload = async (task: () => Promise<{ creator: string; format: string }>): Promise<{ creator: string; format: string }> => {
-    return new Promise((resolve) => {
-      downloadQueueRef.current.push(async () => {
-        const result = await task();
-        resolve(result);
-      });
-      processDownloadQueue();
-    });
-  };
-
-  const getCreatorOptimized = async (
-    archive: any,
-    matchedSystem: any,
-    key: string,
-    signal: AbortSignal
-  ): Promise<{ creator: string; format: string }> => {
-    if (creatorExtractionMode === 'never') {
-      return { creator: 'Unknown', format: 'UNKNOWN' };
-    }
-    
-    const cacheKey = `${archive.id}_${archive.name}`;
-    
-    if (creatorCacheRef.current.has(cacheKey)) {
-      const cached = creatorCacheRef.current.get(cacheKey)!;
-      addLog(`💾 Cache: ${archive.name} → ${cached}`, 'info');
-      return { creator: cached, format: 'CACHED' };
-    }
-    
-    const name = archive.name.replace(/\.(zip|7z|7zip|rar)$/i, '');
-    const existingTheme = existingThemes.find(existing => 
-      existing.name.toLowerCase() === name.toLowerCase() &&
-      existing.system === matchedSystem.systemId
-    );
-    
-    if (existingTheme?.creator && existingTheme.creator !== 'Unknown' && existingTheme.creator !== 'Inconnu') {
-      const creator = existingTheme.creator;
-      creatorCacheRef.current.set(cacheKey, creator);
-      addLog(`♻️ Existant: ${name} → ${creator}`, 'success');
-      return { creator, format: 'EXISTING' };
-    }
-    
-    if (signal.aborted) return { creator: 'Unknown', format: 'ABORTED' };
-    
-    addLog(`⏳ Queue: ${name} (${downloadQueueRef.current.length + 1})`, 'warning');
-    
-    const result = await queueDownload(async () => {
-      try {
-        await waitIfPaused();
-        await checkQuota();
-        addLog(`📦 DL: ${name}`, 'warning');
-        
-        const { creator, format } = await extractCreatorFromArchive(archive.id, key, addLog);
-        creatorCacheRef.current.set(cacheKey, creator);
-        
-        if (creator !== 'Unknown') {
-          setStats(prev => ({ ...prev, creatorsExtracted: prev.creatorsExtracted + 1 }));
-          analysisCreatorsRef.current += 1;
-          addLog(`✅ Créateur: ${name} → ${creator}`, 'success');
-        }
-        
-        return { creator, format };
-      } catch (error: any) {
-        const errorMsg = error.message?.toLowerCase() || '';
-        if (errorMsg.includes('429') || errorMsg.includes('quota')) {
-          addLog(`🚫 QUOTA sur ${name}`, 'error');
-          setStats(prev => ({ ...prev, quotaErrors: prev.quotaErrors + 1 }));
-          analysisQuotaErrorsRef.current += 1;
-        } else {
-          addLog(`⚠️ Err ${name}: ${error.message}`, 'error');
-        }
-        return { creator: 'Unknown', format: 'ERROR' };
-      }
-    });
-    
-    return result;
-  };
-
   const analyzeFolder = async (
     folderId: string,
     key: string,
@@ -551,7 +461,8 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
           await waitIfPaused();
           
           const name = archive.name.replace(/\.(zip|7z|7zip|rar)$/i, '');
-          const { creator, format } = await getCreatorOptimized(archive, matchedSystem, key, signal);
+          const creator = 'Unknown';
+          const format = 'UNKNOWN' as const;
           const image = findMatchingImage(archive.name, images);
           
           const archiveDate = archive.modifiedTime?.split('T')[0] || archive.createdTime?.split('T')[0] || '';
@@ -630,6 +541,8 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
   };
   
   const startAnalysis = async () => {
+    autoImportPendingRef.current = autoImport;
+
     if (!apiKey.trim() || apiKey.length < 39) {
       alert('⚠️ Clé API invalide (minimum 39 caractères)');
       return;
@@ -659,19 +572,14 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       speed: 0,
       startTime: Date.now(),
       errors: 0,
-      creatorsExtracted: 0,
       quotaErrors: 0,
       totalRequests: 0
     });
     setElapsedTime(0);
     setSelectedSystemFilter('all');
-    creatorCacheRef.current.clear();
-    downloadQueueRef.current = [];
-    isProcessingQueueRef.current = false;
 
     analysisTotalRequestsRef.current = 0;
     analysisQuotaErrorsRef.current = 0;
-    analysisCreatorsRef.current = 0;
 
     quotaManagerRef.current = {
       requestCount: 0,
@@ -688,12 +596,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     addLog('🎯 Quota: 80 requêtes / min (fenêtre 60s)', 'info');
     addLog('🏷️ Détection automatique des catégories activée', 'success');
     addLog('📅 Récupération des dates de fichiers activée', 'success');
-    
-    const modeLabels = {
-      never: '⚡ Mode rapide',
-      always: '🌐 Mode complet'
-    };
-    addLog(`📋 ${modeLabels[creatorExtractionMode]}`, 'info');
     
     let grandTotalThemes = 0;
 
@@ -722,9 +624,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
           `📊 Requêtes API: ${analysisTotalRequestsRef.current} • Erreurs quota: ${analysisQuotaErrorsRef.current}`,
           'info'
         );
-        if (creatorExtractionMode !== 'never') {
-          addLog(`👤 ${analysisCreatorsRef.current} créateur(s) extrait(s)`, 'success');
-        }
       }
     } catch (error: any) {
       addLog(`❌ Erreur: ${error.message}`, 'error');
@@ -746,10 +645,10 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     addLog('⚠️ Analyse annulée', 'error');
   };
 
-  const handleImport = async () => {
-    const selected = themes.filter(t => selectedThemes.has(t.id));
+  const handleImport = async (themesOverride?: DriveTheme[]) => {
+    const selected = themesOverride ?? themes.filter(t => selectedThemes.has(t.id));
     if (selected.length === 0) {
-      alert('⚠️ Aucun thème sélectionné');
+      if (!themesOverride) alert('⚠️ Aucun thème sélectionné');
       return;
     }
     if (!onImportThemes) {
@@ -871,17 +770,18 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-bold text-gray-400 mb-2">🎯 MODE D'EXTRACTION DES CRÉATEURS</label>
-            <select
-              value={creatorExtractionMode}
-              onChange={(e) => setCreatorExtractionMode(e.target.value as CreatorExtractionMode)}
-              className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white text-sm focus:border-orange-500 transition-all font-semibold"
+          <div className="flex items-center gap-2 mb-4">
+            <input
+              type="checkbox"
+              id="autoImportCheckbox"
+              checked={autoImport}
+              onChange={(e) => setAutoImport(e.target.checked)}
               disabled={isAnalyzing}
-            >
-              <option value="never">⚡ Mode Rapide - Pas d'extraction (3-5 min estimées)</option>
-              <option value="always">🌐 Mode Complet - Télécharger tous les ZIP (20-40 min estimées)</option>
-            </select>
+              className="w-4 h-4 accent-orange-500"
+            />
+            <label htmlFor="autoImportCheckbox" className="text-sm text-gray-300 font-semibold select-none cursor-pointer">
+              Sélectionner et importer automatiquement tout ce qui est trouvé, à la fin du scan
+            </label>
           </div>
 
           <div className="flex items-center gap-4">
@@ -939,10 +839,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
               <div className="bg-gray-900 rounded-lg px-4 py-3 text-center border border-gray-700 min-w-[80px]">
                 <div className={`font-black text-lg ${stats.errors > 0 ? 'text-red-400' : 'text-gray-600'}`}>{stats.errors}</div>
                 <div className="text-gray-500 text-[10px] font-semibold uppercase">Erreurs</div>
-              </div>
-              <div className="bg-gray-900 rounded-lg px-4 py-3 text-center border border-green-700 min-w-[100px]">
-                <div className="text-green-400 font-black text-lg">{stats.creatorsExtracted}</div>
-                <div className="text-gray-500 text-[10px] font-semibold uppercase">Créateurs</div>
               </div>
             </div>
           </div>
@@ -1098,7 +994,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
                 {selectedThemes.size === filteredThemes.length && filteredThemes.length > 0 ? 'Tout désélectionner' : 'Tout sélectionner'}
               </button>
               <button 
-                onClick={handleImport}
+                onClick={() => handleImport()}
                 disabled={selectedThemes.size === 0}
                 className="px-5 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all"
               >
