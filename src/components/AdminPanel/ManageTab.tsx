@@ -375,7 +375,6 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const [showBulkScreenScraperModal, setShowBulkScreenScraperModal] = useState(false);
   const [showBulkMultiModal, setShowBulkMultiModal] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
-  const [isCleaning, setIsCleaning] = useState(false);
   const [showGithubModal, setShowGithubModal] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   const [githubTokenInput, setGithubTokenInput] = useState('');
@@ -768,35 +767,6 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     showToast(`✅ ${addedCount} thème(s) ajouté(s), ${updatedCount} mis à jour (doublons ignorés)`, 'success');
   };
 
-  const handleAutoCleanup = async () => {
-    if (!confirm('⚠️ ATTENTION : Cette fonction va vérifier si les fichiers ZIP existent toujours sur Google Drive.\n\nCela peut prendre du temps.\n\nVoulez-vous continuer ?')) return;
-    const backupFilename = `backup_avant_nettoyage_${new Date().toISOString().split('T')[0]}.json`;
-    downloadJson(themes, backupFilename);
-    showToast('💾 Backup créé : ' + backupFilename, 'success');
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    if (!confirm('⚠️ DERNIÈRE CONFIRMATION\n\nLe backup a été téléchargé. Continuer ?')) return;
-    setIsCleaning(true);
-    showToast('🔍 Vérification des fichiers ZIP...', 'success');
-    const validThemes: ThemeItem[] = [];
-    let deletedCount = 0; let checkedCount = 0;
-    for (const theme of themes) {
-      checkedCount++;
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 8000);
-        const response = await fetch(theme.downloadUrl, { method: 'GET', headers: { 'Range': 'bytes=0-1' }, signal: controller.signal });
-        clearTimeout(timeoutId);
-        if (response.ok || response.status === 206) validThemes.push(theme);
-        else if (response.status === 404) deletedCount++;
-        else validThemes.push(theme);
-      } catch { validThemes.push(theme); }
-      if (checkedCount % 5 === 0) showToast(`🔍 Vérification... ${checkedCount}/${themes.length}`, 'success');
-    }
-    if (deletedCount > 0) { setThemes(validThemes); await saveThemes(validThemes); showToast(`✅ Nettoyage terminé : ${deletedCount} thème(s) supprimé(s)`, 'success'); }
-    else showToast('✅ Aucun lien mort trouvé !', 'success');
-    setIsCleaning(false);
-  };
-
   const resetFilters = () => setFilters({ search: '', category: '', system: '', onlyInvalidUrls: false, onlyMissingCreators: false, onlyNotOnScreenScraper: false, onlyOnScreenScraper: false, onlyMulti: false, onlyMature: false });
   const hasActiveFilters = filters.search || filters.category || filters.system || filters.onlyInvalidUrls || filters.onlyMissingCreators || filters.onlyNotOnScreenScraper || filters.onlyOnScreenScraper || filters.onlyMulti || filters.onlyMature;
   const selectedThemes = themes.filter(t => selectedIds.includes(t.id));
@@ -964,10 +934,6 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
               ) : (
                 <><Globe className="w-4 h-4" />Push GitHub</>
               )}
-            </button>
-            <button onClick={handleAutoCleanup} disabled={isCleaning}
-              className="px-4 py-2 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all">
-              <Trash2 className="w-4 h-4" />{isCleaning ? '🔍 Nettoyage...' : '🧹 Nettoyer liens morts'}
             </button>
           </div>
         </div>

@@ -5,8 +5,16 @@ import {
 } from 'lucide-react';
 import { 
   extractDriveFileId, extractFolderId, fetchWithRetry,
-  saveDriveApiKey, loadDriveApiKey, saveUrls, loadUrls
+  saveDriveApiKey, loadDriveApiKey, saveUrls, loadUrls,
+  MAX_REQUESTS_PER_MINUTE
 } from '../DriveTab/DriveHelpers';
+
+// Pause entre chaque requête à l'API Drive, pour rester sous le quota et
+// éviter qu'un scan de gros catalogue ne se fasse bloquer en cours de route
+// (voir listAllFilesInFolder : sans ça, aucune limitation de débit n'existait
+// ici, contrairement à DriveTab qui gère ça finement).
+const REQUEST_PACING_MS = Math.ceil(60000 / MAX_REQUESTS_PER_MINUTE);
+const pace = () => new Promise(resolve => setTimeout(resolve, REQUEST_PACING_MS));
 
 interface ThemeItem {
   id: number;
@@ -69,6 +77,7 @@ const SyncTab: React.FC<SyncTabProps> = ({ existingThemes, onDeleteThemes }) => 
     folderId: string,
     key: string,
     signal: AbortSignal,
+    errorTracker: { count: number },
     foundFiles: Set<string> = new Set(),
     depth: number = 0
   ): Promise<Set<string>> => {
@@ -78,6 +87,7 @@ const SyncTab: React.FC<SyncTabProps> = ({ existingThemes, onDeleteThemes }) => 
       let pageToken: string | null = null;
       
       do {
+        await pace();
         const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&key=${key}&fields=files(id,name,mimeType),nextPageToken&pageSize=1000${pageToken ? `&pageToken=${pageToken}` : ''}`;
         
         const data = await fetchWithRetry(url, signal, addLog);
@@ -85,7 +95,7 @@ const SyncTab: React.FC<SyncTabProps> = ({ existingThemes, onDeleteThemes }) => 
         if (data.files) {
           for (const file of data.files) {
             if (file.mimeType === 'application/vnd.google-apps.folder') {
-              await listAllFilesInFolder(file.id, key, signal, foundFiles, depth + 1);
+              await listAllFilesInFolder(file.id, key, signal, errorTracker, foundFiles, depth + 1);
             } else if (/\.(zip|7z|7zip|rar)$/i.test(file.name)) {
               foundFiles.add(file.id);
             }
@@ -97,7 +107,13 @@ const SyncTab: React.FC<SyncTabProps> = ({ existingThemes, onDeleteThemes }) => 
       
       return foundFiles;
     } catch (error: any) {
-      addLog(`❌ Erreur scan dossier: ${error.message}`, 'error');
+      // IMPORTANT : on ne renvoie plus silencieusement une liste partielle
+      // comme si elle était complète — ça produirait de faux "orphelins"
+      // (des thèmes bien réels, juste jamais atteints par un scan interrompu).
+      // On note l'échec ; startSync refusera de conclure quoi que ce soit
+      // tant qu'un seul dossier n'a pas été scanné avec certitude jusqu'au bout.
+      errorTracker.count += 1;
+      addLog(`❌ Erreur scan dossier (résultats potentiellement incomplets): ${error.message}`, 'error');
       return foundFiles;
     }
   };
@@ -138,6 +154,7 @@ Veuillez configurer les 3 URLs dans l'onglet Drive pour éviter les faux positif
 
     try {
       const allDriveFiles = new Set<string>();
+      const errorTracker = { count: 0 };
 
       for (let i = 0; i < validUrls.length; i++) {
         if (controller.signal.aborted) break;
@@ -151,7 +168,7 @@ Veuillez configurer les 3 URLs dans l'onglet Drive pour éviter les faux positif
         }
 
         addLog(`\n📂 Scan Drive ${i + 1}/3...`, 'info');
-        const filesInDrive = await listAllFilesInFolder(folderId, apiKey, controller.signal);
+        const filesInDrive = await listAllFilesInFolder(folderId, apiKey, controller.signal, errorTracker);
         
         addLog(`   ✅ ${filesInDrive.size} archives trouvées`, 'success');
         
@@ -160,6 +177,24 @@ Veuillez configurer les 3 URLs dans l'onglet Drive pour éviter les faux positif
 
       if (controller.signal.aborted) {
         addLog('⚠️ Scan annulé', 'warning');
+        return;
+      }
+
+      if (errorTracker.count > 0) {
+        addLog(`\n🛑 Scan incomplet : ${errorTracker.count} dossier(s) n'ont pas pu être vérifiés jusqu'au bout.`, 'error');
+        addLog('⛔ Résultats non fiables — aucun thème ne sera marqué "orphelin" sur cette base.', 'error');
+        addLog('👉 Relance la synchronisation (souvent un souci de quota temporaire).', 'warning');
+        alert(
+          `⛔ Scan incomplet (${errorTracker.count} dossier(s) en erreur)\n\n` +
+          `Impossible de garantir la liste des fichiers présents sur Drive.\n` +
+          `Aucun thème n'a été marqué comme orphelin pour éviter une suppression à tort.\n\n` +
+          `Relance la synchronisation dans quelques instants.`
+        );
+        setStats({
+          totalScanned: existingThemes.length,
+          orphansFound: 0,
+          validThemes: 0
+        });
         return;
       }
 

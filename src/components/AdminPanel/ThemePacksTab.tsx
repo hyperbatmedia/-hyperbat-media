@@ -51,14 +51,22 @@ const ThemePacksTab: React.FC<ThemePacksTabProps> = ({ packsData, setPacksData, 
     setDraft(prev => prev.map(p => p.month === month ? { ...p, [field]: value } : p));
   };
 
-  // ── Enregistrer (local, avant push) ──────────────────────────────────────
-  const handleSave = async () => {
-    // On ne garde que les lignes réellement remplies (date + lien) pour la vitrine
+  // Construit les données prêtes à sauvegarder/publier à partir de ce qui est
+  // affiché à l'écran (draft) — utilisé à la fois par "Enregistrer" et par
+  // "Push GitHub", pour que Push ne puisse jamais publier autre chose que ce
+  // que l'admin voit réellement au moment où il clique, même s'il a oublié de
+  // cliquer "Enregistrer" avant.
+  const buildPacksData = (): ThemePacksData => {
     const filled = draft.filter(p => p.label.trim() && p.driveUrl.trim());
-    const updated: ThemePacksData = {
+    return {
       featuredMonth: filled.some(p => p.month === featuredMonth) ? featuredMonth : (filled[0]?.month ?? ''),
       packs: filled.map(p => ({ ...p, note: p.note?.trim() || undefined })),
     };
+  };
+
+  // ── Enregistrer (local, avant push) ──────────────────────────────────────
+  const handleSave = async () => {
+    const updated = buildPacksData();
     setPacksData(updated);
     await savePacksData(updated);
     setSaveMessage('✅ Enregistré localement — pense à Push GitHub pour publier.');
@@ -66,11 +74,18 @@ const ThemePacksTab: React.FC<ThemePacksTabProps> = ({ packsData, setPacksData, 
   };
 
   // ── Push GitHub ──────────────────────────────────────────────────────────
+  // Reconstruit et enregistre systématiquement à partir du brouillon actuel
+  // avant de publier : Push seul suffit toujours à publier exactement ce qui
+  // est affiché à l'écran, qu'on ait cliqué "Enregistrer" juste avant ou non.
   const handleGithubPush = async (token: string) => {
     setIsPushing(true);
     setPushMessage(null);
     try {
-      const content = btoa(unescape(encodeURIComponent(JSON.stringify(packsData, null, 2))));
+      const updated = buildPacksData();
+      setPacksData(updated);
+      await savePacksData(updated);
+
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(updated, null, 2))));
 
       const getRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${PACKS_PATH}?ref=${GITHUB_BRANCH}&_=${Date.now()}`, {
         headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
@@ -83,7 +98,7 @@ const ThemePacksTab: React.FC<ThemePacksTabProps> = ({ packsData, setPacksData, 
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: `Update themePacks.json (${packsData.packs.length} pack(s)) - ${new Date().toLocaleDateString('fr-FR')}`,
+          message: `Update themePacks.json (${updated.packs.length} pack(s)) - ${new Date().toLocaleDateString('fr-FR')}`,
           content,
           sha,
           branch: GITHUB_BRANCH
@@ -187,7 +202,7 @@ const ThemePacksTab: React.FC<ThemePacksTabProps> = ({ packsData, setPacksData, 
       {/* PUSH GITHUB */}
       <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 space-y-3">
         <h3 className="text-sm font-bold text-gray-200 flex items-center gap-2"><Globe className="w-4 h-4 text-purple-400" /> Publier sur GitHub</h3>
-        <p className="text-xs text-gray-400">Les changements restent locaux tant que tu n'as pas pushé (et enregistré juste au-dessus).</p>
+        <p className="text-xs text-gray-400">Publie directement ce qui est affiché ci-dessus sur le site (inutile de cliquer "Enregistrer" avant).</p>
         <div className="flex gap-2">
           <input
             type="password"
@@ -230,8 +245,8 @@ const ThemePacksTab: React.FC<ThemePacksTabProps> = ({ packsData, setPacksData, 
                 <p>Clique sur l'étoile ★ à gauche de la ligne à mettre en avant sur la page d'accueil. Une seule à la fois.</p>
               </section>
               <section>
-                <h4 className="text-cyan-400 font-bold mb-1">Enregistrer puis publier</h4>
-                <p>Clique "Enregistrer les modifications" pour sauvegarder tes changements, puis "Push GitHub" pour les rendre visibles sur le site (laisse le temps à GitHub Pages de reconstruire après).</p>
+                <h4 className="text-cyan-400 font-bold mb-1">Publier</h4>
+                <p>"Push GitHub" publie directement ce que tu vois à l'écran — pas besoin de cliquer "Enregistrer" avant (mais tu peux, si tu veux juste garder tes changements sans les publier tout de suite). Laisse le temps à GitHub Pages de reconstruire après un push.</p>
               </section>
             </div>
           </div>
