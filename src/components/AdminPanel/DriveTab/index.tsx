@@ -172,7 +172,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
   const [sortBy, setSortBy] = useState<SortOption>('name');
   const [sortAsc, setSortAsc] = useState(true);
   const [autoImport, setAutoImport] = useState(true);
-  const autoImportPendingRef = useRef(false);
   
   /** Total requêtes API pendant l’analyse en cours (pour logs finaux, évite state périmé) */
   const analysisTotalRequestsRef = useRef(0);
@@ -198,24 +197,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
   useEffect(() => { saveUrls(driveUrls); }, [driveUrls]);
   useEffect(() => { if (apiKey?.length >= 39) saveDriveApiKey(apiKey); }, [apiKey]);
   useEffect(() => { if (autoScroll) logsEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [logs, autoScroll]);
-
-  // Import automatique : dès que l'analyse se termine (isAnalyzing passe de
-  // true à false), si l'option était activée AU MOMENT DU LANCEMENT (voir
-  // autoImportPendingRef, posé dans startAnalysis), on importe directement
-  // tout ce qui a été trouvé — équivalent à "Tout sélectionner" + "Importer"
-  // fait à la main. On passe `themes` directement à handleImport plutôt que
-  // de passer par setSelectedThemes puis handleImport() : les deux se
-  // seraient enchaînés sur le même rendu, avec selectedThemes encore à son
-  // ancienne valeur (mise à jour de state asynchrone).
-  useEffect(() => {
-    if (isAnalyzing) return;
-    if (!autoImportPendingRef.current) return;
-    autoImportPendingRef.current = false;
-    if (themes.length === 0) return;
-    addLog(`🚀 Import automatique de ${themes.length} thème(s)...`, 'info');
-    handleImport(themes);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAnalyzing]);
   useEffect(() => {
     if (!isAnalyzing || stats.startTime === 0) return;
     const interval = setInterval(() => {
@@ -541,8 +522,6 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
   };
   
   const startAnalysis = async () => {
-    autoImportPendingRef.current = autoImport;
-
     if (!apiKey.trim() || apiKey.length < 39) {
       alert('⚠️ Clé API invalide (minimum 39 caractères)');
       return;
@@ -598,6 +577,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
     addLog('📅 Récupération des dates de fichiers activée', 'success');
     
     let grandTotalThemes = 0;
+    const allFoundThemes: DriveTheme[] = [];
 
     try {
       for (const url of urls) {
@@ -614,6 +594,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
 
         if (!controller.signal.aborted) {
           grandTotalThemes += result.themes.length;
+          allFoundThemes.push(...result.themes);
           addLog(`✅ ${result.themes.length} thème(s) dans cet arbre`, 'success');
         }
       }
@@ -624,6 +605,17 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
           `📊 Requêtes API: ${analysisTotalRequestsRef.current} • Erreurs quota: ${analysisQuotaErrorsRef.current}`,
           'info'
         );
+
+        // Import automatique : on utilise directement allFoundThemes, accumulé
+        // localement pendant la boucle ci-dessus (pas le state React `themes`,
+        // pour ne dépendre d'aucun timing de re-rendu). `autoImport` est lu ici
+        // tel qu'il était au moment du clic sur "Lancer" — exactement ce qu'on
+        // veut, puisque c'est cette même exécution de startAnalysis qui tourne
+        // depuis le début du scan.
+        if (autoImport && allFoundThemes.length > 0) {
+          addLog(`🚀 Import automatique de ${allFoundThemes.length} thème(s)...`, 'info');
+          await handleImport(allFoundThemes);
+        }
       }
     } catch (error: any) {
       addLog(`❌ Erreur: ${error.message}`, 'error');

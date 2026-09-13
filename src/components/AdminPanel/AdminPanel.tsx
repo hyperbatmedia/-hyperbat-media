@@ -191,6 +191,7 @@ const AdminPanel: FC<AdminPanelProps> = ({
           <DriveTab
             onImportThemes={handleImportThemes}
             existingThemes={themes}
+            setAdminTab={setAdminTab}
           />
         )}
 
