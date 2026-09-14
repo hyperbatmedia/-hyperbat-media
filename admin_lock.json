@@ -1,6 +1,7 @@
 {
-  "isLocked": true,
+  "isLocked": false,
   "adminName": "Bob",
-  "lockedAt": 1789413157068,
-  "expiresAt": 1789441957068
+  "lockedAt": 1789413218456,
+  "cooldownUntil": 1789413278456,
+  "isPushCooldown": false
 }
