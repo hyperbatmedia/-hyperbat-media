@@ -324,7 +324,7 @@ export default function ThemeSubmissionPage() {
             Merci{lastPseudo ? ` ${lastPseudo}` : ''} !
           </p>
           <p style={{ color: COLORS.textSecondary }} className="font-medium mb-6">
-            Ton/tes thème(s) a/ont bien été envoyé(s) — il(s) sera(ont) vérifié(s) avant
+            Tonthème(s) a/ont bien été envoyé(s) — il(s) sera(ont) vérifié(s) avant
             d'apparaître sur le site.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -379,7 +379,7 @@ export default function ThemeSubmissionPage() {
           id="pseudo"
           value={pseudo}
           onChange={(e) => setPseudo(e.target.value)}
-          placeholder="ex: Akeshi"
+          placeholder="ex: Dav"
           className="w-full p-3 rounded-xl text-white mb-6 focus:outline-none"
           style={{ backgroundColor: COLORS.inputBg, border: `1px solid ${COLORS.border}55` }}
         />
@@ -562,7 +562,7 @@ export default function ThemeSubmissionPage() {
 
         {status === 'sending' && (
           <p className="text-xs text-center mb-2" style={{ color: COLORS.textSecondary }}>
-            Ça peut prendre jusqu'à 30 secondes, merci de ne pas fermer cette page.
+            Ça peut prendre jusqu'à 45 secondes, merci de ne pas fermer cette page.
           </p>
         )}
 
