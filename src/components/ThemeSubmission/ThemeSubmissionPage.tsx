@@ -11,7 +11,7 @@
 // accent flamme #FF8C00 / #FFA500 / #FFD700 — les mêmes couleurs que les
 // boutons de ThemeList, CartPanel, RecapThemesPanel, Tutoriels/Outils, etc.
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { generateSystems } from '../../hooks/useSystemsLogic';
 import { systemsData, sectionIcons, categories } from '../../constants';
 import { SystemRow } from '../../types';
@@ -63,10 +63,47 @@ function createEmptyTheme(): ThemeEntry {
     clientId: generateClientId(),
     nom: '',
     systemId: '',
-    categorie: categories[0]?.id ?? '',
+    categorie: '',
     zipFile: null,
     imageFile: null,
   };
+}
+
+// Point 1 (limite de taille) : les fichiers partent en base64 (+33% de
+// volume) dans UN SEUL envoi JSON regroupant tous les thèmes du formulaire —
+// pas un par un. Le plafond officieux d'Apps Script pour le corps d'une
+// requête POST tourne autour de 50 Mo. On bloque l'envoi avant, avec de la
+// marge, plutôt que de laisser échouer après 30 secondes d'attente (et,
+// comme on l'a découvert, un dépassement de cette taille peut produire
+// exactement le même genre d'erreur non-JSON que les ralentissements
+// Apps Script — sans lien avec eux).
+const MAX_TOTAL_BYTES = 35 * 1024 * 1024; // ~35 Mo bruts ≈ 46-47 Mo en base64
+
+function formatMB(bytes: number): string {
+  return (bytes / (1024 * 1024)).toFixed(1);
+}
+
+// Point 2 (prévisualisation) : composant dédié pour créer/détruire l'URL
+// d'aperçu au bon moment (à chaque changement de fichier, et au démontage),
+// sans quoi les URL créées par URL.createObjectURL() ne sont jamais
+// libérées et s'accumulent en mémoire.
+function ImagePreviewThumbnail({ file }: { file: File }) {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+
+  if (!previewUrl) return null;
+  return (
+    <img
+      src={previewUrl}
+      alt=""
+      className="w-10 h-10 rounded-lg object-cover shrink-0"
+    />
+  );
 }
 
 // Convertit un fichier en base64 (sans le préfixe "data:...;base64,")
@@ -116,11 +153,38 @@ export default function ThemeSubmissionPage() {
   const isThemeValid = (t: ThemeEntry) =>
     t.nom.trim().length > 0 && !!t.systemId && !!t.categorie && !!t.zipFile && !!t.imageFile;
 
+  // Point 1 : taille totale cumulée de tous les fichiers du formulaire (tous
+  // thèmes confondus, puisqu'ils partent dans un seul envoi).
+  const totalBytes = useMemo(
+    () => themes.reduce((sum, t) => sum + (t.zipFile?.size ?? 0) + (t.imageFile?.size ?? 0), 0),
+    [themes]
+  );
+  const sizeExceeded = totalBytes > MAX_TOTAL_BYTES;
+
   const canSubmit =
     pseudo.trim().length > 0 &&
     themes.length > 0 &&
     themes.every(isThemeValid) &&
+    !sizeExceeded &&
     status !== 'sending';
+
+  // Point 4 : avertir avant de quitter la page si des fichiers (potentiellement
+  // lourds) sont déjà sélectionnés, ou si un envoi est en cours — le moment où
+  // fermer fait le plus de dégâts (requête interrompue). Se désactive tout
+  // seul dès que le formulaire est vide (y compris après un envoi réussi,
+  // puisque handleSubmit réinitialise déjà themes à ce moment-là) ou après une
+  // erreur si les fichiers ont depuis été retirés.
+  const hasSelectedFiles = themes.some((t) => t.zipFile || t.imageFile);
+  useEffect(() => {
+    const shouldWarn = hasSelectedFiles || status === 'sending';
+    if (!shouldWarn) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [hasSelectedFiles, status]);
 
   const handleSubmit = async () => {
     if (!canSubmit) return;
@@ -382,6 +446,7 @@ export default function ThemeSubmissionPage() {
                     className="w-full p-3 rounded-xl text-white focus:outline-none"
                     style={{ backgroundColor: COLORS.inputBg, border: `1px solid ${COLORS.border}55` }}
                   >
+                    <option value="" disabled>Choisir une catégorie</option>
                     {categories.map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
@@ -391,31 +456,80 @@ export default function ThemeSubmissionPage() {
                 </div>
               </div>
 
-              <label
-                className="flex items-center justify-center gap-2 rounded-xl px-3 py-4 text-center text-sm font-semibold mb-3 cursor-pointer transition-colors"
+              <div
+                className="flex items-center gap-2 rounded-xl px-3 py-4 mb-3 transition-colors"
                 style={{ border: `2px dashed ${COLORS.textSecondary}66`, color: COLORS.textSecondary }}
               >
-                {t.zipFile ? `📦 ${t.zipFile.name}` : 'Fichier .zip du thème *'}
-                <input
-                  type="file"
-                  accept=".zip,.7z,.rar"
-                  className="hidden"
-                  onChange={(e) => updateTheme(t.key, { zipFile: e.target.files?.[0] ?? null })}
-                />
-              </label>
+                <label className="flex-1 flex items-center justify-center gap-2 text-center text-sm font-semibold cursor-pointer min-w-0">
+                  {t.zipFile ? (
+                    <span className="truncate">📦 {t.zipFile.name}</span>
+                  ) : (
+                    'Fichier .zip du thème *'
+                  )}
+                  <input
+                    type="file"
+                    accept=".zip,.7z,.rar"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      // Pré-remplit "Nom du thème" avec le nom du fichier tel
+                      // quel (juste l'extension retirée) si le champ est
+                      // encore vide — ne touche jamais à un nom déjà tapé, et
+                      // ne modifie rien d'autre : "sonic_v2.zip" donne
+                      // "sonic_v2", sans aucun nettoyage.
+                      const patch: Partial<ThemeEntry> = { zipFile: file };
+                      if (file && !t.nom.trim()) {
+                        patch.nom = file.name.replace(/\.[^/.]+$/, '');
+                      }
+                      updateTheme(t.key, patch);
+                    }}
+                  />
+                </label>
+                {t.zipFile && (
+                  <button
+                    type="button"
+                    onClick={() => updateTheme(t.key, { zipFile: null })}
+                    className="text-xs font-bold shrink-0 hover:opacity-80"
+                    style={{ color: '#f87171' }}
+                    aria-label="Retirer ce fichier"
+                    title="Retirer ce fichier"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
 
-              <label
-                className="flex items-center justify-center gap-2 rounded-xl px-3 py-4 text-center text-sm font-semibold cursor-pointer transition-colors"
+              <div
+                className="flex items-center gap-2 rounded-xl px-3 py-4 transition-colors"
                 style={{ border: `2px dashed ${COLORS.border}`, color: '#FFA500' }}
               >
-                {t.imageFile ? `🖼️ ${t.imageFile.name}` : 'Image — obligatoire *'}
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => updateTheme(t.key, { imageFile: e.target.files?.[0] ?? null })}
-                />
-              </label>
+                {t.imageFile && <ImagePreviewThumbnail file={t.imageFile} />}
+                <label className="flex-1 flex items-center justify-center gap-2 text-center text-sm font-semibold cursor-pointer min-w-0">
+                  {t.imageFile ? (
+                    <span className="truncate">🖼️ {t.imageFile.name}</span>
+                  ) : (
+                    'Image — obligatoire *'
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => updateTheme(t.key, { imageFile: e.target.files?.[0] ?? null })}
+                  />
+                </label>
+                {t.imageFile && (
+                  <button
+                    type="button"
+                    onClick={() => updateTheme(t.key, { imageFile: null })}
+                    className="text-xs font-bold shrink-0 hover:opacity-80"
+                    style={{ color: '#f87171' }}
+                    aria-label="Retirer cette image"
+                    title="Retirer cette image"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
@@ -428,6 +542,17 @@ export default function ThemeSubmissionPage() {
         >
           + Ajouter un autre thème
         </button>
+
+        {totalBytes > 0 && (
+          <p
+            className="text-xs text-center mb-2"
+            style={{ color: sizeExceeded ? '#f87171' : COLORS.textSecondary }}
+          >
+            {sizeExceeded
+              ? `Le total de tes fichiers est trop volumineux (${formatMB(totalBytes)} Mo / ${formatMB(MAX_TOTAL_BYTES)} Mo max) — essaie de les envoyer en plusieurs fois.`
+              : `Taille totale : ${formatMB(totalBytes)} Mo / ${formatMB(MAX_TOTAL_BYTES)} Mo`}
+          </p>
+        )}
 
         {status === 'error' && (
           <p className="font-semibold text-sm mb-3 text-center" style={{ color: '#f87171' }}>
