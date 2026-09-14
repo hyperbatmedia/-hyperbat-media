@@ -22,6 +22,7 @@ import { RefreshCw, Edit2, X, Check, Trash2, Inbox, AlertTriangle } from 'lucide
 import { SystemRow, Category, NewThemeForm } from '../../types';
 import { AutocompleteSelect } from '../shared/AutocompleteSelect';
 import { ROBOT_ENDPOINT } from '../../config/robotEndpoint';
+import { robotFetch, RobotFetchError } from '../../utils/robotFetch';
 
 type PendingSubmission = {
   id: string;
@@ -54,17 +55,28 @@ export default function SubmissionsTab({ systems, categories, onApprove }: Submi
 
   const configured = ROBOT_ENDPOINT.indexOf('À_REMPLIR') !== 0;
 
+  // Message clair, quelle que soit l'action, si le robot ne répond pas
+  // normalement après 2 tentatives (voir robotFetch). Mesuré en pratique :
+  // environ 1 appel sur 9-10 vers ce Web App échoue ou traîne de façon
+  // aléatoire, indépendamment de la feuille "Soumissions" ou de son contenu
+  // (hypothèse testée et écartée) — c'est un comportement ponctuel connu et
+  // documenté par Google lui-même pour ce type de déploiement, qui se
+  // résout normalement tout seul en réessayant un instant après.
+  const robotErrorMessage = (err: unknown, fallback: string): string =>
+    err instanceof RobotFetchError
+      ? 'Le robot ne répond pas normalement pour le moment (souci passager côté Google, ça arrive). Réessaie dans une minute.'
+      : err instanceof Error ? err.message : fallback;
+
   const loadItems = async () => {
     if (!configured) return;
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`${ROBOT_ENDPOINT}?action=list`);
-      const data = await res.json();
+      const data = await robotFetch(`${ROBOT_ENDPOINT}?action=list`, {});
       if (!data.ok) throw new Error(data.error || 'Erreur inconnue.');
       setItems(data.items || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Impossible de charger les dépôts.');
+      setError(robotErrorMessage(err, 'Impossible de charger les dépôts.'));
     } finally {
       setLoading(false);
     }
@@ -79,7 +91,7 @@ export default function SubmissionsTab({ systems, categories, onApprove }: Submi
     setBusyId(item.id);
     setError('');
     try {
-      const res = await fetch(ROBOT_ENDPOINT, {
+      const data = await robotFetch(ROBOT_ENDPOINT, {
         method: 'POST',
         body: JSON.stringify({
           action: 'approve',
@@ -90,7 +102,6 @@ export default function SubmissionsTab({ systems, categories, onApprove }: Submi
           createur: item.createur,
         }),
       });
-      const data = await res.json();
       if (!data.ok) throw new Error(data.error || 'Approbation impossible.');
 
       // Important : theme.system doit être la forme COURTE normalisée
@@ -116,7 +127,7 @@ export default function SubmissionsTab({ systems, categories, onApprove }: Submi
 
       setItems((prev) => prev.filter((i) => i.id !== item.id));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur pendant l\'approbation.');
+      setError(robotErrorMessage(err, "Erreur pendant l'approbation."));
     } finally {
       setBusyId(null);
       loadItems(); // toujours se resynchroniser sur l'état réel du serveur
@@ -131,15 +142,14 @@ export default function SubmissionsTab({ systems, categories, onApprove }: Submi
     setBusyId(item.id);
     setError('');
     try {
-      const res = await fetch(ROBOT_ENDPOINT, {
+      const data = await robotFetch(ROBOT_ENDPOINT, {
         method: 'POST',
         body: JSON.stringify({ action: 'reject', id: item.id }),
       });
-      const data = await res.json();
       if (!data.ok) throw new Error(data.error || 'Suppression impossible.');
       setItems((prev) => prev.filter((i) => i.id !== item.id));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur pendant la suppression.');
+      setError(robotErrorMessage(err, 'Erreur pendant la suppression.'));
     } finally {
       setBusyId(null);
       loadItems(); // toujours se resynchroniser sur l'état réel du serveur

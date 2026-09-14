@@ -17,6 +17,7 @@ import { systemsData, sectionIcons, categories } from '../../constants';
 import { SystemRow } from '../../types';
 import { AutocompleteSelect } from '../shared/AutocompleteSelect';
 import { ROBOT_ENDPOINT } from '../../config/robotEndpoint';
+import { robotFetch, generateClientId, RobotFetchError } from '../../utils/robotFetch';
 
 const EXCLUDED_IDS = ['all', 'tools', 'tutorials', 'main-themes', 'other-themes'];
 
@@ -43,6 +44,7 @@ function goHome() {
 
 type ThemeEntry = {
   key: string;
+  clientId: string;
   nom: string;
   systemId: string;
   categorie: string;
@@ -53,6 +55,12 @@ type ThemeEntry = {
 function createEmptyTheme(): ThemeEntry {
   return {
     key: Math.random().toString(36).slice(2),
+    // Identifiant anti-doublon : généré une seule fois ici, à la création de
+    // la ligne, et jamais régénéré ensuite — même si l'envoi est réessayé
+    // automatiquement (voir handleSubmit), le robot recevra toujours le même
+    // clientId pour ce thème précis, ce qui lui permet de reconnaître un
+    // renvoi et de ne jamais créer de doublon (voir Code.gs).
+    clientId: generateClientId(),
     nom: '',
     systemId: '',
     categorie: categories[0]?.id ?? '',
@@ -90,6 +98,7 @@ export default function ThemeSubmissionPage() {
   const [themes, setThemes] = useState<ThemeEntry[]>([createEmptyTheme()]);
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  const [sendingMessage, setSendingMessage] = useState('Envoi en cours…');
   // Conserve le pseudo utilisé pour le dernier envoi réussi, pour pouvoir
   // personnaliser le message de remerciement même après que le champ
   // "pseudo" ait été réinitialisé (voir handleSubmit).
@@ -117,6 +126,7 @@ export default function ThemeSubmissionPage() {
     if (!canSubmit) return;
     setStatus('sending');
     setErrorMsg('');
+    setSendingMessage('Envoi en cours…');
 
     try {
       const payload = {
@@ -126,6 +136,7 @@ export default function ThemeSubmissionPage() {
           themes.map(async (t) => {
             const system = realSystems.find((s) => s.id === t.systemId);
             return {
+              clientId: t.clientId,
               nom: t.nom.trim(),
               systeme: system?.name ?? '',
               famille: system?.section ?? '',
@@ -143,12 +154,19 @@ export default function ThemeSubmissionPage() {
       // Apps Script gère très bien un corps texte brut, et ça évite un
       // aller-retour de vérification (preflight) que les Web Apps Google
       // ne gèrent pas correctement.
-      const res = await fetch(ROBOT_ENDPOINT, {
-        method: 'POST',
-        body: JSON.stringify(payload),
-      });
+      //
+      // robotFetch réessaie une fois automatiquement en cas d'échec (le
+      // robot peut ponctuellement mettre du temps à répondre, ou renvoyer
+      // une erreur HTML au lieu du JSON attendu). Comme chaque thème garde
+      // le même clientId d'une tentative à l'autre, un renvoi ne crée
+      // jamais de doublon : le robot reconnaît qu'il a déjà reçu ce dépôt
+      // (voir Code.gs) et ne recrée rien.
+      const data = await robotFetch(
+        ROBOT_ENDPOINT,
+        { method: 'POST', body: JSON.stringify(payload) },
+        () => setSendingMessage('Ça prend un peu plus de temps que prévu, nouvel essai en cours…')
+      );
 
-      const data = await res.json();
       if (!data.ok) throw new Error(data.error || 'Erreur inconnue du robot.');
 
       setStatus('done');
@@ -156,6 +174,53 @@ export default function ThemeSubmissionPage() {
       setThemes([createEmptyTheme()]);
       setPseudo('');
     } catch (err) {
+      if (err instanceof RobotFetchError) {
+        // L'envoi complet a échoué deux fois. Avant d'abandonner, on pose
+        // une question beaucoup plus légère au robot (aucun fichier à
+        // renvoyer, juste "as-tu déjà reçu CES clientId ?") pour donner une
+        // réponse CERTAINE au visiteur plutôt que de le laisser dans le
+        // flou — lui ne peut pas vérifier lui-même (pas d'accès à la
+        // feuille/Drive), mais le robot le sait avec certitude.
+        setSendingMessage('Vérification en cours…');
+        try {
+          const clientIds = themes.map((t) => t.clientId);
+          const checkData = await robotFetch(ROBOT_ENDPOINT, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'checkStatus', ids: clientIds }),
+          });
+
+          if (checkData.ok && clientIds.every((id: string) => checkData.existingIds?.[id])) {
+            // Bonne nouvelle confirmée : le dépôt était bien arrivé malgré
+            // l'erreur affichée juste avant. On termine comme une réussite.
+            setStatus('done');
+            setLastPseudo(pseudo.trim());
+            setThemes([createEmptyTheme()]);
+            setPseudo('');
+            return;
+          }
+
+          setStatus('error');
+          if (checkData.ok) {
+            // Réponse certaine, cette fois : rien n'est arrivé, en confiance.
+            setErrorMsg("Ton dépôt n'est pas passé. Tu peux cliquer sur Envoyer à nouveau, en toute sécurité.");
+          } else {
+            setErrorMsg(
+              "Le robot ne répond pas normalement pour l'instant (ça arrive, c'est ponctuel). " +
+              'Pas d\'inquiétude : tu peux cliquer sur Envoyer à nouveau, ça ne créera jamais de doublon.'
+            );
+          }
+        } catch {
+          // Même cette vérification légère a échoué : on retombe sur le
+          // message honnête, sans certitude, mais toujours sans risque.
+          setStatus('error');
+          setErrorMsg(
+            "Le robot ne répond pas normalement pour l'instant (ça arrive, c'est ponctuel). " +
+            'Pas d\'inquiétude : tu peux cliquer sur Envoyer à nouveau, ça ne créera jamais de doublon.'
+          );
+        }
+        return;
+      }
+
       setStatus('error');
       setErrorMsg(err instanceof Error ? err.message : 'Erreur inconnue, réessaie.');
     }
@@ -370,6 +435,12 @@ export default function ThemeSubmissionPage() {
           </p>
         )}
 
+        {status === 'sending' && (
+          <p className="text-xs text-center mb-2" style={{ color: COLORS.textSecondary }}>
+            Ça peut prendre jusqu'à 30 secondes, merci de ne pas fermer cette page.
+          </p>
+        )}
+
         <button
           type="button"
           onClick={handleSubmit}
@@ -378,7 +449,7 @@ export default function ThemeSubmissionPage() {
           style={canSubmit ? primaryButtonStyle : { ...primaryButtonStyle, backgroundColor: '#4b5563', borderColor: '#6b7280' }}
         >
           {status === 'sending'
-            ? 'Envoi en cours…'
+            ? sendingMessage
             : `Envoyer ${themes.length > 1 ? `mes ${themes.length} thèmes` : 'mon thème'}`}
         </button>
         <p className="text-xs text-center mt-3" style={{ color: COLORS.textSecondary }}>
