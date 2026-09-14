@@ -101,7 +101,7 @@ function ImagePreviewThumbnail({ file }: { file: File }) {
     <img
       src={previewUrl}
       alt=""
-      className="w-10 h-10 rounded-lg object-cover shrink-0"
+      className="w-16 h-16 rounded-lg object-cover shrink-0"
     />
   );
 }
