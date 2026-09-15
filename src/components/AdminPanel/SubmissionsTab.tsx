@@ -182,6 +182,11 @@ export default function SubmissionsTab({ systems, categories, onApprove }: Submi
           Rappel : approuver un thème ici ne le publie pas tout seul sur le site.
           Une fois tes approbations faites, va dans l'onglet <span className="font-black">"Gérer"</span> et
           clique sur <span className="font-black">Push</span> pour les rendre visibles pour les visiteurs.
+          <br className="hidden sm:block" />
+          Chaque approbation prend 30 à 40 secondes (déplacement des fichiers sur Drive) : pendant ce
+          temps, les boutons des <span className="font-black">autres</span> dépôts sont désactivés
+          exprès — c'est normal, attends la fin (barre orange sous la carte) avant d'approuver le
+          suivant, sinon un thème peut disparaître du catalogue sans prévenir.
         </p>
       </div>
 
@@ -217,6 +222,16 @@ export default function SubmissionsTab({ systems, categories, onApprove }: Submi
               key={item.id}
               item={item}
               busy={busyId === item.id}
+              // Verrou GLOBAL : tant qu'un dépôt quelconque est en cours de
+              // traitement (busyId non nul), toutes les cartes sont bloquées —
+              // pas seulement celle concernée. Avant ce correctif, rien
+              // n'empêchait de cliquer "Approuver" sur plusieurs dépôts à la
+              // suite pendant que les précédents tournaient encore (30-40s
+              // chacun), et les mises à jour du catalogue se marchaient
+              // dessus : certains thèmes approuvés (fichiers bien déplacés,
+              // ligne bien marquée "approuvé" dans la Sheet) n'arrivaient
+              // jamais dans themes.json.
+              locked={busyId !== null}
               onEdit={() => setEditing(item)}
               onApprove={() => handleApprove(item)}
               onRequestDelete={() => setConfirmDelete(item)}
@@ -250,12 +265,20 @@ export default function SubmissionsTab({ systems, categories, onApprove }: Submi
 const SubmissionCard = ({
   item,
   busy,
+  locked,
   onEdit,
   onApprove,
   onRequestDelete,
 }: {
   item: PendingSubmission;
+  // true UNIQUEMENT pour la carte en cours de traitement — affiche la barre
+  // de progression et le texte de statut.
   busy: boolean;
+  // true pour TOUTES les cartes dès qu'un traitement quelconque est en
+  // cours — désactive leurs boutons, pour ne jamais laisser deux
+  // approbations se chevaucher (voir le commentaire dans le composant
+  // parent, juste au-dessus de l'appel à <SubmissionCard />).
+  locked: boolean;
   onEdit: () => void;
   onApprove: () => void;
   onRequestDelete: () => void;
@@ -277,10 +300,25 @@ const SubmissionCard = ({
         </span>
       </div>
 
+      {/* Barre "indéterminée" façon téléchargement de navigateur : on n'a
+          pas de vraie progression chiffrée (le robot ne répond qu'à la
+          toute fin), donc un segment glisse en boucle plutôt que d'afficher
+          un pourcentage inventé. Visible uniquement sur la carte concernée. */}
+      {busy && (
+        <div className="pt-1" role="status" aria-live="polite">
+          <div className="h-1.5 w-full rounded-full bg-gray-800 overflow-hidden">
+            <div className="h-full w-1/3 rounded-full bg-gradient-to-r from-orange-500 to-amber-400 progress-indeterminate" />
+          </div>
+          <p className="text-[11px] font-semibold text-amber-400 mt-1">
+            ⏳ Traitement en cours (~30-40s)… patiente, ne clique pas ailleurs.
+          </p>
+        </div>
+      )}
+
       <div className="flex gap-1.5 pt-2">
         <button
           onClick={onEdit}
-          disabled={busy}
+          disabled={locked}
           title="Modifier avant validation"
           className="p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors disabled:opacity-50"
         >
@@ -288,15 +326,15 @@ const SubmissionCard = ({
         </button>
         <button
           onClick={onApprove}
-          disabled={busy}
+          disabled={locked}
           className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold text-sm transition-colors disabled:opacity-50"
         >
           <Check className="w-4 h-4" />
-          Approuver
+          {busy ? 'Traitement…' : 'Approuver'}
         </button>
         <button
           onClick={onRequestDelete}
-          disabled={busy}
+          disabled={locked}
           className="p-2 bg-transparent border border-red-500 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors disabled:opacity-50"
           title="Supprimer"
         >

@@ -26,3 +26,17 @@ body {
 h1, h2, h3, h4 {
     letter-spacing: 0.05em;
 }
+
+/* Barre de progression "indéterminée" (façon téléchargement de navigateur),
+   utilisée dans l'onglet Soumissions de l'admin pendant le traitement d'une
+   approbation. Pas de vrai pourcentage possible : le robot Apps Script ne
+   répond qu'à la toute fin (30-40s), donc un segment glisse en boucle pour
+   montrer qu'un traitement tourne, plutôt qu'un chiffre inventé. */
+@keyframes hyperbat-progress-indeterminate {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(400%); }
+}
+
+.progress-indeterminate {
+    animation: hyperbat-progress-indeterminate 1.1s ease-in-out infinite;
+}

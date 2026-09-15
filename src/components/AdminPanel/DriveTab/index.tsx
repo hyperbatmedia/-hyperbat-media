@@ -7,7 +7,7 @@ import {
   DriveTheme, generateSystemMapping, findMatchingSystem, formatSize, 
   extractFolderId, convertToDirectLink, findMatchingImage, fetchWithRetry, 
   saveUrls, loadUrls, saveDriveApiKey, loadDriveApiKey,
-  detectCategoryFromPath
+  detectCategoryFromPath, extractDriveFileId
 } from './DriveHelpers';
 
 interface ThemeItem {
@@ -160,6 +160,22 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
   const [isPaused, setIsPaused] = useState(false);
   const [themes, setThemes] = useState<DriveTheme[]>([]);
   const [systemsProgress, setSystemsProgress] = useState<Record<string, any>>({});
+
+  // Identifiants Drive déjà présents dans le catalogue (themes.json) — sert à
+  // ne plus proposer au scan des fichiers déjà sur la vitrine. Notamment les
+  // thèmes ajoutés via "Proposer un thème" puis approuvés/pushés : ils sont
+  // simplement DÉPLACÉS (pas copiés) vers leur dossier final au moment de
+  // l'approbation, donc le scan les retrouverait sinon comme "nouveaux",
+  // alors qu'ils sont déjà en ligne.
+  const existingDriveIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const t of existingThemes) {
+      const id = extractDriveFileId(t.downloadUrl);
+      if (id) ids.add(id);
+    }
+    return ids;
+  }, [existingThemes]);
+
   const [stats, setStats] = useState({
     totalFolders: 0, processedFolders: 0, totalThemes: 0, activeRequests: 0,
     speed: 0, startTime: 0, errors: 0, quotaErrors: 0, totalRequests: 0
@@ -432,7 +448,8 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
         }
         
         const matchedSystem = findMatchingSystem(systemName, systemMapping);
-        addLog(`🎮 ${archives.length} → ${matchedSystem.systemName}`, 'info');
+        const newArchivesCount = archives.filter(a => !existingDriveIds.has(a.id)).length;
+        addLog(`🎮 ${newArchivesCount} nouveau(x) / ${archives.length} → ${matchedSystem.systemName}`, 'info');
         
         const detectedCategory = detectCategoryFromPath(path);
         addLog(`  🏷️ Catégorie: ${detectedCategory}`, 'info');
@@ -440,7 +457,13 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
         for (const archive of archives) {
           if (signal.aborted) break;
           await waitIfPaused();
-          
+
+          // Déjà au catalogue (voir existingDriveIds) : on ne le propose pas
+          // au scan, ça évite de retrouver comme "nouveaux" des thèmes en
+          // fait déjà en ligne (notamment ceux ajoutés via "Proposer un
+          // thème" puis approuvés/pushés).
+          if (existingDriveIds.has(archive.id)) continue;
+
           const name = archive.name.replace(/\.(zip|7z|7zip|rar)$/i, '');
           const creator = 'Unknown';
           const format = 'UNKNOWN' as const;
