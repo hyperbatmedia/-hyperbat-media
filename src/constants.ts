@@ -86,6 +86,7 @@ export const systemsData: SystemsDataStructure = {
         igt: { label: 'IGT SLOTS', systems: ['IGT Slots'] },
         acclaim: { label: 'ACCLAIM', systems: ['Acclaim'] },
         exidy: { label: 'EXIDY', systems: ['Exidy'] },
+        century: { label: 'CENTURY ELECTRONICS', systems: ['Century Electronics'] },
         'autres-arcade': { label: 'AUTRES CONSTRUCTEURS', systems: ['AAE', 'Daphne (LaserDisc)', 'Singe (LaserDisc)', 'American Laser Games', 'Gaelco', 'IGS', 'FBNeo'] }
     },
     home: {
