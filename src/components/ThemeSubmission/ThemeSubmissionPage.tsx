@@ -131,6 +131,28 @@ export default function ThemeSubmissionPage() {
     [allSystems]
   );
 
+  // "Collections Personnalisées" (id 'collection') n'est pas une vraie
+  // catégorie de thème : c'est le système "Collections Personnalisées"
+  // (voir realSystems / systemsData) qui apparaît aussi dans `categories`
+  // uniquement pour servir d'onglet de filtre sur le site principal
+  // (HyperBatMediaSite.tsx). Aucun thème n'a jamais "category": "collection"
+  // dans les données — la vraie catégorie reste game-themes / artwork / etc.
+  // On l'exclut donc du menu "Catégorie" du formulaire pour éviter la
+  // confusion avec le menu "Système", où "Collections Personnalisées" est
+  // déjà proposée.
+  const submissionCategories = useMemo(
+    () => categories.filter((c) => c.id !== 'collection'),
+    []
+  );
+
+  // Id du système "Collections Personnalisées" dans realSystems — utilisé
+  // pour présélectionner automatiquement sa catégorie (voir onChange du
+  // menu Système ci-dessous).
+  const collectionSystemId = useMemo(
+    () => realSystems.find((s) => s.name === 'Collections Personnalisées')?.id,
+    [realSystems]
+  );
+
   const [pseudo, setPseudo] = useState('');
   const [themes, setThemes] = useState<ThemeEntry[]>([createEmptyTheme()]);
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
@@ -314,6 +336,13 @@ export default function ThemeSubmissionPage() {
 
         <div className="max-w-md text-center">
           <p
+            className="text-xs font-black tracking-widest mb-2 hyperbat-highscore-blink"
+            style={{ color: '#FFD700' }}
+          >
+            ★ HIGH SCORE ★
+          </p>
+
+          <p
             className="text-3xl font-black mb-3"
             style={{
               background: flameGradient,
@@ -324,7 +353,7 @@ export default function ThemeSubmissionPage() {
             Merci{lastPseudo ? ` ${lastPseudo}` : ''} !
           </p>
           <p style={{ color: COLORS.textSecondary }} className="font-medium mb-6">
-            Tonthème(s) a/ont bien été envoyé(s) — il(s) sera(ont) vérifié(s) avant
+            Ton thème(s) a/ont bien été envoyé(s) — il(s) sera(ont) vérifié(s) avant
             d'apparaître sur le site.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -408,19 +437,6 @@ export default function ThemeSubmissionPage() {
                 )}
               </div>
 
-              <div className="mb-3">
-                <label className="block text-sm font-bold mb-2" style={{ color: COLORS.textSecondary }}>
-                  Nom du thème *
-                </label>
-                <input
-                  value={t.nom}
-                  onChange={(e) => updateTheme(t.key, { nom: e.target.value })}
-                  placeholder="ex: Back to the Future"
-                  className="w-full p-3 rounded-xl text-white focus:outline-none"
-                  style={{ backgroundColor: COLORS.inputBg, border: `1px solid ${COLORS.border}55` }}
-                />
-              </div>
-
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                 <div>
                   <label className="block text-sm font-bold mb-2" style={{ color: COLORS.textSecondary }}>
@@ -431,7 +447,24 @@ export default function ThemeSubmissionPage() {
                   <AutocompleteSelect
                     options={realSystems}
                     value={t.systemId}
-                    onChange={(systemId) => updateTheme(t.key, { systemId })}
+                    onChange={(systemId) => {
+                      const patch: Partial<ThemeEntry> = { systemId };
+                      // Les thèmes soumis ici pour "Collections
+                      // Personnalisées" sont toujours des collections
+                      // classiques (comme 24 des 25 déjà en ligne pour ce
+                      // système), jamais des artworks — on présélectionne
+                      // donc directement la bonne catégorie.
+                      if (systemId === collectionSystemId) {
+                        patch.categorie = 'game-themes';
+                      } else if (t.systemId === collectionSystemId) {
+                        // On quitte "Collections Personnalisées" pour un
+                        // autre système : la catégorie qui était verrouillée
+                        // n'a plus de raison d'être conservée, on la vide
+                        // pour forcer un vrai choix.
+                        patch.categorie = '';
+                      }
+                      updateTheme(t.key, patch);
+                    }}
                     placeholder="Écris un système…"
                     emptyLabel="Choisir un système"
                   />
@@ -443,11 +476,13 @@ export default function ThemeSubmissionPage() {
                   <select
                     value={t.categorie}
                     onChange={(e) => updateTheme(t.key, { categorie: e.target.value })}
-                    className="w-full p-3 rounded-xl text-white focus:outline-none"
+                    disabled={t.systemId === collectionSystemId}
+                    className="w-full p-3 rounded-xl text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
                     style={{ backgroundColor: COLORS.inputBg, border: `1px solid ${COLORS.border}55` }}
+                    title={t.systemId === collectionSystemId ? 'Fixée automatiquement pour les Collections Personnalisées' : undefined}
                   >
                     <option value="" disabled>Choisir une catégorie</option>
-                    {categories.map((c) => (
+                    {submissionCategories.map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
                       </option>
@@ -472,15 +507,13 @@ export default function ThemeSubmissionPage() {
                     className="hidden"
                     onChange={(e) => {
                       const file = e.target.files?.[0] ?? null;
-                      // Pré-remplit "Nom du thème" avec le nom du fichier tel
-                      // quel (juste l'extension retirée) si le champ est
-                      // encore vide — ne touche jamais à un nom déjà tapé, et
-                      // ne modifie rien d'autre : "sonic_v2.zip" donne
-                      // "sonic_v2", sans aucun nettoyage.
+                      // Le nom du thème n'est plus saisi à la main : c'est
+                      // toujours le nom du .zip (extension retirée, sans
+                      // aucun nettoyage) qui fait foi. "sonic_v2.zip" donne
+                      // "sonic_v2". On resynchronise à chaque nouveau fichier
+                      // choisi, y compris pour remplacer un fichier précédent.
                       const patch: Partial<ThemeEntry> = { zipFile: file };
-                      if (file && !t.nom.trim()) {
-                        patch.nom = file.name.replace(/\.[^/.]+$/, '');
-                      }
+                      patch.nom = file ? file.name.replace(/\.[^/.]+$/, '') : '';
                       updateTheme(t.key, patch);
                     }}
                   />
@@ -570,9 +603,15 @@ export default function ThemeSubmissionPage() {
           type="button"
           onClick={handleSubmit}
           disabled={!canSubmit}
-          className="w-full rounded-lg py-3 text-sm font-bold shadow-lg transition-all border disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full rounded-lg py-3 text-sm font-bold shadow-lg transition-all border disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           style={canSubmit ? primaryButtonStyle : { ...primaryButtonStyle, backgroundColor: '#4b5563', borderColor: '#6b7280' }}
         >
+          {status === 'sending' && (
+            <span
+              className="inline-block w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin shrink-0"
+              aria-hidden="true"
+            />
+          )}
           {status === 'sending'
             ? sendingMessage
             : `Envoyer ${themes.length > 1 ? `mes ${themes.length} thèmes` : 'mon thème'}`}

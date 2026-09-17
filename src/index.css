@@ -40,3 +40,15 @@ h1, h2, h3, h4 {
 .progress-indeterminate {
     animation: hyperbat-progress-indeterminate 1.1s ease-in-out infinite;
 }
+
+/* Écran de remerciement de la page "Proposer un thème" (ThemeSubmissionPage) :
+   clignotement façon "HIGH SCORE" d'arcade, et petit rebond pour le
+   personnage pixel-art. */
+@keyframes hyperbat-blink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.25; }
+}
+
+.hyperbat-highscore-blink {
+    animation: hyperbat-blink 0.9s steps(1) infinite;
+}
