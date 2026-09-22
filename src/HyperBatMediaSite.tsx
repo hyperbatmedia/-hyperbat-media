@@ -12,6 +12,7 @@ import { ThemeItem } from './types';
 import { categories, CART_MAX } from './constants';
 import { useThemeStorage } from './hooks/useThemeStorage';
 import { useThemePacksStorage } from './hooks/useThemePacksStorage';
+import { useLinksStorage } from './hooks/useLinksStorage';
 import { useSystemsLogic } from './hooks/useSystemsLogic';
 import { getThemeKey } from './utils/themeUtils';
 import Sidebar from './components/Sidebar/Sidebar';
@@ -20,6 +21,10 @@ import ThemeList from './components/ThemeList/ThemeList';
 import CartPanel from './components/CartPanel/CartPanel';
 import RecapThemesPanel from './components/RecapThemesPanel/RecapThemesPanel';
 import ThemePacksPanel from './components/ThemePacksPanel/ThemePacksPanel';
+import FeaturedBanner from './components/FeaturedBanner/FeaturedBanner';
+import ContentModal from './components/ContentModal/ContentModal';
+import type { ModalConfig } from './components/ContentModal/ContentModal';
+import type { ModalItem as LinkModalItem } from './hooks/useLinksLoader';
 import bobSystemsData from './data/bob-systems.json';
 import { resolveBobSlug } from './data/systemAliases';
 import { detectAgent } from './agent/hyperbatAgent';
@@ -332,6 +337,23 @@ export default function HyperBatMediaSite(): JSX.Element {
 
   const { themes: rawThemes, setThemes, isLoading, saveThemes } = useThemeStorage();
   const { packsData, setPacksData, savePacksData } = useThemePacksStorage();
+  const { links: linksData, setLinks: setLinksData, saveLinks } = useLinksStorage();
+
+  // ── Bandeaux "vedette" (Nouveau / À la une / À ne pas manquer) ───────────
+  // Jusqu'à 2 items, cherchés dans les items des listes modales de
+  // links.json (voir LinksTab.tsx dans l'AdminPanel). Cliquer dessus rouvre
+  // la modale complète de la liste d'origine (Outils, Tutoriels, etc.).
+  const [featuredModalConfig, setFeaturedModalConfig] = useState<ModalConfig | null>(null);
+  const featuredItems = useMemo(() => {
+    const found: { item: LinkModalItem; parentModal: ModalConfig }[] = [];
+    for (const link of linksData) {
+      if (!link.modal) continue;
+      for (const item of link.modal.items) {
+        if (item.vedette) found.push({ item, parentModal: link.modal });
+      }
+    }
+    return found.slice(0, 2);
+  }, [linksData]);
   const systemsLogic = useSystemsLogic();
   const colors = useMemo(() => getThemeColors(isDarkMode), [isDarkMode]);
 
@@ -927,7 +949,19 @@ export default function HyperBatMediaSite(): JSX.Element {
                 <AdminPanel themes={rawThemes} setThemes={setThemes} saveThemes={saveThemes}
                   systems={systemsLogic.systems} categories={categories}
                   adminTab={adminTab} setAdminTab={setAdminTab}
-                  packsData={packsData} setPacksData={setPacksData} savePacksData={savePacksData} />
+                  packsData={packsData} setPacksData={setPacksData} savePacksData={savePacksData}
+                  linksData={linksData} setLinksData={setLinksData} saveLinks={saveLinks} />
+              )}
+              {!showAdminPanel && featuredItems.length > 0 && (
+                <div className="flex flex-wrap gap-3 mb-4">
+                  {featuredItems.map(({ item, parentModal }) => (
+                    <FeaturedBanner
+                      key={item.id}
+                      item={item}
+                      onClick={() => setFeaturedModalConfig(parentModal)}
+                    />
+                  ))}
+                </div>
               )}
               {!showAdminPanel && (
                 <ThemeList viewMode={viewMode} themes={paginatedThemes}
@@ -1046,6 +1080,13 @@ export default function HyperBatMediaSite(): JSX.Element {
       {showPacksPanel && (
         <ThemePacksPanel packsData={packsData} onClose={() => setShowPacksPanel(false)} isDarkMode={isDarkMode} />
       )}
+
+      <ContentModal
+        isOpen={!!featuredModalConfig}
+        onClose={() => setFeaturedModalConfig(null)}
+        config={featuredModalConfig ?? { title: '', type: 'download', items: [] }}
+        isDarkMode={isDarkMode}
+      />
     </div>
   );
 }

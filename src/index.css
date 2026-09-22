@@ -42,8 +42,7 @@ h1, h2, h3, h4 {
 }
 
 /* Écran de remerciement de la page "Proposer un thème" (ThemeSubmissionPage) :
-   clignotement façon "HIGH SCORE" d'arcade, et petit rebond pour le
-   personnage pixel-art. */
+   clignotement façon "HIGH SCORE" d'arcade. */
 @keyframes hyperbat-blink {
     0%, 100% { opacity: 1; }
     50%      { opacity: 0.25; }
@@ -51,4 +50,11 @@ h1, h2, h3, h4 {
 
 .hyperbat-highscore-blink {
     animation: hyperbat-blink 0.9s steps(1) infinite;
+}
+
+/* Bandeau vedette page d'accueil (FeaturedBanner.tsx) : dégradé qui défile
+   en boucle sur le contour, pour attirer l'œil sans devenir agressif. */
+@keyframes hyperbat-featured-move {
+    0%   { background-position: 0% 0; }
+    100% { background-position: 300% 0; }
 }

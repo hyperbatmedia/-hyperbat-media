@@ -6,6 +6,7 @@ import {
   Database,
   Package,
   Inbox,
+  Star,
   LucideIcon
 } from 'lucide-react';
 import { ThemeItem, SystemRow, Category, ThemePacksData } from '../../types';
@@ -15,9 +16,11 @@ import SyncTab from './SyncTab';
 import ScreenScraperSyncTab from './ScreenScraperSyncTab';
 import ThemePacksTab from './ThemePacksTab';
 import SubmissionsTab from './SubmissionsTab';
+import LinksTab from './LinksTab';
+import type { Link } from '../../hooks/useLinksLoader';
 import { extractDriveFileId, isUnknownCreator } from './DriveTab/DriveHelpers';
 
-export type AdminTab = 'manage' | 'drive-import' | 'sync' | 'screenscraper-sync' | 'theme-packs' | 'submissions';
+export type AdminTab = 'manage' | 'drive-import' | 'sync' | 'screenscraper-sync' | 'theme-packs' | 'submissions' | 'links';
 
 interface AdminPanelProps {
   themes: ThemeItem[];
@@ -30,6 +33,9 @@ interface AdminPanelProps {
   packsData: ThemePacksData;
   setPacksData: Dispatch<SetStateAction<ThemePacksData>>;
   savePacksData: (data: ThemePacksData) => Promise<void>;
+  linksData: Link[];
+  setLinksData: Dispatch<SetStateAction<Link[]>>;
+  saveLinks: (links: Link[]) => Promise<void>;
 }
 
 interface TabButtonProps {
@@ -75,6 +81,9 @@ const AdminPanel: FC<AdminPanelProps> = ({
   packsData,
   setPacksData,
   savePacksData,
+  linksData,
+  setLinksData,
+  saveLinks,
 }) => {
 
   const handleImportThemes = async (newThemes: ThemeItem[]): Promise<void> => {
@@ -167,7 +176,16 @@ const AdminPanel: FC<AdminPanelProps> = ({
           <TabButton tab="screenscraper-sync" currentTab={adminTab} setAdminTab={setAdminTab} icon={Database} label="ScreenScraper Sync" />
           <TabButton tab="theme-packs" currentTab={adminTab} setAdminTab={setAdminTab} icon={Package} label="Packs mensuels" />
           <TabButton tab="submissions" currentTab={adminTab} setAdminTab={setAdminTab} icon={Inbox} label="Soumissions" />
+          <TabButton tab="links" currentTab={adminTab} setAdminTab={setAdminTab} icon={Star} label="Mise en avant" />
         </div>
+
+        {adminTab === 'links' && (
+          <LinksTab
+            linksData={linksData}
+            setLinksData={setLinksData}
+            saveLinks={saveLinks}
+          />
+        )}
 
         {adminTab === 'theme-packs' && (
           <ThemePacksTab

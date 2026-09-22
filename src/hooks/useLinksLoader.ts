@@ -10,6 +10,9 @@ export interface ModalItem {
   description?: string;
   imageUrl?: string;
   downloadUrl?: string;
+  /** Badge de mise en avant sur la page d'accueil (2 emplacements max au
+   *  total, tous items/listes confondus — voir LinksTab.tsx). */
+  vedette?: 'nouveau' | 'a-la-une' | 'a-ne-pas-manquer';
 }
 
 export interface ModalConfig {
