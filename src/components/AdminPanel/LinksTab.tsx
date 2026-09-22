@@ -121,13 +121,15 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
 
   // Carte en cours d'édition (une seule à la fois, id d'item ou de lien).
   const [editingId, setEditingId] = useState<string | null>(null);
-  // Sections repliées/dépliées (Outils, Tutoriels, etc. + Thèmes HyperBat).
-  const [openSections, setOpenSections] = useState<Set<string>>(new Set());
-  const toggleSection = (id: string) => setOpenSections(prev => {
-    const next = new Set(prev);
-    next.has(id) ? next.delete(id) : next.add(id);
-    return next;
-  });
+  // Une seule section ouverte à la fois (Outils, Tutoriels, etc. + Thèmes
+  // HyperBat) — ouvrir une section referme automatiquement les autres, et
+  // fermer/changer de section abandonne toujours l'édition en cours plutôt
+  // que de la garder en mémoire pour la prochaine ouverture.
+  const [openSectionId, setOpenSectionId] = useState<string | null>(null);
+  const toggleSection = (id: string) => {
+    setOpenSectionId(prev => (prev === id ? null : id));
+    setEditingId(null);
+  };
   const [openSimple, setOpenSimple] = useState<Set<string>>(new Set());
   const toggleSimple = (id: string) => setOpenSimple(prev => {
     const next = new Set(prev);
@@ -238,11 +240,11 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
       <div className="bg-gray-950 border border-gray-800 rounded-xl overflow-hidden">
         {!isEditing ? (
           <div className="p-2.5">
-            <div className="relative w-full h-20 rounded-lg bg-black mb-2 overflow-hidden flex items-center justify-center">
+            <div className="relative w-full h-28 rounded-lg bg-black mb-2 overflow-hidden flex items-center justify-center">
               {preview ? (
                 <img src={preview} alt={name} className="max-w-full max-h-full object-contain" referrerPolicy="no-referrer" />
               ) : (
-                <Star className="w-5 h-5 text-gray-700" />
+                <Star className="w-6 h-6 text-gray-700" />
               )}
               {vedette && (
                 <span className="absolute top-1 left-1 text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-orange-600 text-white">
@@ -274,6 +276,17 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
                 </button>
               </div>
             </div>
+
+            {/* Aperçu visible aussi en édition, pour voir tout de suite si
+                l'image/lien YouTube collé correspond à ce qu'on attend. */}
+            <div className="w-full h-36 rounded-lg bg-black overflow-hidden flex items-center justify-center">
+              {preview ? (
+                <img src={preview} alt={name} className="max-w-full max-h-full object-contain" referrerPolicy="no-referrer" />
+              ) : (
+                <span className="text-[10px] text-gray-600">Aucun aperçu — renseigne une image ou un lien YouTube</span>
+              )}
+            </div>
+
             {children}
           </div>
         )}
@@ -304,7 +317,7 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
 
       {/* LISTES À ITEMS MULTIPLES (grille de cartes, repliable) */}
       {cardLists.map(list => {
-        const isOpen = openSections.has(list.id);
+        const isOpen = openSectionId === list.id;
         const itemCount = list.modal!.items.length;
         const listVedetteCount = list.modal!.items.filter(i => i.vedette).length;
         return (
@@ -371,7 +384,7 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
 
       {/* LIENS UNIQUES TRAITÉS COMME UNE CARTE (Thèmes HyperBat, repliable) */}
       {singleCards.map(link => {
-        const isOpen = openSections.has(link.id);
+        const isOpen = openSectionId === link.id;
         return (
           <div key={link.id} className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
             <button
