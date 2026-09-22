@@ -28,6 +28,13 @@ export interface Link {
   location: 'header' | 'list';
   position?: number;
   modal?: ModalConfig;
+  /** Champs optionnels pour un lien "simple" affiché comme une carte dans
+   *  l'AdminPanel (ex: "Thèmes HyperBat", qui n'a pas de modale/items mais
+   *  doit quand même pouvoir avoir une image/description/vedette). */
+  creator?: string;
+  description?: string;
+  imageUrl?: string;
+  vedette?: 'nouveau' | 'a-la-une' | 'a-ne-pas-manquer';
 }
 
 /**

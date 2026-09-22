@@ -16,7 +16,7 @@ const DEFAULT_SECTIONS = {
 
 export const generateSystems = (cats: Category[], data: SystemsDataStructure, icons: SectionIconsStructure): SystemRow[] => {
   const result: SystemRow[] = [
-    { id: 'all', name: 'Tous les systèmes', categories: [] },
+    { id: 'all', name: 'Tout réinitialiser', categories: [] },
     { id: 'tools', name: 'Outils', categories: [] },
     { id: 'tutorials', name: 'Tutoriels', categories: [] },
     { id: 'main-themes', name: 'THÈMES HYPERBAT', categories: [] },

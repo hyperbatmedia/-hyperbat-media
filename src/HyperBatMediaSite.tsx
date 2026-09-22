@@ -345,11 +345,26 @@ export default function HyperBatMediaSite(): JSX.Element {
   // la modale complète de la liste d'origine (Outils, Tutoriels, etc.).
   const [featuredModalConfig, setFeaturedModalConfig] = useState<ModalConfig | null>(null);
   const featuredItems = useMemo(() => {
-    const found: { item: LinkModalItem; parentModal: ModalConfig }[] = [];
+    const found: { item: LinkModalItem; onOpen: () => void }[] = [];
     for (const link of linksData) {
-      if (!link.modal) continue;
-      for (const item of link.modal.items) {
-        if (item.vedette) found.push({ item, parentModal: link.modal });
+      if (link.modal) {
+        for (const item of link.modal.items) {
+          if (item.vedette) found.push({ item, onOpen: () => setFeaturedModalConfig(link.modal!) });
+        }
+      } else if (link.vedette) {
+        // Lien unique sans modale (ex: "Thèmes HyperBat") : on le présente
+        // comme un item de carte, et le clic ouvre son URL directement
+        // plutôt qu'une modale qui n'existe pas pour lui.
+        const asItem: LinkModalItem = {
+          id: link.id,
+          name: link.name,
+          creator: link.creator ?? '',
+          description: link.description,
+          imageUrl: link.imageUrl,
+          downloadUrl: link.url,
+          vedette: link.vedette,
+        };
+        found.push({ item: asItem, onOpen: () => window.open(link.url, '_blank', 'noopener,noreferrer') });
       }
     }
     return found.slice(0, 2);
@@ -921,7 +936,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                     <Gamepad2 className="w-4 h-4" style={{ color: '#FFA500' }} />
                     <span style={{ color: colors.textSecondary }}>Système:</span>
                     <span className="font-bold" style={{ color: '#FFA500' }}>
-                      {systemsLogic.selectedSystem === 'all' ? 'Tous les systèmes' : systemsLogic.systems.find(s => s.id === systemsLogic.selectedSystem)?.name || systemsLogic.selectedSystem}
+                      {systemsLogic.selectedSystem === 'all' ? 'Tout réinitialiser' : systemsLogic.systems.find(s => s.id === systemsLogic.selectedSystem)?.name || systemsLogic.selectedSystem}
                     </span>
                   </div>
                   <span style={{ color: colors.textSecondary }}>•</span>
@@ -954,11 +969,11 @@ export default function HyperBatMediaSite(): JSX.Element {
               )}
               {!showAdminPanel && featuredItems.length > 0 && (
                 <div className="flex flex-wrap gap-3 mb-4">
-                  {featuredItems.map(({ item, parentModal }) => (
+                  {featuredItems.map(({ item, onOpen }) => (
                     <FeaturedBanner
                       key={item.id}
                       item={item}
-                      onClick={() => setFeaturedModalConfig(parentModal)}
+                      onClick={onOpen}
                     />
                   ))}
                 </div>
