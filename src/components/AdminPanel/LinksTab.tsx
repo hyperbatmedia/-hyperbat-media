@@ -12,6 +12,24 @@ import React, { useState } from 'react';
 import { Star, Sparkles, Flame, Trash2, Plus, Loader2, Globe, HelpCircle, X, Pencil, ChevronDown } from 'lucide-react';
 import type { Link, ModalItem } from '../../hooks/useLinksLoader';
 
+// Convertit un lien de partage Google Drive en URL affichable directement
+// dans un <img> — même logique que ContentModal.tsx / HyperBatMediaSite.tsx
+// (dupliquée ici comme ailleurs dans le code, pas de utils partagé pour ça).
+const convertGoogleDriveUrl = (url: string, isImage: boolean = false): string => {
+  if (!url || typeof url !== 'string') return url;
+  if (url.includes('/thumbnail?') || url.includes('/uc?') || url.includes('lh3.googleusercontent.com')) return url;
+  let fileId = '';
+  let match = url.match(/\/file\/d\/([a-zA-Z0-9_-]{25,})/);
+  if (match) fileId = match[1];
+  if (!fileId) { match = url.match(/\/(?:folders|d)\/([a-zA-Z0-9_-]{25,})/); if (match) fileId = match[1]; }
+  if (!fileId) { match = url.match(/[?&]id=([a-zA-Z0-9_-]{25,})/); if (match) fileId = match[1]; }
+  if (!fileId) { match = url.match(/open\?id=([a-zA-Z0-9_-]{25,})/); if (match) fileId = match[1]; }
+  if (!fileId && /^[a-zA-Z0-9_-]{25,40}$/.test(url.trim())) fileId = url.trim();
+  if (!fileId) return url;
+  if (isImage) return `https://lh3.googleusercontent.com/d/${fileId}=w400`;
+  return `https://drive.google.com/uc?id=${fileId}&export=download`;
+};
+
 const GITHUB_OWNER = 'hyperbatmedia';
 const GITHUB_REPO = '-hyperbat-media';
 const GITHUB_BRANCH = 'main';
@@ -88,7 +106,13 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
 
   // Carte en cours d'édition (une seule à la fois, id d'item ou de lien).
   const [editingId, setEditingId] = useState<string | null>(null);
-  // Liens simples (Discord/ARRM) repliés/dépliés individuellement.
+  // Sections repliées/dépliées (Outils, Tutoriels, etc. + Thèmes HyperBat).
+  const [openSections, setOpenSections] = useState<Set<string>>(new Set());
+  const toggleSection = (id: string) => setOpenSections(prev => {
+    const next = new Set(prev);
+    next.has(id) ? next.delete(id) : next.add(id);
+    return next;
+  });
   const [openSimple, setOpenSimple] = useState<Set<string>>(new Set());
   const toggleSimple = (id: string) => setOpenSimple(prev => {
     const next = new Set(prev);
@@ -199,7 +223,7 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
           <div className="p-2.5">
             <div className="relative w-full h-16 rounded-lg bg-gray-800 mb-2 overflow-hidden flex items-center justify-center">
               {imageUrl ? (
-                <img src={imageUrl} alt={name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                <img src={convertGoogleDriveUrl(imageUrl, true)} alt={name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               ) : (
                 <Star className="w-5 h-5 text-gray-700" />
               )}
@@ -260,63 +284,102 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
         </button>
       </div>
 
-      {/* LISTES À ITEMS MULTIPLES (grille de cartes) */}
-      {cardLists.map(list => (
-        <div key={list.id}>
-          <h3 className="text-sm font-bold text-orange-400 uppercase tracking-wide mb-2">{list.modal!.title}</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {list.modal!.items.map(item => (
-              <Card
-                key={item.id}
-                id={item.id} name={item.name} creator={item.creator} imageUrl={item.imageUrl} vedette={item.vedette}
-                isEditing={editingId === item.id}
-                onEdit={() => setEditingId(item.id)}
-                onDelete={() => removeItem(list.id, item.id)}
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <Field placeholder="Nom" value={item.name} onChange={v => updateItem(list.id, item.id, { name: v })} />
-                  <Field placeholder="Créateur" value={item.creator} onChange={v => updateItem(list.id, item.id, { creator: v })} />
-                  <Field placeholder="Lien de téléchargement" value={item.downloadUrl ?? ''} onChange={v => updateItem(list.id, item.id, { downloadUrl: v })} span2 />
-                  <Field placeholder="Image (URL)" value={item.imageUrl ?? ''} onChange={v => updateItem(list.id, item.id, { imageUrl: v })} span2 />
-                  <Field placeholder="Description" value={item.description ?? ''} onChange={v => updateItem(list.id, item.id, { description: v })} span2 area />
-                </div>
-                <VedettePicker value={item.vedette} onPick={v => toggleVedette(item.vedette, val => updateItem(list.id, item.id, { vedette: val }), v)} />
-              </Card>
-            ))}
-
+      {/* LISTES À ITEMS MULTIPLES (grille de cartes, repliable) */}
+      {cardLists.map(list => {
+        const isOpen = openSections.has(list.id);
+        const itemCount = list.modal!.items.length;
+        const listVedetteCount = list.modal!.items.filter(i => i.vedette).length;
+        return (
+          <div key={list.id} className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
             <button
-              onClick={() => addItem(list.id)}
-              className="border-2 border-dashed border-gray-700 hover:border-cyan-500 rounded-xl flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-cyan-400 transition-colors py-4"
+              onClick={() => toggleSection(list.id)}
+              className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-800/60 transition-colors"
             >
-              <Plus className="w-5 h-5" />
-              <span className="text-[10px] font-semibold">Ajouter un item</span>
+              <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
+              <h3 className="text-sm font-bold text-orange-400 uppercase tracking-wide flex-1 text-left">{list.modal!.title}</h3>
+              <span className="text-xs text-gray-500">{itemCount} item{itemCount > 1 ? 's' : ''}</span>
+              {listVedetteCount > 0 && (
+                <span className="text-xs bg-orange-600/20 text-orange-400 border border-orange-600/40 rounded-full px-2 py-0.5">
+                  {listVedetteCount} vedette
+                </span>
+              )}
             </button>
-          </div>
-        </div>
-      ))}
 
-      {/* LIENS UNIQUES TRAITÉS COMME UNE CARTE (Thèmes HyperBat) */}
-      {singleCards.map(link => (
-        <div key={link.id}>
-          <h3 className="text-sm font-bold text-orange-400 uppercase tracking-wide mb-2">{link.name || 'Thèmes HyperBat'}</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            <Card
-              id={link.id} name={link.name} creator={link.creator} imageUrl={link.imageUrl} vedette={link.vedette}
-              isEditing={editingId === link.id}
-              onEdit={() => setEditingId(link.id)}
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <Field placeholder="Nom" value={link.name} onChange={v => updateLink(link.id, { name: v })} />
-                <Field placeholder="Créateur" value={link.creator ?? ''} onChange={v => updateLink(link.id, { creator: v })} />
-                <Field placeholder="Lien" value={link.url ?? ''} onChange={v => updateLink(link.id, { url: v })} span2 />
-                <Field placeholder="Image (URL)" value={link.imageUrl ?? ''} onChange={v => updateLink(link.id, { imageUrl: v })} span2 />
-                <Field placeholder="Description" value={link.description ?? ''} onChange={v => updateLink(link.id, { description: v })} span2 area />
+            {isOpen && (
+              <div className="px-4 pb-4 border-t border-gray-800 pt-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {list.modal!.items.map(item => (
+                    <Card
+                      key={item.id}
+                      id={item.id} name={item.name} creator={item.creator} imageUrl={item.imageUrl} vedette={item.vedette}
+                      isEditing={editingId === item.id}
+                      onEdit={() => setEditingId(item.id)}
+                      onDelete={() => removeItem(list.id, item.id)}
+                    >
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <Field placeholder="Nom" value={item.name} onChange={v => updateItem(list.id, item.id, { name: v })} />
+                        <Field placeholder="Créateur" value={item.creator} onChange={v => updateItem(list.id, item.id, { creator: v })} />
+                        <Field placeholder="Lien de téléchargement" value={item.downloadUrl ?? ''} onChange={v => updateItem(list.id, item.id, { downloadUrl: v })} span2 />
+                        <Field placeholder="Image (URL)" value={item.imageUrl ?? ''} onChange={v => updateItem(list.id, item.id, { imageUrl: v })} span2 />
+                        <Field placeholder="Description" value={item.description ?? ''} onChange={v => updateItem(list.id, item.id, { description: v })} span2 area />
+                      </div>
+                      <VedettePicker value={item.vedette} onPick={v => toggleVedette(item.vedette, val => updateItem(list.id, item.id, { vedette: val }), v)} />
+                    </Card>
+                  ))}
+
+                  <button
+                    onClick={() => addItem(list.id)}
+                    className="border-2 border-dashed border-gray-700 hover:border-cyan-500 rounded-xl flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-cyan-400 transition-colors py-4"
+                  >
+                    <Plus className="w-5 h-5" />
+                    <span className="text-[10px] font-semibold">Ajouter un item</span>
+                  </button>
+                </div>
               </div>
-              <VedettePicker value={link.vedette} onPick={v => toggleVedette(link.vedette, val => updateLink(link.id, { vedette: val }), v)} />
-            </Card>
+            )}
           </div>
-        </div>
-      ))}
+        );
+      })}
+
+      {/* LIENS UNIQUES TRAITÉS COMME UNE CARTE (Thèmes HyperBat, repliable) */}
+      {singleCards.map(link => {
+        const isOpen = openSections.has(link.id);
+        return (
+          <div key={link.id} className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
+            <button
+              onClick={() => toggleSection(link.id)}
+              className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-800/60 transition-colors"
+            >
+              <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
+              <h3 className="text-sm font-bold text-orange-400 uppercase tracking-wide flex-1 text-left">{link.name || 'Thèmes HyperBat'}</h3>
+              {link.vedette && (
+                <span className="text-xs bg-orange-600/20 text-orange-400 border border-orange-600/40 rounded-full px-2 py-0.5">1 vedette</span>
+              )}
+            </button>
+
+            {isOpen && (
+              <div className="px-4 pb-4 border-t border-gray-800 pt-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  <Card
+                    id={link.id} name={link.name} creator={link.creator} imageUrl={link.imageUrl} vedette={link.vedette}
+                    isEditing={editingId === link.id}
+                    onEdit={() => setEditingId(link.id)}
+                  >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <Field placeholder="Nom" value={link.name} onChange={v => updateLink(link.id, { name: v })} />
+                      <Field placeholder="Créateur" value={link.creator ?? ''} onChange={v => updateLink(link.id, { creator: v })} />
+                      <Field placeholder="Lien" value={link.url ?? ''} onChange={v => updateLink(link.id, { url: v })} span2 />
+                      <Field placeholder="Image (URL)" value={link.imageUrl ?? ''} onChange={v => updateLink(link.id, { imageUrl: v })} span2 />
+                      <Field placeholder="Description" value={link.description ?? ''} onChange={v => updateLink(link.id, { description: v })} span2 area />
+                    </div>
+                    <VedettePicker value={link.vedette} onPick={v => toggleVedette(link.vedette, val => updateLink(link.id, { vedette: val }), v)} />
+                  </Card>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
 
       {/* LIENS SIMPLES (Discord, ARRM) */}
       <div>

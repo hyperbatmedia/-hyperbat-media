@@ -7,6 +7,23 @@ import React from 'react';
 import { Sparkles, Star, Flame } from 'lucide-react';
 import type { ModalItem } from '../../hooks/useLinksLoader';
 
+// Même conversion Google Drive que ContentModal.tsx / LinksTab.tsx — sans
+// elle, un lien de partage Drive ne s'affiche pas comme <img>.
+const convertGoogleDriveUrl = (url: string, isImage: boolean = false): string => {
+  if (!url || typeof url !== 'string') return url;
+  if (url.includes('/thumbnail?') || url.includes('/uc?') || url.includes('lh3.googleusercontent.com')) return url;
+  let fileId = '';
+  let match = url.match(/\/file\/d\/([a-zA-Z0-9_-]{25,})/);
+  if (match) fileId = match[1];
+  if (!fileId) { match = url.match(/\/(?:folders|d)\/([a-zA-Z0-9_-]{25,})/); if (match) fileId = match[1]; }
+  if (!fileId) { match = url.match(/[?&]id=([a-zA-Z0-9_-]{25,})/); if (match) fileId = match[1]; }
+  if (!fileId) { match = url.match(/open\?id=([a-zA-Z0-9_-]{25,})/); if (match) fileId = match[1]; }
+  if (!fileId && /^[a-zA-Z0-9_-]{25,40}$/.test(url.trim())) fileId = url.trim();
+  if (!fileId) return url;
+  if (isImage) return `https://lh3.googleusercontent.com/d/${fileId}=w400`;
+  return `https://drive.google.com/uc?id=${fileId}&export=download`;
+};
+
 const BADGE_CONFIG: Record<NonNullable<ModalItem['vedette']>, { label: string; Icon: React.FC<{ className?: string }>; bg: string; text: string }> = {
   'nouveau':          { label: '🆕 Nouveau',          Icon: Sparkles, bg: '#FFD700', text: '#1a1a1a' },
   'a-la-une':         { label: '⭐ À la une',          Icon: Star,     bg: '#FF8C00', text: '#1a1a1a' },
@@ -34,7 +51,7 @@ const FeaturedBanner: React.FC<FeaturedBannerProps> = ({ item, onClick }) => {
       <div className="rounded-[10px] p-3 flex items-center gap-3 bg-gray-900 hover:bg-gray-800 transition-colors">
         <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-gray-800 overflow-hidden flex items-center justify-center">
           {item.imageUrl ? (
-            <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+            <img src={convertGoogleDriveUrl(item.imageUrl, true)} alt={item.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
           ) : (
             <Star className="w-5 h-5 text-gray-600" />
           )}
