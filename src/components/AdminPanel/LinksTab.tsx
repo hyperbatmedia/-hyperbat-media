@@ -30,6 +30,21 @@ const convertGoogleDriveUrl = (url: string, isImage: boolean = false): string =>
   return `https://drive.google.com/uc?id=${fileId}&export=download`;
 };
 
+// Aperçu à afficher pour une carte : image classique si dispo, sinon
+// miniature YouTube dérivée de youtubeId (les tutoriels n'ont souvent que
+// ça, pas de champ imageUrl).
+const cardPreviewUrl = (imageUrl?: string, youtubeId?: string): string => {
+  if (imageUrl) return convertGoogleDriveUrl(imageUrl, true);
+  if (youtubeId) return `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
+  return '';
+};
+
+// Extrait l'ID vidéo d'une URL YouTube classique ou courte.
+const extractYoutubeId = (url: string): string => {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  return match ? match[1] : '';
+};
+
 const GITHUB_OWNER = 'hyperbatmedia';
 const GITHUB_REPO = '-hyperbat-media';
 const GITHUB_BRANCH = 'main';
@@ -214,16 +229,18 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
   // Petite carte réutilisée pour un item de liste ET pour un lien unique
   // (Thèmes HyperBat) — même apparence, mêmes champs.
   const Card: React.FC<{
-    id: string; name: string; creator?: string; imageUrl?: string; vedette?: Vedette;
+    id: string; name: string; creator?: string; imageUrl?: string; youtubeId?: string; vedette?: Vedette;
     onEdit: () => void; onDelete?: () => void; isEditing: boolean; children: React.ReactNode;
-  }> = ({ name, creator, imageUrl, vedette, onEdit, onDelete, isEditing, children }) => (
+  }> = ({ name, creator, imageUrl, youtubeId, vedette, onEdit, onDelete, isEditing, children }) => {
+    const preview = cardPreviewUrl(imageUrl, youtubeId);
+    return (
     <div className={isEditing ? 'sm:col-span-2' : ''}>
       <div className="bg-gray-950 border border-gray-800 rounded-xl overflow-hidden">
         {!isEditing ? (
           <div className="p-2.5">
-            <div className="relative w-full h-16 rounded-lg bg-gray-800 mb-2 overflow-hidden flex items-center justify-center">
-              {imageUrl ? (
-                <img src={convertGoogleDriveUrl(imageUrl, true)} alt={name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+            <div className="relative w-full h-20 rounded-lg bg-black mb-2 overflow-hidden flex items-center justify-center">
+              {preview ? (
+                <img src={preview} alt={name} className="max-w-full max-h-full object-contain" referrerPolicy="no-referrer" />
               ) : (
                 <Star className="w-5 h-5 text-gray-700" />
               )}
@@ -262,7 +279,8 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
         )}
       </div>
     </div>
-  );
+    );
+  };
 
   return (
     <div className="text-white space-y-6">
@@ -308,10 +326,12 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
             {isOpen && (
               <div className="px-4 pb-4 border-t border-gray-800 pt-3">
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {list.modal!.items.map(item => (
+                  {list.modal!.items
+                    .filter(item => !editingId || editingId === item.id || !list.modal!.items.some(i => i.id === editingId))
+                    .map(item => (
                     <Card
                       key={item.id}
-                      id={item.id} name={item.name} creator={item.creator} imageUrl={item.imageUrl} vedette={item.vedette}
+                      id={item.id} name={item.name} creator={item.creator} imageUrl={item.imageUrl} youtubeId={item.youtubeId} vedette={item.vedette}
                       isEditing={editingId === item.id}
                       onEdit={() => setEditingId(item.id)}
                       onDelete={() => removeItem(list.id, item.id)}
@@ -320,6 +340,12 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
                         <Field placeholder="Nom" value={item.name} onChange={v => updateItem(list.id, item.id, { name: v })} />
                         <Field placeholder="Créateur" value={item.creator} onChange={v => updateItem(list.id, item.id, { creator: v })} />
                         <Field placeholder="Lien de téléchargement" value={item.downloadUrl ?? ''} onChange={v => updateItem(list.id, item.id, { downloadUrl: v })} span2 />
+                        <Field
+                          placeholder="Lien YouTube"
+                          value={item.youtubeUrl ?? ''}
+                          onChange={v => updateItem(list.id, item.id, { youtubeUrl: v, youtubeId: extractYoutubeId(v) })}
+                          span2
+                        />
                         <Field placeholder="Image (URL)" value={item.imageUrl ?? ''} onChange={v => updateItem(list.id, item.id, { imageUrl: v })} span2 />
                         <Field placeholder="Description" value={item.description ?? ''} onChange={v => updateItem(list.id, item.id, { description: v })} span2 area />
                       </div>
@@ -327,13 +353,15 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
                     </Card>
                   ))}
 
-                  <button
-                    onClick={() => addItem(list.id)}
-                    className="border-2 border-dashed border-gray-700 hover:border-cyan-500 rounded-xl flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-cyan-400 transition-colors py-4"
-                  >
-                    <Plus className="w-5 h-5" />
-                    <span className="text-[10px] font-semibold">Ajouter un item</span>
-                  </button>
+                  {(!editingId || !list.modal!.items.some(i => i.id === editingId)) && (
+                    <button
+                      onClick={() => addItem(list.id)}
+                      className="border-2 border-dashed border-gray-700 hover:border-cyan-500 rounded-xl flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-cyan-400 transition-colors py-4"
+                    >
+                      <Plus className="w-5 h-5" />
+                      <span className="text-[10px] font-semibold">Ajouter un item</span>
+                    </button>
+                  )}
                 </div>
               </div>
             )}
