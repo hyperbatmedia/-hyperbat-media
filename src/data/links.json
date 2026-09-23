@@ -85,6 +85,48 @@
           "creator": "KevoBato",
           "youtubeUrl": "https://www.youtube.com/watch?v=wxJ23CkBESY",
           "youtubeId": "wxJ23CkBESY"
+        },
+        {
+          "id": "item-1790158746964-733559",
+          "name": "Conversion Theme hyperspin + Animations et ces possibilités",
+          "creator": "Phenix",
+          "description": "Je vous présente en avant première la conversion des thèmes hyperspin v1 en 1920x080. Avec en plus la démonstration des possiblités des animations et paramètres ainsi que la 1ere partie de la création d'animations complètes en ajoutant des étapes et les enregistrer.\nProchaine étapes le mode \"Dessin et plumes\"",
+          "imageUrl": "",
+          "downloadUrl": "",
+          "youtubeUrl": "https://www.youtube.com/watch?v=E3ABSIfVo0Y&list=PLs2b-mpQ5QyBYF7RnqLovmPsZgdnRhJbD",
+          "youtubeId": "E3ABSIfVo0Y",
+          "vedette": "a-ne-pas-manquer"
+        },
+        {
+          "id": "item-1790158974727-862145",
+          "name": "Futur interface + Shaders + animations",
+          "creator": "Phenix",
+          "description": "https://hyperbat.phenix-dev.com/\nCréateur de thème pour retrobat\nOn parle des nouveautés et des animations rapidement ;)",
+          "imageUrl": "",
+          "downloadUrl": "",
+          "youtubeUrl": "https://www.youtube.com/watch?v=7WuCDRb5h60&list=PLs2b-mpQ5QyBYF7RnqLovmPsZgdnRhJbD&index=2",
+          "youtubeId": "7WuCDRb5h60"
+        },
+        {
+          "id": "item-1790159099117-248633",
+          "name": "Edition image",
+          "creator": "Phenix",
+          "description": "Cette 2eme partie présente les options de modifications des images. Comme photoshop !!\nhttps://hyperbat.phenix-dev.com/index.html",
+          "imageUrl": "",
+          "downloadUrl": "",
+          "youtubeUrl": "https://www.youtube.com/watch?v=S7Om-8p0gac&list=PLs2b-mpQ5QyBYF7RnqLovmPsZgdnRhJbD&index=3",
+          "youtubeId": "S7Om-8p0gac"
+        },
+        {
+          "id": "item-1790159195530-200544",
+          "name": "Présentation hyperbat, Installation et interface",
+          "creator": "Phenix",
+          "description": "Vidéo de présentation de l'application hyperbat, installation, et interface\nhttps://hyperbat.phenix-dev.com/",
+          "imageUrl": "",
+          "downloadUrl": "",
+          "youtubeUrl": "https://www.youtube.com/watch?v=lIuQhsa8ZGw&list=PLs2b-mpQ5QyBYF7RnqLovmPsZgdnRhJbD&index=4",
+          "youtubeId": "lIuQhsa8ZGw",
+          "vedette": "nouveau"
         }
       ]
     }
@@ -107,7 +149,7 @@
           "downloadUrl": "https://drive.google.com/drive/folders/1LYTtyc8I0LXbcSCeK_MwN-pWzt9_9N5m?usp=sharing",
           "creator": "Dav"
         },
-		{
+        {
           "id": "tool-002",
           "name": "HyperBat",
           "description": "HyperBat est un éditeur visuel de thèmes pour RetroBat, pensé pour le thème HyperBat de Bob Morane (style HyperSpin). Composez, animez et exportez vos thèmes en quelques clics.",
@@ -115,7 +157,7 @@
           "downloadUrl": "https://hyperbat.phenix-dev.com/",
           "creator": "Phenix"
         },
-		{
+        {
           "id": "tool-003",
           "name": "Hyperbat gamethee automatcher",
           "description": "Outil de renommage en masse avec l'ajout de la comparaison des gameId Sreenscraper.Vous aurez besoin d'un json disponible sur la vitrine",
@@ -167,7 +209,7 @@
           "downloadUrl": "https://github.com/BobMoraneRetro/one4all4one-coinopsfriends-bobmorane",
           "creator": "Bob Morane"
         },
-		{
+        {
           "id": "bob-theme-003",
           "name": "NESiCAxLive",
           "description": "Thème RetroBat / Batocera créé par Bob Morane.",
