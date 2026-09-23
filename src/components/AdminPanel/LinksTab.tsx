@@ -110,6 +110,75 @@ const VedettePicker: React.FC<{ value?: Vedette; onPick: (v: Vedette) => void }>
   </div>
 );
 
+// Carte item/lien, à la fois en aperçu (avec bouton "Modifier") et en
+// édition (formulaire pré-rempli). Défini AU NIVEAU DU FICHIER, pas à
+// l'intérieur de LinksTab — sinon React recrée ce composant à chaque
+// frappe dans un champ, et les inputs perdent le focus à chaque lettre.
+const Card: React.FC<{
+  name: string; creator?: string; imageUrl?: string; youtubeId?: string; vedette?: Vedette;
+  onEdit: () => void; onDelete?: () => void; onClose: () => void; isEditing: boolean; children: React.ReactNode;
+}> = ({ name, creator, imageUrl, youtubeId, vedette, onEdit, onDelete, onClose, isEditing, children }) => {
+  const preview = cardPreviewUrl(imageUrl, youtubeId);
+  return (
+    <div className={isEditing ? 'sm:col-span-2' : ''}>
+      <div className="bg-gray-950 border border-gray-800 rounded-xl overflow-hidden">
+        {!isEditing ? (
+          <div className="p-2.5">
+            <div className="relative w-full h-28 rounded-lg bg-black mb-2 overflow-hidden flex items-center justify-center">
+              {preview ? (
+                <img src={preview} alt={name} className="max-w-full max-h-full object-contain" referrerPolicy="no-referrer" />
+              ) : (
+                <Star className="w-6 h-6 text-gray-700" />
+              )}
+              {vedette && (
+                <span className="absolute top-1 left-1 text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-orange-600 text-white">
+                  {VEDETTE_OPTIONS.find(v => v.value === vedette)?.label}
+                </span>
+              )}
+            </div>
+            <p className="text-xs font-bold text-white truncate">{name || '(sans nom)'}</p>
+            {creator && <p className="text-[10px] text-gray-500 truncate mb-2">par {creator}</p>}
+            <button
+              onClick={onEdit}
+              className="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-gray-200 bg-gray-700 hover:bg-gray-600 rounded-lg py-1.5 mt-2 transition-colors"
+            >
+              <Pencil className="w-3 h-3" /> Modifier
+            </button>
+          </div>
+        ) : (
+          <div className="p-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-cyan-400">Édition — {name || '(sans nom)'}</span>
+              <div className="flex items-center gap-1">
+                {onDelete && (
+                  <button onClick={onDelete} title="Supprimer" className="p-1.5 rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-colors">
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
+                <button onClick={onClose} title="Fermer" className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-gray-800 transition-colors">
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Aperçu visible aussi en édition, pour voir tout de suite si
+                l'image/lien YouTube collé correspond à ce qu'on attend. */}
+            <div className="w-full h-36 rounded-lg bg-black overflow-hidden flex items-center justify-center">
+              {preview ? (
+                <img src={preview} alt={name} className="max-w-full max-h-full object-contain" referrerPolicy="no-referrer" />
+              ) : (
+                <span className="text-[10px] text-gray-600">Aucun aperçu — renseigne une image ou un lien YouTube</span>
+              )}
+            </div>
+
+            {children}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks }) => {
   const [draft, setDraft] = useState<Link[]>(() => linksData.map(l => ({ ...l, modal: l.modal ? { ...l.modal, items: [...l.modal.items] } : l.modal })));
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
@@ -230,71 +299,6 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
 
   // Petite carte réutilisée pour un item de liste ET pour un lien unique
   // (Thèmes HyperBat) — même apparence, mêmes champs.
-  const Card: React.FC<{
-    id: string; name: string; creator?: string; imageUrl?: string; youtubeId?: string; vedette?: Vedette;
-    onEdit: () => void; onDelete?: () => void; isEditing: boolean; children: React.ReactNode;
-  }> = ({ name, creator, imageUrl, youtubeId, vedette, onEdit, onDelete, isEditing, children }) => {
-    const preview = cardPreviewUrl(imageUrl, youtubeId);
-    return (
-    <div className={isEditing ? 'sm:col-span-2' : ''}>
-      <div className="bg-gray-950 border border-gray-800 rounded-xl overflow-hidden">
-        {!isEditing ? (
-          <div className="p-2.5">
-            <div className="relative w-full h-28 rounded-lg bg-black mb-2 overflow-hidden flex items-center justify-center">
-              {preview ? (
-                <img src={preview} alt={name} className="max-w-full max-h-full object-contain" referrerPolicy="no-referrer" />
-              ) : (
-                <Star className="w-6 h-6 text-gray-700" />
-              )}
-              {vedette && (
-                <span className="absolute top-1 left-1 text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-orange-600 text-white">
-                  {VEDETTE_OPTIONS.find(v => v.value === vedette)?.label}
-                </span>
-              )}
-            </div>
-            <p className="text-xs font-bold text-white truncate">{name || '(sans nom)'}</p>
-            {creator && <p className="text-[10px] text-gray-500 truncate mb-2">par {creator}</p>}
-            <button
-              onClick={onEdit}
-              className="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-gray-200 bg-gray-700 hover:bg-gray-600 rounded-lg py-1.5 mt-2 transition-colors"
-            >
-              <Pencil className="w-3 h-3" /> Modifier
-            </button>
-          </div>
-        ) : (
-          <div className="p-3 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-cyan-400">Édition — {name || '(sans nom)'}</span>
-              <div className="flex items-center gap-1">
-                {onDelete && (
-                  <button onClick={onDelete} title="Supprimer" className="p-1.5 rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-colors">
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                )}
-                <button onClick={() => setEditingId(null)} title="Fermer" className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-gray-800 transition-colors">
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Aperçu visible aussi en édition, pour voir tout de suite si
-                l'image/lien YouTube collé correspond à ce qu'on attend. */}
-            <div className="w-full h-36 rounded-lg bg-black overflow-hidden flex items-center justify-center">
-              {preview ? (
-                <img src={preview} alt={name} className="max-w-full max-h-full object-contain" referrerPolicy="no-referrer" />
-              ) : (
-                <span className="text-[10px] text-gray-600">Aucun aperçu — renseigne une image ou un lien YouTube</span>
-              )}
-            </div>
-
-            {children}
-          </div>
-        )}
-      </div>
-    </div>
-    );
-  };
-
   return (
     <div className="text-white space-y-6">
 
@@ -344,9 +348,10 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
                     .map(item => (
                     <Card
                       key={item.id}
-                      id={item.id} name={item.name} creator={item.creator} imageUrl={item.imageUrl} youtubeId={item.youtubeId} vedette={item.vedette}
+                      name={item.name} creator={item.creator} imageUrl={item.imageUrl} youtubeId={item.youtubeId} vedette={item.vedette}
                       isEditing={editingId === item.id}
                       onEdit={() => setEditingId(item.id)}
+                      onClose={() => setEditingId(null)}
                       onDelete={() => removeItem(list.id, item.id)}
                     >
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -402,9 +407,10 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
               <div className="px-4 pb-4 border-t border-gray-800 pt-3">
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   <Card
-                    id={link.id} name={link.name} creator={link.creator} imageUrl={link.imageUrl} vedette={link.vedette}
+                    name={link.name} creator={link.creator} imageUrl={link.imageUrl} vedette={link.vedette}
                     isEditing={editingId === link.id}
                     onEdit={() => setEditingId(link.id)}
+                    onClose={() => setEditingId(null)}
                   >
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       <Field placeholder="Nom" value={link.name} onChange={v => updateLink(link.id, { name: v })} />
