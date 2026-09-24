@@ -191,18 +191,11 @@ const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlight
       {/* Contenu */}
       <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
         <div>
-          {item.id !== 'tool-arrm' && (
-            <p style={{ margin: 0, fontSize: 14, fontWeight: 600, lineHeight: 1.3,
-              color: isDarkMode ? '#ffffff' : '#1a1a1a' }}>
-              {item.name}
-            </p>
-          )}
-          {item.id === 'tool-arrm' && (
-            <p style={{ margin: 0, fontSize: 14, fontWeight: 600, lineHeight: 1.3, color: isDarkMode ? '#ffffff' : '#1a1a1a' }}>
-              {item.name}
-            </p>
-          )}
-          <p style={{ margin: item.id !== 'tool-arrm' ? '4px 0 0' : 0, fontSize: 12, color: '#FF8C00' }}>
+          <p style={{ margin: 0, fontSize: 14, fontWeight: 600, lineHeight: 1.3,
+            color: isDarkMode ? '#ffffff' : '#1a1a1a' }}>
+            {item.name}
+          </p>
+          <p style={{ margin: '4px 0 0', fontSize: 12, color: '#FF8C00' }}>
             par {item.creator}
           </p>
         </div>
@@ -296,16 +289,42 @@ const YoutubeCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlighte
 const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, isDarkMode, highlightItemId }) => {
   const [search, setSearch] = useState('');
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocus = useRef<HTMLElement | null>(null);
 
-  // Fermer avec Échap
+  // Fermer avec Échap + piège du focus (Tab) à l'intérieur de la modale
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'Escape') onClose();
+    if (e.key === 'Escape') {
+      onClose();
+      return;
+    }
+    if (e.key === 'Tab' && modalRef.current) {
+      const focusable = modalRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault(); last?.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault(); first?.focus();
+      }
+    }
   }, [onClose]);
 
   useEffect(() => {
     if (isOpen) {
+      previousFocus.current = document.activeElement as HTMLElement;
       document.addEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'hidden';
+      const t = setTimeout(() => closeButtonRef.current?.focus(), 100);
+      return () => {
+        clearTimeout(t);
+        document.removeEventListener('keydown', handleKeyDown);
+        document.body.style.overflow = '';
+        previousFocus.current?.focus();
+      };
     }
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
@@ -339,6 +358,9 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="content-modal-title"
       style={{
         position: 'fixed', inset: 0, zIndex: 1000,
         background: 'rgba(0,0,0,0.85)',
@@ -347,7 +369,7 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
       }}
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div style={{
+      <div ref={modalRef} style={{
         background: isDarkMode ? '#111111' : '#ffffff',
         borderRadius: 16,
         border: '2px solid #FF8C00',
@@ -370,7 +392,7 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{ width: 4, height: 28, background: '#FF8C00', borderRadius: 2 }} />
-            <span style={{ fontSize: 18, fontWeight: 800, color: '#FF8C00', letterSpacing: '0.1em' }}>
+            <span id="content-modal-title" style={{ fontSize: 18, fontWeight: 800, color: '#FF8C00', letterSpacing: '0.1em' }}>
               {config.title}
             </span>
             <span style={{
@@ -382,6 +404,7 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
             </span>
           </div>
           <button
+            ref={closeButtonRef}
             onClick={onClose}
             style={{
               width: 34, height: 34, borderRadius: '50%',
@@ -440,7 +463,7 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
         )}
 
         {/* ── Contenu scrollable ── */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: 20 }}>
+        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: 20 }}>
           {isEmpty ? (
             <div style={{ textAlign: 'center', padding: '60px 20px', color: isDarkMode ? '#555' : '#aaa' }}>
               <ExternalLink style={{ width: 40, height: 40, marginBottom: 12, opacity: 0.4 }} />
