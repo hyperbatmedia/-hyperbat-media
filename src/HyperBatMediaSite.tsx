@@ -344,12 +344,16 @@ export default function HyperBatMediaSite(): JSX.Element {
   // links.json (voir LinksTab.tsx dans l'AdminPanel). Cliquer dessus rouvre
   // la modale complète de la liste d'origine (Outils, Tutoriels, etc.).
   const [featuredModalConfig, setFeaturedModalConfig] = useState<ModalConfig | null>(null);
+  const [featuredHighlightId, setFeaturedHighlightId] = useState<string | undefined>(undefined);
   const featuredItems = useMemo(() => {
     const found: { item: LinkModalItem; onOpen: () => void }[] = [];
     for (const link of linksData) {
       if (link.modal) {
         for (const item of link.modal.items) {
-          if (item.vedette) found.push({ item, onOpen: () => setFeaturedModalConfig(link.modal!) });
+          if (item.vedette) found.push({
+            item,
+            onOpen: () => { setFeaturedModalConfig(link.modal!); setFeaturedHighlightId(item.id); },
+          });
         }
       } else if (link.vedette) {
         // Lien unique sans modale (ex: "Thèmes HyperBat") : on le présente
@@ -1101,6 +1105,7 @@ export default function HyperBatMediaSite(): JSX.Element {
         onClose={() => setFeaturedModalConfig(null)}
         config={featuredModalConfig ?? { title: '', type: 'download', items: [] }}
         isDarkMode={isDarkMode}
+        highlightItemId={featuredHighlightId}
       />
     </div>
   );

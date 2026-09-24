@@ -137,10 +137,11 @@ const Card: React.FC<{
               )}
             </div>
             <p className="text-xs font-bold text-white truncate">{name || '(sans nom)'}</p>
-            {creator && <p className="text-[10px] text-gray-500 truncate mb-2">par {creator}</p>}
+            {creator && <p className="text-[10px] truncate mb-2" style={{ color: '#FF8C00' }}>par {creator}</p>}
             <button
               onClick={onEdit}
-              className="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-gray-200 bg-gray-700 hover:bg-gray-600 rounded-lg py-1.5 mt-2 transition-colors"
+              className="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-white rounded-lg py-1.5 mt-2 transition-opacity hover:opacity-90"
+              style={{ background: '#FF0000' }}
             >
               <Pencil className="w-3 h-3" /> Modifier
             </button>
@@ -275,7 +276,7 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: `Update links.json - ${new Date().toLocaleDateString('fr-FR')}`,
+          message: `Update links.json (${draft.reduce((n, l) => n + (l.modal ? l.modal.items.length : 1), 0)} item(s)) - ${new Date().toLocaleDateString('fr-FR')}`,
           content,
           sha,
           branch: GITHUB_BRANCH

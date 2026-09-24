@@ -1,5 +1,5 @@
 // Fichier: src/components/ContentModal/ContentModal.tsx
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { X, Search, Play, Download, ExternalLink } from 'lucide-react';
 
 // ── Conversion URL Google Drive ───────────────────────────────────────────────
@@ -43,6 +43,9 @@ interface ContentModalProps {
   onClose: () => void;
   config: ModalConfig;
   isDarkMode: boolean;
+  /** Id de l'item à faire défiler jusqu'à lui et mettre en évidence à
+   *  l'ouverture (utilisé par un bandeau "vedette" de la page d'accueil). */
+  highlightItemId?: string;
 }
 
 // ── Thumbnail YouTube ─────────────────────────────────────────────────────────
@@ -70,7 +73,7 @@ const YoutubeThumbnail: React.FC<{ youtubeId: string; name: string }> = ({ youtu
 };
 
 // ── Carte outil/thème ─────────────────────────────────────────────────────────
-const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean }> = ({ item, isDarkMode }) => {
+const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlighted?: boolean }> = ({ item, isDarkMode, isHighlighted }) => {
   const [imgError, setImgError] = useState(false);
   const convertedImageUrl = item.imageUrl ? convertGoogleDriveUrl(item.imageUrl, true) : '';
   const hasImage = !!convertedImageUrl && !imgError;
@@ -85,7 +88,8 @@ const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean }> = ({ item
     <div style={{
       background: isDarkMode ? '#1a1a1a' : '#f9f9f9',
       borderRadius: 12,
-      border: `1px solid ${isDarkMode ? '#2a2a2a' : '#e5e5e5'}`,
+      border: `2px solid ${isHighlighted ? '#FF8C00' : (isDarkMode ? '#2a2a2a' : '#e5e5e5')}`,
+      boxShadow: isHighlighted ? '0 0 0 3px rgba(255,140,0,0.25)' : undefined,
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
@@ -229,7 +233,7 @@ const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean }> = ({ item
 };
 
 // ── Carte YouTube ─────────────────────────────────────────────────────────────
-const YoutubeCard: React.FC<{ item: ModalItem; isDarkMode: boolean }> = ({ item, isDarkMode }) => {
+const YoutubeCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlighted?: boolean }> = ({ item, isDarkMode, isHighlighted }) => {
   const handleWatch = () => {
     if (item.youtubeUrl) {
       window.open(item.youtubeUrl, '_blank', 'noopener,noreferrer');
@@ -240,7 +244,8 @@ const YoutubeCard: React.FC<{ item: ModalItem; isDarkMode: boolean }> = ({ item,
     <div style={{
       background: isDarkMode ? '#1a1a1a' : '#f9f9f9',
       borderRadius: 12,
-      border: `1px solid ${isDarkMode ? '#2a2a2a' : '#e5e5e5'}`,
+      border: `2px solid ${isHighlighted ? '#FF8C00' : (isDarkMode ? '#2a2a2a' : '#e5e5e5')}`,
+      boxShadow: isHighlighted ? '0 0 0 3px rgba(255,140,0,0.25)' : undefined,
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
@@ -253,7 +258,7 @@ const YoutubeCard: React.FC<{ item: ModalItem; isDarkMode: boolean }> = ({ item,
         e.currentTarget.style.transform = 'translateY(-2px)';
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.borderColor = isDarkMode ? '#2a2a2a' : '#e5e5e5';
+        e.currentTarget.style.borderColor = isHighlighted ? '#FF8C00' : (isDarkMode ? '#2a2a2a' : '#e5e5e5');
         e.currentTarget.style.transform = 'translateY(0)';
       }}
     >
@@ -268,6 +273,11 @@ const YoutubeCard: React.FC<{ item: ModalItem; isDarkMode: boolean }> = ({ item,
             par {item.creator}
           </p>
         </div>
+        {item.description && (
+          <p style={{ margin: 0, fontSize: 12, color: isDarkMode ? '#aaaaaa' : '#666', lineHeight: 1.5 }}>
+            {item.description}
+          </p>
+        )}
         <div style={{
           marginTop: 'auto', width: '100%', padding: '7px 12px',
           background: '#FF0000', color: 'white', borderRadius: 8,
@@ -283,8 +293,9 @@ const YoutubeCard: React.FC<{ item: ModalItem; isDarkMode: boolean }> = ({ item,
 };
 
 // ── Modal principal ───────────────────────────────────────────────────────────
-const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, isDarkMode }) => {
+const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, isDarkMode, highlightItemId }) => {
   const [search, setSearch] = useState('');
+  const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // Fermer avec Échap
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -306,6 +317,16 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
   useEffect(() => {
     if (isOpen) setSearch('');
   }, [isOpen]);
+
+  // Défiler jusqu'à l'item mis en avant (venant d'un bandeau vedette de la
+  // page d'accueil) dès que la modale est ouverte et affichée.
+  useEffect(() => {
+    if (!isOpen || !highlightItemId) return;
+    const t = setTimeout(() => {
+      itemRefs.current[highlightItemId]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 150);
+    return () => clearTimeout(t);
+  }, [isOpen, highlightItemId]);
 
   if (!isOpen) return null;
 
@@ -436,11 +457,14 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
               gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
               gap: 16
             }}>
-              {filtered.map(item =>
-                config.type === 'youtube'
-                  ? <YoutubeCard key={item.id} item={item} isDarkMode={isDarkMode} />
-                  : <DownloadCard key={item.id} item={item} isDarkMode={isDarkMode} />
-              )}
+              {filtered.map(item => (
+                <div key={item.id} ref={el => { itemRefs.current[item.id] = el; }}>
+                  {config.type === 'youtube'
+                    ? <YoutubeCard item={item} isDarkMode={isDarkMode} isHighlighted={item.id === highlightItemId} />
+                    : <DownloadCard item={item} isDarkMode={isDarkMode} isHighlighted={item.id === highlightItemId} />
+                  }
+                </div>
+              ))}
             </div>
           )}
         </div>
