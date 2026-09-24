@@ -2,28 +2,6 @@
 
 import { systemsData } from '../../../constants';
 
-// ===== INTERFACES =====
-interface JSZipInterface {
-  loadAsync(data: ArrayBuffer | Uint8Array): Promise<any>;
-}
-
-const waitForJSZip = async (timeout = 10000): Promise<JSZipInterface> => {
-  const startTime = Date.now();
-  
-  while (Date.now() - startTime < timeout) {
-    if (typeof window !== 'undefined' && (window as any).JSZip) {
-      return (window as any).JSZip;
-    }
-    await new Promise(resolve => setTimeout(resolve, 200));
-  }
-  
-  throw new Error('⛔ JSZip non disponible. Vérifiez la connexion Internet.');
-};
-
-const getJSZip = async (): Promise<JSZipInterface> => {
-  return await waitForJSZip();
-};
-
 export interface DriveTheme {
   id: string;
   name: string;
@@ -39,27 +17,11 @@ export interface DriveTheme {
   archiveFormat?: 'ZIP' | '7Z' | 'RAR' | 'UNKNOWN';
 }
 
-export interface Log {
-  timestamp: string;
-  message: string;
-  type: 'info' | 'success' | 'error';
-}
-
-export interface DriveStats {
-  total: number;
-  success: number;
-  error: number;
-}
-
 // ===== CONSTANTES =====
-export const MAX_LOGS = 500;
 export const REQUEST_TIMEOUT = 60000;
 export const MAX_RETRIES = 3;
-export const ITEMS_PER_PAGE = 20;
 export const DRIVE_API_KEY_STORAGE = 'hyperbat_drive_api_key';
-export const QUEUE_DELAY = 5000;
 export const MAX_REQUESTS_PER_MINUTE = 60;
-export const CREATOR_CACHE_STORAGE = 'hyperbat_creator_cache';
 
 // ===== FORMATAGE DATE FR =====
 export const formatDateFR = (dateStr?: string): string => {
@@ -73,15 +35,6 @@ export const formatDateFR = (dateStr?: string): string => {
     console.warn('Erreur formatage date:', dateStr, error);
     return dateStr;
   }
-};
-
-// ===== DÉTECTION FORMAT ARCHIVE =====
-export const detectArchiveFormat = (signature: string): 'ZIP' | '7Z' | 'RAR' | 'UNKNOWN' => {
-  if (signature.startsWith('504b')) return 'ZIP';
-  if (signature.startsWith('377abcaf271c')) return '7Z';
-  if (signature.startsWith('526172211a07')) return 'RAR';
-  if (signature.startsWith('526172211a070100')) return 'RAR';
-  return 'UNKNOWN';
 };
 
 // ===== NORMALISATION POUR COMPARAISON =====
@@ -195,29 +148,6 @@ export const saveDriveApiKey = (apiKey: string): void => {
 
 export const loadDriveApiKey = (): string => {
   return localStorage.getItem(DRIVE_API_KEY_STORAGE) || '';
-};
-
-// ===== GESTION CACHE CRÉATEURS =====
-export const saveCreatorCache = (cache: Map<string, string>): void => {
-  try {
-    const array = Array.from(cache.entries());
-    localStorage.setItem(CREATOR_CACHE_STORAGE, JSON.stringify(array));
-  } catch (error) {
-    console.warn('Erreur sauvegarde cache créateurs:', error);
-  }
-};
-
-export const loadCreatorCache = (): Map<string, string> => {
-  try {
-    const stored = localStorage.getItem(CREATOR_CACHE_STORAGE);
-    if (stored) {
-      const array = JSON.parse(stored);
-      return new Map(array);
-    }
-  } catch (error) {
-    console.warn('Erreur chargement cache créateurs:', error);
-  }
-  return new Map();
 };
 
 // ===== EXTRACTION ID GOOGLE DRIVE =====
@@ -368,223 +298,6 @@ export const findMatchingSystem = (
     systemId: cleanName.replace(/[^a-z0-9]+/g, ''),
     systemName: folderName
   };
-};
-
-// ===== EXTRACTION CRÉATEUR (ZIP UNIQUEMENT) =====
-export const extractCreatorFromArchive = async (
-  fileId: string,
-  apiKey: string,
-  addLog?: (message: string, type?: 'info' | 'success' | 'error') => void
-): Promise<{ creator: string; format: 'ZIP' | '7Z' | 'RAR' | 'UNKNOWN' }> => {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
-  
-  try {
-    const downloadUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${apiKey}`;
-    
-    if (addLog) addLog(`📽 Téléchargement ${fileId.slice(0, 8)}...`, 'info');
-    const startTime = Date.now();
-    
-    const response = await fetchWithBackoff(downloadUrl, controller.signal, addLog);
-    
-    const downloadTime = Date.now() - startTime;
-    if (addLog) addLog(`  ⏱️ ${downloadTime}ms`, 'info');
-    
-    const contentLength = response.headers.get('content-length');
-    if (addLog) addLog(`  📦 Taille: ${formatSize(contentLength)}`, 'info');
-    
-    const arrayBuffer = await response.arrayBuffer();
-    if (addLog) addLog(`  ✔ ${formatSize(arrayBuffer.byteLength)} téléchargés`, 'success');
-    
-    const header = new Uint8Array(arrayBuffer.slice(0, 8));
-    const signature = Array.from(header).map(b => b.toString(16).padStart(2, '0')).join('');
-    
-    const format = detectArchiveFormat(signature);
-    
-    if (addLog) addLog(`  📦 Format détecté: ${format}`, 'info');
-    
-    if (format !== 'ZIP') {
-      if (addLog) addLog(`  ⚠️ Format ${format} non décompressable`, 'error');
-      clearTimeout(timeoutId);
-      return { creator: 'Unknown', format };
-    }
-    
-    if (addLog) addLog(`  🗜️ Décompression ZIP...`, 'info');
-    
-    let xmlContent: string | null = null;
-    
-    try {
-      const JSZip = await getJSZip();
-      const zip = await JSZip.loadAsync(arrayBuffer);
-      
-      if (addLog) addLog(`  📂 ${Object.keys(zip.files).length} fichiers`, 'info');
-      
-      const xmlNames = ['theme.xml', 'systeme.xml', 'system.xml'];
-      
-      for (const fileName of Object.keys(zip.files)) {
-        const file = zip.files[fileName];
-        
-        if (fileName.includes('/')) continue;
-        
-        const lowerName = fileName.toLowerCase();
-        if (xmlNames.includes(lowerName)) {
-          xmlContent = await file.async('string');
-          if (addLog) addLog(`  ✔ XML: ${fileName}`, 'success');
-          break;
-        }
-      }
-      
-    } catch (jszipError: any) {
-      if (addLog) addLog(`  ❌ Erreur JSZip: ${jszipError.message}`, 'error');
-      clearTimeout(timeoutId);
-      return { creator: 'Unknown', format: 'ZIP' };
-    }
-    
-    if (!xmlContent) {
-      if (addLog) addLog(`  ⚠️ Aucun XML à la racine`, 'error');
-      clearTimeout(timeoutId);
-      return { creator: 'Unknown', format: 'ZIP' };
-    }
-    
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
-    
-    const parserError = xmlDoc.querySelector('parsererror');
-    if (parserError) {
-      if (addLog) addLog(`  ⚠️ Erreur parsing XML`, 'error');
-      clearTimeout(timeoutId);
-      return { creator: 'Unknown', format: 'ZIP' };
-    }
-    
-    const authorTags = [
-      xmlDoc.querySelector('text[name="gamethemeauthor"]'),
-      xmlDoc.querySelector('text[name="systhemeauthor"]'),
-      xmlDoc.querySelector('creator'),
-      xmlDoc.querySelector('author')
-    ];
-    
-    let creatorText = '';
-    
-    for (const tag of authorTags) {
-      if (tag) {
-        const textElement = tag.querySelector('text');
-        if (textElement?.textContent?.trim()) {
-          creatorText = textElement.textContent.trim();
-          break;
-        }
-        
-        if (tag.textContent?.trim()) {
-          creatorText = tag.textContent.trim();
-          break;
-        }
-      }
-    }
-    
-    if (!creatorText) {
-      const allTextElements = xmlDoc.querySelectorAll('text[name]');
-      for (const element of Array.from(allTextElements)) {
-        const name = element.getAttribute('name')?.toLowerCase() || '';
-        if (name.includes('author') || name.includes('creator') || name.includes('theme')) {
-          const innerText = element.querySelector('text');
-          if (innerText?.textContent?.trim()) {
-            creatorText = innerText.textContent.trim();
-            break;
-          }
-          if (element.textContent?.trim()) {
-            creatorText = element.textContent.trim();
-            break;
-          }
-        }
-      }
-    }
-    
-    if (!creatorText) {
-      if (addLog) addLog(`  ⚠️ Créateur non trouvé`, 'error');
-      clearTimeout(timeoutId);
-      return { creator: 'Unknown', format: 'ZIP' };
-    }
-    
-    const creator = creatorText
-      .replace(/^Theme by\s*:\s*/i, '')
-      .replace(/^System Theme By\s*:\s*/i, '')
-      .replace(/^By\s*:\s*/i, '')
-      .replace(/^Author\s*:\s*/i, '')
-      .replace(/^Creator\s*:\s*/i, '')
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&quot;/g, '"')
-      .trim();
-    
-    if (isUnknownCreator(creator)) {
-      clearTimeout(timeoutId);
-      return { creator: 'Unknown', format: 'ZIP' };
-    }
-    
-    if (addLog) addLog(`  ✅ Créateur: ${creator}`, 'success');
-    clearTimeout(timeoutId);
-    return { creator, format: 'ZIP' };
-    
-  } catch (error: any) {
-    clearTimeout(timeoutId);
-    
-    if (error.name === 'AbortError') {
-      if (addLog) addLog(`  ⏱️ Timeout (${REQUEST_TIMEOUT / 1000}s)`, 'error');
-    } else {
-      if (addLog) addLog(`  ❌ Erreur: ${error.message}`, 'error');
-    }
-    
-    return { creator: 'Unknown', format: 'UNKNOWN' };
-  }
-};
-
-// ===== FETCH AVEC BACKOFF =====
-const fetchWithBackoff = async (
-  url: string,
-  signal: AbortSignal,
-  addLog?: (message: string, type?: 'info' | 'success' | 'error') => void,
-  retries = 0
-): Promise<Response> => {
-  try {
-    const response = await fetch(url, { signal });
-    
-    if (response.status === 429) {
-      const retryAfter = response.headers.get('Retry-After');
-      const delay = retryAfter 
-        ? parseInt(retryAfter) * 1000 
-        : Math.min(2000 * Math.pow(2, retries), 60000);
-      
-      if (addLog) addLog(`  ⏸️ Rate limit (429), pause ${(delay / 1000).toFixed(0)}s...`, 'error');
-      
-      await new Promise(resolve => setTimeout(resolve, delay));
-      
-      if (retries < MAX_RETRIES) {
-        return fetchWithBackoff(url, signal, addLog, retries + 1);
-      } else {
-        throw new Error('Quota Google Drive dépassé');
-      }
-    }
-    
-    if (!response.ok) {
-      if (addLog) addLog(`  ❌ HTTP ${response.status}`, 'error');
-      throw new Error(`HTTP ${response.status}`);
-    }
-    
-    return response;
-    
-  } catch (error: any) {
-    if (signal.aborted) throw error;
-    
-    if (retries < MAX_RETRIES) {
-      const delay = Math.min(2000 * Math.pow(2, retries), 30000);
-      if (addLog) addLog(`  🔄 Retry ${retries + 1}/${MAX_RETRIES}...`, 'error');
-      
-      await new Promise(resolve => setTimeout(resolve, delay));
-      return fetchWithBackoff(url, signal, addLog, retries + 1);
-    }
-    
-    throw error;
-  }
 };
 
 // ===== FORMATAGE TAILLE =====
@@ -769,13 +482,4 @@ export const saveUrls = (urls: string[]): void => {
 export const loadUrls = (): string[] => {
   const saved = localStorage.getItem('driveUrls');
   return saved ? JSON.parse(saved) : ['', '', '', '', ''];
-};
-
-// ===== VALIDATION =====
-export const getValidationIssues = (themes: DriveTheme[]) => {
-  return {
-    noImage: themes.filter(t => !t.imageUrl).length,
-    unknownSystem: themes.filter(t => t.system === 'unknown').length,
-    noCreator: themes.filter(t => isUnknownCreator(t.creator)).length
-  };
 };
