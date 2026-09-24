@@ -365,7 +365,7 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
         position: 'fixed', inset: 0, zIndex: 1000,
         background: 'rgba(0,0,0,0.85)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: 16, backdropFilter: 'blur(4px)'
+        padding: 8, backdropFilter: 'blur(4px)'
       }}
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}
     >
@@ -374,8 +374,8 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
         borderRadius: 16,
         border: '2px solid #FF8C00',
         width: '100%',
-        maxWidth: 900,
-        maxHeight: '90vh',
+        maxWidth: 1100,
+        maxHeight: '97vh',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
@@ -385,7 +385,7 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
         {/* ── Header ── */}
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '16px 20px',
+          padding: '10px 20px',
           borderBottom: '2px solid #FF8C00',
           background: isDarkMode ? '#0f0f0f' : '#fafafa',
           flexShrink: 0
@@ -463,7 +463,7 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
         )}
 
         {/* ── Contenu scrollable ── */}
-        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: 20 }}>
+        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '12px 20px' }}>
           {isEmpty ? (
             <div style={{ textAlign: 'center', padding: '60px 20px', color: isDarkMode ? '#555' : '#aaa' }}>
               <ExternalLink style={{ width: 40, height: 40, marginBottom: 12, opacity: 0.4 }} />
@@ -477,8 +477,8 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
           ) : (
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-              gap: 16
+              gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))',
+              gap: 12
             }}>
               {filtered.map(item => (
                 <div key={item.id} ref={el => { itemRefs.current[item.id] = el; }}>
@@ -494,7 +494,7 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
 
         {/* ── Footer ── */}
         <div style={{
-          padding: '10px 20px',
+          padding: '6px 20px',
           borderTop: `1px solid ${isDarkMode ? '#222' : '#eee'}`,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           flexShrink: 0
