@@ -54,20 +54,19 @@ const YoutubeThumbnail: React.FC<{ youtubeId: string; name: string }> = ({ youtu
   const thumbUrl = `https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`;
 
   return (
-    <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', background: '#1a1a1a', overflow: 'hidden' }}>
+    <div className="relative w-full aspect-video bg-[#1a1a1a] overflow-hidden">
       {!imgError ? (
         <img
           src={thumbUrl}
           alt={name}
           onError={() => setImgError(true)}
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          className="w-full h-full object-cover block"
         />
       ) : (
-        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1a1a2e' }}>
-          <Play style={{ color: '#FF8C00', width: 32, height: 32 }} />
+        <div className="w-full h-full flex items-center justify-center bg-[#1a1a2e]">
+          <Play className="text-[#FF8C00] w-8 h-8" />
         </div>
       )}
-
     </div>
   );
 };
@@ -85,28 +84,20 @@ const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlight
   };
 
   return (
-    <div style={{
-      background: isDarkMode ? '#1a1a1a' : '#f9f9f9',
-      borderRadius: 12,
-      border: `2px solid ${isHighlighted ? '#FF8C00' : (isDarkMode ? '#2a2a2a' : '#e5e5e5')}`,
-      boxShadow: isHighlighted ? '0 0 0 3px rgba(255,140,0,0.25)' : undefined,
-      overflow: 'hidden',
-      display: 'flex',
-      flexDirection: 'column',
-      transition: 'border-color 0.2s',
-    }}>
+    <div
+      className={`rounded-xl overflow-hidden flex flex-col transition-colors duration-200 border-2 ${
+        isDarkMode ? 'bg-[#1a1a1a]' : 'bg-[#f9f9f9]'
+      } ${isHighlighted ? 'border-[#FF8C00] shadow-[0_0_0_3px_rgba(255,140,0,0.25)]' : isDarkMode ? 'border-[#2a2a2a]' : 'border-[#e5e5e5]'}`}
+    >
       {/* Image ou visuel titre */}
-      <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', background: '#0f0f1a', overflow: 'hidden', flexShrink: 0 }}>
+      <div className="relative w-full aspect-video bg-[#0f0f1a] overflow-hidden shrink-0">
         {hasImage ? (
           <img src={convertedImageUrl} alt={item.name} onError={() => setImgError(true)}
-            style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }} />
+            className="w-full h-full object-contain block" />
         ) : item.id === 'tool-arrm' ? (
           /* Visuel ARRM — effet glace bleu */
-          <div style={{
-            width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: 'linear-gradient(135deg, #020d1a 0%, #041e3a 50%, #020d1a 100%)',
-          }}>
-            <svg viewBox="0 0 300 110" style={{ width: '85%', height: '85%' }}>
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#020d1a] via-[#041e3a] to-[#020d1a]">
+            <svg viewBox="0 0 300 110" className="w-[85%] h-[85%]">
               <defs>
                 <linearGradient id="iceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
                   <stop offset="0%"   stopColor="#a8e6ff" />
@@ -162,62 +153,39 @@ const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlight
           </div>
         ) : (
           /* Visuel titre générique (HyperBat Theme Creator etc.) */
-          <div style={{
-            width: '100%', height: '100%', display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center', padding: '16px',
-            background: 'linear-gradient(135deg, #020d1a 0%, #041e3a 50%, #020d1a 100%)',
-          }}>
-            <div style={{
-              fontSize: 11, letterSpacing: '0.2em', color: '#FF8C00', marginBottom: 8,
-              textTransform: 'uppercase', opacity: 0.7
-            }}>
+          <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-[#020d1a] via-[#041e3a] to-[#020d1a]">
+            <div className="text-[11px] tracking-widest text-[#FF8C00] mb-2 uppercase opacity-70">
               HyperBat
             </div>
-            <div style={{
-              fontSize: 15, fontWeight: 700, color: '#FF8C00', textAlign: 'center',
-              lineHeight: 1.3, textShadow: '0 0 20px rgba(255,140,0,0.5)',
-              letterSpacing: '0.05em'
-            }}>
+            <div className="text-[15px] font-bold text-[#FF8C00] text-center leading-tight tracking-wide"
+              style={{ textShadow: '0 0 20px rgba(255,140,0,0.5)' }}>
               {item.name}
             </div>
-            <div style={{
-              marginTop: 12, width: 40, height: 2,
-              background: 'linear-gradient(90deg, transparent, #FF8C00, transparent)'
-            }} />
+            <div className="mt-3 w-10 h-0.5 bg-gradient-to-r from-transparent via-[#FF8C00] to-transparent" />
           </div>
         )}
       </div>
 
       {/* Contenu */}
-      <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
+      <div className="p-3 flex flex-col gap-2 flex-1">
         <div>
-          <p style={{ margin: 0, fontSize: 14, fontWeight: 600, lineHeight: 1.3,
-            color: isDarkMode ? '#ffffff' : '#1a1a1a' }}>
+          <p className={`m-0 text-sm font-semibold leading-tight ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'}`}>
             {item.name}
           </p>
-          <p style={{ margin: '4px 0 0', fontSize: 12, color: '#FF8C00' }}>
+          <p className="mt-1 mb-0 text-xs text-[#FF8C00]">
             par {item.creator}
           </p>
         </div>
         {item.description && (
-          <p style={{ margin: 0, fontSize: 12, color: isDarkMode ? '#aaaaaa' : '#666', lineHeight: 1.5 }}>
+          <p className={`m-0 text-xs leading-relaxed ${isDarkMode ? 'text-[#aaaaaa]' : 'text-[#666]'}`}>
             {item.description}
           </p>
         )}
         <button
           onClick={handleDownload}
-          style={{
-            marginTop: 'auto', width: '100%', padding: '8px 12px',
-            background: 'linear-gradient(135deg, #FF8C00, #FFA500)',
-            color: '#1a1a1a', border: 'none', borderRadius: 8,
-            fontSize: 13, fontWeight: 700, cursor: 'pointer',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-            transition: 'filter 0.2s'
-          }}
-          onMouseEnter={e => (e.currentTarget.style.filter = 'brightness(1.15)')}
-          onMouseLeave={e => (e.currentTarget.style.filter = 'brightness(1)')}
+          className="mt-auto w-full py-2 px-3 bg-gradient-to-br from-[#FF8C00] to-[#FFA500] text-[#1a1a1a] border-none rounded-lg text-[13px] font-bold cursor-pointer flex items-center justify-center gap-1.5 transition-[filter] duration-200 hover:brightness-110"
         >
-          <Download style={{ width: 14, height: 14 }} />
+          <Download className="w-3.5 h-3.5" />
           Télécharger
         </button>
       </div>
@@ -234,50 +202,30 @@ const YoutubeCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlighte
   };
 
   return (
-    <div style={{
-      background: isDarkMode ? '#1a1a1a' : '#f9f9f9',
-      borderRadius: 12,
-      border: `2px solid ${isHighlighted ? '#FF8C00' : (isDarkMode ? '#2a2a2a' : '#e5e5e5')}`,
-      boxShadow: isHighlighted ? '0 0 0 3px rgba(255,140,0,0.25)' : undefined,
-      overflow: 'hidden',
-      display: 'flex',
-      flexDirection: 'column',
-      cursor: 'pointer',
-      transition: 'border-color 0.2s, transform 0.2s',
-    }}
+    <div
+      className={`rounded-xl overflow-hidden flex flex-col cursor-pointer transition-all duration-200 border-2 hover:-translate-y-0.5 hover:border-[#FF8C00] ${
+        isDarkMode ? 'bg-[#1a1a1a]' : 'bg-[#f9f9f9]'
+      } ${isHighlighted ? 'border-[#FF8C00] shadow-[0_0_0_3px_rgba(255,140,0,0.25)]' : isDarkMode ? 'border-[#2a2a2a]' : 'border-[#e5e5e5]'}`}
       onClick={handleWatch}
-      onMouseEnter={e => {
-        e.currentTarget.style.borderColor = '#FF8C00';
-        e.currentTarget.style.transform = 'translateY(-2px)';
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.borderColor = isHighlighted ? '#FF8C00' : (isDarkMode ? '#2a2a2a' : '#e5e5e5');
-        e.currentTarget.style.transform = 'translateY(0)';
-      }}
     >
       {item.youtubeId && <YoutubeThumbnail youtubeId={item.youtubeId} name={item.name} />}
 
-      <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
+      <div className="p-3 flex flex-col gap-2 flex-1">
         <div>
-          <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: isDarkMode ? '#ffffff' : '#1a1a1a', lineHeight: 1.4 }}>
+          <p className={`m-0 text-[13px] font-semibold leading-snug ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'}`}>
             {item.name}
           </p>
-          <p style={{ margin: '4px 0 0', fontSize: 12, color: '#FF8C00' }}>
+          <p className="mt-1 mb-0 text-xs text-[#FF8C00]">
             par {item.creator}
           </p>
         </div>
         {item.description && (
-          <p style={{ margin: 0, fontSize: 12, color: isDarkMode ? '#aaaaaa' : '#666', lineHeight: 1.5 }}>
+          <p className={`m-0 text-xs leading-relaxed ${isDarkMode ? 'text-[#aaaaaa]' : 'text-[#666]'}`}>
             {item.description}
           </p>
         )}
-        <div style={{
-          marginTop: 'auto', width: '100%', padding: '7px 12px',
-          background: '#FF0000', color: 'white', borderRadius: 8,
-          fontSize: 13, fontWeight: 700,
-          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-        }}>
-          <Play style={{ width: 13, height: 13, marginLeft: 2 }} />
+        <div className="mt-auto w-full py-[7px] px-3 bg-[#FF0000] text-white rounded-lg text-[13px] font-bold flex items-center justify-center gap-1.5">
+          <Play className="w-[13px] h-[13px] ml-0.5" />
           Regarder
         </div>
       </div>
@@ -361,101 +309,63 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
       role="dialog"
       aria-modal="true"
       aria-labelledby="content-modal-title"
-      style={{
-        position: 'fixed', inset: 0, zIndex: 1000,
-        background: 'rgba(0,0,0,0.85)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: 8, backdropFilter: 'blur(4px)'
-      }}
+      className="fixed inset-0 z-[1000] bg-black/85 backdrop-blur-sm flex items-center justify-center p-2"
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div ref={modalRef} style={{
-        background: isDarkMode ? '#111111' : '#ffffff',
-        borderRadius: 16,
-        border: '2px solid #FF8C00',
-        width: '100%',
-        maxWidth: 1100,
-        maxHeight: '97vh',
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-        boxShadow: '0 0 60px rgba(255,140,0,0.2)',
-      }}>
+      <div
+        ref={modalRef}
+        className={`rounded-2xl border-2 border-[#FF8C00] w-full max-w-[1100px] max-h-[97vh] flex flex-col overflow-hidden shadow-[0_0_60px_rgba(255,140,0,0.2)] ${
+          isDarkMode ? 'bg-[#111111]' : 'bg-white'
+        }`}
+      >
 
         {/* ── Header ── */}
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '10px 20px',
-          borderBottom: '2px solid #FF8C00',
-          background: isDarkMode ? '#0f0f0f' : '#fafafa',
-          flexShrink: 0
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ width: 4, height: 28, background: '#FF8C00', borderRadius: 2 }} />
-            <span id="content-modal-title" style={{ fontSize: 18, fontWeight: 800, color: '#FF8C00', letterSpacing: '0.1em' }}>
+        <div className={`flex items-center justify-between px-5 py-2.5 border-b-2 border-[#FF8C00] shrink-0 ${
+          isDarkMode ? 'bg-[#0f0f0f]' : 'bg-[#fafafa]'
+        }`}>
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-7 bg-[#FF8C00] rounded-sm" />
+            <span id="content-modal-title" className="text-lg font-extrabold text-[#FF8C00] tracking-widest">
               {config.title}
             </span>
-            <span style={{
-              fontSize: 12, padding: '3px 10px',
-              background: 'rgba(255,140,0,0.15)', color: '#FF8C00',
-              borderRadius: 20, border: '1px solid rgba(255,140,0,0.3)'
-            }}>
+            <span className="text-xs py-[3px] px-2.5 bg-[#FF8C00]/15 text-[#FF8C00] rounded-full border border-[#FF8C00]/30">
               {config.items.length} {config.items.length > 1 ? 'entrées' : 'entrée'}
             </span>
           </div>
           <button
             ref={closeButtonRef}
             onClick={onClose}
-            style={{
-              width: 34, height: 34, borderRadius: '50%',
-              border: '1px solid rgba(255,140,0,0.3)',
-              background: 'transparent', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: isDarkMode ? '#aaa' : '#666',
-              transition: 'all 0.2s'
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,140,0,0.15)'; e.currentTarget.style.color = '#FF8C00'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = isDarkMode ? '#aaa' : '#666'; }}
+            className={`w-[34px] h-[34px] rounded-full border border-[#FF8C00]/30 bg-transparent cursor-pointer flex items-center justify-center transition-colors duration-200 hover:bg-[#FF8C00]/15 hover:text-[#FF8C00] ${
+              isDarkMode ? 'text-[#aaa]' : 'text-[#666]'
+            }`}
             title="Fermer (Échap)"
           >
-            <X style={{ width: 16, height: 16 }} />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* ── Barre de recherche ── */}
         {config.items.length > 4 && (
-          <div style={{ padding: '12px 20px', borderBottom: `1px solid ${isDarkMode ? '#222' : '#eee'}`, flexShrink: 0 }}>
-            <div style={{ position: 'relative' }}>
-              <Search style={{
-                position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
-                width: 16, height: 16, color: '#FF8C00'
-              }} />
+          <div className={`py-3 px-5 border-b shrink-0 ${isDarkMode ? 'border-[#222]' : 'border-[#eee]'}`}>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#FF8C00]" />
               <input
                 type="text"
                 placeholder="Rechercher..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                style={{
-                  width: '100%', padding: '8px 12px 8px 38px',
-                  background: isDarkMode ? '#1a1a1a' : '#f5f5f5',
-                  border: `1px solid ${isDarkMode ? '#333' : '#ddd'}`,
-                  borderRadius: 8, fontSize: 14,
-                  color: isDarkMode ? '#fff' : '#1a1a1a',
-                  outline: 'none', boxSizing: 'border-box'
-                }}
-                onFocus={e => e.target.style.borderColor = '#FF8C00'}
-                onBlur={e => e.target.style.borderColor = isDarkMode ? '#333' : '#ddd'}
+                className={`w-full py-2 pl-[38px] pr-3 rounded-lg text-sm outline-none box-border border focus:border-[#FF8C00] ${
+                  isDarkMode ? 'bg-[#1a1a1a] border-[#333] text-white' : 'bg-[#f5f5f5] border-[#ddd] text-[#1a1a1a]'
+                }`}
               />
               {search && (
                 <button
                   onClick={() => setSearch('')}
-                  style={{
-                    position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)',
-                    background: 'none', border: 'none', cursor: 'pointer', padding: 4,
-                    color: isDarkMode ? '#aaa' : '#999'
-                  }}
+                  className={`absolute right-2.5 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer p-1 ${
+                    isDarkMode ? 'text-[#aaa]' : 'text-[#999]'
+                  }`}
                 >
-                  <X style={{ width: 14, height: 14 }} />
+                  <X className="w-3.5 h-3.5" />
                 </button>
               )}
             </div>
@@ -463,23 +373,19 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
         )}
 
         {/* ── Contenu scrollable ── */}
-        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '12px 20px' }}>
+        <div className="flex-1 min-h-0 overflow-y-auto py-3 px-5">
           {isEmpty ? (
-            <div style={{ textAlign: 'center', padding: '60px 20px', color: isDarkMode ? '#555' : '#aaa' }}>
-              <ExternalLink style={{ width: 40, height: 40, marginBottom: 12, opacity: 0.4 }} />
-              <p style={{ fontSize: 15, margin: 0 }}>Aucun contenu pour le moment</p>
-              <p style={{ fontSize: 13, margin: '8px 0 0', opacity: 0.7 }}>Revenez bientôt !</p>
+            <div className={`text-center py-16 px-5 ${isDarkMode ? 'text-[#555]' : 'text-[#aaa]'}`}>
+              <ExternalLink className="w-10 h-10 mb-3 opacity-40 mx-auto" />
+              <p className="text-[15px] m-0">Aucun contenu pour le moment</p>
+              <p className="text-[13px] mt-2 mb-0 opacity-70">Revenez bientôt !</p>
             </div>
           ) : filtered.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px 20px', color: isDarkMode ? '#555' : '#aaa' }}>
-              <p style={{ fontSize: 14, margin: 0 }}>Aucun résultat pour "<span style={{ color: '#FF8C00' }}>{search}</span>"</p>
+            <div className={`text-center py-10 px-5 ${isDarkMode ? 'text-[#555]' : 'text-[#aaa]'}`}>
+              <p className="text-sm m-0">Aucun résultat pour "<span className="text-[#FF8C00]">{search}</span>"</p>
             </div>
           ) : (
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))',
-              gap: 12
-            }}>
+            <div className="grid gap-3 grid-cols-[repeat(auto-fill,minmax(210px,1fr))]">
               {filtered.map(item => (
                 <div key={item.id} ref={el => { itemRefs.current[item.id] = el; }}>
                   {config.type === 'youtube'
@@ -493,13 +399,10 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
         </div>
 
         {/* ── Footer ── */}
-        <div style={{
-          padding: '6px 20px',
-          borderTop: `1px solid ${isDarkMode ? '#222' : '#eee'}`,
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          flexShrink: 0
-        }}>
-          <span style={{ fontSize: 11, color: isDarkMode ? '#444' : '#bbb' }}>
+        <div className={`py-1.5 px-5 border-t flex items-center justify-between shrink-0 ${
+          isDarkMode ? 'border-[#222]' : 'border-[#eee]'
+        }`}>
+          <span className={`text-[11px] ${isDarkMode ? 'text-[#444]' : 'text-[#bbb]'}`}>
             {config.type === 'youtube' ? 'Les vidéos s\'ouvrent sur YouTube' : 'Les liens de téléchargement sont sécurisés'}
           </span>
         </div>
