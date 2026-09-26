@@ -701,6 +701,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           onClose={() => setModalOpen(false)}
           config={modalConfig}
           isDarkMode={isDarkMode}
+          instanceId="sidebar-modal"
         />
       )}
     </aside>

@@ -46,6 +46,10 @@ interface ContentModalProps {
   /** Id de l'item à faire défiler jusqu'à lui et mettre en évidence à
    *  l'ouverture (utilisé par un bandeau "vedette" de la page d'accueil). */
   highlightItemId?: string;
+  /** Préfixe pour les id/name des champs internes (cette modale est rendue
+   *  à 2 endroits — Sidebar et page d'accueil — un id fixe créerait un
+   *  doublon si les deux étaient ouvertes en même temps). */
+  instanceId?: string;
 }
 
 // ── Thumbnail YouTube ─────────────────────────────────────────────────────────
@@ -234,7 +238,7 @@ const YoutubeCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlighte
 };
 
 // ── Modal principal ───────────────────────────────────────────────────────────
-const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, isDarkMode, highlightItemId }) => {
+const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, isDarkMode, highlightItemId, instanceId = 'content-modal' }) => {
   const [search, setSearch] = useState('');
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -351,9 +355,12 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#FF8C00]" />
               <input
                 type="text"
+                id={`${instanceId}-search`}
+                name={`${instanceId}-search`}
                 placeholder="Rechercher..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
+                autoComplete="off"
                 className={`w-full py-2 pl-[38px] pr-3 rounded-lg text-sm outline-none box-border border focus:border-[#FF8C00] ${
                   isDarkMode ? 'bg-[#1a1a1a] border-[#333] text-white' : 'bg-[#f5f5f5] border-[#ddd] text-[#1a1a1a]'
                 }`}

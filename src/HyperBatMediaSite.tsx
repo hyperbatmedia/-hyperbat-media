@@ -1113,6 +1113,7 @@ export default function HyperBatMediaSite(): JSX.Element {
         config={featuredModalConfig ?? { title: '', type: 'download', items: [] }}
         isDarkMode={isDarkMode}
         highlightItemId={featuredHighlightId}
+        instanceId="featured-modal"
       />
     </div>
   );
