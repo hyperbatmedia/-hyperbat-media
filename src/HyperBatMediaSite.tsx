@@ -4,7 +4,7 @@
 // pour permettre a des outils externes (le launcher AHK RetroBat, le
 // script hyperbat_theme_finder.py) d'ouvrir la vitrine deja pre-filtree.
 
-import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import type { ComponentType, CSSProperties } from 'react';
 import { Search, Gamepad2, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download, AlertTriangle, Gift, Upload } from 'lucide-react';
 
@@ -16,7 +16,8 @@ import { useLinksStorage } from './hooks/useLinksStorage';
 import { useSystemsLogic } from './hooks/useSystemsLogic';
 import { getThemeKey } from './utils/themeUtils';
 import Sidebar from './components/Sidebar/Sidebar';
-import AdminPanel, { AdminTab } from './components/AdminPanel/AdminPanel';
+const AdminPanel = lazy(() => import('./components/AdminPanel/AdminPanel'));
+import type { AdminTab } from './components/AdminPanel/AdminPanel';
 import ThemeList from './components/ThemeList/ThemeList';
 import CartPanel from './components/CartPanel/CartPanel';
 import RecapThemesPanel from './components/RecapThemesPanel/RecapThemesPanel';
@@ -254,7 +255,7 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
               </button>
             ))}
           </div>
-          <input type="password" autoFocus value={token}
+          <input type="password" id="admin-token" name="admin-token" autoComplete="off" autoFocus value={token}
             onChange={e => { setToken(e.target.value); setError(''); }}
             onKeyDown={e => e.key === 'Enter' && handleSubmit()}
             placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
@@ -912,6 +913,8 @@ export default function HyperBatMediaSite(): JSX.Element {
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: '#FFA500' }} />
                   <input
                     ref={searchInputRef}
+                    id="main-theme-search"
+                    name="main-theme-search"
                     type="text"
                     placeholder={isRetrobat
                       ? 'Rechercher un thème… (SUD ou NORD = clavier)'
@@ -919,6 +922,8 @@ export default function HyperBatMediaSite(): JSX.Element {
                     value={searchTerm}
                     onChange={(e) => handleSearchChange(e.target.value)}
                     className="w-full rounded-lg pl-12 pr-12 py-3 border-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    aria-label="Rechercher un thème, un jeu, un créateur ou un système"
+                    autoComplete="off"
                     style={{
                       backgroundColor: colors.inputBg,
                       color: colors.text,
@@ -965,11 +970,13 @@ export default function HyperBatMediaSite(): JSX.Element {
                 </div>
               )}
               {showAdminPanel && (
-                <AdminPanel themes={rawThemes} setThemes={setThemes} saveThemes={saveThemes}
-                  systems={systemsLogic.systems} categories={categories}
-                  adminTab={adminTab} setAdminTab={setAdminTab}
-                  packsData={packsData} setPacksData={setPacksData} savePacksData={savePacksData}
-                  linksData={linksData} setLinksData={setLinksData} saveLinks={saveLinks} />
+                <Suspense fallback={<div style={{ padding: 40, textAlign: 'center', color: colors.textSecondary }}>Chargement de l'administration…</div>}>
+                  <AdminPanel themes={rawThemes} setThemes={setThemes} saveThemes={saveThemes}
+                    systems={systemsLogic.systems} categories={categories}
+                    adminTab={adminTab} setAdminTab={setAdminTab}
+                    packsData={packsData} setPacksData={setPacksData} savePacksData={savePacksData}
+                    linksData={linksData} setLinksData={setLinksData} saveLinks={saveLinks} />
+                </Suspense>
               )}
               {!showAdminPanel && featuredItems.length > 0 && (
                 <div className="flex flex-wrap gap-3 mb-4">
