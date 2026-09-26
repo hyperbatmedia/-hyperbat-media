@@ -6,16 +6,6 @@
 export const TOP_BUTTON_IDS = ['all', 'tools', 'tutorials', 'main-themes', 'other-themes'] as const;
 
 /**
- * Configuration de la position de la barre de recherche
- */
-export const SEARCH_CONFIG = {
-  /** Index après lequel insérer la recherche */
-  insertAfterIndex: 3,
-  /** ID du système après lequel insérer la recherche */
-  insertAfterId: 'main-themes',
-} as const;
-
-/**
  * Palette de couleurs de la sidebar
  */
 export const SIDEBAR_COLORS = {
@@ -110,20 +100,3 @@ export const ANIMATION_STYLES = `
  * Styles combinés pour injection dans le composant
  */
 export const SIDEBAR_INLINE_STYLES = SCROLLBAR_STYLES + ANIMATION_STYLES;
-
-/**
- * Textes de la sidebar (pour faciliter l'i18n future)
- */
-export const SIDEBAR_TEXTS = {
-  title: 'SYSTÈMES',
-  searchPlaceholder: 'Rechercher un système...',
-  searchClearTitle: 'Effacer la recherche',
-  noResultsPrefix: 'Aucun système trouvé pour',
-  clearSearchButton: 'Effacer la recherche',
-  allCategories: 'Toutes les catégories',
-  showCategories: 'Afficher les catégories',
-  hideCategories: 'Masquer les catégories',
-  discordTitle: 'Rejoindre notre Discord',
-  arrmTitle: 'ARRM',
-  collapseAllTitle: 'Replier tout',
-} as const;
