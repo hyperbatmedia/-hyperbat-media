@@ -94,8 +94,7 @@
           "imageUrl": "",
           "downloadUrl": "",
           "youtubeUrl": "https://www.youtube.com/watch?v=E3ABSIfVo0Y&list=PLs2b-mpQ5QyBYF7RnqLovmPsZgdnRhJbD",
-          "youtubeId": "E3ABSIfVo0Y",
-          "vedette": "a-ne-pas-manquer"
+          "youtubeId": "E3ABSIfVo0Y"
         },
         {
           "id": "item-1790158974727-862145",
@@ -125,8 +124,7 @@
           "imageUrl": "",
           "downloadUrl": "",
           "youtubeUrl": "https://www.youtube.com/watch?v=lIuQhsa8ZGw&list=PLs2b-mpQ5QyBYF7RnqLovmPsZgdnRhJbD&index=4",
-          "youtubeId": "lIuQhsa8ZGw",
-          "vedette": "nouveau"
+          "youtubeId": "lIuQhsa8ZGw"
         },
         {
           "id": "item-1790235097768-999289",
@@ -192,6 +190,24 @@
           "imageUrl": "https://drive.google.com/file/d/1V1X4h9hqcmmK0iXE-R9UZnjD-q_kGJ4G/view?usp=sharing",
           "downloadUrl": "http://www.jujuvincebros.fr/wiki/arrm/doku.php?id=arrm_relooked_fr:download-fr_relooked",
           "creator": "Nexusone13"
+        },
+        {
+          "id": "item-1790413714606-697774",
+          "name": "Installer-Batocera",
+          "creator": "Dav et Christophe",
+          "description": "HyperBat Media est un add-on pour batocera qui installe facilement des\nthèmes système, default ou jeu à partir du thème HyperBat de Bob Morane.\nAccède à la vitrine via une entrée dédiée dans le système Ports, ou plus\nrapidement avec F9, R1 ou R3, selon ton choix fait à l'installation de\nl'addon.",
+          "imageUrl": "https://drive.google.com/file/d/1W_M4tKAOUa_d-iTA55mh_9biG6bfXde0/view?usp=drive_link",
+          "downloadUrl": "https://drive.google.com/file/d/1rU-bGzTduTe_R9yhBKWAf4jE6_JHY6ID/view?usp=drive_link",
+          "vedette": "nouveau"
+        },
+        {
+          "id": "item-1790414022335-634335",
+          "name": "Installer-Windows retrobat v2",
+          "creator": "Dav et Christophe",
+          "description": "HyperBat Media est un add-on pour RetroBat qui installe facilement des\nthèmes système, default ou jeu à partir du thème HyperBat de Bob Morane.\nAccède à la vitrine via une entrée dédiée dans le système Windows, ou plus\nrapidement avec F9, R1 ou R3, selon ton choix fait à l'installation de\nl'addon.",
+          "imageUrl": "https://drive.google.com/file/d/1W_M4tKAOUa_d-iTA55mh_9biG6bfXde0/view?usp=drive_link",
+          "downloadUrl": "https://drive.google.com/file/d/1f4aByEoDr7AVyZZwlkmUInNziX9YsiRw/view?usp=drive_link",
+          "vedette": "nouveau"
         }
       ]
     }
