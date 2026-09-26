@@ -108,6 +108,47 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
     chevronColor: '#E60012', 
     unselectedText: '#E60012',  // Rouge quand NON sélectionné
     selectedText: '#E60012'     // Rouge quand sélectionné (FIX!)
+  },
+
+  snk: {
+    keywords: ['snk'],
+    bg: '#0D0D0D',        // Noir (identité Neo Geo)
+    border: '#0096DF',    // Bleu SNK officiel
+    hover: '#1A1A1A',
+    text: '#FFFFFF',
+    chevronColor: '#0096DF',
+    selectedText: '#FFFFFF'
+  },
+
+  konami: {
+    keywords: ['konami'],
+    bg: '#FFFFFF',        // Blanc
+    border: '#BF0021',    // Rouge Konami officiel (Pantone 485 C)
+    hover: '#F0F0F0',
+    text: '#BF0021',
+    chevronColor: '#BF0021',
+    unselectedText: '#BF0021',
+    selectedText: '#BF0021'
+  },
+
+  microsoft: {
+    keywords: ['microsoft', 'xbox'],
+    bg: '#000000',        // Noir (identité Xbox)
+    border: '#107C10',    // Vert Xbox officiel
+    hover: '#1A1A1A',
+    text: '#FFFFFF',
+    chevronColor: '#107C10',
+    selectedText: '#FFFFFF'
+  },
+
+  sony: {
+    keywords: ['sony', 'playstation'],
+    bg: '#003791',        // Bleu PlayStation officiel (logo historique)
+    border: '#0070D1',
+    hover: '#002960',
+    text: '#FFFFFF',
+    chevronColor: '#0070D1',
+    selectedText: '#FFFFFF'
   }
 };
 
