@@ -85,11 +85,11 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
       'sega cd', 'megacd', 'segacd', 'nomad'
     ], 
     excludeKeywords: ['atari'], 
-    bg: '#001F5C',        // Bleu Sega
-    border: '#00B0FF',    // Bleu clair Sega
-    hover: '#001040', 
+    bg: '#0060A8',         // Bleu Sega officiel (international)
+    border: '#008DD0',     // Bleu Sega officiel (Japon) - utilisé comme accent
+    hover: '#004D87', 
     text: '#FFFFFF', 
-    chevronColor: '#00B0FF',
+    chevronColor: '#008DD0',
     selectedText: '#FFFFFF'  // Blanc quand sélectionné
   },
   
@@ -148,6 +148,16 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
     hover: '#002960',
     text: '#FFFFFF',
     chevronColor: '#0070D1',
+    selectedText: '#FFFFFF'
+  },
+
+  actionmax: {
+    keywords: ['action max', 'actionmax'],
+    bg: '#0A1929',         // Bleu nuit métallique (fond du logo original)
+    border: '#40C4FF',     // Bleu laser (rayon du logo)
+    hover: '#132F45',
+    text: '#FFFFFF',
+    chevronColor: '#40C4FF',
     selectedText: '#FFFFFF'
   }
 };
