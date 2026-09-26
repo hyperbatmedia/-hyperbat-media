@@ -5,7 +5,7 @@
 // strictement identiques à l'original : recherche au clavier, flèches
 // haut/bas, Entrée pour valider, Échap pour fermer.
 
-import { useState, useMemo, useRef, useEffect, KeyboardEvent } from 'react';
+import { useState, useMemo, useRef, useEffect, useId, KeyboardEvent } from 'react';
 import { Search, X, ChevronDown } from 'lucide-react';
 import { SystemRow } from '../../types';
 
@@ -27,6 +27,7 @@ export const AutocompleteSelect = ({
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const inputId = useId();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -102,6 +103,9 @@ export const AutocompleteSelect = ({
         <input
           ref={inputRef}
           type="text"
+          id={inputId}
+          name={inputId}
+          autoComplete="off"
           value={isOpen ? searchTerm : selectedName}
           onChange={(e) => {
             setSearchTerm(e.target.value);
@@ -175,5 +179,3 @@ export const AutocompleteSelect = ({
     </div>
   );
 };
-
-export default AutocompleteSelect;
