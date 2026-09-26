@@ -6,6 +6,7 @@ import {
   TOP_BUTTON_IDS,
   EXTERNAL_LINKS,
   SIDEBAR_INLINE_STYLES,
+  SIDEBAR_COLORS,
 } from './sidebar.constants';
 import { useLinksLoader } from '../../hooks/useLinksLoader';
 import type { ModalConfig } from '../../hooks/useLinksLoader';
@@ -293,7 +294,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         }`}
         aria-expanded={isExpanded}
       >
-        <h4 className="font-bold text-sm tracking-wider flex items-center gap-2 min-w-0" style={{ color: '#FFD700' }}>
+        <h4 className="font-bold text-sm tracking-wider flex items-center gap-2 min-w-0" style={{ color: SIDEBAR_COLORS.primaryGold }}>
           <SectionIcon section={sectionKey} size={32} isDarkMode={isDarkMode} />
           <span className="truncate">{label}</span>
           {sectionCount > 0 && (
@@ -302,7 +303,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </span>
           )}
         </h4>
-        <ChevronDown className={`w-4 h-4 chevron-icon flex-shrink-0 ${isExpanded ? 'open' : 'closed'}`} style={{ color: '#FFA500' }} />
+        <ChevronDown className={`w-4 h-4 chevron-icon flex-shrink-0 ${isExpanded ? 'open' : 'closed'}`} style={{ color: SIDEBAR_COLORS.primaryLight }} />
       </button>
     );
   };
@@ -324,7 +325,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         }`}
         aria-expanded={isExpanded}
       >
-        <h5 className="font-bold text-sm tracking-normal flex items-center gap-1 min-w-0" style={{ color: '#FF8C00' }}>
+        <h5 className="font-bold text-sm tracking-normal flex items-center gap-1 min-w-0" style={{ color: SIDEBAR_COLORS.primary }}>
           <span className="truncate">{system.name}</span>
           {subsectionCount > 0 && (
             <span className="text-xs opacity-80 font-normal flex-shrink-0" style={{ color: 'rgba(255,140,0,0.85)' }}>
@@ -332,7 +333,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </span>
           )}
         </h5>
-        <ChevronDown className={`w-3 h-3 chevron-icon flex-shrink-0 ${isExpanded ? 'open' : 'closed'}`} style={{ color: '#FFA500' }} />
+        <ChevronDown className={`w-3 h-3 chevron-icon flex-shrink-0 ${isExpanded ? 'open' : 'closed'}`} style={{ color: SIDEBAR_COLORS.primaryLight }} />
       </button>
     );
   };
@@ -368,7 +369,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     const defaultHoverText   = isDarkMode ? 'hover:text-white'  : 'hover:text-gray-900';
 
     const buttonStyle = isTopButton
-      ? { background: 'linear-gradient(135deg, #FFA500 0%, #FF9E33 100%)', borderColor: '#FFD700', borderWidth: '2px', boxShadow: '0 2px 4px rgba(0,0,0,0.3)' }
+      ? { background: `linear-gradient(135deg, ${SIDEBAR_COLORS.primaryLight} 0%, #FF9E33 100%)`, borderColor: SIDEBAR_COLORS.primaryGold, borderWidth: '2px', boxShadow: '0 2px 4px rgba(0,0,0,0.3)' }
       : isSelected ? { backgroundColor: colors.bg, borderColor: colors.border } : {};
 
     const textStyle = isTopButton
@@ -525,7 +526,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         aria-label={collapsed ? 'Étendre la sidebar' : 'Réduire la sidebar'}
         style={{
           position: 'absolute', right: -14, top: '50%', transform: 'translateY(-50%)',
-          width: 14, height: 48, background: '#FF8C00', border: 'none',
+          width: 14, height: 48, background: SIDEBAR_COLORS.primary, border: 'none',
           borderRadius: '0 6px 6px 0', cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 20, padding: 0,
         }}
@@ -540,12 +541,12 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Container sidebar */}
       <div className={`rounded-lg border-4 sticky top-4 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}
-        style={{ borderColor: '#FF8C00', height: 'calc(100vh - 2rem)', display: 'flex', flexDirection: 'column' }}>
+        style={{ borderColor: SIDEBAR_COLORS.primary, height: 'calc(100vh - 2rem)', display: 'flex', flexDirection: 'column' }}>
 
         {/* Header titre + Discord/ARRM — mode étendu */}
         {!collapsed && (
           <div className="flex items-center justify-between p-4 pb-2 flex-shrink-0">
-            <h3 className="text-xl font-black" style={{ color: '#FF8C00' }}>SYSTÈMES</h3>
+            <h3 className="text-xl font-black" style={{ color: SIDEBAR_COLORS.primary }}>SYSTÈMES</h3>
             <div className="flex gap-2">
               {isLoadingLinks ? (
                 <div className="text-gray-400 text-xs">Chargement...</div>
@@ -559,7 +560,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                         ${isARRM ? 'px-2.5 py-2 bg-yellow-500 hover:bg-yellow-600 border-yellow-600 focus:ring-yellow-400' : 'p-2 bg-[#5865F2] hover:bg-[#4752C4] border-[#5865F2] focus:ring-blue-400'}`}
                       title={link.name}>
                       {isARRM ? (
-                        <span className="text-sm font-bold flex items-center justify-center" style={{ color: '#0091bd' }}>ARRM</span>
+                        <span className="text-sm font-bold flex items-center justify-center" style={{ color: SIDEBAR_COLORS.arrm }}>ARRM</span>
                       ) : (
                         <DiscordIcon size={20} />
                       )}
@@ -578,7 +579,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     tabIndex={isRetrobat ? -1 : undefined}
                     className="px-2.5 py-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 transition-all duration-200 border-2 border-yellow-600 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     title="ARRM">
-                    <span className="text-sm font-bold" style={{ color: '#0091bd' }}>ARRM</span>
+                    <span className="text-sm font-bold" style={{ color: SIDEBAR_COLORS.arrm }}>ARRM</span>
                   </a>
                 </>
               )}
@@ -600,7 +601,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                       ${isARRM ? 'bg-yellow-500 hover:bg-yellow-600 focus:ring-yellow-400' : 'bg-[#5865F2] hover:bg-[#4752C4] focus:ring-blue-400'}`}
                     style={{ width: 36, height: isARRM ? 28 : 36 }}>
                     {isARRM ? (
-                      <span className="text-xs font-black" style={{ color: '#0091bd' }}>ARRM</span>
+                      <span className="text-xs font-black" style={{ color: SIDEBAR_COLORS.arrm }}>ARRM</span>
                     ) : (
                       <DiscordIcon size={20} />
                     )}
@@ -621,7 +622,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   title="ARRM"
                   className="flex items-center justify-center rounded-lg bg-yellow-500 hover:bg-yellow-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                   style={{ width: 36, height: 28 }}>
-                  <span className="text-xs font-black" style={{ color: '#0091bd' }}>ARRM</span>
+                  <span className="text-xs font-black" style={{ color: SIDEBAR_COLORS.arrm }}>ARRM</span>
                 </a>
               </>
             )}
@@ -660,7 +661,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     {showSearchAfter && (
                       <div className="my-2 px-2">
                         <div className="relative">
-                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#FFA500' }} />
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: SIDEBAR_COLORS.primaryLight }} />
                           <input
                             ref={setSearchInputNode}
                             data-hbat-sidebar-search=""
