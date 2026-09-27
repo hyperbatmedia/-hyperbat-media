@@ -439,7 +439,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 {system.name}
                 {themeCount > 0 && (
                   <span className="ml-2 text-xs opacity-80 font-normal"
-                    style={{ color: isSelected || isTopButton ? 'rgba(255,255,255,0.85)' : 'rgba(255,140,0,0.9)' }}>
+                    style={{ color: (isSelected || isTopButton) ? (colors.selectedText || 'rgba(255,255,255,0.85)') : 'rgba(255,140,0,0.9)' }}>
                     ({themeCount})
                   </span>
                 )}
@@ -457,7 +457,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             >
               <ChevronDown
                 className={`w-4 h-4 chevron-icon ${expandedSystems[system.id] ? 'open' : 'closed'}`}
-                style={{ color: isSelected || isTopButton ? 'white' : (colors.chevronColor || colors.bg) }}
+                style={{ color: (isSelected || isTopButton) ? (colors.selectedText || 'white') : (colors.chevronColor || colors.bg) }}
               />
             </button>
           )}

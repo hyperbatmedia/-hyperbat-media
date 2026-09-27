@@ -184,12 +184,12 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
   atlus: {
     keywords: ['atlus'],
     bg: '#FFFFFF',
-    border: '#2E5AAC',      // Bleu Atlus
+    border: '#3163B7',      // Bleu Atlus (extrait du vrai logo)
     hover: '#F0F0F0',
-    text: '#2E5AAC',
-    chevronColor: '#ED1C24', // Rouge du "T"
-    unselectedText: '#2E5AAC',
-    selectedText: '#2E5AAC'
+    text: '#3163B7',
+    chevronColor: '#ED1C24', // Rouge du "T" (extrait du vrai logo)
+    unselectedText: '#3163B7',
+    selectedText: '#3163B7'
   },
 
   acorn: {
@@ -205,23 +205,220 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
 
   atomiswave: {
     keywords: ['atomiswave'],
-    bg: '#FFFFFF',            // Blanc, comme le vrai logo (fond transparent)
-    border: '#C6641E',        // Orange-brun du dégradé du texte
+    bg: '#FFFFFF',
+    border: '#F36917',        // Orange (extrait du vrai logo)
     hover: '#F0F0F0',
-    text: '#C6641E',
-    chevronColor: '#8FD9C4',  // Vert menthe de l'accent diagonal
-    unselectedText: '#C6641E',
-    selectedText: '#C6641E'
+    text: '#F36917',
+    chevronColor: '#599B77',  // Vert (extrait du vrai logo)
+    unselectedText: '#F36917',
+    selectedText: '#F36917'
   },
 
   nec: {
     keywords: ['nec', 'pc engine', 'turbografx', 'pc-fx', 'supergrafx'],
-    bg: '#1414A0',            // Bleu/indigo officiel NEC
-    border: '#FFFFFF',
-    hover: '#0F0F78',
+    bg: '#020202',
+    border: '#C61717',        // Rouge PC Engine (extrait du vrai logo)
+    hover: '#1A1A1A',
     text: '#FFFFFF',
-    chevronColor: '#FFFFFF',
+    chevronColor: '#C61717',
     selectedText: '#FFFFFF'
+  },
+
+  taito: {
+    keywords: ['taito'],
+    bg: '#FFFFFF',
+    border: '#127BCA',        // Bleu Taito (extrait du vrai logo)
+    hover: '#F0F0F0',
+    text: '#127BCA',
+    chevronColor: '#4F4C4D',
+    unselectedText: '#127BCA',
+    selectedText: '#127BCA'
+  },
+
+  dataeast: {
+    keywords: ['data east', 'dataeast'],
+    bg: '#FFFFFF',
+    border: '#F91B20',        // Rouge Data East (extrait du vrai logo)
+    hover: '#F0F0F0',
+    text: '#F91B20',
+    chevronColor: '#F91B20',
+    unselectedText: '#F91B20',
+    selectedText: '#F91B20'
+  },
+
+  midway: {
+    keywords: ['midway'],
+    bg: '#000000',
+    border: '#D63647',        // Rouge Midway (extrait du vrai logo)
+    hover: '#1A1A1A',
+    text: '#FFFFFF',
+    chevronColor: '#D63647',
+    selectedText: '#FFFFFF'
+  },
+
+  coleco: {
+    keywords: ['coleco', 'colecovision'],
+    bg: '#001B2E',
+    border: '#EE6E5E',        // Corail (extrait du vrai logo ColecoVision)
+    hover: '#00121F',
+    text: '#FFFFFF',
+    chevronColor: '#A3DDF2',  // Turquoise (extrait du vrai logo)
+    selectedText: '#FFFFFF'
+  },
+
+  amiga: {
+    keywords: ['amiga'],
+    bg: '#1E2A4E',             // Bleu marine Commodore (marque mère)
+    border: '#F04822',         // Orange-rouge (extrait du vrai logo Amiga)
+    hover: '#141D38',
+    text: '#FFFFFF',
+    chevronColor: '#F04822',
+    selectedText: '#FFFFFF'
+  },
+
+  amstradcpc: {
+    keywords: ['amstrad', 'cpc', 'gx4000'],
+    bg: '#4D4D4D',
+    border: '#9C2249',         // Bordeaux (extrait du vrai logo, pas magenta)
+    hover: '#3A3A3A',
+    text: '#FFFFFF',
+    chevronColor: '#9C2249',
+    selectedText: '#FFFFFF'
+  },
+
+  apple2: {
+    keywords: ['apple ii', 'apple iigs', 'apple 2'],
+    bg: '#000000',
+    border: '#FF6600',         // Orange (extrait du vrai logo)
+    hover: '#1A1A1A',
+    text: '#FFFFFF',
+    chevronColor: '#FFCC00',
+    selectedText: '#FFFFFF'
+  },
+
+  cave: {
+    keywords: ['cave'],
+    bg: '#FFFFFF',
+    border: '#009944',
+    hover: '#F0F0F0',
+    text: '#009944',
+    chevronColor: '#E60013',
+    unselectedText: '#009944',
+    selectedText: '#009944'
+  },
+
+  psikyo: {
+    keywords: ['psikyo'],
+    bg: '#000000',
+    border: '#FF2100',
+    hover: '#1A1A1A',
+    text: '#FFFFFF',
+    chevronColor: '#FF2100',
+    selectedText: '#FFFFFF'
+  },
+
+  toaplan: {
+    keywords: ['toaplan'],
+    bg: '#000000',
+    border: '#F0B900',
+    hover: '#1A1A1A',
+    text: '#F0B900',
+    chevronColor: '#855700',
+    selectedText: '#F0B900'
+  },
+
+  seta: {
+    keywords: ['seta'],
+    bg: '#FFFFFF',
+    border: '#0B4199',
+    hover: '#F0F0F0',
+    text: '#0B4199',
+    chevronColor: '#0B4199',
+    unselectedText: '#0B4199',
+    selectedText: '#0B4199'
+  },
+
+  sammy: {
+    keywords: ['sammy'],
+    bg: '#000000',
+    border: '#55D400',
+    hover: '#1A1A1A',
+    text: '#FFFFFF',
+    chevronColor: '#217821',
+    selectedText: '#FFFFFF'
+  },
+
+  jaleco: {
+    keywords: ['jaleco'],
+    bg: '#FFFFFF',
+    border: '#246BBE',
+    hover: '#F0F0F0',
+    text: '#246BBE',
+    chevronColor: '#246BBE',
+    unselectedText: '#246BBE',
+    selectedText: '#246BBE'
+  },
+
+  nichibutsu: {
+    keywords: ['nichibutsu'],
+    bg: '#000000',
+    border: '#FFFF00',
+    hover: '#1A1A1A',
+    text: '#FFFF00',
+    chevronColor: '#FFFF00',
+    selectedText: '#FFFF00'
+  },
+
+  banpresto: {
+    keywords: ['banpresto'],
+    bg: '#231F20',
+    border: '#ED1C24',
+    hover: '#161213',
+    text: '#FFFFFF',
+    chevronColor: '#ED1C24',
+    selectedText: '#FFFFFF'
+  },
+
+  tecmo: {
+    keywords: ['tecmo'],
+    bg: '#FFFFFF',
+    border: '#DA2128',
+    hover: '#F0F0F0',
+    text: '#DA2128',
+    chevronColor: '#DA2128',
+    unselectedText: '#DA2128',
+    selectedText: '#DA2128'
+  },
+
+  acclaim: {
+    keywords: ['acclaim'],
+    bg: '#000000',
+    border: '#0019BF',
+    hover: '#1A1A1A',
+    text: '#FFFFFF',
+    chevronColor: '#31E1FD',
+    selectedText: '#FFFFFF'
+  },
+
+  exidy: {
+    keywords: ['exidy'],
+    bg: '#000000',
+    border: '#0105FF',
+    hover: '#1A1A1A',
+    text: '#FFFFFF',
+    chevronColor: '#EF00EB',
+    selectedText: '#FFFFFF'
+  },
+
+  irem: {
+    keywords: ['irem'],
+    bg: '#FFFFFF',
+    border: '#0055D4',
+    hover: '#F0F0F0',
+    text: '#0055D4',
+    chevronColor: '#00FFCC',
+    unselectedText: '#0055D4',
+    selectedText: '#0055D4'
   },
 
   commodore64: {
