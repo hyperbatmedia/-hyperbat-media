@@ -159,6 +159,68 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
     text: '#FFFFFF',
     chevronColor: '#40C4FF',
     selectedText: '#FFFFFF'
+  },
+
+  atari: {
+    keywords: ['atari'],
+    bg: '#0D0D0D',          // Noir (identité cabinet arcade vintage)
+    border: '#E4202E',      // Rouge Atari officiel
+    hover: '#1A1A1A',
+    text: '#FFFFFF',
+    chevronColor: '#E4202E',
+    selectedText: '#FFFFFF'
+  },
+
+  dragon: {
+    keywords: ['dragon 32', 'dragon 64', 'dragon data'],
+    bg: '#000000',          // Noir (étiquette d'origine Dragon 32/64)
+    border: '#E31E24',      // Rouge du dragon stylisé sur le logo
+    hover: '#1A1A1A',
+    text: '#FFFFFF',
+    chevronColor: '#E31E24',
+    selectedText: '#FFFFFF'
+  },
+
+  atlus: {
+    keywords: ['atlus'],
+    bg: '#FFFFFF',
+    border: '#2E5AAC',      // Bleu Atlus
+    hover: '#F0F0F0',
+    text: '#2E5AAC',
+    chevronColor: '#ED1C24', // Rouge du "T"
+    unselectedText: '#2E5AAC',
+    selectedText: '#2E5AAC'
+  },
+
+  acorn: {
+    keywords: ['acorn', 'atom', 'archimedes', 'bbc micro'],
+    bg: '#FFFFFF',
+    border: '#4A9B3E',      // Vert Acorn
+    hover: '#F0F0F0',
+    text: '#2E7D32',
+    chevronColor: '#4A9B3E',
+    unselectedText: '#2E7D32',
+    selectedText: '#2E7D32'
+  },
+
+  atomiswave: {
+    keywords: ['atomiswave'],
+    bg: '#0D0D0D',
+    border: '#E67E22',       // Orange dominant du dégradé
+    hover: '#1A1A1A',
+    text: '#FFFFFF',
+    chevronColor: '#8FD9C4', // Vert menthe de l'accent
+    selectedText: '#FFFFFF'
+  },
+
+  commodore64: {
+    keywords: ['commodore 64', 'c64'],
+    bg: '#000000',           // Noir (nod à l'écran de démarrage sombre)
+    border: '#29ABE2',       // Bleu du bandeau arc-en-ciel C64
+    hover: '#1A1A1A',
+    text: '#FFFFFF',
+    chevronColor: '#29ABE2',
+    selectedText: '#FFFFFF'
   }
 };
 
@@ -175,6 +237,25 @@ export const DEFAULT_COLORS: SystemColorConfig = {
 };
 
 /**
+ * Échappe les caractères spéciaux regex d'un mot-clé (utile pour les mots-clés
+ * contenant des espaces, ex: 'game boy', 'x board')
+ */
+const escapeRegExp = (str: string): string => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/**
+ * Teste si `text` contient `keyword` comme mot/segment isolé, et non comme
+ * simple sous-chaîne. Empêche les faux positifs du type :
+ *  - 'ds' (Nintendo DS) matchant à l'intérieur de "worlds" (home-worlds-actionmax)
+ *  - 'n64' (Nintendo 64) matchant à l'intérieur de "dragon64" (Dragon 64)
+ * \b s'appuie sur les frontières \w/non-\w : les tirets, espaces et underscores
+ * utilisés dans les IDs (ex: "home-worlds-actionmax") créent bien ces frontières.
+ */
+const matchesKeyword = (text: string, keyword: string): boolean => {
+  const pattern = new RegExp(`\\b${escapeRegExp(keyword.toLowerCase())}\\b`, 'i');
+  return pattern.test(text);
+};
+
+/**
  * Détermine les couleurs à appliquer pour un système donné
  * @param systemId - ID du système (ex: 'nes', 'mame')
  * @param systemName - Nom du système (ex: 'Nintendo Entertainment System')
@@ -187,14 +268,14 @@ export const getSystemColors = (systemId: string, systemName: string): SystemCol
   // Recherche d'une configuration correspondante
   for (const config of Object.values(SYSTEM_COLORS)) {
     const hasMatch = config.keywords.some(
-      kw => nameLower.includes(kw.toLowerCase()) || idLower.includes(kw.toLowerCase())
+      kw => matchesKeyword(nameLower, kw) || matchesKeyword(idLower, kw)
     );
     
     if (!hasMatch) continue;
     
     // Vérifier les exclusions (ex: éviter 'atari' pour les systèmes Sega)
     if (config.excludeKeywords?.some(
-      kw => nameLower.includes(kw.toLowerCase()) || idLower.includes(kw.toLowerCase())
+      kw => matchesKeyword(nameLower, kw) || matchesKeyword(idLower, kw)
     )) {
       continue;
     }
