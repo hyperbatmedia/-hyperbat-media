@@ -289,7 +289,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     return (
       <button
         onClick={() => toggleSection(sectionKey)}
-        className={`w-full text-left pt-3 pb-1 px-2 rounded transition flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+        className={`w-full text-left pt-3 pb-1 pl-2 pr-3 rounded transition flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-orange-500 ${
           isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-200'
         }`}
         aria-expanded={isExpanded}
@@ -320,7 +320,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     return (
       <button
         onClick={() => toggleSubsection(system.subsection || '')}
-        className={`w-full text-left pt-2 pb-1 px-3 ml-2 rounded transition flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+        className={`w-full text-left pt-2 pb-1 pl-3 pr-4 ml-2 rounded transition flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-orange-500 ${
           isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-200'
         }`}
         aria-expanded={isExpanded}
@@ -451,7 +451,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             <button
               onClick={() => toggleSystemCategories(system.id)}
               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSystemCategories(system.id); } }}
-              className="flex-shrink-0 p-1 rounded hover:bg-black/20 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="flex-shrink-0 p-1 mr-0.5 rounded hover:bg-black/20 focus:outline-none focus:ring-2 focus:ring-orange-500"
               title={expandedSystems[system.id] ? 'Masquer les catégories' : 'Afficher les catégories'}
               aria-expanded={expandedSystems[system.id]}
             >
@@ -632,7 +632,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         )}
 
         {/* Contenu scrollable */}
-        <div className="pr-1 pl-1 custom-scrollbar flex-1" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+        <div className="pr-3 pl-1 custom-scrollbar flex-1" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
           {visibleSystems.length === 0 && isSearchActive ? (
             <div className="text-center py-8 px-4">
               <p className="text-gray-300 text-sm mb-3">

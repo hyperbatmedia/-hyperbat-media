@@ -64,6 +64,10 @@ export const SCROLLBAR_STYLES = `
   .custom-scrollbar {
     scrollbar-width: thin;
     scrollbar-color: ${SIDEBAR_COLORS.primary} #1a1a1a;
+    /* Réserve toujours la place de la scrollbar (même quand elle n'est pas
+       nécessaire) pour que les chevrons/lignes ne se retrouvent jamais
+       chevauchés par la barre au moment où elle apparaît. */
+    scrollbar-gutter: stable;
   }
 `;
 

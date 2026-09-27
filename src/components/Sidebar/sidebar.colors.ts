@@ -205,11 +205,22 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
 
   atomiswave: {
     keywords: ['atomiswave'],
-    bg: '#0D0D0D',
-    border: '#E67E22',       // Orange dominant du dégradé
-    hover: '#1A1A1A',
+    bg: '#FFFFFF',            // Blanc, comme le vrai logo (fond transparent)
+    border: '#C6641E',        // Orange-brun du dégradé du texte
+    hover: '#F0F0F0',
+    text: '#C6641E',
+    chevronColor: '#8FD9C4',  // Vert menthe de l'accent diagonal
+    unselectedText: '#C6641E',
+    selectedText: '#C6641E'
+  },
+
+  nec: {
+    keywords: ['nec', 'pc engine', 'turbografx', 'pc-fx', 'supergrafx'],
+    bg: '#1414A0',            // Bleu/indigo officiel NEC
+    border: '#FFFFFF',
+    hover: '#0F0F78',
     text: '#FFFFFF',
-    chevronColor: '#8FD9C4', // Vert menthe de l'accent
+    chevronColor: '#FFFFFF',
     selectedText: '#FFFFFF'
   },
 
