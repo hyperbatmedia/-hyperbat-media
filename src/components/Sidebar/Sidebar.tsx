@@ -370,7 +370,11 @@ const Sidebar: React.FC<SidebarProps> = ({
 
     const buttonStyle = isTopButton
       ? { background: `linear-gradient(135deg, ${SIDEBAR_COLORS.primaryLight} 0%, #FF9E33 100%)`, borderColor: SIDEBAR_COLORS.primaryGold, borderWidth: '2px', boxShadow: '0 2px 4px rgba(0,0,0,0.3)' }
-      : isSelected ? { backgroundColor: colors.bg, borderColor: colors.border } : {};
+      : isSelected
+        ? (colors.bgGradient
+            ? { background: colors.bgGradient, borderColor: colors.border }
+            : { backgroundColor: colors.bg, borderColor: colors.border })
+        : {};
 
     const textStyle = isTopButton
       ? { color: '#1F1F1F', fontWeight: '700' }

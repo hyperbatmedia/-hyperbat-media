@@ -4,6 +4,7 @@ export interface SystemColorConfig {
   keywords: string[];
   excludeKeywords?: string[];
   bg: string;
+  bgGradient?: string;    // Dégradé CSS optionnel, utilisé à la place de bg quand présent (fond du bouton sélectionné uniquement)
   border: string;
   hover: string;
   text?: string;
@@ -174,6 +175,7 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
   dragon: {
     keywords: ['dragon 32', 'dragon 64', 'dragon data'],
     bg: '#000000',          // Noir (étiquette d'origine Dragon 32/64)
+    bgGradient: 'linear-gradient(90deg, #000 0%, #000 8%, #FA4139 8%, #F2844D 30%, #FDDF46 46%, #FCF15B 58%, #15BE54 72%, #1AACDF 88%, #40A9FA 92%, #000 92%, #000 100%)',
     border: '#E31E24',      // Rouge du dragon stylisé sur le logo
     hover: '#1A1A1A',
     text: '#FFFFFF',
@@ -237,13 +239,12 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
 
   dataeast: {
     keywords: ['data east', 'dataeast'],
-    bg: '#FFFFFF',
-    border: '#F91B20',        // Rouge Data East (extrait du vrai logo)
-    hover: '#F0F0F0',
-    text: '#F91B20',
-    chevronColor: '#F91B20',
-    unselectedText: '#F91B20',
-    selectedText: '#F91B20'
+    bg: '#0D0D0D',
+    border: '#E8B923',         // Or (bas du dégradé chromé du vrai logo)
+    hover: '#1A1A1A',
+    text: '#FFFFFF',
+    chevronColor: '#7B93C4',   // Bleu (haut du dégradé chromé du vrai logo)
+    selectedText: '#FFFFFF'
   },
 
   midway: {
