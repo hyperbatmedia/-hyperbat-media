@@ -8,9 +8,10 @@
 // Cliquer "Modifier" une carte ouvre son formulaire juste en dessous, déjà
 // pré-rempli. Mécanisme d'enregistrement local + Push GitHub calqué sur
 // ThemePacksTab.tsx.
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Star, Sparkles, Flame, Trash2, Plus, Loader2, Globe, HelpCircle, X, Pencil, ChevronDown } from 'lucide-react';
 import type { Link, ModalItem } from '../../hooks/useLinksLoader';
+import { useAdminCooldown } from '../../hooks/useAdminCooldown';
 
 // Convertit un lien de partage Google Drive en URL affichable directement
 // dans un <img> — même logique que ContentModal.tsx / HyperBatMediaSite.tsx
@@ -49,6 +50,8 @@ const GITHUB_OWNER = 'hyperbatmedia';
 const GITHUB_REPO = '-hyperbat-media';
 const GITHUB_BRANCH = 'main';
 const LINKS_PATH = 'src/data/links.json';
+const LOCK_PATH = 'admin_lock.json';
+const MAX_ATTEMPTS = 3;
 
 // Listes à items multiples (modal.items), affichées en grille de cartes.
 const CARD_LIST_IDS = ['outils', 'tutoriels', 'autres-themes-bob'];
@@ -188,6 +191,20 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
   const [githubTokenInput, setGithubTokenInput] = useState('');
   const [isPushing, setIsPushing] = useState(false);
   const [pushMessage, setPushMessage] = useState<string | null>(null);
+  const [showGithubModal, setShowGithubModal] = useState(false);
+  const { cooldownRemaining, cooldownAdmin, formatCountdown, startCooldown, forceCooldownSkip } = useAdminCooldown();
+  const handleGithubPushRef = useRef<(token: string) => Promise<void>>();
+
+  // Écoute un push déclenché depuis ailleurs (ex: modale "Fermer Admin"),
+  // même mécanisme que ManageTab.
+  useEffect(() => {
+    const handlePushRequest = (e: Event) => {
+      const token = (e as CustomEvent).detail?.token;
+      if (token) void handleGithubPushRef.current?.(token);
+    };
+    window.addEventListener('hyperbat-push-request', handlePushRequest);
+    return () => window.removeEventListener('hyperbat-push-request', handlePushRequest);
+  }, []);
 
   // Carte en cours d'édition (une seule à la fois, id d'item ou de lien).
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -259,47 +276,136 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
   const handleGithubPush = async (token: string) => {
     setIsPushing(true);
     setPushMessage(null);
+    const adminName = localStorage.getItem('hyperbat_admin_name') || 'Admin';
     try {
       setLinksData(draft);
       await saveLinks(draft);
 
       const content = btoa(unescape(encodeURIComponent(JSON.stringify(draft, null, 2))));
+      const itemCount = draft.reduce((n, l) => n + (l.modal ? l.modal.items.length : 1), 0);
 
-      const getRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LINKS_PATH}?ref=${GITHUB_BRANCH}&_=${Date.now()}`, {
-        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
-      });
-      if (!getRes.ok) throw new Error(`Erreur récupération SHA: ${getRes.status}`);
-      const fileData = await getRes.json();
-      const sha = fileData.sha;
+      // Push de links.json, avec retry si le SHA était périmé (409) —
+      // même logique que ManageTab pour themes.json.
+      let linksPushed = false;
+      for (let attempt = 1; attempt <= MAX_ATTEMPTS && !linksPushed; attempt++) {
+        const getRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LINKS_PATH}?ref=${GITHUB_BRANCH}&_=${Date.now()}`, {
+          headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
+        });
+        if (!getRes.ok) throw new Error(`Erreur récupération SHA: ${getRes.status}`);
+        const fileData = await getRes.json();
+        const sha = fileData.sha;
 
-      const pushRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LINKS_PATH}`, {
-        method: 'PUT',
-        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: `Update links.json (${draft.reduce((n, l) => n + (l.modal ? l.modal.items.length : 1), 0)} item(s)) - ${new Date().toLocaleDateString('fr-FR')}`,
-          content,
-          sha,
-          branch: GITHUB_BRANCH
-        })
-      });
-      if (!pushRes.ok) throw new Error(`Erreur push: ${pushRes.status}`);
+        const pushRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LINKS_PATH}`, {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: `Update links.json (${itemCount} item(s)) - ${new Date().toLocaleDateString('fr-FR')}`,
+            content,
+            sha,
+            branch: GITHUB_BRANCH
+          })
+        });
+        if (pushRes.ok) { linksPushed = true; break; }
+        if (pushRes.status === 409 && attempt < MAX_ATTEMPTS) {
+          await new Promise(r => setTimeout(r, 400 * attempt));
+          continue;
+        }
+        throw new Error(`Erreur push: ${pushRes.status}`);
+      }
 
-      setPushMessage('✅ Liens publiés sur GitHub avec succès.');
+      // Écrit le verrou avec cooldown sur GitHub (isLocked: false = juste
+      // un cooldown, pas un vrai verrou d'accès) — même admin_lock.json
+      // que ManageTab, donc un push ici bloque aussi Gérer pendant 3 min,
+      // et inversement.
+      const lockData = {
+        isLocked: false,
+        adminName,
+        pushedAt: Date.now(),
+        cooldownUntil: Date.now() + 180 * 1000,
+        isPushCooldown: true,
+        cooldownSeconds: 180
+      };
+      const lockContent = btoa(unescape(encodeURIComponent(JSON.stringify(lockData, null, 2))));
+
+      let lockWritten = false;
+      for (let attempt = 1; attempt <= MAX_ATTEMPTS && !lockWritten; attempt++) {
+        let lockSha: string | undefined;
+        try {
+          const lockGetRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}?ref=${GITHUB_BRANCH}&_=${Date.now()}`, {
+            headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
+          });
+          if (lockGetRes.ok) {
+            const lockFileData = await lockGetRes.json();
+            lockSha = lockFileData.sha;
+          }
+        } catch { /* fichier n'existe pas encore, c'est OK */ }
+
+        const lockPutRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${LOCK_PATH}`, {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: `Admin lock: push by ${adminName}`,
+            content: lockContent,
+            ...(lockSha ? { sha: lockSha } : {}),
+            branch: GITHUB_BRANCH
+          })
+        });
+        if (lockPutRes.ok) { lockWritten = true; break; }
+        if (lockPutRes.status === 409 && attempt < MAX_ATTEMPTS) {
+          await new Promise(r => setTimeout(r, 400 * attempt));
+          continue;
+        }
+        console.error('Lock write failed:', lockPutRes.status);
+        break;
+      }
+
+      startCooldown(adminName);
+
+      if (lockWritten) {
+        setPushMessage(`✅ Push réussi par ${adminName} — Admin bloqué 3 min`);
+      } else {
+        setPushMessage('⚠️ Liens poussés, mais le verrou n\'a pas pu être libéré sur GitHub.');
+      }
       setGithubTokenInput('');
+      setShowGithubModal(false);
     } catch (err) {
       console.error(err);
-      setPushMessage('❌ Erreur lors du push. Vérifie ton token et réessaie.');
+      setPushMessage(`❌ Erreur GitHub : ${err instanceof Error ? err.message : 'Inconnue'}`);
     } finally {
       setIsPushing(false);
     }
   };
+  handleGithubPushRef.current = handleGithubPush;
 
   const cardLists = draft.filter(l => CARD_LIST_IDS.includes(l.id) && l.modal);
   const singleCards = draft.filter(l => SINGLE_CARD_IDS.includes(l.id));
   const simpleLinks = draft.filter(l => SIMPLE_LINK_IDS.includes(l.id));
 
-  // Petite carte réutilisée pour un item de liste ET pour un lien unique
-  // (Thèmes HyperBat) — même apparence, mêmes champs.
+  if (cooldownRemaining > 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[500px] text-white">
+        <div className="bg-gray-800 border-2 border-orange-500 rounded-2xl p-10 max-w-md w-full text-center shadow-2xl">
+          <div className="text-6xl mb-4">⏳</div>
+          <h2 className="text-2xl font-black text-orange-400 mb-2">Push effectué par {cooldownAdmin}</h2>
+          <p className="text-gray-400 mb-6">Vitrine en cours de déploiement...</p>
+          <div className="text-7xl font-black mb-2" style={{
+            background: 'linear-gradient(180deg, #FF8C00 0%, #FFD700 100%)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
+          }}>
+            {formatCountdown(cooldownRemaining)}
+          </div>
+          <p className="text-gray-500 text-sm mb-8">La vitrine sera disponible dans quelques instants</p>
+          <button
+            onClick={forceCooldownSkip}
+            className="px-6 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white rounded-lg font-bold text-sm transition-all border border-gray-600"
+          >
+            Forcer l'accès
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="text-white space-y-6">
 
@@ -470,25 +576,57 @@ const LinksTab: React.FC<LinksTabProps> = ({ linksData, setLinksData, saveLinks 
       <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 space-y-3">
         <h3 className="text-sm font-bold text-gray-200 flex items-center gap-2"><Globe className="w-4 h-4 text-purple-400" /> Publier sur GitHub</h3>
         <p className="text-xs text-gray-400">Publie directement ce qui est affiché ci-dessus sur le site (inutile de cliquer "Enregistrer" avant).</p>
-        <div className="flex gap-2">
-          <input
-            type="password"
-            placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
-            value={githubTokenInput}
-            onChange={e => setGithubTokenInput(e.target.value)}
-            className="flex-1 p-3 bg-gray-950 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none font-mono text-sm"
-          />
-          <button
-            onClick={() => githubTokenInput.trim() && handleGithubPush(githubTokenInput.trim())}
-            disabled={!githubTokenInput.trim() || isPushing}
-            className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-bold px-5 py-3 rounded-xl transition-colors"
-          >
-            {isPushing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Globe className="w-4 h-4" />}
-            {isPushing ? 'Envoi...' : 'Push GitHub'}
-          </button>
-        </div>
+        <button
+          onClick={() => setShowGithubModal(true)}
+          disabled={isPushing}
+          className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-bold px-5 py-3 rounded-xl transition-colors"
+        >
+          {isPushing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Globe className="w-4 h-4" />}
+          {isPushing ? 'Envoi...' : 'Push GitHub'}
+        </button>
         {pushMessage && <p className="text-xs font-semibold">{pushMessage}</p>}
       </div>
+
+      {/* MODALE DE CONFIRMATION PUSH */}
+      {showGithubModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={() => setShowGithubModal(false)}>
+          <div className="bg-gray-800 rounded-2xl border-2 border-purple-500 max-w-md w-full shadow-2xl p-6" onClick={e => e.stopPropagation()}>
+            <h2 className="text-xl font-black text-purple-400 mb-2 flex items-center gap-2">
+              <Globe className="w-6 h-6" /> Push GitHub
+            </h2>
+            <p className="text-gray-400 text-sm mb-1">
+              Connecté en tant que : <span className="text-orange-400 font-bold">{localStorage.getItem('hyperbat_admin_name') || 'Admin'}</span>
+            </p>
+            <p className="text-gray-400 text-sm mb-4">
+              Saisis ton token GitHub pour pousser <code className="text-orange-400">links.json</code> directement sur le repo.
+              Le token ne sera pas sauvegardé. Un cooldown de 3 min démarrera après le push.
+            </p>
+            <div className="mb-4">
+              <label className="block text-sm font-bold text-gray-300 mb-2">Personal Access Token</label>
+              <input
+                type="password"
+                value={githubTokenInput}
+                onChange={e => setGithubTokenInput(e.target.value)}
+                placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+                className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-purple-500 focus:outline-none font-mono text-sm"
+              />
+              <p className="text-xs text-gray-500 mt-1">GitHub → Settings → Developer settings → Tokens (classic) → scope: repo</p>
+            </div>
+            <div className="flex gap-3">
+              <button onClick={() => { setShowGithubModal(false); setGithubTokenInput(''); }}
+                className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold">
+                Annuler
+              </button>
+              <button
+                onClick={() => githubTokenInput.trim() && handleGithubPush(githubTokenInput.trim())}
+                disabled={!githubTokenInput.trim()}
+                className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold flex items-center justify-center gap-2">
+                <Globe className="w-4 h-4" /> Pousser
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* GUIDE */}
       {showGuide && (

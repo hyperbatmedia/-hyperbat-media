@@ -3,6 +3,7 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Search, Download, Edit2, Trash2, Eye, X, AlertCircle, ImageOff, User, CheckSquare, Square, Upload, ArrowUpDown, Zap, Users, Database, Globe, HelpCircle } from 'lucide-react';
 import { ensureDisplayableUrl, reverseConvertUrl, isUnknownCreator, formatDateFR, extractDriveFileId } from './DriveTab/DriveHelpers';
 import { AutocompleteSelect } from '../shared/AutocompleteSelect';
+import { useAdminCooldown, COOLDOWN_SECONDS } from '../../hooks/useAdminCooldown';
 
 interface ThemeItem {
   id: number;
@@ -45,7 +46,6 @@ const GITHUB_OWNER = 'hyperbatmedia';
 const GITHUB_REPO = '-hyperbat-media';
 const GITHUB_BRANCH = 'main';
 const LOCK_PATH = 'admin_lock.json';
-const COOLDOWN_SECONDS = 180; // 3 minutes
 
 const isInvalidUrl = (url: string): boolean => {
   if (!url?.trim()) return true;
@@ -380,10 +380,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const [githubTokenInput, setGithubTokenInput] = useState('');
   const [isPushing, setIsPushing] = useState(false);
 
-  // ── Lock system ───────────────────────────────────────────────────────────
-  const [cooldownRemaining, setCooldownRemaining] = useState<number>(0);
-  const [cooldownAdmin, setCooldownAdmin] = useState<string>('');
-  const cooldownIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // ── Lock system (partagé avec LinksTab via useAdminCooldown) ─────────────
+  const { cooldownRemaining, cooldownAdmin, formatCountdown, startCooldown, forceCooldownSkip } = useAdminCooldown();
   const handleGithubPushRef = useRef<(token: string) => Promise<void>>();
 
   // Écoute le push déclenché depuis la modale "Fermer Admin"
@@ -392,79 +390,9 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       const token = (e as CustomEvent).detail?.token;
       if (token) void handleGithubPushRef.current?.(token);
     };
-    // Écoute la fermeture sans push → reset le cooldown
-    const handleCloseAdmin = () => {
-      if (cooldownIntervalRef.current) clearInterval(cooldownIntervalRef.current);
-      localStorage.removeItem('hyperbat_cooldown');
-      setCooldownRemaining(0);
-      setCooldownAdmin('');
-    };
     window.addEventListener('hyperbat-push-request', handlePushRequest);
-    window.addEventListener('hyperbat-close-admin', handleCloseAdmin);
-    return () => {
-      window.removeEventListener('hyperbat-push-request', handlePushRequest);
-      window.removeEventListener('hyperbat-close-admin', handleCloseAdmin);
-    };
+    return () => window.removeEventListener('hyperbat-push-request', handlePushRequest);
   }, []);
-
-  // Vérifie si un cooldown est actif au montage (depuis localStorage)
-  useEffect(() => {
-    const stored = localStorage.getItem('hyperbat_cooldown');
-    if (stored) {
-      try {
-        const { pushedAt, adminName } = JSON.parse(stored);
-        const elapsed = Math.floor((Date.now() - pushedAt) / 1000);
-        const remaining = COOLDOWN_SECONDS - elapsed;
-        if (remaining > 0) {
-          setCooldownRemaining(remaining);
-          setCooldownAdmin(adminName);
-        } else {
-          localStorage.removeItem('hyperbat_cooldown');
-        }
-      } catch {
-        localStorage.removeItem('hyperbat_cooldown');
-      }
-    }
-  }, []);
-
-  // Décompte du cooldown
-  useEffect(() => {
-    if (cooldownRemaining > 0) {
-      cooldownIntervalRef.current = setInterval(() => {
-        setCooldownRemaining(prev => {
-          if (prev <= 1) {
-            clearInterval(cooldownIntervalRef.current!);
-            localStorage.removeItem('hyperbat_cooldown');
-            setCooldownAdmin('');
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-    return () => {
-      if (cooldownIntervalRef.current) clearInterval(cooldownIntervalRef.current);
-    };
-  }, [cooldownRemaining]);
-
-  const formatCountdown = (seconds: number): string => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}:${s.toString().padStart(2, '0')}`;
-  };
-
-  const startCooldown = (adminName: string) => {
-    const pushedAt = Date.now();
-    localStorage.setItem('hyperbat_cooldown', JSON.stringify({ pushedAt, adminName }));
-    setCooldownRemaining(COOLDOWN_SECONDS);
-    setCooldownAdmin(adminName);
-  };
-
-  const forceCooldownSkip = () => {
-    localStorage.removeItem('hyperbat_cooldown');
-    setCooldownRemaining(0);
-    setCooldownAdmin('');
-  };
   // ── Fin Lock system ───────────────────────────────────────────────────────
 
   const itemsPerPage = 52;
