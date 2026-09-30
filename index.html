@@ -2,6 +2,43 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Garde-fou "site mis à jour pendant que la page était en cache".
+      // GitHub Pages peut servir un ancien index.html (cache ~10 min) qui pointe
+      // vers des fichiers /assets/ déjà remplacés par un déploiement : le JS
+      // renvoie alors 404 et la page reste blanche. Dans ce cas on recharge UNE
+      // fois avec un paramètre ?_r=... (autre adresse = pas de cache) : les
+      // autres paramètres (retrobat, system, boutons manette, agent...) sont
+      // conservés. Au plus un rechargement par minute, donc jamais de boucle.
+      (function () {
+        var KEY = 'hyperbat_asset_reload';
+        var url;
+        try {
+          url = new URL(window.location.href);
+          if (url.searchParams.has('_r')) {
+            url.searchParams.delete('_r');
+            window.history.replaceState(null, '', url.pathname + url.search + url.hash);
+          }
+        } catch (e) { /* on continue sans nettoyage d'adresse */ }
+
+        window.addEventListener('error', function (e) {
+          var t = e.target;
+          if (!t || (t.tagName !== 'SCRIPT' && t.tagName !== 'LINK')) return;
+          var src = t.src || t.href || '';
+          if (src.indexOf('/assets/') === -1) return;
+          try {
+            var last = parseInt(sessionStorage.getItem(KEY) || '0', 10);
+            if (Date.now() - last < 60000) return;
+            sessionStorage.setItem(KEY, String(Date.now()));
+          } catch (err) { return; }
+          try {
+            var next = new URL(window.location.href);
+            next.searchParams.set('_r', String(Date.now()));
+            window.location.replace(next.toString());
+          } catch (err2) { window.location.reload(); }
+        }, true);
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="%BASE_URL%favicon-32.png" />
@@ -33,22 +70,6 @@
   </head>
   <body>
     <div id="root"></div>
-    
-    <!-- JSZip pour extraction ZIP uniquement -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    
-    <script>
-      // Initialiser JSZip
-      window.addEventListener('load', () => {
-        if (window.JSZip) {
-          console.log('✅ JSZip chargé et prêt (support ZIP)');
-        } else {
-          console.error('❌ JSZip non disponible');
-        }
-        
-        console.info('ℹ️ Format supporté: ZIP ✅ uniquement');
-      });
-    </script>
     
     <script type="module" src="/src/main.tsx"></script> 
   </body>
