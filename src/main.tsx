@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import HyperBatMediaSite from './HyperBatMediaSite'; // Importation de votre composant principal
 import ThemeSubmissionPage from './components/ThemeSubmission/ThemeSubmissionPage';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import './index.css'; // Importation du CSS (y compris Tailwind)
 
 // Pas de librairie de routes sur ce site, et GitHub Pages ne sert qu'un seul
@@ -12,6 +13,8 @@ const isSubmissionPage = new URLSearchParams(window.location.search).has('soumet
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    {isSubmissionPage ? <ThemeSubmissionPage /> : <HyperBatMediaSite />}
+    <ErrorBoundary>
+      {isSubmissionPage ? <ThemeSubmissionPage /> : <HyperBatMediaSite />}
+    </ErrorBoundary>
   </React.StrictMode>
 );

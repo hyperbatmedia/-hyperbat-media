@@ -4,7 +4,7 @@
 // pour permettre a des outils externes (le launcher AHK RetroBat, le
 // script hyperbat_theme_finder.py) d'ouvrir la vitrine deja pre-filtree.
 
-import { useState, useMemo, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import type { ComponentType, CSSProperties } from 'react';
 import { Search, Gamepad2, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download, AlertTriangle, Gift, Upload } from 'lucide-react';
 
@@ -16,7 +16,7 @@ import { useLinksStorage } from './hooks/useLinksStorage';
 import { useSystemsLogic } from './hooks/useSystemsLogic';
 import { getThemeKey } from './utils/themeUtils';
 import Sidebar from './components/Sidebar/Sidebar';
-const AdminPanel = lazy(() => import('./components/AdminPanel/AdminPanel'));
+import AdminPanel from './components/AdminPanel/AdminPanel';
 import type { AdminTab } from './components/AdminPanel/AdminPanel';
 import ThemeList from './components/ThemeList/ThemeList';
 import CartPanel from './components/CartPanel/CartPanel';
@@ -970,13 +970,11 @@ export default function HyperBatMediaSite(): JSX.Element {
                 </div>
               )}
               {showAdminPanel && (
-                <Suspense fallback={<div style={{ padding: 40, textAlign: 'center', color: colors.textSecondary }}>Chargement de l'administration…</div>}>
-                  <AdminPanel themes={rawThemes} setThemes={setThemes} saveThemes={saveThemes}
+                <AdminPanel themes={rawThemes} setThemes={setThemes} saveThemes={saveThemes}
                     systems={systemsLogic.systems} categories={categories}
                     adminTab={adminTab} setAdminTab={setAdminTab}
                     packsData={packsData} setPacksData={setPacksData} savePacksData={savePacksData}
                     linksData={linksData} setLinksData={setLinksData} saveLinks={saveLinks} />
-                </Suspense>
               )}
               {!showAdminPanel && featuredItems.length > 0 && (
                 <div className="flex flex-wrap gap-3 mb-4">
