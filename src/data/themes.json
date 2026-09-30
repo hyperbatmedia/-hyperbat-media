@@ -49533,5 +49533,60 @@
     "downloadUrl": "https://drive.google.com/file/d/189xjUsnO1rdfWNbQjmazjlGR8W74GZcb/view?usp=sharing",
     "size": "47.1 MB",
     "date": "2026-09-18"
+  },
+  {
+    "id": 124943,
+    "name": "DICE",
+    "creator": "Dav",
+    "system": "dice",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1ufy2-xKndOV15Zo_VsMob5w7iEYnCrSH/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1LIu0VmbKsCOKvVCeuo8L7L_XOBV8_93b/view?usp=sharing",
+    "size": "2.8 MB",
+    "date": "2026-09-30"
+  },
+  {
+    "id": 124944,
+    "name": "namco3xx",
+    "creator": "Bob",
+    "system": "namcosystem357369",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1pyh5YgTNTyPjf7sPF2mn8A4UQekQyGnG/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Y4_sJiRFAndr7miT_FcwGNUPAcO3rE9S/view?usp=sharing",
+    "size": "2.7 MB",
+    "date": "2026-09-30"
+  },
+  {
+    "id": 124945,
+    "name": "HBMAME",
+    "creator": "Dav",
+    "system": "hbmame",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Axevqad45QtkBr64Wg1Hfw6NeAK_ysMV/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/11cjmtJuDrRmrQvk_dbHgc9-E0jPAJYFN/view?usp=sharing",
+    "size": "4.3 MB",
+    "date": "2026-09-30"
+  },
+  {
+    "id": 124946,
+    "name": "lindbergh",
+    "creator": "Roni",
+    "system": "lindbergh",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1i6SVARN9n564EZiLKXaZ0Srm7ka6pshm/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1CeuLXzhA3LiR7RYOexaurgeFcJpj8spe/view?usp=sharing",
+    "size": "1.4 MB",
+    "date": "2026-09-30"
+  },
+  {
+    "id": 124947,
+    "name": "hikaru",
+    "creator": "Dav",
+    "system": "hikaru",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Ab0qGoteVJnYCdbZraqGPkfUe2svecQT/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/12inn2y_JMcjHAotCfLbY_S6SCtZLSgHi/view?usp=sharing",
+    "size": "2.9 MB",
+    "date": "2026-09-30"
   }
 ]
