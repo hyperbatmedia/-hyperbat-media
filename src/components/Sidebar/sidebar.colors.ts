@@ -46,6 +46,7 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
     hover: '#002D5C', 
     text: '#FFFFFF', 
     chevronColor: '#00A3FF',
+    unselectedText: '#00A3FF', // Bleu clair quand non sélectionné
     selectedText: '#FFFFFF'  // Blanc quand sélectionné
   },
   
