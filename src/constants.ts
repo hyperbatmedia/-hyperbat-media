@@ -88,6 +88,7 @@ export const systemsData: SystemsDataStructure = {
         acclaim: { label: 'ACCLAIM', systems: ['Acclaim'] },
         exidy: { label: 'EXIDY', systems: ['Exidy'] },
         century: { label: 'CENTURY ELECTRONICS', systems: ['Century Electronics'] },
+        dice: { label: 'DICE', systems: ['Dice'] },
         'autres-arcade': { label: 'AUTRES CONSTRUCTEURS', systems: ['AAE', 'Daphne (LaserDisc)', 'Singe (LaserDisc)', 'American Laser Games', 'Gaelco', 'IGS', 'FBNeo'] }
     },
     home: {
