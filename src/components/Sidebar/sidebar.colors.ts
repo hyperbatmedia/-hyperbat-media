@@ -58,7 +58,7 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
       'namcosystemes3', 'namcosystemfl', 'namcosystemna1', 'namcosystemna2'
     ], 
     bg: '#FFFFFF',        // Blanc
-    border: '#FFFFFF', 
+    border: '#E30613', 
     hover: '#F0F0F0', 
     text: '#E30613',      // Rouge Namco
     chevronColor: '#E30613', 
@@ -84,7 +84,7 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
       'sc-3000', 'sc3000', 'pico', 'beena', 'advanced pico', '32x', 'mega cd', 
       'sega cd', 'megacd', 'segacd', 'nomad'
     ], 
-    excludeKeywords: ['atari'], 
+    excludeKeywords: ['atari', 'pico-8', 'pico8'], 
     bg: '#0060A8',         // Bleu Sega officiel (international)
     border: '#008DD0',     // Bleu Sega officiel (Japon) - utilisé comme accent
     hover: '#004D87', 
@@ -227,12 +227,12 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
   taito: {
     keywords: ['taito'],
     bg: '#FFFFFF',
-    border: '#127BCA',        // Bleu Taito (extrait du vrai logo)
+    border: '#157DCA',        // Bleu Taito (échantillonné sur le vrai logo)
     hover: '#F0F0F0',
-    text: '#127BCA',
+    text: '#157DCA',
     chevronColor: '#4F4C4D',
-    unselectedText: '#127BCA',
-    selectedText: '#127BCA'
+    unselectedText: '#157DCA',
+    selectedText: '#157DCA'
   },
 
   dataeast: {
@@ -277,12 +277,13 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
 
   amstradcpc: {
     keywords: ['amstrad', 'cpc', 'gx4000'],
-    bg: '#4D4D4D',
-    border: '#9C2249',         // Bordeaux (extrait du vrai logo, pas magenta)
-    hover: '#3A3A3A',
-    text: '#FFFFFF',
+    bg: '#F2F2F2',              // Gris très clair, comme le vrai logo (et non gris foncé)
+    border: '#9C2249',          // Bordeaux (extrait du vrai logo)
+    hover: '#E0E0E0',
+    text: '#9C2249',
     chevronColor: '#9C2249',
-    selectedText: '#FFFFFF'
+    unselectedText: '#9C2249',
+    selectedText: '#9C2249'
   },
 
   apple2: {
@@ -297,13 +298,14 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
 
   cave: {
     keywords: ['cave'],
+    excludeKeywords: ['cave story'],
     bg: '#FFFFFF',
-    border: '#009944',
+    border: '#0C8B46',
     hover: '#F0F0F0',
-    text: '#009944',
-    chevronColor: '#E60013',
-    unselectedText: '#009944',
-    selectedText: '#009944'
+    text: '#0C8B46',
+    chevronColor: '#CA0303',
+    unselectedText: '#0C8B46',
+    selectedText: '#0C8B46'
   },
 
   psikyo: {
@@ -415,7 +417,7 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
     border: '#0055D4',
     hover: '#F0F0F0',
     text: '#0055D4',
-    chevronColor: '#00FFCC',
+    chevronColor: '#0055D4',
     unselectedText: '#0055D4',
     selectedText: '#0055D4'
   },
@@ -428,6 +430,80 @@ export const SYSTEM_COLORS: Record<string, SystemColorConfig> = {
     text: '#FFFFFF',
     chevronColor: '#29ABE2',
     selectedText: '#FFFFFF'
+  },
+
+  magazines: {
+    keywords: ['magazines'],
+    bg: '#F5F0E1',            // Beige papier journal
+    border: '#8B6F47',        // Brun kraft
+    hover: '#EBE4D0',
+    text: '#4A3728',
+    chevronColor: '#8B6F47',
+    unselectedText: '#4A3728',
+    selectedText: '#4A3728'
+  },
+
+  collections: {
+    keywords: ['collections personnalisees', 'collections personnalisées'],
+    bg: '#2D1B4E',            // Violet foncé (personnalisation/premium)
+    border: '#C9A227',        // Or (mise en avant, "collection spéciale")
+    hover: '#231540',
+    text: '#FFFFFF',
+    chevronColor: '#C9A227',
+    selectedText: '#FFFFFF'
+  },
+
+  magnavox: {
+    keywords: ['magnavox', 'odyssey'],
+    bg: '#FFFFFF',
+    border: '#FF0000',        // Rouge pur (échantillonné sur le vrai logo Odyssey)
+    hover: '#F0F0F0',
+    text: '#FF0000',
+    chevronColor: '#FF0000',
+    unselectedText: '#FF0000',
+    selectedText: '#FF0000'
+  },
+
+  msx: {
+    keywords: ['msx'],
+    bg: '#1E3A8A',             // Bleu (écran de démarrage standard MSX)
+    border: '#000000',        // Noir (encart du logo)
+    hover: '#152A63',
+    text: '#FFFFFF',
+    chevronColor: '#FFFFFF',
+    selectedText: '#FFFFFF'
+  },
+
+  teknoparrot: {
+    keywords: ['teknoparrot'],
+    bg: '#000000',
+    border: '#D42325',        // Rouge "TEKNO" (échantillonné sur le vrai logo)
+    hover: '#1A1A1A',
+    text: '#FFFFFF',
+    chevronColor: '#2096D1',  // Bleu "PARROT" (échantillonné sur le vrai logo)
+    selectedText: '#FFFFFF'
+  },
+
+  triforce: {
+    keywords: ['triforce'],
+    bg: '#FFFFFF',
+    border: '#8A81CA',        // Violet (échantillonné sur le vrai logo)
+    hover: '#F0F0F0',
+    text: '#8A81CA',
+    chevronColor: '#8A81CA',
+    unselectedText: '#8A81CA',
+    selectedText: '#8A81CA'
+  },
+
+  philips: {
+    keywords: ['philips', 'cd-i', 'cdi'],
+    bg: '#FFFFFF',
+    border: '#15B8F3',        // Bleu cyan (échantillonné sur le vrai logo PHILIPS)
+    hover: '#F0F0F0',
+    text: '#15B8F3',
+    chevronColor: '#FA0606',  // Rouge (triangle du logo CD-i)
+    unselectedText: '#15B8F3',
+    selectedText: '#15B8F3'
   }
 };
 
