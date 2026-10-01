@@ -18,8 +18,14 @@ import { SystemRow } from '../../types';
 import { AutocompleteSelect } from '../shared/AutocompleteSelect';
 import { ROBOT_ENDPOINT } from '../../config/robotEndpoint';
 import { robotFetch, generateClientId, RobotFetchError } from '../../utils/robotFetch';
+import linksJson from '../../data/links.json';
 
 const EXCLUDED_IDS = ['all', 'tools', 'tutorials', 'main-themes', 'other-themes'];
+
+// Lien Discord : on le lit dans links.json (le même que celui du site, modifiable
+// depuis l'onglet Liens de l'admin) plutôt que de le recopier ici en dur.
+const DISCORD_URL: string =
+  (linksJson as Array<{ id: string; url: string }>).find((l) => l.id === 'discord')?.url ?? '';
 
 // Reprise exacte de getThemeColors() (HyperBatMediaSite.tsx), mode sombre
 // uniquement : cette page n'a pas besoin du bouton clair/sombre du site.
@@ -468,6 +474,25 @@ export default function ThemeSubmissionPage() {
                     placeholder="Écris un système…"
                     emptyLabel="Choisir un système"
                   />
+                  {/* Évite qu'un créateur range son thème dans le "système le
+                      plus proche" (ex. MAME) faute de trouver le sien : la liste
+                      est fixe, il n'y a pas de saisie libre. */}
+                  <p className="text-xs mt-1" style={{ color: COLORS.textSecondary }}>
+                    Ton système n'est pas dans la liste ? Ne choisis pas un autre système :{' '}
+                    {DISCORD_URL ? (
+                      <a
+                        href={DISCORD_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: '#FFA500', textDecoration: 'underline' }}
+                      >
+                        préviens-nous sur Discord
+                      </a>
+                    ) : (
+                      'préviens-nous'
+                    )}{' '}
+                    avec son nom, on l'ajoute.
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-bold mb-2" style={{ color: COLORS.textSecondary }}>
