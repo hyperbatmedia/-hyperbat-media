@@ -47,7 +47,7 @@ export const systemsData: SystemsDataStructure = {
         taito: { label: 'TAITO', systems: ['Taito Classique', 'Taito', 'Taito F3', 'Taito G-Net', 'Type X', 'Type X2', 'Type X3', 'Type X Zero', 'NESiCAxLive', 'NESiCAxLive 2', 'Taito B System', 'Taito L System', 'Taito X System', 'Taito Z System', 'Taito Qix Hardware', 'Taito Type Z'] },
         'nintendo-arcade': { label: 'NINTENDO', systems: ['Nintendo Classics', 'PlayChoice-10', 'VS System'] },
         triforce: { label: 'TRIFORCE', systems: ['Triforce'] },
-        'atari-arcade': { label: 'ATARI', systems: ['Atari Classique', 'Atari System 1', 'Atari System 2', 'Atari System G1', 'Atari System G2', 'Atari System G3'] },
+        'atari-arcade': { label: 'ATARI', systems: ['Atari Classics', 'Atari System 1', 'Atari System 2', 'Atari System G1', 'Atari System G2', 'Atari System G3'] },
         cave: { label: 'CAVE', systems: ['Cave'] },
         psikyo: { label: 'PSIKYO', systems: ['Psikyo'] },
         toaplan: { label: 'TOAPLAN', systems: ['Toaplan'] },

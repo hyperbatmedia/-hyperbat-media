@@ -56,7 +56,7 @@ export const THEME_TO_BOB: Record<string, string | null> = {
 
   // ── ATARI ─────────────────────────────────────────────────────────────────
   'lynx':                    'atarilynx',
-  'atariclassique':          null,
+  'atariclassics':           null,
 
   // ── NEC ───────────────────────────────────────────────────────────────────
   'pcengineturbografx16':    'pcengine',
