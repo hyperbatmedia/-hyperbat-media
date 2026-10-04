@@ -89,9 +89,19 @@ const Toast = ({ message, type, onClose }: { message: string; type: 'success' | 
   </div>
 );
 
+// ── Créateurs : suggestions + orthographe unique ──────────────────────────────
+const creatorKey = (s: string) => (s || '').trim().toLowerCase();
+// Si le nom saisi existe déjà (majuscules/espaces près), on reprend l'orthographe déjà utilisée.
+const canonicalCreator = (input: string, known: string[]): string => {
+  const t = (input || '').trim();
+  const hit = known.find(k => creatorKey(k) === creatorKey(t));
+  return hit || t;
+};
+
 // ── BulkCreatorEditModal ──────────────────────────────────────────────────────
-const BulkCreatorEditModal = ({ selectedThemes, onSave, onClose }: {
+const BulkCreatorEditModal = ({ selectedThemes, knownCreators, onSave, onClose }: {
   selectedThemes: ThemeItem[];
+  knownCreators: string[];
   onSave: (newCreator: string) => void;
   onClose: () => void;
 }) => {
@@ -124,8 +134,9 @@ const BulkCreatorEditModal = ({ selectedThemes, onSave, onClose }: {
           </div>
           <div>
             <label className="block text-sm font-bold text-gray-300 mb-2">Nouveau créateur *</label>
-            <input type="text" required value={newCreator} onChange={e => setNewCreator(e.target.value)} placeholder="Ex: John Doe" autoFocus
+            <input type="text" required list="known-creators" value={newCreator} onChange={e => setNewCreator(e.target.value)} placeholder="Ex: John Doe (suggestions dès que tu tapes)" autoFocus
               className="w-full p-4 bg-gray-950 border border-gray-700 rounded-xl text-white text-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 focus:outline-none transition-all" />
+            <datalist id="known-creators">{knownCreators.map(c => <option key={c} value={c} />)}</datalist>
           </div>
           <div className="flex gap-3 pt-4 border-t border-gray-700">
             <button type="button" onClick={onClose} className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold transition-all">Annuler</button>
@@ -426,6 +437,22 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     });
   }, [themes]);
 
+  // Créateurs déjà connus : une seule orthographe par pseudo (la plus utilisée)
+  const knownCreators = useMemo(() => {
+    const byKey = new Map<string, Map<string, number>>();
+    for (const t of themes) {
+      if (!t.creator || isUnknownCreator(t.creator)) continue;
+      const k = creatorKey(t.creator);
+      const m = byKey.get(k) || new Map<string, number>();
+      const name = t.creator.trim();
+      m.set(name, (m.get(name) || 0) + 1);
+      byKey.set(k, m);
+    }
+    return Array.from(byKey.values())
+      .map(m => Array.from(m.entries()).sort((a, b) => b[1] - a[1])[0][0])
+      .sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
+  }, [themes]);
+
   const filtered = useMemo(() => {
     return themesWithConvertedUrls.filter(theme => {
       if (filters.search && !theme.name.toLowerCase().includes(filters.search.toLowerCase())) return false;
@@ -490,7 +517,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     }
   };
 
-  const handleBulkCreatorEdit = (newCreator: string) => {
+  const handleBulkCreatorEdit = (typedCreator: string) => {
+    const newCreator = canonicalCreator(typedCreator, knownCreators);
     const updated = themes.map(theme => selectedIds.includes(theme.id) ? { ...theme, creator: newCreator } : theme);
     setThemes(updated); saveThemes(updated); setSelectedIds([]); setShowBulkCreatorModal(false);
     showToast(`✅ Créateur modifié pour ${selectedIds.length} thème(s)`, 'success');
@@ -508,7 +536,8 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     showToast(`✅ Statut Multi modifié pour ${selectedIds.length} thème(s)`, 'success');
   };
 
-  const handleSaveEdit = async (edited: ThemeItem) => {
+  const handleSaveEdit = async (typed: ThemeItem) => {
+    const edited = { ...typed, creator: canonicalCreator(typed.creator, knownCreators) };
     const updated = themes.map(t => t.id === edited.id ? edited : t);
     setThemes(updated); await saveThemes(updated); setEditingTheme(null);
     showToast('✅ Thème modifié', 'success');
@@ -979,11 +1008,11 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
       )}
       {editingTheme && (
         <EditModal theme={editingTheme} onSave={handleSaveEdit} onClose={() => setEditingTheme(null)}
-          systems={systems} categories={categories} />
+          systems={systems} categories={categories} knownCreators={knownCreators} />
       )}
       {showImportModal && <ImportModal onImport={handleImport} onClose={() => setShowImportModal(false)} />}
       {showBulkCreatorModal && selectedThemes.length > 0 && (
-        <BulkCreatorEditModal selectedThemes={selectedThemes} onSave={handleBulkCreatorEdit} onClose={() => setShowBulkCreatorModal(false)} />
+        <BulkCreatorEditModal selectedThemes={selectedThemes} knownCreators={knownCreators} onSave={handleBulkCreatorEdit} onClose={() => setShowBulkCreatorModal(false)} />
       )}
       {showBulkScreenScraperModal && selectedThemes.length > 0 && (
         <BulkScreenScraperEditModal selectedThemes={selectedThemes} onSave={handleBulkScreenScraperEdit} onClose={() => setShowBulkScreenScraperModal(false)} />
@@ -1172,9 +1201,9 @@ const PreviewModal = ({ theme, onClose, onEdit, onDelete, systems, categories }:
 };
 
 // ── EditModal ─────────────────────────────────────────────────────────────────
-const EditModal = ({ theme, onSave, onClose, systems, categories }: {
+const EditModal = ({ theme, onSave, onClose, systems, categories, knownCreators }: {
   theme: ThemeItem; onSave: (t: ThemeItem) => void; onClose: () => void;
-  systems: SystemRow[]; categories: Category[];
+  systems: SystemRow[]; categories: Category[]; knownCreators: string[];
 }) => {
   const [editData, setEditData] = useState<ThemeItem>({ ...theme });
   const availableSystems = systems.filter(s => !s.isHeader && !s.isSubHeader);
@@ -1195,8 +1224,9 @@ const EditModal = ({ theme, onSave, onClose, systems, categories }: {
             </div>
             <div>
               <label className="block text-sm font-bold text-gray-300 mb-2">Créateur *</label>
-              <input type="text" required value={editData.creator} onChange={e => setEditData({...editData, creator: e.target.value})}
+              <input type="text" required list="known-creators" value={editData.creator} onChange={e => setEditData({...editData, creator: e.target.value})}
                 className="w-full p-3 bg-gray-950 border border-gray-700 rounded-xl text-white focus:border-orange-500 focus:outline-none" />
+              <datalist id="known-creators">{knownCreators.map(c => <option key={c} value={c} />)}</datalist>
             </div>
             <div>
               <label className="block text-sm font-bold text-gray-300 mb-2">Système *</label>
