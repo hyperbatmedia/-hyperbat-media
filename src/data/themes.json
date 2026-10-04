@@ -624,19 +624,6 @@
     "isMulti": false
   },
   {
-    "id": 22983,
-    "name": "_default",
-    "creator": "Roni",
-    "system": "iremm62",
-    "category": "default-themes",
-    "imageUrl": "https://drive.google.com/file/d/1jK8WS8sgdmXgDpKrrh3aJWkSl_Co6d9e/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/14rwDr8Ay2MeuFpD_2jjOD7tNzC1YAqIy/view?usp=sharing",
-    "size": "716.6 KB",
-    "date": "2026-02-03",
-    "onScreenScraper": false,
-    "isMulti": false
-  },
-  {
     "id": 23042,
     "name": "_default",
     "creator": "Roni",
@@ -902,20 +889,6 @@
     "downloadUrl": "https://drive.google.com/file/d/16hrH8X86BGA0QjKYeJUI2TFmI4xR2jWl/view?usp=sharing",
     "size": "1.3 MB",
     "date": "2025-11-13",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 39870
-  },
-  {
-    "id": 22985,
-    "name": "10yard",
-    "creator": "Roni",
-    "system": "iremm62",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1qVA40Jr08OktYD6hfURkFpj41d-UFfKe/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1RFuM3wgwU719l-u1tDFI0onKNruCCMFO/view?usp=sharing",
-    "size": "1.3 MB",
-    "date": "2026-02-03",
     "onScreenScraper": true,
     "isMulti": false,
     "gameId": 39870
@@ -4049,20 +4022,6 @@
     "downloadUrl": "https://drive.google.com/file/d/1dLUJFJpNaNskaer2GN6xTPisif-bFHB5/view?usp=sharing",
     "size": "649.4 KB",
     "date": "2025-11-13",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 151185
-  },
-  {
-    "id": 22984,
-    "name": "atomboy",
-    "creator": "Roni",
-    "system": "iremm62",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1SNGaAu69-qIileOenrZmveEvwjqVEP_V/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1ZfhtQxpKe28CwuX9481oBU81N97TWQNZ/view?usp=sharing",
-    "size": "649.4 KB",
-    "date": "2026-02-03",
     "onScreenScraper": true,
     "isMulti": false,
     "gameId": 151185
