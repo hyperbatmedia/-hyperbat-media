@@ -61,7 +61,7 @@ export const systemsData: SystemsDataStructure = {
         upl: { label: 'UPL', systems: ['UPL'] },
         tatsumi: { label: 'TATSUMI', systems: ['Tatsumi'] },
         midway: { label: 'MIDWAY', systems: ['Midway'] },
-        irem: { label: 'IREM', systems: ['Irem Classique', 'Irem M-62', 'Irem M-72', 'Irem M-92'] },
+        irem: { label: 'IREM', systems: ['Irem Classics', 'Irem M-62', 'Irem M-72', 'Irem M-92'] },
         dataeast: { label: 'DATA EAST', systems: ['Data East', 'Data East 16-bit', 'Data East 8-bit', 'DECO Cassette System', 'BurgerTime boards'] },
         mitchell: { label: 'MITCHELL', systems: ['Mitchell'] },
         jaleco: { label: 'JALECO', systems: ['Jaleco', 'Mega System 1', 'Mega System 2'] },

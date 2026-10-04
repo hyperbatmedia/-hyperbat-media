@@ -183,7 +183,7 @@ export const THEME_TO_BOB: Record<string, string | null> = {
   // ── ARCADE sans équivalent domestique (exclusion volontaire, audit récap) ─
   'atarisystem1':             null,
   'fuuki':                    null,
-  'iremclassique':            null,
+  'iremclassics':             null,
   'namcoclassique':           null,
   'namcosystem2':             null,
   'playchoice10':             null,
