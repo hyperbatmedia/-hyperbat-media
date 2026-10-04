@@ -18115,19 +18115,6 @@
     "gameId": 827
   },
   {
-    "id": 326,
-    "name": "kungfum",
-    "creator": "Roni",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1kUIM5Cnk1CAcxZs45DvD1bymVzhBfurq/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1TsNWIyslziGrCxihUkmRleZopjusum16/view?usp=sharing",
-    "size": "1.1 MB",
-    "date": "2025-11-13",
-    "onScreenScraper": true,
-    "gameId": 42075
-  },
-  {
     "id": 22165,
     "name": "kungfum",
     "creator": "Roni",
@@ -21259,19 +21246,6 @@
     "downloadUrl": "https://drive.google.com/file/d/1V3Er4JcLcw_yzpHA3lHMxmDoPvLrHUWJ/view?usp=sharing",
     "size": "3.4 MB",
     "date": "2026-01-17",
-    "onScreenScraper": false,
-    "isMulti": false
-  },
-  {
-    "id": 42055,
-    "name": "neogeo",
-    "creator": "Finch",
-    "system": "neogeomvs",
-    "category": "system-themes",
-    "imageUrl": "https://drive.google.com/file/d/1bRneuwVgbyQaUp_I_aI50d5ZCjd7HBQI/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1hbLJ3-uz_mmzscffu6R77KdeCQa_73Tt/view?usp=sharing",
-    "size": "827.3 KB",
-    "date": "2026-01-11",
     "onScreenScraper": false,
     "isMulti": false
   },
@@ -27407,18 +27381,6 @@
     "date": "2026-01-05",
     "onScreenScraper": true,
     "isMulti": false,
-    "gameId": 43396
-  },
-  {
-    "id": 201,
-    "name": "strider2a",
-    "creator": "Roni",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1oL5M88Cb90b1_L7eExlPrg9uqsCpL_qw/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1HhOxcjVlTV2oM2OJENbP9-uuy8aCy-jO/view?usp=sharing",
-    "size": "2.0 MB",
-    "onScreenScraper": true,
     "gameId": 43396
   },
   {
@@ -37482,19 +37444,6 @@
     "gameId": 40587
   },
   {
-    "id": 74006,
-    "name": "mwalk (Alt)",
-    "creator": "Roni",
-    "system": "system18",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/11R4yJ2kK9mWDTBobTQVYdiBt5N635XLi/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1unrsRFsE-7sBRMpsOUDpYIM2pu-OubAs/view?usp=sharing",
-    "size": "1.4 MB",
-    "date": "2026-07-23",
-    "onScreenScraper": false,
-    "isMulti": false
-  },
-  {
     "id": 74007,
     "name": "bloxeed",
     "creator": "Roni",
@@ -43954,19 +43903,6 @@
     "downloadUrl": "https://drive.google.com/file/d/1uool6yuwrZlsSC7CDDeYCsOSd7nypRR8/view?usp=sharing",
     "size": "2.6 MB",
     "date": "2026-04-03",
-    "onScreenScraper": false,
-    "isMulti": false
-  },
-  {
-    "id": 98698,
-    "name": "motoraid",
-    "creator": "Roni",
-    "system": "segaclassics",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1cZ5e1Qy7ohmKGQeM5GW2VG8UBHh__v3I/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1CSkE0buCKoMALASnvDpeaIDrE0mGYve1/view?usp=sharing",
-    "size": "2.9 MB",
-    "date": "2026-08-12",
     "onScreenScraper": false,
     "isMulti": false
   },
