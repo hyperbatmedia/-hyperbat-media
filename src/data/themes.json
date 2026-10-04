@@ -1364,20 +1364,6 @@
     "gameId": 39911
   },
   {
-    "id": 606,
-    "name": "720",
-    "creator": "Roni",
-    "system": "atariclassique",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1fPllGI5EFTdbHK06XWbKqTac-mRWitKQ/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1P9NntBXoCK-gnUtTGscDe50ydzAOrh-k/view?usp=sharing",
-    "size": "914.1 KB",
-    "date": "2026-01-02",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 39911
-  },
-  {
     "id": 43836,
     "name": "720 Degrees",
     "creator": "huhe-8554",
@@ -3138,20 +3124,6 @@
     "downloadUrl": "https://drive.google.com/file/d/1y2Bro3K3eIwWsL24zGe4gB45HIkfEBQk/view?usp=sharing",
     "size": "1.5 MB",
     "date": "2025-11-13",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 40022
-  },
-  {
-    "id": 605,
-    "name": "apb",
-    "creator": "Roni",
-    "system": "atariclassique",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1uYXTWl7vd6kdsgZC9UuA5G_V7is6zgef/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1c0v_Egh7PSphlbZtih_0x5DXakeuK81k/view?usp=sharing",
-    "size": "1.7 MB",
-    "date": "2026-01-02",
     "onScreenScraper": true,
     "isMulti": false,
     "gameId": 40022
@@ -16834,19 +16806,6 @@
     "isMulti": false
   },
   {
-    "id": 40530,
-    "name": "ironclad",
-    "creator": "Roni",
-    "system": "neogeo",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1ZWrtBsR33xdIIRKcwC7i1nTJLNsotEpT/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1h2TLg-BJ2H2Qb63bV1-MTc9dIlNwCn5S/view?usp=sharing",
-    "size": "2.6 MB",
-    "date": "2025-11-14",
-    "onScreenScraper": true,
-    "gameId": 87607
-  },
-  {
     "id": 42163,
     "name": "ironclad",
     "creator": "Roni",
@@ -20368,19 +20327,6 @@
     "gameId": 37605
   },
   {
-    "id": 12528,
-    "name": "mslug2t",
-    "creator": "sk0ney",
-    "system": "neogeo",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/16MZ7PlOThXy-bdL9RbVbfxyrdAwRpzFl/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1pkJynCaW14s-PorGTZGr428yPH2Iae94/view?usp=sharing",
-    "size": "842.0 KB",
-    "date": "2026-01-17",
-    "onScreenScraper": true,
-    "gameId": 37605
-  },
-  {
     "id": 42059,
     "name": "mslug2t",
     "creator": "Sk0ney",
@@ -22485,20 +22431,6 @@
     "downloadUrl": "https://drive.google.com/file/d/17EOkE8K74-ellpDbhSkcifdNqzX4c_9I/view?usp=sharing",
     "size": "1.8 MB",
     "date": "2025-12-01",
-    "onScreenScraper": true,
-    "isMulti": false,
-    "gameId": 79186
-  },
-  {
-    "id": 597,
-    "name": "paperboy",
-    "creator": "Roni",
-    "system": "atariclassique",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1Z9xuc3HKtMjs167llFmzm6AnipS-kc-p/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1xJr5xSxQ3RQthvAqMg-qGtfV1XrbWp6C/view?usp=sharing",
-    "size": "2.2 MB",
-    "date": "2026-01-02",
     "onScreenScraper": true,
     "isMulti": false,
     "gameId": 79186
@@ -25397,17 +25329,6 @@
     "isMulti": true
   },
   {
-    "id": 20310,
-    "name": "segaalls",
-    "creator": "KevoBatoYT",
-    "system": "segaalls",
-    "category": "system-themes",
-    "imageUrl": "https://drive.google.com/file/d/1SLIfV_9A1xl-qLLC4-0X0VmxXut3tuFH/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1C7_QVG_paBJouFqQF2VvlY8x2APLyasF/view?usp=sharing",
-    "size": "2.5 MB",
-    "date": "2026-01-21"
-  },
-  {
     "id": 22177,
     "name": "segaalls",
     "creator": "Roni",
@@ -25507,19 +25428,6 @@
     "imageUrl": "https://drive.google.com/file/d/1bWVT2U48d9AXdgqarzHn5Ivf0rLtxQMo/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1cNfxtD0pxDCa56UzwVbHgfQ_4E0zVd7q/view?usp=sharing",
     "size": "848.7 KB",
-    "date": "2026-01-17",
-    "onScreenScraper": false,
-    "isMulti": false
-  },
-  {
-    "id": 14158,
-    "name": "SegaSystem24",
-    "creator": "Roni",
-    "system": "system24",
-    "category": "system-themes",
-    "imageUrl": "https://drive.google.com/file/d/18OhSWAFuWJUnfUvVaI-bTjphd2FXARJz/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1YjIznG7JThry56G-iK7QbkqOLuSwUENj/view?usp=sharing",
-    "size": "1005.1 KB",
     "date": "2026-01-17",
     "onScreenScraper": false,
     "isMulti": false
@@ -39277,19 +39185,6 @@
     "isMulti": false
   },
   {
-    "id": 81296,
-    "name": "_default",
-    "creator": "Roni",
-    "system": "saibukaihatsu",
-    "category": "default-themes",
-    "imageUrl": "https://drive.google.com/file/d/1pXY0nU6q33QjszzfeUlavRVGSSWbyCwP/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1VAt0SplVGGnymiERMats22fOx3_d7Ou3/view?usp=sharing",
-    "size": "645.4 KB",
-    "date": "2026-08-01",
-    "onScreenScraper": false,
-    "isMulti": false
-  },
-  {
     "id": 81311,
     "name": "_default",
     "creator": "Roni",
@@ -40787,17 +40682,6 @@
     "date": "2026-07-30",
     "onScreenScraper": false,
     "isMulti": false
-  },
-  {
-    "id": 82993,
-    "name": "ptblank2",
-    "creator": "Akeshi",
-    "system": "arcade-namco-namcosystem11",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1Ujp2SsfWu8MD5RVXXEVIFmMZV4_Ss_49/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1pzt4W6P9of84rTQHm-0fZz2hFdj35g3n/view?usp=sharing",
-    "size": "2.2 MB",
-    "date": "2026-07-30"
   },
   {
     "id": 82994,
@@ -43567,17 +43451,6 @@
     "date": "2026-07-26",
     "onScreenScraper": false,
     "isMulti": false
-  },
-  {
-    "id": 98655,
-    "name": "yiear",
-    "creator": "Dav",
-    "system": "arcade-konami-konamiclassics",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1zvA2T7nyUlyRXzUycjdPsNOxPADZMP6a/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1pmuzrG7J4koFQylayeVzIFi9MZtu5QDj/view?usp=sharing",
-    "size": "1.3 MB",
-    "date": "2026-07-26"
   },
   {
     "id": 98656,
