@@ -45,7 +45,7 @@ export const systemsData: SystemsDataStructure = {
         namco: { label: 'NAMCO', systems: ['Namco Classique', 'Namco System', 'Namco System 1', 'Namco System 2', 'Namco System 2x6', 'Namco System 10', 'Namco System 11', 'Namco System 12', 'Namco System 21', 'Namco System 22', 'Namco System 23', 'Namco System 357 / 369', 'Namco System ES1', 'Namco System ES2', 'Namco System ES3', 'Namco System FL', 'Namco System NA-1', 'Namco System NA-2', 'Namco System NB-1', 'Namco System NB-2', 'Namco ND-1', 'Namco Super System 22'] },
         konami: { label: 'KONAMI', systems: ['Konami Classics', 'Konami', 'Konami Bubble System', 'Konami GX', 'Konami GTI', 'Konami M2', 'Konami Hornet', 'Konami Python', 'Konami Viper', 'Konami Firebeat', 'Konami Twinkle', 'Konami Windy', 'Konami Windy X2', 'Konami System 573', 'Konami 68000', 'Konami 68000B', 'Konami GX400', 'Bemani DJ Main', 'Bemani PC', 'e-Amusement'] },
         taito: { label: 'TAITO', systems: ['Taito Classique', 'Taito', 'Taito F3', 'Taito G-Net', 'Type X', 'Type X2', 'Type X3', 'Type X Zero', 'NESiCAxLive', 'NESiCAxLive 2', 'Taito B System', 'Taito L System', 'Taito X System', 'Taito Z System', 'Taito Qix Hardware', 'Taito Type Z'] },
-        'nintendo-arcade': { label: 'NINTENDO', systems: ['Nintendo Classique', 'PlayChoice-10', 'VS System'] },
+        'nintendo-arcade': { label: 'NINTENDO', systems: ['Nintendo Classics', 'PlayChoice-10', 'VS System'] },
         triforce: { label: 'TRIFORCE', systems: ['Triforce'] },
         'atari-arcade': { label: 'ATARI', systems: ['Atari Classique', 'Atari System 1', 'Atari System 2', 'Atari System G1', 'Atari System G2', 'Atari System G3'] },
         cave: { label: 'CAVE', systems: ['Cave'] },
