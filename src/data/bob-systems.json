@@ -1508,5 +1508,30 @@
     "slug": "zxspectrum",
     "fullname": "ZX Spectrum",
     "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "gametank",
+    "fullname": "GameTank",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "gong",
+    "fullname": "Pong",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "uqm",
+    "fullname": "Ur-Quan Masters",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "uzdoom",
+    "fullname": "UZDoom",
+    "existsOn": "Batocera"
+  },
+  {
+    "slug": "vemulator",
+    "fullname": "Dreamcast VMU",
+    "existsOn": "Batocera"
   }
 ]
