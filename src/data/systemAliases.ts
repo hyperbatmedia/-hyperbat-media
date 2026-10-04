@@ -95,7 +95,7 @@ export const THEME_TO_BOB: Record<string, string | null> = {
   'pecom64':                 null,
   'mtx512':                  null,
   'microbee':                null,
-  'eg2000':                  null,
+  'eg2000':                  'cgenie',
   'alice32':                 null,
   'exelvisionexl100':        null,
   'sordm5':                  null,
