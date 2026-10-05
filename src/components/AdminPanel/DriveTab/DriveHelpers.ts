@@ -381,7 +381,7 @@ export const findMatchingImage = (
   const baseName = archiveName.replace(/\.(zip|7z|7zip|rar)$/i, '').toLowerCase();
   
   const exactMatch = imageFiles.find(img => {
-    const imgName = img.name.replace(/\.(jpg|jpeg|png)$/i, '').toLowerCase();
+    const imgName = img.name.replace(/\.(jpg|jpeg|png|webp)$/i, '').toLowerCase();
     return imgName === baseName;
   });
   
@@ -389,22 +389,31 @@ export const findMatchingImage = (
     return exactMatch;
   }
   
+  // Un nom "presque pareil" n'est accepté que si la différence est une simple
+  // faute de frappe / un séparateur. Si elle contient un chiffre ou une marque
+  // de version (2, v2, alt...), c'est un AUTRE thème : mieux vaut aucune image
+  // que l'image d'un autre thème (ex: sfiii / sfiii2, zerowing / zerowing2).
+  const differsByVersion = (longer: string, shorter: string): boolean => {
+    const rest = longer.replace(shorter, '');
+    return /\d/.test(rest) || /alt|ver|^v$/i.test(rest.replace(/[\s_\-.]/g, ''));
+  };
+
   const partialMatch = imageFiles.find(img => {
-    const imgName = img.name.replace(/\.(jpg|jpeg|png)$/i, '').toLowerCase();
+    const imgName = img.name.replace(/\.(jpg|jpeg|png|webp)$/i, '').toLowerCase();
     const lengthDiff = Math.abs(baseName.length - imgName.length);
-    
+
     if (lengthDiff <= 3) {
       if (baseName.includes(imgName) && imgName.length >= baseName.length * 0.8) {
-        return true;
+        return !differsByVersion(baseName, imgName);
       }
       if (imgName.includes(baseName) && baseName.length >= imgName.length * 0.8) {
-        return true;
+        return !differsByVersion(imgName, baseName);
       }
     }
-    
+
     return false;
   });
-  
+
   if (partialMatch && addLog) {
     addLog(`ℹ️ Match partiel: "${archiveName}" → "${partialMatch.name}"`);
   }

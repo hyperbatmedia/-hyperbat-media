@@ -430,7 +430,7 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
       
       const folders = files.filter(f => f.mimeType === 'application/vnd.google-apps.folder');
       const archives = files.filter(f => /\.(zip|7z|7zip|rar)$/i.test(f.name));
-      const images = files.filter(f => /\.(jpg|jpeg|png)$/i.test(f.name));
+      const images = files.filter(f => /\.(jpg|jpeg|png|webp)$/i.test(f.name));
       
       if (archives.length > 0) {
         const pathParts = path.split('/').filter(p => p);
