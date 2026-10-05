@@ -562,7 +562,7 @@
   {
     "slug": "gzdoom",
     "fullname": "GZDoom",
-    "existsOn": "Batocera + Retrobat"
+    "existsOn": "Retrobat"
   },
   {
     "slug": "halflife",
@@ -602,7 +602,7 @@
   {
     "slug": "j2me",
     "fullname": "Java 2 MicroEdition",
-    "existsOn": "Retrobat"
+    "existsOn": "Batocera + Retrobat"
   },
   {
     "slug": "jazz2",
@@ -647,7 +647,7 @@
   {
     "slug": "lindbergh",
     "fullname": "Sega Lindbergh",
-    "existsOn": "Batocera"
+    "existsOn": "Batocera + Retrobat"
   },
   {
     "slug": "loopy",
@@ -817,7 +817,7 @@
   {
     "slug": "namco3xx",
     "fullname": "Namco 357/369",
-    "existsOn": "Retrobat"
+    "existsOn": "Batocera + Retrobat"
   },
   {
     "slug": "naomi",
@@ -857,7 +857,7 @@
   {
     "slug": "ngage",
     "fullname": "N-Gage",
-    "existsOn": "Retrobat"
+    "existsOn": "Batocera + Retrobat"
   },
   {
     "slug": "ngp",
@@ -887,7 +887,7 @@
   {
     "slug": "opengoal",
     "fullname": "OpenGOAL",
-    "existsOn": "Retrobat"
+    "existsOn": "Batocera + Retrobat"
   },
   {
     "slug": "openjazz",
@@ -1508,6 +1508,31 @@
     "slug": "zxspectrum",
     "fullname": "ZX Spectrum",
     "existsOn": "Batocera + Retrobat"
+  },
+  {
+    "slug": "dusklight",
+    "fullname": "DuskLight",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "exowin3x",
+    "fullname": "eXoWin3x",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "exowin9x",
+    "fullname": "eXoWin9x",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "kodi",
+    "fullname": "KODI",
+    "existsOn": "Retrobat"
+  },
+  {
+    "slug": "n64recomp",
+    "fullname": "Nintendo 64 Recompilation",
+    "existsOn": "Retrobat"
   },
   {
     "slug": "gametank",
