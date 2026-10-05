@@ -299,19 +299,6 @@
     "isMulti": false
   },
   {
-    "id": 13353,
-    "name": "_default",
-    "creator": "Dav",
-    "system": "aquarius",
-    "category": "default-themes",
-    "imageUrl": "https://drive.google.com/file/d/1yi78FfRs4NxbCX0FWOse2oHJbwNSRhye/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1X8mkxJIQlbNKQle9LAVnAsr2IW9OiVpj/view?usp=sharing",
-    "size": "1.3 MB",
-    "date": "2026-01-17",
-    "onScreenScraper": false,
-    "isMulti": false
-  },
-  {
     "id": 10383,
     "name": "_default",
     "creator": "Kairos182",
@@ -3801,7 +3788,7 @@
   {
     "id": 22130,
     "name": "atari5200 V1",
-    "creator": "Huhe8554",
+    "creator": "Huhe-8554",
     "system": "atari5200",
     "category": "default-themes",
     "imageUrl": "https://drive.google.com/file/d/1eBgrJuBm-l2eYKb_g0fRxugZ_KAkZdYW/view?usp=sharing",
@@ -6866,7 +6853,7 @@
   {
     "id": 37174,
     "name": "Castlevania - Symphony of the Night (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "playstation",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1xHfrD-jw7SjYaoIts5F1Gw65uw4FhNK2/view?usp=sharing",
@@ -6894,7 +6881,7 @@
   {
     "id": 37173,
     "name": "Castlevania Chronicles (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "playstation",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1sRv33DTtH4rpac2RSnj8jyNCc0meWXkC/view?usp=sharing",
@@ -8265,7 +8252,7 @@
   {
     "id": 37172,
     "name": "Crash Bandicoot - Warped (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "playstation",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1GZd8PwfdZ_E_oweIZtK-c7k_GGkGZZWC/view?usp=sharing",
@@ -8279,7 +8266,7 @@
   {
     "id": 37171,
     "name": "Crash Bandicoot (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "playstation",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1MtlJSLZGz6j3__mAbj6u7SKhMFcv-qSv/view?usp=sharing",
@@ -8293,7 +8280,7 @@
   {
     "id": 37170,
     "name": "Crash Bandicoot 2 - Cortex Strikes Back (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "playstation",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1aNjzLCQdGr_XXt9Yjx1qpmYgT52VDgBz/view?usp=sharing",
@@ -12532,7 +12519,7 @@
   {
     "id": 11776,
     "name": "fr",
-    "creator": "KevoBatoY",
+    "creator": "KevoBatoYT",
     "system": "europar",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/12XwxYiLdGormXEB0uYFeXp8AYMCtTEWX/view?usp=sharing",
@@ -15042,7 +15029,7 @@
   {
     "id": 37169,
     "name": "Gran Turismo (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "playstation",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1V5t64C11RzHI7Ud0z8eo7a-WhI0jb07Z/view?usp=sharing",
@@ -15139,7 +15126,7 @@
   {
     "id": 11778,
     "name": "GRID",
-    "creator": "KevoBatoY",
+    "creator": "KevoBatoYT",
     "system": "europar",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/19qdBLXvk-eK7ucKQwKG3sJ7T7qPoI2Ri/view?usp=sharing",
@@ -15734,7 +15721,7 @@
   {
     "id": 37168,
     "name": "Hello Kitty - Cube Frenzy (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "playstation",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1rwcIsbczg5q3FCP8fX1uJtmGZZEz-a4S/view?usp=sharing",
@@ -20359,7 +20346,7 @@
   {
     "id": 35776,
     "name": "mspacmnf",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "midway",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1bKknYec2eoGzuTteOmpR34NMznxXLSMp/view?usp=sharing",
@@ -20373,7 +20360,7 @@
   {
     "id": 36073,
     "name": "mspacmnf",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "mame",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1G5rkH3s7cnKfrpQgmY3AEap6NPV-Js2Q/view?usp=sharing",
@@ -21876,7 +21863,7 @@
   {
     "id": 37167,
     "name": "Oddworld - Abe's Exoddus (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "playstation",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1uzPyfvC5uM0TM653aGkkfELK33dNjvPk/view?usp=sharing",
@@ -22399,7 +22386,7 @@
   {
     "id": 37166,
     "name": "PaRappa the Rapper (USA) (En,Fr,De,Es,It)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "playstation",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1a-wmV7_jU_SiaG8Q02zDlAarms9F84fo/view?usp=sharing",
@@ -24477,7 +24464,7 @@
   {
     "id": 37165,
     "name": "Ridge Racer (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "playstation",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/15GsHYQTQbjcctf9ziaxUNpx3SuczOirf/view?usp=sharing",
@@ -26848,7 +26835,7 @@
   {
     "id": 11777,
     "name": "SR3",
-    "creator": "KevoBatoY",
+    "creator": "KevoBatoYT",
     "system": "europar",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/125iqat9xwTyVUCbrbbP05Q82soGTfs6V/view?usp=sharing",
@@ -37640,7 +37627,7 @@
   {
     "id": 76516,
     "name": "Galaga Legions DX",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "xbox360",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1OilyiQw3UzsJeAxFKC4Y7oObLU_jr6y7/view?usp=sharing",
@@ -37654,7 +37641,7 @@
   {
     "id": 76517,
     "name": "Pac-Man - Championship Edition DX",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "xbox360",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1za5ZIDJXK8njD87WObZa0Cygx5m2xQQC/view?usp=sharing",
@@ -37668,7 +37655,7 @@
   {
     "id": 76817,
     "name": "Street Fighter EX3",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "playstation2",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1nNJ6Hb5ykGEsOSMZ3SyKCgaTp2EIqGN8/view?usp=sharing",
@@ -37682,7 +37669,7 @@
   {
     "id": 76818,
     "name": "Gran Turismo 3 - A-spec",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "playstation2",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1uQqEm7fe2y1CV0X1wlFezm7pUw5NVZLJ/view?usp=sharing",
@@ -39539,7 +39526,7 @@
   {
     "id": 81515,
     "name": "gunbird",
-    "creator": " Par Sk0ney",
+    "creator": "Sk0ney",
     "system": "psikyo",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1PSJHQtRBnUcFmocRnpEzoJA8pECzRSIy/view?usp=sharing",
@@ -42479,7 +42466,7 @@
   {
     "id": 94971,
     "name": "Ys IV - The Dawn of Ys",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1YgTnyM1cjifOfEa7Pyqikkt1szD_MDg9/view?usp=sharing",
@@ -42492,7 +42479,7 @@
   {
     "id": 94972,
     "name": "Ys III - Wanderers from Ys (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1eEJ8xLEFzNeqv61XV6o0pqjSr-6Cv4dq/view?usp=sharing",
@@ -42505,7 +42492,7 @@
   {
     "id": 94973,
     "name": "Ys Book I & II - Ancient Ys Vanished (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1segrh02AJHsKy7xKzP19Bc7ZNe0BTcHA/view?usp=sharing",
@@ -42518,7 +42505,7 @@
   {
     "id": 94974,
     "name": "Wonder Boy III - Monster Lair (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1HZm49cHJ4Eg0x7XvWJG6HHzWByBGpuux/view?usp=sharing",
@@ -42531,7 +42518,7 @@
   {
     "id": 94975,
     "name": "Super Air Zonk (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1WnVgbIbh_FB6CxJIMuv4HxDpdF1wSUGX/view?usp=sharing",
@@ -42544,7 +42531,7 @@
   {
     "id": 94976,
     "name": "Riot Zone (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/14FOLS2tFBbftoeqrn03rFUblKZgO43-V/view?usp=sharing",
@@ -42557,7 +42544,7 @@
   {
     "id": 94977,
     "name": "Lords of Thunder (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1jcTXs1_4vUJPz36y5Ne7NKIc4dcJKSda/view?usp=sharing",
@@ -42570,7 +42557,7 @@
   {
     "id": 94978,
     "name": "Final Zone II (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1ToKDTqTUKejbHrsTsmVRv8Xgkm0-510x/view?usp=sharing",
@@ -42583,7 +42570,7 @@
   {
     "id": 94979,
     "name": "Fighting Street (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1B6aoRq1cXQg6BciaKIbo0cWDw2UYbZGY/view?usp=sharing",
@@ -42596,7 +42583,7 @@
   {
     "id": 94980,
     "name": "Exile 2 - Wicked Phenomenon (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/19YReec1fNXOGYJjZ9PicPZBwqamtbyPA/view?usp=sharing",
@@ -42609,7 +42596,7 @@
   {
     "id": 94981,
     "name": "Exile (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1AJTB-lfPu3A2aNxJsVUbpzjR7jqaNGb_/view?usp=sharing",
@@ -42622,7 +42609,7 @@
   {
     "id": 94982,
     "name": "Dynastic Hero, The (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1JKa_mJgld1Ytkvf84R-O1LClMRew3ygX/view?usp=sharing",
@@ -42635,7 +42622,7 @@
   {
     "id": 94983,
     "name": "Dungeon Explorer II (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1YfVPmdNODQaz2-ECxbcEiU0p4YMxxVzS/view?usp=sharing",
@@ -42648,7 +42635,7 @@
   {
     "id": 94984,
     "name": "Dragon Slayer - The Legend of Heroes (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1ZLYX21zffnOrevtyr3dRHNv45LcKSQtY/view?usp=sharing",
@@ -42661,7 +42648,7 @@
   {
     "id": 94985,
     "name": "Cosmic Fantasy 2 (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1JBg-zv4xEzfnXbf2shp3UfenoXkoms70/view?usp=sharing",
@@ -42674,7 +42661,7 @@
   {
     "id": 94986,
     "name": "Castlevania - Rondo of Blood",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1XIN70GbaiUTGA7mAoxWPYgQ4f1tdE3GE/view?usp=sharing",
@@ -42687,7 +42674,7 @@
   {
     "id": 94987,
     "name": "Camp California (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1tUkSs-kuvSxNHcqfjeYAk5JdTHvuiWnt/view?usp=sharing",
@@ -42700,7 +42687,7 @@
   {
     "id": 94988,
     "name": "Buster Bros. (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/10r-3AIPGmRIYqG98AKBOGOIuP09AJ_op/view?usp=sharing",
@@ -42713,7 +42700,7 @@
   {
     "id": 94989,
     "name": "Bonk 3 - Bonk's Big Adventure (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1WD3pYjO28RzqiCpOXhOMSTRM0e_by0Yo/view?usp=sharing",
@@ -42726,7 +42713,7 @@
   {
     "id": 94990,
     "name": "Beyond Shadowgate (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1oj7sUxcrM7H6TV9CTFvFWgzQ0ymeBdh6/view?usp=sharing",
@@ -42739,7 +42726,7 @@
   {
     "id": 94991,
     "name": "4 in 1 Super CD (USA)",
-    "creator": "KittieKatie",
+    "creator": "KittyKatie",
     "system": "pcenginecdturbografxcd",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/1_ek0Z2XY3-wihwF_CTJzrfanFIckWy2B/view?usp=sharing",
@@ -43896,7 +43883,7 @@
   {
     "id": 98697,
     "name": "ajax",
-    "creator": "Pento 5185",
+    "creator": "Pento5185",
     "system": "konamiclassics",
     "category": "game-themes",
     "imageUrl": "https://drive.google.com/file/d/19XHZeCBnY-FJ_OgWlhUkef2IY-Z4uiDO/view?usp=sharing",
@@ -49516,5 +49503,16 @@
     "downloadUrl": "https://drive.google.com/file/d/1kK1oXoXCgSsrtvmROw5_IYuspgDfLEqL/view?usp=sharing",
     "size": "5.3 MB",
     "date": "2026-09-30"
+  },
+  {
+    "id": 124972,
+    "name": "_default",
+    "creator": "Dav",
+    "system": "aquarius",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1VOJ2R5Z5p2loQlMRnnjf-0khFxV1pnzt/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1_eoUgVxj53-CvjHJlvF8cR5w9B8mIT67/view?usp=sharing",
+    "size": "1.3 MB",
+    "date": "2026-10-04"
   }
 ]
