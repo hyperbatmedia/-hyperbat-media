@@ -19,6 +19,7 @@ import { AutocompleteSelect } from '../shared/AutocompleteSelect';
 import { ROBOT_ENDPOINT } from '../../config/robotEndpoint';
 import { robotFetch, generateClientId, RobotFetchError } from '../../utils/robotFetch';
 import linksJson from '../../data/links.json';
+import themesJson from '../../data/themes.json';
 
 const EXCLUDED_IDS = ['all', 'tools', 'tutorials', 'main-themes', 'other-themes'];
 
@@ -26,6 +27,23 @@ const EXCLUDED_IDS = ['all', 'tools', 'tutorials', 'main-themes', 'other-themes'
 // depuis l'onglet Liens de l'admin) plutôt que de le recopier ici en dur.
 const DISCORD_URL: string =
   (linksJson as Array<{ id: string; url: string }>).find((l) => l.id === 'discord')?.url ?? '';
+
+// Vérification des noms déjà pris : le nom d'un thème est le nom de son .zip
+// (sans l'extension). On compare sans tenir compte des majuscules ni des
+// espaces, tirets et underscores, pour attraper "Sonic_V2" vs "sonic v2".
+const nameKey = (s: string) => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+const systemKey = (systemId: string) =>
+  (systemId.split('-').pop() || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+
+const existingNamesBySystem: Map<string, Set<string>> = (() => {
+  const map = new Map<string, Set<string>>();
+  for (const th of themesJson as Array<{ name: string; system: string }>) {
+    const k = systemKey(th.system || '');
+    if (!map.has(k)) map.set(k, new Set());
+    map.get(k)!.add(nameKey(th.name));
+  }
+  return map;
+})();
 
 // Reprise exacte de getThemeColors() (HyperBatMediaSite.tsx), mode sombre
 // uniquement : cette page n'a pas besoin du bouton clair/sombre du site.
@@ -188,6 +206,19 @@ export default function ThemeSubmissionPage() {
     [themes]
   );
   const sizeExceeded = totalBytes > MAX_TOTAL_BYTES;
+
+  // Noms déjà pris : soit par un thème du site dans le même système, soit par
+  // un autre thème du même formulaire. Simple avertissement (on ne bloque pas :
+  // deux créateurs peuvent légitimement avoir un thème du même nom).
+  const nameTaken = (t: ThemeEntry): boolean => {
+    if (!t.zipFile || !t.systemId) return false;
+    const key = nameKey(t.nom);
+    if (!key) return false;
+    if (existingNamesBySystem.get(systemKey(t.systemId))?.has(key)) return true;
+    return themes.some(
+      (o) => o.key !== t.key && o.systemId === t.systemId && !!o.zipFile && nameKey(o.nom) === key
+    );
+  };
 
   const canSubmit =
     pseudo.trim().length > 0 &&
@@ -406,6 +437,12 @@ export default function ThemeSubmissionPage() {
         >
           HyperBat Media — ton dépôt sera vérifié avant de rejoindre le site.
         </p>
+        <p
+          className="text-sm mb-6 rounded-xl p-3"
+          style={{ color: COLORS.text, backgroundColor: COLORS.cardBg, border: `1px solid ${COLORS.border}55` }}
+        >
+          Continue aussi à poster ton thème sur le Discord, comme d'habitude. Ce formulaire vient en plus.
+        </p>
 
         <label className="block text-sm font-bold mb-2" style={{ color: COLORS.textSecondary }} htmlFor="pseudo">
           Ton pseudo *
@@ -556,6 +593,17 @@ export default function ThemeSubmissionPage() {
                   </button>
                 )}
               </div>
+
+              <p className="text-xs -mt-2 mb-3" style={{ color: COLORS.textSecondary }}>
+                Le nom de ton zip ne doit pas déjà exister dans le même système. Sinon, ajoute{' '}
+                <code>v2</code>, <code>alt</code> ou ton pseudo à la suite du nom (ex : <code>monTheme_alt.zip</code>).
+              </p>
+              {nameTaken(t) && (
+                <p className="text-sm font-bold mb-3" style={{ color: '#f87171' }}>
+                  ⚠️ Un thème nommé « {t.nom} » existe déjà dans ce système. Ajoute{' '}
+                  <code>v2</code>, <code>alt</code> ou ton pseudo à la suite du nom de ton zip avant d'envoyer.
+                </p>
+              )}
 
               <div
                 className="flex items-center gap-2 rounded-xl px-3 py-4 transition-colors"
