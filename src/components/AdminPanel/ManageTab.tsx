@@ -1138,6 +1138,16 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
               </section>
 
               <section>
+                <h4 className="text-cyan-400 font-bold mb-1">Supprimer un thème</h4>
+                <p>Ça se fait en 3 étapes, dans cet ordre :</p>
+                <ol className="list-decimal pl-5 space-y-1 mt-1">
+                  <li>Dans « Gérer », supprime le thème (un seul : bouton rouge dans l'aperçu ; plusieurs : coche-les puis « Supprimer »).</li>
+                  <li>Supprime aussi son fichier et son image sur le Drive. L'admin ne le fait pas à ta place.</li>
+                  <li>Clique sur « Push GitHub » pour publier. Fais un seul push, quand tu as fini.</li>
+                </ol>
+              </section>
+
+              <section>
                 <h4 className="text-cyan-400 font-bold mb-1">Push GitHub</h4>
                 <p>
                   Publie <code className="text-cyan-300">themes.json</code> sur GitHub avec un token

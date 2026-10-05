@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import AdminGuide from '../AdminGuide';
 import { 
   FolderOpen, Zap, Activity, CheckCircle, Play, StopCircle, Download, 
   FileArchive, Clock, Layers, Filter, ArrowUpDown, Pause, PlayCircle, AlertTriangle 
@@ -742,6 +743,32 @@ const DriveTab: React.FC<DriveTabProps> = ({ onImportThemes, existingThemes = []
             <div>
               <h1 className="text-4xl font-black text-white mb-1">Analyseur Google Drive</h1>
               <p className="text-gray-400 text-sm font-semibold">⚡ 4 dossiers parallèles • 80 req/min • ZIP/7Z/RAR • Catégories auto • Dates</p>
+            </div>
+            <div className="ml-auto">
+              <AdminGuide
+                title={'Guide — Onglet "Import Drive"'}
+                sections={[
+                  { title: 'À quoi ça sert', content: <p>Scanner tes dossiers Google Drive pour trouver les nouveaux thèmes et les ajouter au catalogue.</p> },
+                  {
+                    title: 'Les étapes, dans l\'ordre',
+                    steps: [
+                      <><strong>Clé API :</strong> colle ta clé API Google Drive. Elle est retenue sur cet ordinateur, tu ne la colles qu'une fois.</>,
+                      <><strong>Liens Drive :</strong> colle les liens de tes dossiers (jusqu'à 4).</>,
+                      <><strong>Lance l'analyse :</strong> clique sur « Lancer l'Analyse ». Tu peux mettre en pause ou annuler.</>,
+                      <><strong>Bascule automatique :</strong> à la fin du scan, tu arrives tout seul dans l'onglet « Gérer ».</>,
+                      <><strong>Créateurs manquants :</strong> clique sur le filtre « Créateurs manquants » et remplis le créateur de chaque thème (tu peux le faire en masse).</>,
+                      <><strong>Retire le filtre</strong> « Créateurs manquants ».</>,
+                      <><strong>Autres corrections :</strong> modifie ce qu'il faut (région, nom, etc.).</>,
+                      <><strong>Push GitHub :</strong> clique sur « Push GitHub » pour publier sur le site. Fais un seul push, à la fin, quand tu as fini tes corrections.</>,
+                    ],
+                  },
+                  {
+                    title: 'Important',
+                    warning: true,
+                    content: <p>L'import ne sauvegarde que dans ton navigateur. Tant que tu n'as pas fait « Push GitHub », le site public ne change pas.</p>,
+                  },
+                ]}
+              />
             </div>
           </div>
         </div>

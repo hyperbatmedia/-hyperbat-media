@@ -21,6 +21,7 @@ import { useEffect, useState } from 'react';
 import { RefreshCw, Edit2, X, Check, Trash2, Inbox, AlertTriangle } from 'lucide-react';
 import { SystemRow, Category, NewThemeForm } from '../../types';
 import { AutocompleteSelect } from '../shared/AutocompleteSelect';
+import AdminGuide from './AdminGuide';
 import { ROBOT_ENDPOINT } from '../../config/robotEndpoint';
 import { robotFetch, RobotFetchError } from '../../utils/robotFetch';
 
@@ -174,6 +175,35 @@ export default function SubmissionsTab({ systems, categories, onApprove }: Submi
 
   return (
     <div>
+      <div className="flex justify-end mb-3">
+        <AdminGuide
+          title={'Guide — Onglet "Soumissions"'}
+          sections={[
+            { title: 'À quoi ça sert', content: <p>Voir les thèmes envoyés par les créateurs depuis la page « Proposer des thèmes », les vérifier, puis les accepter ou les refuser.</p> },
+            {
+              title: 'Les étapes, dans l\'ordre',
+              steps: [
+                <><strong>Ouvre l'onglet :</strong> les dépôts en attente s'affichent tout seuls. Le bouton « Actualiser » sert à recharger la liste si un nouveau dépôt arrive pendant que tu es dessus.</>,
+                <><strong>Vérifie chaque dépôt :</strong> nom, système, catégorie et pseudo du créateur.</>,
+                <><strong>Corrige si besoin :</strong> le crayon permet de modifier avant de valider.</>,
+                <><strong>Approuve :</strong> clique sur « Approuver ». Le robot range les fichiers dans le bon dossier Drive et ajoute le thème au catalogue. Ça prend 30 à 40 secondes.</>,
+                <><strong>Attends la fin :</strong> la barre orange sous la carte doit se terminer avant d'approuver le dépôt suivant.</>,
+                <><strong>⚠️ IMPORTANT :</strong> une fois que tu as approuvé ou supprimé tous tes thèmes, retourne dans l'onglet « Gérer » et clique sur « Push GitHub ». Approuver ne publie rien tout seul : tant que tu n'as pas fait le push, les thèmes restent invisibles pour les visiteurs. Fais un seul push à la fin, pas un après chaque thème.</>,
+              ],
+            },
+            { title: 'Pour refuser', content: <p>La corbeille supprime le dépôt : le zip et l'image partent à la corbeille Drive et la ligne est retirée. Une confirmation est demandée.</p> },
+            {
+              title: 'À savoir',
+              content: (
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Si tu approuves un dépôt trop vite après un autre, un thème peut disparaître du catalogue sans prévenir. Attends toujours la fin.</li>
+                  <li>Si le robot ne répond pas (environ 1 fois sur 10), clique à nouveau.</li>
+                </ul>
+              ),
+            },
+          ]}
+        />
+      </div>
       {/* Bandeau fixe — toujours visible tant que l'onglet Soumissions est
           ouvert, pas seulement après une action. Non fermable, exprès. */}
       <div className="flex items-start gap-3 bg-amber-900/30 border-2 border-amber-500/60 rounded-xl p-4 mb-6">

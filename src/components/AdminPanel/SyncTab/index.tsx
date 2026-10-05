@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import AdminGuide from '../AdminGuide';
 import { 
   Trash2, AlertTriangle, CheckCircle, Play, RefreshCw, Database,
   XCircle, Shield, Zap
@@ -323,6 +324,37 @@ Cette action est irréversible !`);
             <div>
               <h1 className="text-4xl font-black text-white mb-1">Synchronisation Drive</h1>
               <p className="text-gray-400 text-sm font-semibold">🔍 Détecte les thèmes supprimés • 🗑️ Nettoyage automatique • 🛡️ 3 Drives requis</p>
+            </div>
+            <div className="ml-auto">
+              <AdminGuide
+                title={'Guide — Onglet "Synchronisation"'}
+                sections={[
+                  {
+                    title: 'À quoi ça sert',
+                    content: <p>Trouver les thèmes du site dont le fichier a été supprimé du Drive. Ces thèmes n'ont plus de lien qui marche : on les appelle les « orphelins ».</p>,
+                  },
+                  {
+                    title: 'Les étapes, dans l\'ordre',
+                    steps: [
+                      <><strong>Clé API et liens Drive :</strong> ce sont les mêmes que dans « Import Drive ». Il faut renseigner au moins 3 liens. Si un Drive manque, tous ses thèmes seraient pris à tort pour des orphelins.</>,
+                      <><strong>Lance la synchronisation.</strong> Le scan vérifie chaque thème du site : le lien est-il vide, invalide, ou le fichier a-t-il disparu du Drive ?</>,
+                      <><strong>Lis le résultat :</strong> les orphelins s'affichent avec la raison.</>,
+                      <><strong>Coche ceux à retirer,</strong> puis clique sur le bouton de suppression et confirme.</>,
+                      <><strong>Push GitHub</strong> dans l'onglet « Gérer » pour publier. Fais un seul push, une fois tous tes orphelins supprimés.</>,
+                    ],
+                  },
+                  {
+                    title: 'À savoir',
+                    content: (
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li>Si le scan est incomplet (erreur ou quota Google), il n'affiche aucun orphelin, pour éviter une suppression à tort. Relance-le quelques minutes plus tard.</li>
+                        <li>La suppression retire le thème du site, pas du Drive (son fichier n'y est plus, c'est justement pour ça qu'il est orphelin).</li>
+                        <li>Comme pour l'import, rien n'est publié tant que tu n'as pas fait « Push GitHub ».</li>
+                      </ul>
+                    ),
+                  },
+                ]}
+              />
             </div>
           </div>
         </div>
