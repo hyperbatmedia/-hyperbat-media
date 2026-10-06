@@ -17073,19 +17073,6 @@
     "gameId": 145407
   },
   {
-    "id": 156,
-    "name": "johnnyrocknoir",
-    "creator": "Pento5185",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1XQExEAPYni0C0PPav-kJaZ_xDvBRTLUx/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1Wh2lZcQ2AGxueUT1pj5wVbniK9qn7adh/view?usp=sharing",
-    "size": "5.0 MB",
-    "date": "2025-12-01",
-    "onScreenScraper": false,
-    "isMulti": false
-  },
-  {
     "id": 7892,
     "name": "johnnyrocknoir",
     "creator": "Pento5185",
@@ -18983,20 +18970,6 @@
     "downloadUrl": "https://drive.google.com/file/d/19l-n5kdG2dHnRKGndkItT4dyXdYmV3Pn/view?usp=sharing",
     "size": "14.8 MB",
     "date": "2025-12-07",
-    "onScreenScraper": false,
-    "isMulti": false,
-    "gameId": 145408
-  },
-  {
-    "id": 155,
-    "name": "maddog-hd",
-    "creator": "Pento5185",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1XWhVoQGw7nK8LOTJsuv-Pz_3bS9FnRiM/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1UFxelkLRk4-dbeSCFE25Jq3fnPNkQNmB/view?usp=sharing",
-    "size": "8.9 MB",
-    "date": "2025-12-01",
     "onScreenScraper": false,
     "isMulti": false,
     "gameId": 145408
@@ -49550,13 +49523,13 @@
   },
   {
     "id": 124976,
-    "name": "Landstalker - MD",
+    "name": "Goof Troop Alt",
     "creator": "Sebwillow",
-    "system": "megadrivegenesis",
+    "system": "supernintendo",
     "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1N34BGmWDj157ij3kO2q8nXRY-gDqHu10/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1wgWrSfpUvqsR_HvdwzEJnAbNfGMbeGYG/view?usp=sharing",
-    "size": "2.4 Mo",
+    "imageUrl": "https://drive.google.com/file/d/1llLJu6Wv-iU0k2YcXD4bJjOlg6EZnwlf/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1aNiQLOKWv9rRT5_eHSeu5HKOOLu687au/view?usp=sharing",
+    "size": "1.5 Mo",
     "date": "2026-10-06"
   }
 ]
