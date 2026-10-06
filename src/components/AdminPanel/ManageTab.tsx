@@ -830,15 +830,6 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
               </div>
             </div>
             <div className="flex items-center gap-3">
-              {deletedThemes.length > 0 && (
-                <button
-                  onClick={downloadDeletedList}
-                  title="Télécharge la liste des thèmes supprimés pour retrouver leurs fichiers sur le Drive. La liste s'efface quand tu fermes l'admin."
-                  className="flex items-center gap-1.5 text-xs px-3 py-2 bg-red-900/40 hover:bg-red-900/60 text-red-200 rounded-xl transition-colors border border-red-500/50"
-                >
-                  <Download className="w-4 h-4" /> Liste des thèmes supprimés ({deletedThemes.length})
-                </button>
-              )}
               <button
                 onClick={() => setShowGuide(true)}
                 className="flex items-center gap-1.5 text-xs px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition-colors border border-gray-700"
@@ -939,6 +930,15 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
             <button onClick={handleExport} className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all">
               <Download className="w-4 h-4" />DL themes.json ({themes.length})
             </button>
+            {deletedThemes.length > 0 && (
+              <button
+                onClick={downloadDeletedList}
+                title="Télécharge la liste des thèmes supprimés pour retrouver leurs fichiers sur le Drive. La liste s'efface quand tu fermes l'admin."
+                className="px-4 py-2 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all"
+              >
+                <Trash2 className="w-4 h-4" />Liste des thèmes supprimés ({deletedThemes.length})
+              </button>
+            )}
             <button onClick={handleGithubButtonClick} disabled={isPushing}
               className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg transition-all">
               {isPushing ? (
@@ -1197,7 +1197,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
                 <p>Ça se fait en 3 étapes, dans cet ordre :</p>
                 <ol className="list-decimal pl-5 space-y-1 mt-1">
                   <li>Dans « Gérer », supprime le thème (un seul : bouton rouge dans l'aperçu ; plusieurs : coche-les puis « Supprimer »).</li>
-                  <li>Supprime aussi son fichier et son image sur le Drive. L'admin ne le fait pas à ta place : le bouton rouge « Liste des thèmes supprimés » (en haut) télécharge un fichier avec le nom, le créateur, le système et la catégorie de chaque thème supprimé, pour les retrouver sur le Drive. Télécharge-la avant de fermer l'admin : elle s'efface à la fermeture.</li>
+                  <li>Supprime aussi son fichier et son image sur le Drive. L'admin ne le fait pas à ta place : le bouton rouge « Liste des thèmes supprimés », à côté de « Push GitHub », télécharge un fichier avec le nom, le créateur, le système et la catégorie de chaque thème supprimé, pour les retrouver sur le Drive. Télécharge-la avant de fermer l'admin : elle s'efface à la fermeture.</li>
                   <li>Clique sur « Push GitHub » pour publier. Fais un seul push, quand tu as fini.</li>
                 </ol>
               </section>
