@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, FC } from 'react';
+import { Dispatch, SetStateAction, FC, useState } from 'react';
 import {
   Edit2,
   FolderOpen,
@@ -85,6 +85,12 @@ const AdminPanel: FC<AdminPanelProps> = ({
   setLinksData,
   saveLinks,
 }) => {
+
+  // Liste des thèmes supprimés dans "Gérer" pendant cette session d'admin
+  // (sert à retrouver leurs fichiers sur le Drive). Volontairement gardée ici
+  // et non dans ManageTab : elle survit quand on change d'onglet, et s'efface
+  // toute seule quand on ferme l'admin (ce composant disparaît alors).
+  const [deletedThemes, setDeletedThemes] = useState<ThemeItem[]>([]);
 
   const handleImportThemes = async (newThemes: ThemeItem[]): Promise<void> => {
     let maxId = 0;
@@ -202,6 +208,8 @@ const AdminPanel: FC<AdminPanelProps> = ({
             saveThemes={saveThemes}
             systems={systems}
             categories={categories}
+            deletedThemes={deletedThemes}
+            onThemesDeleted={(removed) => setDeletedThemes(prev => [...prev, ...removed])}
           />
         )}
 

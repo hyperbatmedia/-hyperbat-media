@@ -40,6 +40,9 @@ interface ManageTabProps {
   saveThemes: (themes: ThemeItem[]) => Promise<void>;
   systems: SystemRow[];
   categories: Category[];
+  /** Thèmes supprimés pendant cette session d'admin (gérés par AdminPanel). */
+  deletedThemes?: ThemeItem[];
+  onThemesDeleted?: (removed: ThemeItem[]) => void;
 }
 
 const GITHUB_OWNER = 'hyperbatmedia';
@@ -363,7 +366,7 @@ const ThemeCard = ({ theme, systemName, categoryName, onView, isSelected, onTogg
 };
 
 // ── ManageTab ─────────────────────────────────────────────────────────────────
-export default function ManageTab({ themes, setThemes, saveThemes, systems, categories }: ManageTabProps) {
+export default function ManageTab({ themes, setThemes, saveThemes, systems, categories, deletedThemes = [], onThemesDeleted }: ManageTabProps) {
   const [filters, setFilters] = useState({
     search: '',
     category: '',
@@ -498,11 +501,52 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
     else setSelectedIds(prev => [...new Set([...prev, ...pageIds])]);
   };
 
+  // Fichier texte listant les thèmes supprimés pendant cette session, pour
+  // retrouver et supprimer leurs fichiers sur le Drive. Format .txt exprès :
+  // il s'ouvre partout (pas besoin d'Excel ni de Google Sheets).
+  const downloadDeletedList = () => {
+    if (deletedThemes.length === 0) return;
+    const norm = (v: string) => (v || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+    const systemLabel = (slug: string) =>
+      availableSystems.find(s => norm(s.id.split('-').pop() || '') === norm(slug))?.name || slug;
+    const rows = deletedThemes
+      .map(t => ({
+        nom: t.name,
+        createur: t.creator || 'Inconnu',
+        systeme: systemLabel(t.system),
+        categorie: categories.find(c => c.id === t.category)?.name || t.category,
+      }))
+      .sort((a, b) => a.systeme.localeCompare(b.systeme, 'fr') || a.nom.localeCompare(b.nom, 'fr'));
+    const now = new Date();
+    const lines = [
+      'THÈMES SUPPRIMÉS DU CATALOGUE — fichiers à supprimer aussi sur le Drive',
+      `Date : ${now.toLocaleDateString('fr-FR')} — ${rows.length} thème(s)`,
+      '',
+      ...rows.flatMap((r, i) => [
+        `${i + 1}. ${r.nom}`,
+        `   Créateur  : ${r.createur}`,
+        `   Système   : ${r.systeme}`,
+        `   Catégorie : ${r.categorie}`,
+        '',
+      ]),
+    ];
+    const blob = new Blob(['\uFEFF' + lines.join('\r\n')], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `themes-supprimes-${now.toISOString().slice(0, 10)}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const handleDelete = (themeId: number) => {
     const theme = themes.find(t => t.id === themeId);
     if (theme && confirm(`Supprimer "${theme.name}" ?`)) {
       const updated = themes.filter(t => t.id !== themeId);
       setThemes(updated); saveThemes(updated);
+      onThemesDeleted?.([theme]);
       showToast('🗑️ Thème supprimé', 'success');
       setViewTheme(null);
     }
@@ -511,8 +555,10 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
   const handleBulkDelete = () => {
     if (selectedIds.length === 0) return;
     if (confirm(`Supprimer ${selectedIds.length} thème(s) ?`)) {
+      const removed = themes.filter(t => selectedIds.includes(t.id));
       const updated = themes.filter(t => !selectedIds.includes(t.id));
       setThemes(updated); saveThemes(updated); setSelectedIds([]);
+      onThemesDeleted?.(removed);
       showToast(`🗑️ ${selectedIds.length} thème(s) supprimé(s)`, 'success');
     }
   };
@@ -784,6 +830,15 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
               </div>
             </div>
             <div className="flex items-center gap-3">
+              {deletedThemes.length > 0 && (
+                <button
+                  onClick={downloadDeletedList}
+                  title="Télécharge la liste des thèmes supprimés pour retrouver leurs fichiers sur le Drive. La liste s'efface quand tu fermes l'admin."
+                  className="flex items-center gap-1.5 text-xs px-3 py-2 bg-red-900/40 hover:bg-red-900/60 text-red-200 rounded-xl transition-colors border border-red-500/50"
+                >
+                  <Download className="w-4 h-4" /> Liste des thèmes supprimés ({deletedThemes.length})
+                </button>
+              )}
               <button
                 onClick={() => setShowGuide(true)}
                 className="flex items-center gap-1.5 text-xs px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition-colors border border-gray-700"
@@ -1142,7 +1197,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
                 <p>Ça se fait en 3 étapes, dans cet ordre :</p>
                 <ol className="list-decimal pl-5 space-y-1 mt-1">
                   <li>Dans « Gérer », supprime le thème (un seul : bouton rouge dans l'aperçu ; plusieurs : coche-les puis « Supprimer »).</li>
-                  <li>Supprime aussi son fichier et son image sur le Drive. L'admin ne le fait pas à ta place.</li>
+                  <li>Supprime aussi son fichier et son image sur le Drive. L'admin ne le fait pas à ta place : le bouton rouge « Liste des thèmes supprimés » (en haut) télécharge un fichier avec le nom, le créateur, le système et la catégorie de chaque thème supprimé, pour les retrouver sur le Drive. Télécharge-la avant de fermer l'admin : elle s'efface à la fermeture.</li>
                   <li>Clique sur « Push GitHub » pour publier. Fais un seul push, quand tu as fini.</li>
                 </ol>
               </section>
