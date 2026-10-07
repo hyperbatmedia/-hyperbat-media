@@ -168,7 +168,7 @@ export const THEME_TO_BOB: Record<string, string | null> = {
   'system24':                null,
   'system32':                null,
   'taito':                   null,
-  'taitoclassique':          null,
+  'taitoclassics':           null,
   'technos':                 null,
   'tecmo':                   null,
   'toaplan':                 null,
@@ -184,7 +184,7 @@ export const THEME_TO_BOB: Record<string, string | null> = {
   'atarisystem1':             null,
   'fuuki':                    null,
   'iremclassics':             null,
-  'namcoclassique':           null,
+  'namcoclassics':            null,
   'namcosystem2':             null,
   'playchoice10':             null,
 };
