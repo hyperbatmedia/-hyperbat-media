@@ -50381,5 +50381,38 @@
     "downloadUrl": "https://drive.google.com/file/d/1D1ZHFsZUT3xuW6HaG4jXspcGu__D0bEk/view?usp=sharing",
     "size": "3.4 Mo",
     "date": "2026-10-08"
+  },
+  {
+    "id": 124980,
+    "name": "pang3",
+    "creator": "Mrfomt",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1PnYm70DGZz1gAutQ0E96Kb-dWnV_VEcp/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/10N9gpLoyUDjp-72RMOGb9__ePAnU_LJ1/view?usp=sharing",
+    "size": "1.1 MB",
+    "date": "2026-07-30"
+  },
+  {
+    "id": 124981,
+    "name": "_default",
+    "creator": "Dav et Christophe",
+    "system": "nes",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/11TSCv6SNsOuRoIoRqd-AtzDJ3zzx7mXt/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1qw6ZpKDDHqkJYLVvyRqDQX_nECXO0IDA/view?usp=sharing",
+    "size": "9.2 MB",
+    "date": "2026-10-10"
+  },
+  {
+    "id": 124982,
+    "name": "_default",
+    "creator": "Roni",
+    "system": "mastersystem",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Abb_BOvzjFnqMGMbOx2upMJsCGylt3Ml/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1JtmgSjfHxKpbixG3K_uWVyLBzbLk08Lj/view?usp=sharing",
+    "size": "6.0 MB",
+    "date": "2026-10-10"
   }
 ]
