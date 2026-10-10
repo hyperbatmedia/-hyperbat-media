@@ -481,19 +481,6 @@
     "isMulti": false
   },
   {
-    "id": 18075,
-    "name": "_default",
-    "creator": "Roni",
-    "system": "mastersystem",
-    "category": "default-themes",
-    "imageUrl": "https://drive.google.com/file/d/1FOhnGPXlMUr5GhZb-2OYN2X-3qxyDRRH/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1XvR1h8ljw1DJt4ChOQmR37NtTbL5UgT9/view?usp=sharing",
-    "size": "6.0 MB",
-    "date": "2026-01-18",
-    "onScreenScraper": false,
-    "isMulti": false
-  },
-  {
     "id": 18424,
     "name": "_default",
     "creator": "Roni",
@@ -21327,19 +21314,6 @@
     "imageUrl": "https://drive.google.com/file/d/14vlT42BnN8OpPxqANwxLFy-EzdB41CuR/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1oZn9JRbA0HOD85-ERmBoTZm16bcIty27/view?usp=sharing",
     "size": "1.1 MB",
-    "date": "2026-01-02",
-    "onScreenScraper": false,
-    "isMulti": false
-  },
-  {
-    "id": 688,
-    "name": "nes v4",
-    "creator": "Dav et Christophe",
-    "system": "nes",
-    "category": "default-themes",
-    "imageUrl": "https://drive.google.com/file/d/1tJR-ggafXNTNv1ptF62a5_cekH4NeDOt/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1UFLsEdzUSqjxoQzgKyZvW8NeF_Kt6hCc/view?usp=sharing",
-    "size": "38.0 MB",
     "date": "2026-01-02",
     "onScreenScraper": false,
     "isMulti": false
