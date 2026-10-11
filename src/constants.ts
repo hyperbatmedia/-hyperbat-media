@@ -204,7 +204,7 @@ export const systemsData: SystemsDataStructure = {
         spectravideo: { label: 'SPECTRAVIDEO', systems: ['Spectravideo'] },
         apple: { label: 'APPLE', systems: ['Apple II', 'Apple IIgs'] },
         casio: { label: 'CASIO', systems: ['PV-2000'] },
-        thomson: { label: 'THOMSON', systems: ['MO5', 'TO7', 'TO8'] },
+        thomson: { label: 'THOMSON', systems: ['Thomson MO/TO', 'MO5', 'TO7', 'TO8'] },
         tandy: { label: 'TANDY', systems: ['TRS-80 Color Computer (CoCo)'] },
         ti: { label: 'TEXAS INSTRUMENTS', systems: ['TI-99/4A'] },
         dragon: { label: 'DRAGON DATA', systems: ['Dragon 32', 'Dragon 64'] },

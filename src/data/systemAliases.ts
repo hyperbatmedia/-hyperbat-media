@@ -41,6 +41,7 @@ export const THEME_TO_BOB: Record<string, string | null> = {
   'pegasusaamber':                         'pegasus',
   'elektronikabk':                         'bk',
   'epicepicgames':                         'epic',
+  'thomsonmoto':                           'thomson',
   'nintendo64recompilation':               'n64recomp',
   'tadcorporation':                        null,
   'playmark':                              null,
