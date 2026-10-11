@@ -18,6 +18,33 @@
 
 export const THEME_TO_BOB: Record<string, string | null> = {
 
+  // ── Ajouts du 11/10/2026 (ports, stores PC, ordinosaure) ──────────────────
+  'dusklighttwilightprincess':             'dusklight',
+  '2ship2harkinianmajorasmask':            '2ship',
+  'perfectdark':                           'pdark',
+  'quakeii':                               'quake2',
+  'prboomdoom':                            'prboom',
+  'eduke32dukenukem3d':                    'eduke32',
+  'ecwolfwolfenstein3d':                   'ecwolf',
+  'blakestone':                            'bstone',
+  'realrtcw':                              'rtcw',
+  'theforceenginedarkforces':              'theforceengine',
+  'devilutionxdiablo':                     'devilutionx',
+  'openjazzjazzjackrabbit':                'openjazz',
+  'openlaratombraider':                    'openlara',
+  'opengoaljakanddaxter':                  'opengoal',
+  'reminiscenceflashback':                 'reminiscence',
+  'bermudasyndrome':                       'bsyndrome',
+  'gemrbinfinityengine':                   'gemrb',
+  'easyrpgrpgmaker':                       'easyrpg',
+  'portsdivers':                           'ports',
+  'pegasusaamber':                         'pegasus',
+  'elektronikabk':                         'bk',
+  'epicepicgames':                         'epic',
+  'nintendo64recompilation':               'n64recomp',
+  'tadcorporation':                        null,
+  'playmark':                              null,
+
   // ── SEGA ──────────────────────────────────────────────────────────────────
   'megadrivegenesis':        'megadrive',
   'megadrivemsu':            'megadrive-msu',

@@ -89,7 +89,7 @@ export const systemsData: SystemsDataStructure = {
         exidy: { label: 'EXIDY', systems: ['Exidy'] },
         century: { label: 'CENTURY ELECTRONICS', systems: ['Century Electronics'] },
         dice: { label: 'DICE', systems: ['Dice'] },
-        'autres-arcade': { label: 'AUTRES CONSTRUCTEURS', systems: ['AAE', 'Daphne (LaserDisc)', 'Singe (LaserDisc)', 'American Laser Games', 'Gaelco', 'IGS', 'FBNeo'] }
+        'autres-arcade': { label: 'AUTRES CONSTRUCTEURS', systems: ['AAE', 'Daphne (LaserDisc)', 'Singe (LaserDisc)', 'American Laser Games', 'Gaelco', 'IGS', 'FBNeo', 'Playmark', 'TAD Corporation'] }
     },
     home: {
         magnavox: { label: 'MAGNAVOX', systems: ['Odyssey', 'Odyssey 2 / Videopac'] },
@@ -101,7 +101,9 @@ export const systemsData: SystemsDataStructure = {
         ballyastrocade: { label: 'BALLY', systems: ['Astrocade'] },
         worlds: { label: 'WORLDS OF WONDER', systems: ['Action Max'] },
         coleco: { label: 'COLECO', systems: ['ColecoVision'] },
-        bandai: { label: 'BANDAI', systems: ['Super Vision 8000', 'Super Cassette Vision'] },
+        bandai: { label: 'BANDAI', systems: ['Super Vision 8000'] },
+        epoch: { label: 'EPOCH', systems: ['Cassette Vision', 'Super Cassette Vision'] },
+        othello: { label: 'OTHELLO', systems: ['Multivision'] },
         casio: { label: 'CASIO', systems: ['Casio Loopy', 'PV-1000'] },
         tomy: { label: 'TOMY', systems: ['Tutor'] },
         entex: { label: 'ENTEX', systems: ['Adventure Vision'] },
@@ -122,6 +124,7 @@ export const systemsData: SystemsDataStructure = {
                 'Sufami Turbo', 
                 'Nintendo 64', 
                 'Nintendo 64DD', 
+                'Nintendo 64 Recompilation', 
                 'GameCube', 
                 'Wii', 
                 'Wii U', 
@@ -171,20 +174,24 @@ export const systemsData: SystemsDataStructure = {
         valve: { label: 'VALVE', systems: ['Steam Deck'] }
     },
     ports: {
-        zelda: { label: 'ZELDA PORTS', systems: ['Ship of Harkinian (Ocarina of Time)'] },
+        zelda: { label: 'ZELDA PORTS', systems: ['Ship of Harkinian (Ocarina of Time)', 'DuskLight (Twilight Princess)'] },
+        n64ports: { label: 'N64 PORTS', systems: ["2 Ship 2 Harkinian (Majora's Mask)", 'Perfect Dark'] },
         sonic: { label: 'SONIC PORTS', systems: ['Sonic 3 AIR', 'Sonic Mania', 'Sonic Retro', 'Cannonball (OutRun)'] },
         mario: { label: 'MARIO PORTS', systems: ['Super Bros War'] },
-        indie: { label: 'INDIE PORTS', systems: ['Cave Story', 'C-Dogs SDL', 'LÖVE (Love2D)'] },
-        pc: { label: 'PC PORTS', systems: ['Boom 3 (Doom 3)', 'GZDoom', 'Commander Genius (Commander Keen)', 'CorsixTH (Theme Hospital)'] },
+        indie: { label: 'INDIE PORTS', systems: ['Cave Story', 'C-Dogs SDL', 'LÖVE (Love2D)', 'Dinothawr', 'EasyRPG (RPG Maker)'] },
+        fps: { label: 'FPS PORTS', systems: ['Quake', 'Quake II', 'PrBoom (Doom)', 'Raze', 'EDuke32 (Duke Nukem 3D)', 'ECWolf (Wolfenstein 3D)', 'Blake Stone', 'RealRTCW', 'Half-Life', 'The Force Engine (Dark Forces)'] },
+        pc: { label: 'PC PORTS', systems: ['Boom 3 (Doom 3)', 'GZDoom', 'Commander Genius (Commander Keen)', 'CorsixTH (Theme Hospital)', 'DevilutionX (Diablo)', 'OpenJazz (Jazz Jackrabbit)', 'OpenLara (Tomb Raider)', 'OpenGOAL (Jak and Daxter)', 'REminiscence (Flashback)', 'Bermuda Syndrome', 'GemRB (Infinity Engine)'] },
         fighting: { label: 'FIGHTING ENGINES', systems: ['Ikemen GO', 'M.U.G.E.N'] },
-        other: { label: 'AUTRES PORTS', systems: ['Solarus', 'Starship', 'Karaoke', 'ScummVM', 'OpenBOR'] }
+        other: { label: 'AUTRES PORTS', systems: ['Solarus', 'Starship', 'Karaoke', 'ScummVM', 'OpenBOR', 'BennuGD', 'Power Bomberman', 'Ports (divers)'] }
     },
     fantasy: {
         fantasy: { label: 'FANTASY CONSOLES', systems: ['PICO-8', 'TIC-80', 'WASM-4', 'LowRes NX', 'Lutro', 'Uzebox', 'Vircon32'] },
         lexaloffle: { label: 'LEXALOFFLE', systems: ['Voxatron'] }
     },
     ordinosaure: {
-        acorn: { label: 'ACORN', systems: ['Atom', 'Archimedes', 'BBC Micro'] },
+        acorn: { label: 'ACORN', systems: ['Atom', 'Archimedes', 'BBC Micro', 'Electron'] },
+        aamber: { label: 'AAMBER', systems: ['Pegasus (Aamber)'] },
+        elektronika: { label: 'ELEKTRONIKA', systems: ['Elektronika BK'] },
         'atari-computer': { label: 'ATARI', systems: ['Atari 800', 'Atari ST', 'Atari XE', 'XEGS'] },
         commodore: { label: 'COMMODORE', systems: ['VIC-20 (C20)', 'Commodore 64', 'Commodore 128', 'PET', 'Amiga', 'Amiga 500', 'Amiga 1200', 'Amiga 4000', 'Plus/4 (C+4)', 'Commodore 16'] },
         amstrad: { label: 'AMSTRAD', systems: ['CPC', 'GX4000'] },
@@ -217,9 +224,10 @@ export const systemsData: SystemsDataStructure = {
         apfcomputer: { label: 'APF', systems: ['APF-M1000'] },
         colecocomputer: { label: 'COLECO', systems: ['Coleco Adam'] },
         adobe: { label: 'ADOBE', systems: ['Flash'] },
-        windows: { label: 'WINDOWS', systems: ['Windows 3.x', 'Windows 9x', 'Windows'] },
+        windows: { label: 'WINDOWS', systems: ['Windows 3.x', 'Windows 9x', 'Windows', 'eXoWin3x', 'eXoWin9x'] },
+        storespc: { label: 'STORES PC', systems: ['EPIC (Epic Games)', 'EA Games'] },
         pecom: { label: 'PECOM', systems: ['Pecom 64'] },
-        dos: { label: 'DOS', systems: ['MS-DOS', 'PC DOS'] },
+        dos: { label: 'DOS', systems: ['MS-DOS', 'PC DOS', 'eXoDOS'] },
         dec: { label: 'DEC', systems: ['PDP-1', 'PDP-8', 'PDP-11'] }
     },
     flipper: {
