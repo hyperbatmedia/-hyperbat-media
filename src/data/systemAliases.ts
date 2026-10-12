@@ -117,6 +117,8 @@ export const THEME_TO_BOB: Record<string, string | null> = {
   'pcdos':                   'pc',
   'msx':                     'msx1',
   'samcoup':                 'samcoupe',
+  'pokmonmini':              'pokemini',
+  'lvelove2d':               'love',
   'plus4c4':                 'cplus4',
   'oric1':                   'oric',
   'odyssey2videopac':        'odyssey2',
