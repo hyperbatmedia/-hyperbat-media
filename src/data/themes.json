@@ -50414,5 +50414,49 @@
     "downloadUrl": "https://drive.google.com/file/d/1JtmgSjfHxKpbixG3K_uWVyLBzbLk08Lj/view?usp=sharing",
     "size": "6.0 MB",
     "date": "2026-10-10"
+  },
+  {
+    "id": 124983,
+    "name": "Mega Man X",
+    "creator": "Sebwillow",
+    "system": "supernintendo",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1jIxrO7Nyhr9X82gP191BINTbO-yYmF_o/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1jWa-8-7Oq_qBzBA795rMui-WcCFZ60rT/view?usp=sharing",
+    "size": "4.1 Mo",
+    "date": "2026-10-12"
+  },
+  {
+    "id": 124984,
+    "name": "Mega Man X (USA) (Rev 1)",
+    "creator": "Sebwillow",
+    "system": "supernintendo",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1Sdqxun-Zv4D0_ZC8ebiCjQCb8S1oVmW4/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1QSQLpv-OTDXDne81Uu1zb7lTOQvjwA87/view?usp=sharing",
+    "size": "2.5 Mo",
+    "date": "2026-10-12"
+  },
+  {
+    "id": 124985,
+    "name": "Addams Family Values",
+    "creator": "Sebwillow",
+    "system": "supernintendo",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/13itrF_6hxF9bRufuFNfxZnzNf7P9BeX5/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/15WNOyVRIcs49M2fzI8vNFYi5YA_4MWgU/view?usp=sharing",
+    "size": "7.0 Mo",
+    "date": "2026-10-12"
+  },
+  {
+    "id": 124986,
+    "name": "Megaman X - Alt",
+    "creator": "Sebwillow",
+    "system": "supernintendo",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1qG2nQ6kt-3RPdXIoJ3QuQaz7In_mxCiB/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1WHyAz7ON3TVwb3WfyvM6IlAC6RkcmSGA/view?usp=sharing",
+    "size": "505 Ko",
+    "date": "2026-10-12"
   }
 ]
