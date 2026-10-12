@@ -74,6 +74,11 @@ type ThemeEntry = {
   categorie: string;
   zipFile: File | null;
   imageFile: File | null;
+  // État d'envoi de CE thème (voir handleSubmit) : un thème "received" a été
+  // confirmé par le robot et ne repart jamais ; un thème "failed" garde son
+  // message d'erreur pour que le visiteur sache lequel renvoyer et pourquoi.
+  sendStatus: 'idle' | 'sending' | 'received' | 'failed';
+  sendError: string;
 };
 
 function createEmptyTheme(): ThemeEntry {
@@ -90,18 +95,20 @@ function createEmptyTheme(): ThemeEntry {
     categorie: '',
     zipFile: null,
     imageFile: null,
+    sendStatus: 'idle',
+    sendError: '',
   };
 }
 
-// Point 1 (limite de taille) : les fichiers partent en base64 (+33% de
-// volume) dans UN SEUL envoi JSON regroupant tous les thèmes du formulaire —
-// pas un par un. Le plafond officieux d'Apps Script pour le corps d'une
-// requête POST tourne autour de 50 Mo. On bloque l'envoi avant, avec de la
-// marge, plutôt que de laisser échouer après 30 secondes d'attente (et,
-// comme on l'a découvert, un dépassement de cette taille peut produire
-// exactement le même genre d'erreur non-JSON que les ralentissements
-// Apps Script — sans lien avec eux).
-const MAX_TOTAL_BYTES = 35 * 1024 * 1024; // ~35 Mo bruts ≈ 46-47 Mo en base64
+// Limite de taille PAR THÈME : chaque thème part dans son propre envoi (voir
+// handleSubmit), avec ses fichiers en base64 (+33% de volume). Le plafond
+// officieux d'Apps Script pour le corps d'une requête POST tourne autour de
+// 50 Mo : on bloque donc un thème AVANT l'envoi s'il dépasse cette limite
+// (avec de la marge), plutôt que de le laisser échouer après 30 secondes
+// d'attente (un dépassement produit le même genre d'erreur non-JSON que les
+// ralentissements d'Apps Script, sans lien avec eux). Comme les thèmes partent
+// un par un, le total du formulaire n'est plus limité.
+const MAX_THEME_BYTES = 35 * 1024 * 1024; // ~35 Mo bruts ≈ 46-47 Mo en base64
 
 function formatMB(bytes: number): string {
   return (bytes / (1024 * 1024)).toFixed(1);
@@ -193,19 +200,31 @@ export default function ThemeSubmissionPage() {
 
   const addTheme = () => setThemes((prev) => [...prev, createEmptyTheme()]);
 
-  const removeTheme = (key: string) =>
-    setThemes((prev) => (prev.length > 1 ? prev.filter((t) => t.key !== key) : prev));
+  const removeTheme = (key: string) => {
+    const remaining = themes.filter((t) => t.key !== key);
+    if (remaining.length === 0) return;
+    // Si le thème retiré était le dernier à renvoyer, tout le reste est déjà
+    // reçu : on termine comme une réussite plutôt que de laisser le visiteur
+    // devant un bouton "Envoyer" désactivé.
+    if (remaining.every((t) => t.sendStatus === 'received')) {
+      setLastPseudo(pseudo.trim());
+      setThemes([createEmptyTheme()]);
+      setPseudo('');
+      setStatus('done');
+      return;
+    }
+    setThemes(remaining);
+  };
 
   const isThemeValid = (t: ThemeEntry) =>
     t.nom.trim().length > 0 && !!t.systemId && !!t.categorie && !!t.zipFile && !!t.imageFile;
 
-  // Point 1 : taille totale cumulée de tous les fichiers du formulaire (tous
-  // thèmes confondus, puisqu'ils partent dans un seul envoi).
-  const totalBytes = useMemo(
-    () => themes.reduce((sum, t) => sum + (t.zipFile?.size ?? 0) + (t.imageFile?.size ?? 0), 0),
-    [themes]
-  );
-  const sizeExceeded = totalBytes > MAX_TOTAL_BYTES;
+  // Taille d'UN thème (zip + image) : c'est ce qui part dans un envoi. Les
+  // thèmes déjà reçus ne comptent plus, ils ne repartent pas.
+  const themeBytes = (t: ThemeEntry) => (t.zipFile?.size ?? 0) + (t.imageFile?.size ?? 0);
+  const pendingThemes = themes.filter((t) => t.sendStatus !== 'received');
+  const receivedCount = themes.length - pendingThemes.length;
+  const sizeExceeded = pendingThemes.some((t) => themeBytes(t) > MAX_THEME_BYTES);
 
   // Noms déjà pris : soit par un thème du site dans le même système, soit par
   // un autre thème du même formulaire. Simple avertissement (on ne bloque pas :
@@ -222,8 +241,8 @@ export default function ThemeSubmissionPage() {
 
   const canSubmit =
     pseudo.trim().length > 0 &&
-    themes.length > 0 &&
-    themes.every(isThemeValid) &&
+    pendingThemes.length > 0 &&
+    pendingThemes.every(isThemeValid) &&
     !sizeExceeded &&
     status !== 'sending';
 
@@ -233,7 +252,7 @@ export default function ThemeSubmissionPage() {
   // seul dès que le formulaire est vide (y compris après un envoi réussi,
   // puisque handleSubmit réinitialise déjà themes à ce moment-là) ou après une
   // erreur si les fichiers ont depuis été retirés.
-  const hasSelectedFiles = themes.some((t) => t.zipFile || t.imageFile);
+  const hasSelectedFiles = themes.some((t) => t.sendStatus !== 'received' && (t.zipFile || t.imageFile));
   useEffect(() => {
     const shouldWarn = hasSelectedFiles || status === 'sending';
     if (!shouldWarn) return;
@@ -245,108 +264,124 @@ export default function ThemeSubmissionPage() {
     return () => window.removeEventListener('beforeunload', handler);
   }, [hasSelectedFiles, status]);
 
-  const handleSubmit = async () => {
-    if (!canSubmit) return;
-    setStatus('sending');
-    setErrorMsg('');
-    setSendingMessage('Envoi en cours…');
-
+  // Envoie UN thème au robot (ses fichiers uniquement). Ne lève jamais d'erreur :
+  // renvoie { ok: true } si le robot a confirmé la réception, sinon
+  // { ok: false, error } avec un message clair pour le visiteur.
+  const sendOneTheme = async (
+    t: ThemeEntry,
+    onRetry: () => void
+  ): Promise<{ ok: true } | { ok: false; error: string }> => {
+    const system = realSystems.find((s) => s.id === t.systemId);
     try {
-      const payload = {
-        action: 'submit',
-        pseudo: pseudo.trim(),
-        themes: await Promise.all(
-          themes.map(async (t) => {
-            const system = realSystems.find((s) => s.id === t.systemId);
-            return {
-              clientId: t.clientId,
-              nom: t.nom.trim(),
-              systeme: system?.name ?? '',
-              famille: system?.section ?? '',
-              categorie: t.categorie,
-              zipBase64: t.zipFile ? await fileToBase64(t.zipFile) : '',
-              zipFilename: t.zipFile?.name ?? '',
-              imageBase64: t.imageFile ? await fileToBase64(t.imageFile) : '',
-              imageFilename: t.imageFile?.name ?? '',
-            };
-          })
-        ),
-      };
-
       // Important : pas de header "Content-Type: application/json" ici.
       // Apps Script gère très bien un corps texte brut, et ça évite un
       // aller-retour de vérification (preflight) que les Web Apps Google
       // ne gèrent pas correctement.
       //
-      // robotFetch réessaie une fois automatiquement en cas d'échec (le
-      // robot peut ponctuellement mettre du temps à répondre, ou renvoyer
-      // une erreur HTML au lieu du JSON attendu). Comme chaque thème garde
-      // le même clientId d'une tentative à l'autre, un renvoi ne crée
-      // jamais de doublon : le robot reconnaît qu'il a déjà reçu ce dépôt
-      // (voir Code.gs) et ne recrée rien.
+      // Le base64 n'est calculé que pour CE thème : la mémoire du navigateur
+      // est libérée avant le thème suivant. robotFetch réessaie une fois
+      // automatiquement en cas d'échec ; comme le clientId du thème ne change
+      // jamais, un renvoi ne crée jamais de doublon (voir Code.gs).
+      const payload = {
+        action: 'submit',
+        pseudo: pseudo.trim(),
+        themes: [
+          {
+            clientId: t.clientId,
+            nom: t.nom.trim(),
+            systeme: system?.name ?? '',
+            famille: system?.section ?? '',
+            categorie: t.categorie,
+            zipBase64: t.zipFile ? await fileToBase64(t.zipFile) : '',
+            zipFilename: t.zipFile?.name ?? '',
+            imageBase64: t.imageFile ? await fileToBase64(t.imageFile) : '',
+            imageFilename: t.imageFile?.name ?? '',
+          },
+        ],
+      };
       const data = await robotFetch(
         ROBOT_ENDPOINT,
         { method: 'POST', body: JSON.stringify(payload) },
-        () => setSendingMessage('Ça prend un peu plus de temps que prévu, nouvel essai en cours…')
+        onRetry
+      );
+      if (!data.ok) return { ok: false, error: data.error || 'Erreur inconnue du robot.' };
+      return { ok: true };
+    } catch (err) {
+      if (err instanceof RobotFetchError) {
+        // L'envoi de ce thème a échoué deux fois. Avant d'abandonner, on pose
+        // une question beaucoup plus légère au robot (aucun fichier à
+        // renvoyer, juste "as-tu déjà reçu CE clientId ?") pour donner une
+        // réponse CERTAINE au visiteur : le dépôt est peut-être bien arrivé
+        // malgré l'erreur, et seul le robot peut le savoir.
+        try {
+          const checkData = await robotFetch(ROBOT_ENDPOINT, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'checkStatus', ids: [t.clientId] }),
+          });
+          if (checkData.ok && checkData.existingIds?.[t.clientId]) return { ok: true };
+          if (checkData.ok) {
+            return { ok: false, error: "Ce thème n'est pas passé. Tu peux le renvoyer, en toute sécurité." };
+          }
+        } catch {
+          // Même la vérification légère a échoué : message honnête ci-dessous.
+        }
+        return {
+          ok: false,
+          error:
+            "Le robot ne répond pas normalement pour l'instant (ça arrive, c'est ponctuel). " +
+            "Tu peux renvoyer ce thème, ça ne créera jamais de doublon.",
+        };
+      }
+      return { ok: false, error: err instanceof Error ? err.message : 'Erreur inconnue, réessaie.' };
+    }
+  };
+
+  // Envoi thème par thème, l'un après l'autre (jamais en parallèle, pour ne pas
+  // surcharger Apps Script). Chaque thème a son propre état : un thème reçu
+  // n'est jamais renvoyé, un thème en échec garde son message d'erreur et
+  // repart seul au prochain clic.
+  const handleSubmit = async () => {
+    if (!canSubmit) return;
+    setStatus('sending');
+    setErrorMsg('');
+
+    const toSend = themes.filter((t) => t.sendStatus !== 'received');
+    let okCount = 0;
+    let failCount = 0;
+
+    for (let i = 0; i < toSend.length; i++) {
+      const t = toSend[i];
+      const label = toSend.length > 1 ? `Envoi du thème ${i + 1}/${toSend.length}…` : 'Envoi en cours…';
+      setSendingMessage(label);
+      updateTheme(t.key, { sendStatus: 'sending', sendError: '' });
+
+      const result = await sendOneTheme(t, () =>
+        setSendingMessage(`${label} nouvel essai en cours…`)
       );
 
-      if (!data.ok) throw new Error(data.error || 'Erreur inconnue du robot.');
+      if (result.ok) {
+        okCount++;
+        updateTheme(t.key, { sendStatus: 'received', sendError: '' });
+      } else {
+        failCount++;
+        updateTheme(t.key, { sendStatus: 'failed', sendError: result.error });
+      }
+    }
 
+    if (failCount === 0) {
       setStatus('done');
       setLastPseudo(pseudo.trim());
       setThemes([createEmptyTheme()]);
       setPseudo('');
-    } catch (err) {
-      if (err instanceof RobotFetchError) {
-        // L'envoi complet a échoué deux fois. Avant d'abandonner, on pose
-        // une question beaucoup plus légère au robot (aucun fichier à
-        // renvoyer, juste "as-tu déjà reçu CES clientId ?") pour donner une
-        // réponse CERTAINE au visiteur plutôt que de le laisser dans le
-        // flou — lui ne peut pas vérifier lui-même (pas d'accès à la
-        // feuille/Drive), mais le robot le sait avec certitude.
-        setSendingMessage('Vérification en cours…');
-        try {
-          const clientIds = themes.map((t) => t.clientId);
-          const checkData = await robotFetch(ROBOT_ENDPOINT, {
-            method: 'POST',
-            body: JSON.stringify({ action: 'checkStatus', ids: clientIds }),
-          });
-
-          if (checkData.ok && clientIds.every((id: string) => checkData.existingIds?.[id])) {
-            // Bonne nouvelle confirmée : le dépôt était bien arrivé malgré
-            // l'erreur affichée juste avant. On termine comme une réussite.
-            setStatus('done');
-            setLastPseudo(pseudo.trim());
-            setThemes([createEmptyTheme()]);
-            setPseudo('');
-            return;
-          }
-
-          setStatus('error');
-          if (checkData.ok) {
-            // Réponse certaine, cette fois : rien n'est arrivé, en confiance.
-            setErrorMsg("Ton dépôt n'est pas passé. Tu peux cliquer sur Envoyer à nouveau, en toute sécurité.");
-          } else {
-            setErrorMsg(
-              "Le robot ne répond pas normalement pour l'instant (ça arrive, c'est ponctuel). " +
-              'Pas d\'inquiétude : tu peux cliquer sur Envoyer à nouveau, ça ne créera jamais de doublon.'
-            );
-          }
-        } catch {
-          // Même cette vérification légère a échoué : on retombe sur le
-          // message honnête, sans certitude, mais toujours sans risque.
-          setStatus('error');
-          setErrorMsg(
-            "Le robot ne répond pas normalement pour l'instant (ça arrive, c'est ponctuel). " +
-            'Pas d\'inquiétude : tu peux cliquer sur Envoyer à nouveau, ça ne créera jamais de doublon.'
-          );
-        }
-        return;
-      }
-
-      setStatus('error');
-      setErrorMsg(err instanceof Error ? err.message : 'Erreur inconnue, réessaie.');
+      return;
     }
+
+    setStatus('error');
+    const received = receivedCount + okCount;
+    setErrorMsg(
+      `${received} thème${received > 1 ? 's' : ''} bien reçu${received > 1 ? 's' : ''}, ` +
+        `${failCount} à renvoyer (voir le détail sur chaque thème ci-dessous).`
+    );
   };
 
   const primaryButtonStyle = {
@@ -456,17 +491,41 @@ export default function ThemeSubmissionPage() {
           style={{ backgroundColor: COLORS.inputBg, border: `1px solid ${COLORS.border}55` }}
         />
 
-        <div className="space-y-4 mb-4">
-          {themes.map((t, index) => (
+        <div className="space-y-4 mb-4" style={status === 'sending' ? { pointerEvents: 'none' } : undefined}>
+          {themes.map((t, index) => t.sendStatus === 'received' ? (
+            <div
+              key={t.key}
+              className="rounded-xl p-4 flex items-center gap-3"
+              style={{ backgroundColor: COLORS.cardBg, border: '2px solid #22c55e88' }}
+            >
+              <span className="font-black" style={{ color: '#22c55e' }} aria-hidden="true">✓</span>
+              <p className="text-sm font-bold min-w-0 truncate" style={{ color: COLORS.text }}>
+                Thème {index + 1} — {t.nom || 'sans nom'}
+                <span className="font-semibold" style={{ color: '#22c55e' }}> · bien reçu</span>
+              </p>
+            </div>
+          ) : (
             <div
               key={t.key}
               className="rounded-xl p-4"
-              style={{ backgroundColor: COLORS.cardBg, border: `2px solid ${COLORS.border}55` }}
+              style={{
+                backgroundColor: COLORS.cardBg,
+                border: `2px solid ${t.sendStatus === 'failed' ? '#f87171' : COLORS.border + '55'}`,
+              }}
             >
               <div className="flex items-center justify-between mb-3">
                 <p className="font-bold" style={{ color: COLORS.text }}>
                   Thème {index + 1}
                 </p>
+                {t.sendStatus === 'sending' && (
+                  <span className="text-xs font-bold flex items-center gap-2" style={{ color: '#FFA500' }}>
+                    <span
+                      className="inline-block w-3 h-3 rounded-full border-2 border-white/30 border-t-white animate-spin shrink-0"
+                      aria-hidden="true"
+                    />
+                    Envoi en cours…
+                  </span>
+                )}
                 {themes.length > 1 && (
                   <button
                     type="button"
@@ -636,6 +695,23 @@ export default function ThemeSubmissionPage() {
                   </button>
                 )}
               </div>
+
+              {themeBytes(t) > 0 && (
+                <p
+                  className="text-xs mt-3"
+                  style={{ color: themeBytes(t) > MAX_THEME_BYTES ? '#f87171' : COLORS.textSecondary }}
+                >
+                  {themeBytes(t) > MAX_THEME_BYTES
+                    ? `Ce thème est trop volumineux (${formatMB(themeBytes(t))} Mo / ${formatMB(MAX_THEME_BYTES)} Mo max).`
+                    : `Taille de ce thème : ${formatMB(themeBytes(t))} Mo / ${formatMB(MAX_THEME_BYTES)} Mo`}
+                </p>
+              )}
+
+              {t.sendStatus === 'failed' && (
+                <p className="text-sm font-bold mt-3" style={{ color: '#f87171' }}>
+                  ✗ Non envoyé — {t.sendError}
+                </p>
+              )}
             </div>
           ))}
         </div>
@@ -643,22 +719,12 @@ export default function ThemeSubmissionPage() {
         <button
           type="button"
           onClick={addTheme}
+          disabled={status === 'sending'}
           className="w-full font-bold rounded-xl py-3 text-sm mb-6 transition-colors hover:opacity-90"
           style={{ border: `2px dashed ${COLORS.border}`, color: COLORS.text }}
         >
           + Ajouter un autre thème
         </button>
-
-        {totalBytes > 0 && (
-          <p
-            className="text-xs text-center mb-2"
-            style={{ color: sizeExceeded ? '#f87171' : COLORS.textSecondary }}
-          >
-            {sizeExceeded
-              ? `Le total de tes fichiers est trop volumineux (${formatMB(totalBytes)} Mo / ${formatMB(MAX_TOTAL_BYTES)} Mo max) — essaie de les envoyer en plusieurs fois.`
-              : `Taille totale : ${formatMB(totalBytes)} Mo / ${formatMB(MAX_TOTAL_BYTES)} Mo`}
-          </p>
-        )}
 
         {status === 'error' && (
           <p className="font-semibold text-sm mb-3 text-center" style={{ color: '#f87171' }}>
@@ -668,7 +734,7 @@ export default function ThemeSubmissionPage() {
 
         {status === 'sending' && (
           <p className="text-xs text-center mb-2" style={{ color: COLORS.textSecondary }}>
-            Ça peut prendre jusqu'à 45 secondes, merci de ne pas fermer cette page.
+            Ça peut prendre jusqu'à 45 secondes par thème, merci de ne pas fermer cette page.
           </p>
         )}
 
@@ -687,7 +753,9 @@ export default function ThemeSubmissionPage() {
           )}
           {status === 'sending'
             ? sendingMessage
-            : `Envoyer ${themes.length > 1 ? `mes ${themes.length} thèmes` : 'mon thème'}`}
+            : receivedCount > 0
+              ? `Renvoyer ${pendingThemes.length > 1 ? `les ${pendingThemes.length} thèmes restants` : 'le thème restant'}`
+              : `Envoyer ${themes.length > 1 ? `mes ${themes.length} thèmes` : 'mon thème'}`}
         </button>
         <p className="text-xs text-center mt-3" style={{ color: COLORS.textSecondary }}>
           Vérifié{themes.length > 1 ? 's' : ''} avant d'apparaître sur le site
