@@ -1,8 +1,7 @@
 {
   "isLocked": false,
   "adminName": "Christophe",
-  "pushedAt": 1792419316541,
-  "cooldownUntil": 1792419496541,
-  "isPushCooldown": true,
-  "cooldownSeconds": 180
+  "lockedAt": 1792419517509,
+  "cooldownUntil": 1792419577509,
+  "isPushCooldown": false
 }
