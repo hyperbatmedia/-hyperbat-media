@@ -50458,5 +50458,49 @@
     "downloadUrl": "https://drive.google.com/file/d/1WHyAz7ON3TVwb3WfyvM6IlAC6RkcmSGA/view?usp=sharing",
     "size": "505 Ko",
     "date": "2026-10-12"
+  },
+  {
+    "id": 124987,
+    "name": "mitchell_alt",
+    "creator": "Huhe-8554",
+    "system": "mitchell",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1hyER6x_NbQKyl2zJ85Y6RFTbi6ivamXk/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1L9nLEKGrQnRLW5sxwA2wNF2bN2mwZmvi/view?usp=sharing",
+    "size": "1.0 Mo",
+    "date": "2026-10-24"
+  },
+  {
+    "id": 124988,
+    "name": "Solstice - The Quest for the Staff of Demnos",
+    "creator": "Sebwillow",
+    "system": "nes",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1BmXILA5CKMH9miupkgmt1VvBG0G6MTrE/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1Idykdq4A0lmgSd9jhOkho1IAb76opKTz/view?usp=sharing",
+    "size": "4.2 Mo",
+    "date": "2026-10-24"
+  },
+  {
+    "id": 124989,
+    "name": "Equinox",
+    "creator": "Sebwillow",
+    "system": "supernintendo",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1RQRWyjGcNidgTYZkSraACborHV9xuhZ1/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1bj2aHzIAwo4_mRTb9PANrclwOX3l7l49/view?usp=sharing",
+    "size": "5.2 Mo",
+    "date": "2026-10-24"
+  },
+  {
+    "id": 124990,
+    "name": "Chibi-Robo! GC",
+    "creator": "Sebwillow",
+    "system": "gamecube",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1WWRIugaT5RCKFEMLJ1eZBSCzh7Jx86Qy/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1yAwcXEtOu1-b_xFhUJ1C8q8IP2op_sLw/view?usp=sharing",
+    "size": "2.3 Mo",
+    "date": "2026-10-24"
   }
 ]
