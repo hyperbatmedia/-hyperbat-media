@@ -89,6 +89,10 @@ export const systemsData: SystemsDataStructure = {
         exidy: { label: 'EXIDY', systems: ['Exidy'] },
         century: { label: 'CENTURY ELECTRONICS', systems: ['Century Electronics'] },
         dice: { label: 'DICE', systems: ['Dice'] },
+        comad: { label: 'COMAD', systems: ['Comad'] },
+        dynax: { label: 'DYNAX', systems: ['Dynax'] },
+        gottlieb: { label: 'GOTTLIEB', systems: ['Gottlieb'] },
+        semicom: { label: 'SEMICOM', systems: ['Semicom'] },
         'autres-arcade': { label: 'AUTRES CONSTRUCTEURS', systems: ['AAE', 'Daphne (LaserDisc)', 'Singe (LaserDisc)', 'American Laser Games', 'Gaelco', 'IGS', 'FBNeo', 'Playmark', 'TAD Corporation'] }
     },
     home: {
