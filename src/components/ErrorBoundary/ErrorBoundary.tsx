@@ -93,6 +93,13 @@ export default class ErrorBoundary extends Component<Props, State> {
 
     const isChunkError = CHUNK_ERROR_PATTERN.test(error.message ?? '');
 
+    let isAdmin = false;
+    try {
+      isAdmin = !!localStorage.getItem('hyperbat_admin_name');
+    } catch {
+      /* localStorage indisponible : on considère que ce n'est pas un admin */
+    }
+
     return (
       <div
         role="alert"
@@ -127,10 +134,15 @@ export default class ErrorBoundary extends Component<Props, State> {
               : "Un élément de la page n'a pas pu s'afficher. Recharge la page. Si le problème revient, le détail ci-dessous permet de trouver la cause."}
           </p>
 
-          <p style={{ margin: '0 0 16px', lineHeight: 1.5, color: '#9ca3af', fontSize: 14 }}>
-            Si tu étais dans l'admin, le verrou reste posé sur GitHub jusqu'à 8 h. À la prochaine
-            connexion, utilise « Forcer l'accès ».
-          </p>
+          {/* Cette consigne ne concerne que les admins : un visiteur (ex. un
+              créateur qui dépose un thème) ne la voit plus, elle l'inquiétait
+              à tort. On reconnaît un admin au nom enregistré à sa connexion. */}
+          {isAdmin && (
+            <p style={{ margin: '0 0 16px', lineHeight: 1.5, color: '#9ca3af', fontSize: 14 }}>
+              Si tu étais dans l'admin, le verrou reste posé sur GitHub jusqu'à 8 h. À la prochaine
+              connexion, utilise « Forcer l'accès ».
+            </p>
+          )}
 
           <pre
             style={{
