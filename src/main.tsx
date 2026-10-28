@@ -1,4 +1,5 @@
 // Fichier: src/main.tsx
+import './utils/translationGuard'; // Doit rester en premier : évite le plantage causé par la traduction automatique du navigateur
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import HyperBatMediaSite from './HyperBatMediaSite'; // Importation de votre composant principal
