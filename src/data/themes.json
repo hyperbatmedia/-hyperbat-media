@@ -9062,20 +9062,6 @@
     "gameId": 40841
   },
   {
-    "id": 28243,
-    "name": "dday",
-    "creator": "Roni",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1tApVDz-98r83nX1QpJHHegQ_JOXRASvA/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1LhIoz0tTU2Ivz4x7rB9Tg7NLVCsAK38m/view?usp=sharing",
-    "size": "1001.5 KB",
-    "date": "2026-07-11",
-    "onScreenScraper": false,
-    "isMulti": false,
-    "gameId": 40846
-  },
-  {
     "id": 451,
     "name": "ddcrew",
     "creator": "Roni",
@@ -33175,20 +33161,6 @@
     "gameId": 40926
   },
   {
-    "id": 63402,
-    "name": "dday",
-    "creator": "Roni",
-    "system": "jaleco",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1TFMI1p6e1YWDHD-_uWwF5rSYgUz0D-Z0/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1TjCXhoPRlA_zbyTbY-aGOXZFIPWfNXEH/view?usp=sharing",
-    "size": "1001.5 KB",
-    "date": "2026-07-11",
-    "onScreenScraper": false,
-    "isMulti": false,
-    "gameId": 40846
-  },
-  {
     "id": 63403,
     "name": "checkman",
     "creator": "Roni",
@@ -33385,20 +33357,6 @@
     "gameId": 40670
   },
   {
-    "id": 63823,
-    "name": "colony7",
-    "creator": "qbertaddict",
-    "system": "mame",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1oN1Y2WYY1KxNSdcz5GyJHdPN4RIU0SdX/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1Z1YtPW6GuQbBnXG2SfVIO87gqJIIBG3l/view?usp=sharing",
-    "size": "2.9 MB",
-    "date": "2026-07-13",
-    "onScreenScraper": false,
-    "isMulti": false,
-    "gameId": 40614
-  },
-  {
     "id": 63824,
     "name": "rchase2",
     "creator": "qbertaddict",
@@ -33565,20 +33523,6 @@
     "onScreenScraper": true,
     "isMulti": false,
     "gameId": 39992
-  },
-  {
-    "id": 64879,
-    "name": "colony7",
-    "creator": "qbertaddict",
-    "system": "taitoclassics",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1ZdgGHF5LMU9LCQGz9NlYNFWJ1hR0GoSl/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1H61OemxQm3e-qT69DZ1Bxc1sTy6JWRFj/view?usp=sharing",
-    "size": "2.9 MB",
-    "date": "2026-07-13",
-    "onScreenScraper": false,
-    "isMulti": false,
-    "gameId": 40614
   },
   {
     "id": 64880,
