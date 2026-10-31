@@ -8,13 +8,14 @@
 import { useState, useMemo, useRef, useEffect, useId, KeyboardEvent } from 'react';
 import { Search, X, ChevronDown } from 'lucide-react';
 import { SystemRow } from '../../types';
+import { useLang } from '../../i18n';
 
 export const AutocompleteSelect = ({
   options,
   value,
   onChange,
-  placeholder = 'Rechercher...',
-  emptyLabel = 'Tous',
+  placeholder: placeholderProp,
+  emptyLabel: emptyLabelProp,
 }: {
   options: SystemRow[];
   value: string;
@@ -22,6 +23,9 @@ export const AutocompleteSelect = ({
   placeholder?: string;
   emptyLabel?: string;
 }) => {
+  const { t: tr } = useLang();
+  const placeholder = placeholderProp ?? tr('select.search');
+  const emptyLabel = emptyLabelProp ?? tr('select.all');
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [highlightedIndex, setHighlightedIndex] = useState(0);
@@ -125,7 +129,7 @@ export const AutocompleteSelect = ({
               type="button"
               onClick={handleClear}
               className="p-1.5 hover:bg-gray-700 rounded-lg transition-colors"
-              title="Réinitialiser"
+              title={tr('select.reset')}
             >
               <X className="w-4 h-4 text-gray-400" />
             </button>
@@ -149,7 +153,7 @@ export const AutocompleteSelect = ({
           {filteredOptions.length === 0 ? (
             <div className="px-4 py-6 text-center text-gray-400">
               <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
-              <p>Aucun système trouvé</p>
+              <p>{tr('select.none')}</p>
             </div>
           ) : (
             <>
@@ -164,13 +168,12 @@ export const AutocompleteSelect = ({
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-white font-medium">{option.name}</span>
-                    {value === option.id && <span className="text-orange-400 text-xs font-bold">✓ Sélectionné</span>}
+                    {value === option.id && <span className="text-orange-400 text-xs font-bold">{tr('select.selected')}</span>}
                   </div>
                 </div>
               ))}
               <div className="px-4 py-2 bg-gray-800 border-t border-gray-700 text-xs text-gray-400 text-center">
-                {filteredOptions.length} système{filteredOptions.length > 1 ? 's' : ''} disponible
-                {filteredOptions.length > 1 ? 's' : ''}
+                {tr(filteredOptions.length > 1 ? 'select.count.many' : 'select.count.one', { n: filteredOptions.length })}
               </div>
             </>
           )}

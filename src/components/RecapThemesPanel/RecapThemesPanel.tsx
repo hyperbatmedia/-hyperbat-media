@@ -1,4 +1,5 @@
 // Fichier: src/components/RecapThemesPanel/RecapThemesPanel.tsx
+import { useLang } from '../../i18n';
 import { useMemo, useState, useCallback } from 'react';
 import { X, Download, Search, ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
 import { ThemeItem } from '../../types';
@@ -40,15 +41,14 @@ const parseExistsOn = (existsOn: string) => {
   };
 };
 
-const exportCSV = (rows: SystemRow[]) => {
-  const headers = ['Slug', 'Nom système', 'RetroBat', 'Batocera', 'Thèmes système', 'Thèmes défaut', 'Thèmes jeu', 'Total'];
+const exportCSV = (rows: SystemRow[], headLine: string, yes: string, no: string) => {
   const lines = [
-    headers.join(';'),
+    headLine,
     ...rows.map(r => [
       r.slug,
       r.fullname,
-      r.inRetrobat ? 'OUI' : 'NON',
-      r.inBatocera ? 'OUI' : 'NON',
+      r.inRetrobat ? yes : no,
+      r.inBatocera ? yes : no,
       r.systemThemes,
       r.defaultThemes,
       r.gameThemes,
@@ -68,6 +68,7 @@ const exportCSV = (rows: SystemRow[]) => {
 
 // ── Composant principal ───────────────────────────────────────────────────────
 export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapThemesPanelProps) {
+  const { t: tr } = useLang();
   const [search, setSearch] = useState('');
   const [showGuide, setShowGuide] = useState(false);
   const [filterPlatform, setFilterPlatform] = useState<'all' | 'retrobat' | 'batocera' | 'both' | 'none'>('all');
@@ -196,10 +197,10 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
                 filter: 'drop-shadow(1px 1px 0px #000)'
               }}>
-                RÉCAP THÈMES
+                {tr('rc.title')}
               </h1>
               <p className="text-xs mt-0.5" style={{ color: textSecondary }}>
-                Couverture des thèmes par système — {rows.length} systèmes de référence
+                {tr('rc.subtitle', { n: rows.length })}
               </p>
             </div>
           </div>
@@ -210,14 +211,14 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
               className="flex items-center gap-2 px-3 py-2 rounded-lg font-bold text-sm border-2 transition hover:brightness-110"
               style={{ backgroundColor: cardBg, borderColor: borderColor, color: textSecondary }}>
               <HelpCircle className="w-4 h-4" />
-              Guide
+              {tr('rc.guide')}
             </button>
             <button
-              onClick={() => exportCSV(filtered)}
+              onClick={() => exportCSV(filtered, tr('rc.csvHead'), tr('rc.yes'), tr('rc.no'))}
               className="flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm border-2 transition hover:brightness-110"
               style={{ backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white' }}>
               <Download className="w-4 h-4" />
-              Télécharger CSV ({filtered.length})
+              {tr('rc.csv', { n: filtered.length })}
             </button>
             <button
               onClick={onClose}
@@ -234,11 +235,11 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
         <div className="container mx-auto px-4 py-3">
           <div className="flex flex-wrap gap-3">
             {[
-              { label: 'Total systèmes', value: stats.total, color: '#FFA500' },
-              { label: 'Ont thème système', value: stats.withSystem, color: '#22c55e' },
-              { label: 'Ont thème défaut', value: stats.withDefault, color: '#60A5FA' },
-              { label: 'Ont thème jeu', value: stats.withGame, color: '#f472b6' },
-              { label: 'Aucun thème', value: stats.missingBoth, color: '#ef4444' },
+              { label: tr('rc.statTotal'), value: stats.total, color: '#FFA500' },
+              { label: tr('rc.statSystem'), value: stats.withSystem, color: '#22c55e' },
+              { label: tr('rc.statDefault'), value: stats.withDefault, color: '#60A5FA' },
+              { label: tr('rc.statGame'), value: stats.withGame, color: '#f472b6' },
+              { label: tr('rc.statNone'), value: stats.missingBoth, color: '#ef4444' },
               { label: 'RetroBat', value: stats.retrobat, color: '#a78bfa' },
               { label: 'Batocera', value: stats.batocera, color: '#34d399' },
             ].map(({ label, value, color }) => (
@@ -261,7 +262,7 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#FFA500' }} />
             <input
               type="text"
-              placeholder="Rechercher un système..."
+              placeholder={tr('rc.search')}
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="pl-9 pr-4 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
@@ -272,11 +273,11 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
           {/* Filtre plateforme */}
           <div className="flex gap-1">
             {[
-              { id: 'all', label: 'Tous' },
+              { id: 'all', label: tr('rc.all') },
               { id: 'both', label: 'RB + BAT' },
               { id: 'retrobat', label: 'RB only' },
               { id: 'batocera', label: 'BAT only' },
-              { id: 'none', label: 'Aucun' },
+              { id: 'none', label: tr('rc.none') },
             ].map(({ id, label }) => (
               <button key={id}
                 onClick={() => setFilterPlatform(id as typeof filterPlatform)}
@@ -294,10 +295,10 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
           {/* Filtre manquants */}
           <div className="flex gap-1">
             {[
-              { id: 'all', label: 'Tous' },
-              { id: 'system', label: '0 Système' },
-              { id: 'default', label: '0 Défaut' },
-              { id: 'both-missing', label: '0 Aucun' },
+              { id: 'all', label: tr('rc.all') },
+              { id: 'system', label: tr('rc.missSystem') },
+              { id: 'default', label: tr('rc.missDefault') },
+              { id: 'both-missing', label: tr('rc.missBoth') },
             ].map(({ id, label }) => (
               <button key={id}
                 onClick={() => setFilterMissing(id as typeof filterMissing)}
@@ -313,7 +314,7 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
           </div>
 
           <div className="ml-auto text-xs" style={{ color: textSecondary }}>
-            {filtered.length} système{filtered.length > 1 ? 's' : ''} affichés
+            {tr(filtered.length > 1 ? 'rc.shownMany' : 'rc.shownOne', { n: filtered.length })}
           </div>
         </div>
       </div>
@@ -329,7 +330,7 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
                     style={{ borderColor, color: '#FFA500' }}
                     onClick={() => handleSort('name')}>
                     <div className="flex items-center gap-1">
-                      Système <SortIcon col="name" />
+                      {tr('rc.colSystem')} <SortIcon col="name" />
                     </div>
                   </th>
                   <th className="px-4 py-3 text-center font-bold border-b" style={{ borderColor, color: textSecondary }}>
@@ -339,28 +340,28 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
                     style={{ borderColor, color: '#22c55e' }}
                     onClick={() => handleSort('system')}>
                     <div className="flex items-center justify-center gap-1">
-                      Thèmes système <SortIcon col="system" />
+                      {tr('rc.colSysThemes')} <SortIcon col="system" />
                     </div>
                   </th>
                   <th className="px-4 py-3 text-center font-bold border-b cursor-pointer select-none"
                     style={{ borderColor, color: '#60A5FA' }}
                     onClick={() => handleSort('default')}>
                     <div className="flex items-center justify-center gap-1">
-                      Thèmes défaut <SortIcon col="default" />
+                      {tr('rc.colDefThemes')} <SortIcon col="default" />
                     </div>
                   </th>
                   <th className="px-4 py-3 text-center font-bold border-b cursor-pointer select-none"
                     style={{ borderColor, color: '#f472b6' }}
                     onClick={() => handleSort('game')}>
                     <div className="flex items-center justify-center gap-1">
-                      Thèmes jeu <SortIcon col="game" />
+                      {tr('rc.colGameThemes')} <SortIcon col="game" />
                     </div>
                   </th>
                   <th className="px-4 py-3 text-center font-bold border-b cursor-pointer select-none"
                     style={{ borderColor, color: '#FFD700' }}
                     onClick={() => handleSort('total')}>
                     <div className="flex items-center justify-center gap-1">
-                      Total <SortIcon col="total" />
+                      {tr('rc.colTotal')} <SortIcon col="total" />
                     </div>
                   </th>
                 </tr>
@@ -443,7 +444,7 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
 
             {filtered.length === 0 && (
               <div className="text-center py-16" style={{ color: textSecondary }}>
-                <p className="text-lg">Aucun système trouvé</p>
+                <p className="text-lg">{tr('rc.notFound')}</p>
               </div>
             )}
           </div>
@@ -462,7 +463,7 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center justify-between pb-3 border-b" style={{ borderColor }}>
-              <h3 className="text-lg font-black" style={{ color: '#FF8C00' }}>Guide — "Récap Thèmes"</h3>
+              <h3 className="text-lg font-black" style={{ color: '#FF8C00' }}>{tr('rc.gTitle')}</h3>
               <button onClick={() => setShowGuide(false)} style={{ color: textSecondary }}>
                 <X className="w-5 h-5" />
               </button>
@@ -470,26 +471,18 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
 
             <div className="space-y-4 text-sm" style={{ color: textSecondary }}>
               <section>
-                <h4 className="font-bold mb-1" style={{ color: text }}>À quoi sert ce panneau</h4>
-                <p>
-                  Pour chaque système RetroBat/Batocera de référence, il montre s'il existe sur RetroBat,
-                  Batocera, les deux ou aucun (badges RB/BAT/HB), et combien tu as de thèmes système, par
-                  défaut et par jeu pour ce système, avec le total.
-                </p>
+                <h4 className="font-bold mb-1" style={{ color: text }}>{tr('rc.g1h')}</h4>
+                <p>{tr('rc.g1p')}</p>
               </section>
 
               <section>
-                <h4 className="font-bold mb-1" style={{ color: text }}>Filtrer / trier</h4>
-                <p>
-                  Recherche par nom de système, filtre par plateforme (RetroBat/Batocera/les deux/aucune),
-                  filtre "manquants" (système ou thème par défaut absent), et tri par n'importe quelle
-                  colonne en cliquant sur son en-tête.
-                </p>
+                <h4 className="font-bold mb-1" style={{ color: text }}>{tr('rc.g2h')}</h4>
+                <p>{tr('rc.g2p')}</p>
               </section>
 
               <section>
-                <h4 className="font-bold mb-1" style={{ color: text }}>Exporter</h4>
-                <p>Le bouton "Télécharger CSV" exporte exactement les lignes actuellement filtrées/affichées.</p>
+                <h4 className="font-bold mb-1" style={{ color: text }}>{tr('rc.g3h')}</h4>
+                <p>{tr('rc.g3p')}</p>
               </section>
             </div>
           </div>

@@ -1,4 +1,6 @@
 // Fichier: src/components/ThemePacksPanel/ThemePacksPanel.tsx
+import { useLang } from '../../i18n';
+import { translatePackText } from '../../i18n/core';
 import React, { useMemo } from 'react';
 import { X, Gift, Download, Package } from 'lucide-react';
 import { ThemePacksData } from '../../types';
@@ -19,6 +21,8 @@ interface ThemePacksPanelProps {
 }
 
 const ThemePacksPanel: React.FC<ThemePacksPanelProps> = ({ packsData, onClose, isDarkMode }) => {
+  const { t: tr, lang } = useLang();
+  const tp = (text: string) => translatePackText(lang, text);
   const { featuredMonth, packs } = packsData;
   const bg = isDarkMode ? '#0f0519' : '#f3f4f6';
   const headBg = isDarkMode ? '#0a0314' : '#f9fafb';
@@ -57,8 +61,8 @@ const ThemePacksPanel: React.FC<ThemePacksPanelProps> = ({ packsData, onClose, i
           <div className="flex items-center gap-3">
             <Package className="w-6 h-6" style={{ color: '#fb923c' }} />
             <div>
-              <h3 className="text-lg font-black" style={{ color: '#fb923c' }}>Packs de thèmes par mois</h3>
-              <p className="text-xs" style={{ color: textSecondary }}>Tous les thèmes ajoutés, regroupés mois par mois</p>
+              <h3 className="text-lg font-black" style={{ color: '#fb923c' }}>{tr('packs.title')}</h3>
+              <p className="text-xs" style={{ color: textSecondary }}>{tr('packs.subtitle')}</p>
             </div>
           </div>
           <button onClick={onClose} style={{ color: textSecondary }} className="hover:text-white">
@@ -87,9 +91,9 @@ const ThemePacksPanel: React.FC<ThemePacksPanelProps> = ({ packsData, onClose, i
                   >
                     NOUVEAU
                   </span>
-                  <div className="font-black text-xl" style={{ color: text }}>{featuredPack.label}</div>
+                  <div className="font-black text-xl" style={{ color: text }}>{tp(featuredPack.label)}</div>
                   {featuredPack.note && (
-                    <div className="text-sm mt-1" style={{ color: textSecondary }}>{featuredPack.note}</div>
+                    <div className="text-sm mt-1" style={{ color: textSecondary }}>{tp(featuredPack.note)}</div>
                   )}
                 </div>
               </div>
@@ -100,7 +104,7 @@ const ThemePacksPanel: React.FC<ThemePacksPanelProps> = ({ packsData, onClose, i
                 className="flex-shrink-0 font-black text-sm px-5 py-3 rounded-xl flex items-center gap-2 whitespace-nowrap"
                 style={{ background: 'linear-gradient(135deg,#f97316,#eab308)', color: '#1a1206', boxShadow: '0 4px 14px rgba(249,115,22,0.4)' }}
               >
-                <Download className="w-4 h-4" /> Télécharger
+                <Download className="w-4 h-4" /> {tr('packs.download')}
               </a>
             </div>
           )}
@@ -108,7 +112,7 @@ const ThemePacksPanel: React.FC<ThemePacksPanelProps> = ({ packsData, onClose, i
           {historyPacks.length > 0 && (
             <>
               <div className="text-xs font-bold uppercase tracking-wide mb-2 ml-1" style={{ color: textSecondary }}>
-                Historique des mois précédents
+                {tr('packs.history')}
               </div>
               <div className="flex flex-col gap-2">
                 {historyPacks.map(pack => (
@@ -118,9 +122,9 @@ const ThemePacksPanel: React.FC<ThemePacksPanelProps> = ({ packsData, onClose, i
                     style={{ backgroundColor: cardBg, border: `1px solid ${cardBorder}` }}
                   >
                     <div className="min-w-0 pr-3">
-                      <div className="text-sm font-semibold" style={{ color: text }}>{pack.label}</div>
+                      <div className="text-sm font-semibold" style={{ color: text }}>{tp(pack.label)}</div>
                       {pack.note && (
-                        <div className="text-xs mt-0.5 truncate" style={{ color: textSecondary }}>{pack.note}</div>
+                        <div className="text-xs mt-0.5 truncate" style={{ color: textSecondary }}>{tp(pack.note)}</div>
                       )}
                     </div>
                     <a
@@ -130,7 +134,7 @@ const ThemePacksPanel: React.FC<ThemePacksPanelProps> = ({ packsData, onClose, i
                       className="flex-shrink-0 text-xs font-bold flex items-center gap-1.5"
                       style={{ color: '#FFA500' }}
                     >
-                      <Download className="w-3.5 h-3.5" /> Télécharger
+                      <Download className="w-3.5 h-3.5" /> {tr('packs.download')}
                     </a>
                   </div>
                 ))}
@@ -140,7 +144,7 @@ const ThemePacksPanel: React.FC<ThemePacksPanelProps> = ({ packsData, onClose, i
 
           {packs.length === 0 && (
             <div className="text-center py-10 text-sm" style={{ color: textSecondary }}>
-              Aucun pack disponible pour le moment.
+              {tr('packs.none')}
             </div>
           )}
         </div>

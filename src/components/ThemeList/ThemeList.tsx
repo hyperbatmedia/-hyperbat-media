@@ -1,4 +1,5 @@
 // Fichier: src/components/ThemeList/ThemeList.tsx
+import { useLang } from '../../i18n';
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Download, Plus } from 'lucide-react';
 import { ThemeItem, SystemRow } from '../../types';
@@ -71,6 +72,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
   kioskSortButtonRef,
   kioskDarkButtonRef,
 }) => {
+  const { t: tr } = useLang();
   const [selectedTheme, setSelectedTheme] = useState<ThemeItem | null>(null);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const [revealedMature, setRevealedMature] = useState<Set<string>>(new Set());
@@ -523,11 +525,11 @@ const ThemeList: React.FC<ThemeListProps> = ({
   ]);
 
   const kioskSudAction = (() => {
-    if (chromeFocus === 'main') return 'Clavier';
-    if (pillFocusId !== null) return 'Filtrer';
-    if (toolbarFocus === 'sort') return 'Tri';
-    if (toolbarFocus === 'dark') return 'Mode';
-    return 'Installer';
+    if (chromeFocus === 'main') return tr('tl.keyboard');
+    if (pillFocusId !== null) return tr('tl.filter');
+    if (toolbarFocus === 'sort') return tr('tl.sort');
+    if (toolbarFocus === 'dark') return tr('tl.mode');
+    return tr('tl.installShort');
   })();
 
   const handleGamepadBack = useCallback(() => {
@@ -660,21 +662,21 @@ const ThemeList: React.FC<ThemeListProps> = ({
     if (!dateStr) return null;
     if (dateStr.includes('-')) {
       const [year, month, day] = dateStr.split('-');
-      return `${day}/${month}/${year}`;
+      return tr('tl.dateFmt', { d: day, m: month, y: year });
     }
     return dateStr;
   };
 
   const getCategoryName = (categoryId: string) => {
     const categoryMap: Record<string, string> = {
-      'game-themes':    'Jeu',
-      'default-themes': 'Défaut',
-      'system-themes':  'Système',
-      'artwork':        'Artwork',
-      'collection':     'Collection',
-      'main-themes':    'Principal',
-      'tools':          'Outil',
-      'tutorials':      'Tutoriel'
+      'game-themes':    tr('tl.catGame'),
+      'default-themes': tr('tl.catDefault'),
+      'system-themes':  tr('tl.catSystem'),
+      'artwork':        tr('tl.catArtwork'),
+      'collection':     tr('tl.catCollection'),
+      'main-themes':    tr('tl.catMain'),
+      'tools':          tr('tl.catTool'),
+      'tutorials':      tr('tl.catTutorial')
     };
     return categoryMap[categoryId] || categoryId;
   };
@@ -702,15 +704,15 @@ const ThemeList: React.FC<ThemeListProps> = ({
 
       {filteredThemesLength === 0 ? (
         <div className="text-center py-20 text-gray-400">
-          <p className="text-lg">Aucun thème trouvé</p>
-          <p className="text-sm mt-2">Essayez de modifier votre recherche</p>
+          <p className="text-lg">{tr('tl.none')}</p>
+          <p className="text-sm mt-2">{tr('tl.noneHint')}</p>
         </div>
       ) : (
         <>
       {cartFullMsg && (
         <div className="cart-full-msg fixed top-6 left-1/2 z-50 px-5 py-3 rounded-lg border-2 font-bold text-sm shadow-lg"
           style={{ transform: 'translateX(-50%)', backgroundColor: '#1a1a1a', borderColor: '#FF8C00', color: '#FF8C00' }}>
-          Sélection pleine — maximum {CART_MAX} thèmes
+          {tr('tl.cartFull', { max: CART_MAX })}
         </div>
       )}
 
@@ -792,7 +794,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                     {theme.mature && !revealedMature.has(key) && (
                       <div className="absolute inset-0 flex flex-col items-center justify-center gap-2" style={{ backgroundColor: 'rgba(20,10,20,0.45)' }}>
                         <div className="w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm text-white" style={{ backgroundColor: '#dc2626' }}>+18</div>
-                        <span className="text-xs font-semibold" style={{ color: '#f5d5d5' }}>Cliquer pour révéler</span>
+                        <span className="text-xs font-semibold" style={{ color: '#f5d5d5' }}>{tr('tl.reveal')}</span>
                       </div>
                     )}
                     {theme.mature && revealedMature.has(key) && (
@@ -825,7 +827,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                   {theme.isMulti && (
                     <span className="px-2 py-1 rounded-full text-xs font-semibold"
                       style={{ background: 'linear-gradient(to right, #9333ea, #ec4899)', color: 'white' }}>
-                      🌍 Multi-region
+                      {tr('tl.multi')}
                     </span>
                   )}
                 </div>
@@ -849,7 +851,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                       background: 'linear-gradient(135deg, rgba(251,191,36,0.15) 0%, rgba(245,158,11,0.15) 100%)',
                       color: '#FCD34D', borderLeft: '2px solid #F59E0B', borderRight: '2px solid #F59E0B', fontSize: '0.8rem'
                     }}>
-                    ✨ Par {theme.creator}
+                    {tr('tl.by', { name: theme.creator })}
                   </p>
                 </div>
 
@@ -874,7 +876,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                       } : undefined}
                       className="flex-1 py-2 rounded flex items-center justify-center gap-2 font-bold text-xs border transition hover:brightness-110 active:scale-95"
                       style={{ backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white' }}>
-                      🎮 Installer dans {agentInfo?.platform === 'batocera' ? 'Batocera' : 'RetroBat'}
+                      {tr('tl.install', { platform: agentInfo?.platform === 'batocera' ? 'Batocera' : 'RetroBat' })}
                     </a>
                   ) : (
                     // ── Mode normal : bouton Télécharger ──
@@ -884,13 +886,13 @@ const ThemeList: React.FC<ThemeListProps> = ({
                       className="flex-1 py-2 rounded flex items-center justify-center gap-2 font-bold text-xs border transition hover:brightness-110 active:scale-95"
                       style={{ backgroundColor: '#CC7000', borderColor: '#E89B3C', color: 'white' }}>
                       <Download className="w-4 h-4" />
-                      Télécharger
+                      {tr('tl.download')}
                     </a>
                   )}
                   <button
                     tabIndex={isRetrobat ? -1 : undefined}
                     onClick={() => handleCartToggle(theme)}
-                    title={inCart ? 'Retirer de la sélection' : cart.length >= CART_MAX ? 'Sélection pleine' : 'Ajouter à la sélection'}
+                    title={inCart ? tr('tl.cartRemove') : cart.length >= CART_MAX ? tr('tl.cartFullTitle') : tr('tl.cartAdd')}
                     className="px-3 py-2 rounded border-2 transition hover:brightness-110 active:scale-95 flex items-center justify-center gap-1 text-xs font-bold"
                     style={{
                       backgroundColor: inCart ? 'rgba(34,197,94,0.15)' : cart.length >= CART_MAX && !inCart ? 'rgba(255,140,0,0.05)' : '#1a1a1a',
@@ -899,8 +901,8 @@ const ThemeList: React.FC<ThemeListProps> = ({
                       cursor: cart.length >= CART_MAX && !inCart ? 'not-allowed' : 'pointer'
                     }}>
                     {inCart
-                      ? <><span>✓</span><span>Ajouté</span></>
-                      : <><Plus className="w-4 h-4" style={{ color: '#FFD700' }} /><span>Ajouter</span></>
+                      ? <><span>✓</span><span>{tr('tl.added')}</span></>
+                      : <><Plus className="w-4 h-4" style={{ color: '#FFD700' }} /><span>{tr('tl.add')}</span></>
                     }
                   </button>
                 </div>
@@ -918,7 +920,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
               backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white',
               ...(paginationFocus === 'prev' ? { outline: '3px solid #fff', outlineOffset: '2px' } : {}),
             }}>
-            ← Précédent
+            {tr('tl.prev')}
           </button>
           <div className="flex gap-1">
             {currentPage > 3 && (
@@ -959,16 +961,18 @@ const ThemeList: React.FC<ThemeListProps> = ({
               backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white',
               ...(paginationFocus === 'next' ? { outline: '3px solid #fff', outlineOffset: '2px' } : {}),
             }}>
-            Suivant →
+            {tr('tl.next')}
           </button>
         </div>
       )}
 
       {filteredThemesLength > 0 && (
         <div className="mt-4 text-center text-gray-400 text-sm">
-          Affichage de {((currentPage - 1) * themesPerPage) + 1} à{' '}
-          {Math.min(currentPage * themesPerPage, filteredThemesLength)} sur{' '}
-          <span className="font-bold text-orange-400">{filteredThemesLength.toLocaleString()}</span> thème(s)
+          {tr('tl.showing', {
+            from: ((currentPage - 1) * themesPerPage) + 1,
+            to: Math.min(currentPage * themesPerPage, filteredThemesLength),
+            total: filteredThemesLength.toLocaleString(),
+          })}
         </div>
       )}
         </>
@@ -995,7 +999,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
         <GamepadVirtualKeyboard
           open={oskOpen}
           initialValue={oskInitial}
-          title="Recherche thèmes"
+          title={tr('tl.oskTitle')}
           onChange={handleOskChange}
           onConfirm={handleOskConfirm}
           onCancel={handleOskCancel}
@@ -1040,7 +1044,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
               <circle cx="0" cy="0" r="4" fill="#3a3a3a" stroke="#555" strokeWidth="1"/>
             </svg>
             <span style={{ fontSize:'9px', fontWeight:700, color:'#fff', lineHeight:1 }}>D-PAD</span>
-            <span style={{ fontSize:'9px', color:'#aaa', lineHeight:1 }}>Naviguer</span>
+            <span style={{ fontSize:'9px', color:'#aaa', lineHeight:1 }}>{tr('tl.nav')}</span>
           </div>
         );
 
@@ -1084,18 +1088,18 @@ const ThemeList: React.FC<ThemeListProps> = ({
                 backgroundColor:'#2a2a2a', border:'1.5px solid #666',
                 fontSize:'9px', fontWeight:700, color:'#fff',
               }}>R1</div>
-              <span style={{ fontSize:'9px', color:'#aaa', lineHeight:1 }}>Fermer</span>
-              <span style={{ fontSize:'8px', color:'#666', marginTop:'1px' }}>(F9 clavier)</span>
+              <span style={{ fontSize:'9px', color:'#aaa', lineHeight:1 }}>{tr('tl.close')}</span>
+              <span style={{ fontSize:'8px', color:'#666', marginTop:'1px' }}>{tr('tl.f9')}</span>
             </div>
             <Sep/>
             {/* SUD - Installer / Clavier si recherche focusée */}
-            <BtnIcon dir="sud"  color="#2ecc71" active={btnSudOk}  label="SUD"  action={kioskSudAction}/>
+            <BtnIcon dir="sud"  color="#2ecc71" active={btnSudOk}  label={tr('tl.ctrlSouth')}  action={kioskSudAction}/>
             <Sep/>
             {/* EST - Retour — rouge Xbox (B) */}
-            <BtnIcon dir="est"  color="#e74c3c" active={btnEstOk}  label="EST"  action="Retour"/>
+            <BtnIcon dir="est"  color="#e74c3c" active={btnEstOk}  label={tr('tl.ctrlEast')}  action={tr('tl.back')}/>
             <Sep/>
             {/* NORD - Aperçu / Clavier */}
-            <BtnIcon dir="nord" color="#f1c40f" active={btnNordOk} label="NORD" action={chromeFocus === 'main' ? 'Clavier' : (pillFocusId !== null || toolbarFocus) ? '—' : 'Aperçu'}/>
+            <BtnIcon dir="nord" color="#f1c40f" active={btnNordOk} label={tr('tl.ctrlNorth')} action={chromeFocus === 'main' ? tr('tl.keyboard') : (pillFocusId !== null || toolbarFocus) ? '—' : tr('tl.preview')}/>
             <Sep/>
             {/* D-PAD : grille + pagination bas + recherche (haut 1re ligne) */}
             <DPad/>
@@ -1105,8 +1109,8 @@ const ThemeList: React.FC<ThemeListProps> = ({
             {hasTriggers && (
               <>
                 <Sep/>
-                <Badge label="L2/LT" action="Page -" active={btnTriggerLOk}/>
-                <Badge label="R2/RT" action="Page +" active={btnTriggerROk}/>
+                <Badge label="L2/LT" action={tr('tl.pageMinus')} active={btnTriggerLOk}/>
+                <Badge label="R2/RT" action={tr('tl.pagePlus')} active={btnTriggerROk}/>
               </>
             )}
             {/* Page courante */}
@@ -1114,7 +1118,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
               <>
                 <Sep/>
                 <span style={{ fontSize:'12px', fontWeight:700, color:'#FFD700', whiteSpace:'nowrap' }}>
-                  Page {currentPage}/{totalPages}
+                  {tr('tl.pageN', { cur: currentPage, total: totalPages })}
                 </span>
               </>
             )}
@@ -1123,13 +1127,13 @@ const ThemeList: React.FC<ThemeListProps> = ({
               <>
                 <Sep/>
                 <span style={{ fontSize:'10px', fontWeight:700, color:'#2ecc71', whiteSpace:'nowrap' }}>
-                  ● Agent {agentInfo.platform === 'batocera' ? 'Batocera' : 'RetroBat'}
+                  {tr('tl.agent', { platform: agentInfo.platform === 'batocera' ? 'Batocera' : 'RetroBat' })}
                 </span>
               </>
             )}
           </div>
           <span style={{ fontSize:'10px', color:'#666', marginTop:'4px' }}>
-            🖱 Vous pouvez aussi utiliser une souris pour plus de confort
+            {tr('tl.mouse')}
           </span>
           </div>
         );

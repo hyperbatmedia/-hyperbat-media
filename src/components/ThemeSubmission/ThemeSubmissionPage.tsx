@@ -20,6 +20,7 @@ import { ROBOT_ENDPOINT } from '../../config/robotEndpoint';
 import { robotFetch, generateClientId, RobotFetchError } from '../../utils/robotFetch';
 import linksJson from '../../data/links.json';
 import themesJson from '../../data/themes.json';
+import { useLang } from '../../i18n';
 
 const EXCLUDED_IDS = ['all', 'tools', 'tutorials', 'main-themes', 'other-themes'];
 
@@ -152,6 +153,7 @@ function fileToBase64(file: File): Promise<string> {
 }
 
 export default function ThemeSubmissionPage() {
+  const { t: tr, label: trLabel } = useLang();
   const allSystems = useMemo<SystemRow[]>(
     () => generateSystems(categories, systemsData, sectionIcons),
     []
@@ -188,7 +190,7 @@ export default function ThemeSubmissionPage() {
   const [themes, setThemes] = useState<ThemeEntry[]>([createEmptyTheme()]);
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
-  const [sendingMessage, setSendingMessage] = useState('Envoi en cours…');
+  const [sendingMessage, setSendingMessage] = useState(() => tr('sub.sending'));
   // Conserve le pseudo utilisé pour le dernier envoi réussi, pour pouvoir
   // personnaliser le message de remerciement même après que le champ
   // "pseudo" ait été réinitialisé (voir handleSubmit).
@@ -304,7 +306,7 @@ export default function ThemeSubmissionPage() {
         { method: 'POST', body: JSON.stringify(payload) },
         onRetry
       );
-      if (!data.ok) return { ok: false, error: data.error || 'Erreur inconnue du robot.' };
+      if (!data.ok) return { ok: false, error: data.error || tr('sub.errUnknownRobot') };
       return { ok: true };
     } catch (err) {
       if (err instanceof RobotFetchError) {
@@ -320,19 +322,17 @@ export default function ThemeSubmissionPage() {
           });
           if (checkData.ok && checkData.existingIds?.[t.clientId]) return { ok: true };
           if (checkData.ok) {
-            return { ok: false, error: "Ce thème n'est pas passé. Tu peux le renvoyer, en toute sécurité." };
+            return { ok: false, error: tr('sub.errNotPassed') };
           }
         } catch {
           // Même la vérification légère a échoué : message honnête ci-dessous.
         }
         return {
           ok: false,
-          error:
-            "Le robot ne répond pas normalement pour l'instant (ça arrive, c'est ponctuel). " +
-            "Tu peux renvoyer ce thème, ça ne créera jamais de doublon.",
+          error: tr('sub.errRobotDown'),
         };
       }
-      return { ok: false, error: err instanceof Error ? err.message : 'Erreur inconnue, réessaie.' };
+      return { ok: false, error: err instanceof Error ? err.message : tr('sub.errUnknown') };
     }
   };
 
@@ -351,12 +351,12 @@ export default function ThemeSubmissionPage() {
 
     for (let i = 0; i < toSend.length; i++) {
       const t = toSend[i];
-      const label = toSend.length > 1 ? `Envoi du thème ${i + 1}/${toSend.length}…` : 'Envoi en cours…';
+      const label = toSend.length > 1 ? tr('sub.sendingN', { i: i + 1, n: toSend.length }) : tr('sub.sending');
       setSendingMessage(label);
       updateTheme(t.key, { sendStatus: 'sending', sendError: '' });
 
       const result = await sendOneTheme(t, () =>
-        setSendingMessage(`${label} nouvel essai en cours…`)
+        setSendingMessage(`${label} ${tr('sub.retrying')}`)
       );
 
       if (result.ok) {
@@ -378,10 +378,7 @@ export default function ThemeSubmissionPage() {
 
     setStatus('error');
     const received = receivedCount + okCount;
-    setErrorMsg(
-      `${received} thème${received > 1 ? 's' : ''} bien reçu${received > 1 ? 's' : ''}, ` +
-        `${failCount} à renvoyer (voir le détail sur chaque thème ci-dessous).`
-    );
+    setErrorMsg(tr(received > 1 ? 'sub.summaryMany' : 'sub.summaryOne', { ok: received, fail: failCount }));
   };
 
   const primaryButtonStyle = {
@@ -403,7 +400,7 @@ export default function ThemeSubmissionPage() {
           className="absolute top-6 left-4 sm:left-8 text-sm font-bold hover:opacity-80 transition-opacity"
           style={{ color: COLORS.textSecondary }}
         >
-          ← Retour à l'accueil
+          {tr('sub.home')}
         </button>
 
         <div className="max-w-md text-center">
@@ -422,11 +419,10 @@ export default function ThemeSubmissionPage() {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Merci{lastPseudo ? ` ${lastPseudo}` : ''} !
+            {lastPseudo ? tr('sub.thanks', { pseudo: lastPseudo }) : tr('sub.thanksNoName')}
           </p>
           <p style={{ color: COLORS.textSecondary }} className="font-medium mb-6">
-            Ton thème(s) a/ont bien été envoyé(s) — il(s) sera(ont) vérifié(s) avant
-            d'apparaître sur le site.
+            {tr('sub.sentOk')}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
@@ -435,7 +431,7 @@ export default function ThemeSubmissionPage() {
               className="rounded-lg px-6 py-3 text-sm font-bold shadow-lg border"
               style={primaryButtonStyle}
             >
-              Proposer un autre thème
+              {tr('sub.another')}
             </button>
             <button
               type="button"
@@ -443,7 +439,7 @@ export default function ThemeSubmissionPage() {
               className="rounded-lg px-6 py-3 text-sm font-bold border"
               style={{ borderColor: `${COLORS.border}55`, color: COLORS.text }}
             >
-              Retour à l'accueil
+              {tr('sub.homeShort')}
             </button>
           </div>
         </div>
@@ -460,33 +456,33 @@ export default function ThemeSubmissionPage() {
           className="text-sm font-bold hover:opacity-80 transition-opacity mb-4"
           style={{ color: COLORS.textSecondary }}
         >
-          ← Retour à l'accueil
+          {tr('sub.home')}
         </button>
 
         <h1 className="text-3xl font-extrabold mb-1" style={{ color: COLORS.border }}>
-          Proposer des thèmes
+          {tr('sub.title')}
         </h1>
         <p
           className="text-sm mb-6 pb-4"
           style={{ color: COLORS.textSecondary, borderBottom: `1px solid ${COLORS.border}33` }}
         >
-          HyperBat Media — ton dépôt sera vérifié avant de rejoindre le site.
+          {tr('sub.subtitle')}
         </p>
         <p
           className="text-sm mb-6 rounded-xl p-3"
           style={{ color: COLORS.text, backgroundColor: COLORS.cardBg, border: `1px solid ${COLORS.border}55` }}
         >
-          Continue aussi à poster ton thème sur le Discord, comme d'habitude. Ce formulaire vient en plus.
+          {tr('sub.discordNote')}
         </p>
 
         <label className="block text-sm font-bold mb-2" style={{ color: COLORS.textSecondary }} htmlFor="pseudo">
-          Ton pseudo *
+          {tr('sub.pseudo')}
         </label>
         <input
           id="pseudo"
           value={pseudo}
           onChange={(e) => setPseudo(e.target.value)}
-          placeholder="ex: Dav"
+          placeholder={tr('sub.pseudoPh')}
           className="w-full p-3 rounded-xl text-white mb-6 focus:outline-none"
           style={{ backgroundColor: COLORS.inputBg, border: `1px solid ${COLORS.border}55` }}
         />
@@ -500,8 +496,8 @@ export default function ThemeSubmissionPage() {
             >
               <span className="font-black" style={{ color: '#22c55e' }} aria-hidden="true">✓</span>
               <p className="text-sm font-bold min-w-0 truncate" style={{ color: COLORS.text }}>
-                Thème {index + 1} — {t.nom || 'sans nom'}
-                <span className="font-semibold" style={{ color: '#22c55e' }}> · bien reçu</span>
+                {tr('sub.themeNamed', { n: index + 1, name: t.nom || tr('sub.noName') })}
+                <span className="font-semibold" style={{ color: '#22c55e' }}>{tr('sub.received')}</span>
               </p>
             </div>
           ) : (
@@ -515,7 +511,7 @@ export default function ThemeSubmissionPage() {
             >
               <div className="flex items-center justify-between mb-3">
                 <p className="font-bold" style={{ color: COLORS.text }}>
-                  Thème {index + 1}
+                  {tr('sub.themeN', { n: index + 1 })}
                 </p>
                 {t.sendStatus === 'sending' && (
                   <span className="text-xs font-bold flex items-center gap-2" style={{ color: '#FFA500' }}>
@@ -523,7 +519,7 @@ export default function ThemeSubmissionPage() {
                       className="inline-block w-3 h-3 rounded-full border-2 border-white/30 border-t-white animate-spin shrink-0"
                       aria-hidden="true"
                     />
-                    Envoi en cours…
+                    {tr('sub.sending')}
                   </span>
                 )}
                 {themes.length > 1 && (
@@ -532,9 +528,9 @@ export default function ThemeSubmissionPage() {
                     onClick={() => removeTheme(t.key)}
                     className="text-xs font-bold hover:opacity-80"
                     style={{ color: '#f87171' }}
-                    aria-label="Retirer ce thème"
+                    aria-label={tr('sub.removeTheme')}
                   >
-                    ✕ Retirer
+                    {tr('sub.remove')}
                   </button>
                 )}
               </div>
@@ -542,7 +538,7 @@ export default function ThemeSubmissionPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                 <div>
                   <label className="block text-sm font-bold mb-2" style={{ color: COLORS.textSecondary }}>
-                    Système *
+                    {tr('sub.system')}
                   </label>
                   {/* Composant partagé avec l'admin : recherche au clavier parmi
                       tous les systèmes, pas de longue liste à faire défiler. */}
@@ -567,14 +563,14 @@ export default function ThemeSubmissionPage() {
                       }
                       updateTheme(t.key, patch);
                     }}
-                    placeholder="Écris un système…"
-                    emptyLabel="Choisir un système"
+                    placeholder={tr('sub.systemPh')}
+                    emptyLabel={tr('sub.systemEmpty')}
                   />
                   {/* Évite qu'un créateur range son thème dans le "système le
                       plus proche" (ex. MAME) faute de trouver le sien : la liste
                       est fixe, il n'y a pas de saisie libre. */}
                   <p className="text-xs mt-1" style={{ color: COLORS.textSecondary }}>
-                    Ton système n'est pas dans la liste ? Ne choisis pas un autre système :{' '}
+                    {tr('sub.missing1')}{' '}
                     {DISCORD_URL ? (
                       <a
                         href={DISCORD_URL}
@@ -582,17 +578,17 @@ export default function ThemeSubmissionPage() {
                         rel="noopener noreferrer"
                         style={{ color: '#FFA500', textDecoration: 'underline' }}
                       >
-                        préviens-nous sur Discord
+                        {tr('sub.missingLink')}
                       </a>
                     ) : (
-                      'préviens-nous'
+                      tr('sub.missingNoLink')
                     )}{' '}
-                    avec son nom, on l'ajoute.
+                    {tr('sub.missing2')}
                   </p>
                 </div>
                 <div>
                   <label className="block text-sm font-bold mb-2" style={{ color: COLORS.textSecondary }}>
-                    Catégorie *
+                    {tr('sub.category')}
                   </label>
                   <select
                     value={t.categorie}
@@ -600,12 +596,12 @@ export default function ThemeSubmissionPage() {
                     disabled={t.systemId === collectionSystemId}
                     className="w-full p-3 rounded-xl text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
                     style={{ backgroundColor: COLORS.inputBg, border: `1px solid ${COLORS.border}55` }}
-                    title={t.systemId === collectionSystemId ? 'Fixée automatiquement pour les Collections Personnalisées' : undefined}
+                    title={t.systemId === collectionSystemId ? tr('sub.categoryAuto') : undefined}
                   >
-                    <option value="" disabled>Choisir une catégorie</option>
+                    <option value="" disabled>{tr('sub.categoryPh')}</option>
                     {submissionCategories.map((c) => (
                       <option key={c.id} value={c.id}>
-                        {c.name}
+                        {trLabel(c.name, 'cat.')}
                       </option>
                     ))}
                   </select>
@@ -620,7 +616,7 @@ export default function ThemeSubmissionPage() {
                   {t.zipFile ? (
                     <span className="truncate">📦 {t.zipFile.name}</span>
                   ) : (
-                    'Fichier .zip du thème *'
+                    tr('sub.zip')
                   )}
                   <input
                     type="file"
@@ -645,8 +641,8 @@ export default function ThemeSubmissionPage() {
                     onClick={() => updateTheme(t.key, { zipFile: null })}
                     className="text-xs font-bold shrink-0 hover:opacity-80"
                     style={{ color: '#f87171' }}
-                    aria-label="Retirer ce fichier"
-                    title="Retirer ce fichier"
+                    aria-label={tr('sub.removeFile')}
+                    title={tr('sub.removeFile')}
                   >
                     ✕
                   </button>
@@ -654,13 +650,13 @@ export default function ThemeSubmissionPage() {
               </div>
 
               <p className="text-xs -mt-2 mb-3" style={{ color: COLORS.textSecondary }}>
-                Le nom de ton zip ne doit pas déjà exister dans le même système. Sinon, ajoute{' '}
-                <code>v2</code>, <code>alt</code> ou ton pseudo à la suite du nom (ex : <code>monTheme_alt.zip</code>).
+                {tr('sub.zipRule1')}{' '}
+                <code>v2</code>, <code>alt</code> {tr('sub.zipRule2')} <code>monTheme_alt.zip</code>).
               </p>
               {nameTaken(t) && (
                 <p className="text-sm font-bold mb-3" style={{ color: '#f87171' }}>
-                  ⚠️ Un thème nommé « {t.nom} » existe déjà dans ce système. Ajoute{' '}
-                  <code>v2</code>, <code>alt</code> ou ton pseudo à la suite du nom de ton zip avant d'envoyer.
+                  {tr('sub.dup1', { name: t.nom })}{' '}
+                  <code>v2</code>, <code>alt</code> {tr('sub.dup2')}
                 </p>
               )}
 
@@ -673,7 +669,7 @@ export default function ThemeSubmissionPage() {
                   {t.imageFile ? (
                     <span className="truncate">🖼️ {t.imageFile.name}</span>
                   ) : (
-                    'Image — obligatoire *'
+                    tr('sub.image')
                   )}
                   <input
                     type="file"
@@ -688,8 +684,8 @@ export default function ThemeSubmissionPage() {
                     onClick={() => updateTheme(t.key, { imageFile: null })}
                     className="text-xs font-bold shrink-0 hover:opacity-80"
                     style={{ color: '#f87171' }}
-                    aria-label="Retirer cette image"
-                    title="Retirer cette image"
+                    aria-label={tr('sub.removeImage')}
+                    title={tr('sub.removeImage')}
                   >
                     ✕
                   </button>
@@ -702,14 +698,14 @@ export default function ThemeSubmissionPage() {
                   style={{ color: themeBytes(t) > MAX_THEME_BYTES ? '#f87171' : COLORS.textSecondary }}
                 >
                   {themeBytes(t) > MAX_THEME_BYTES
-                    ? `Ce thème est trop volumineux (${formatMB(themeBytes(t))} Mo / ${formatMB(MAX_THEME_BYTES)} Mo max).`
-                    : `Taille de ce thème : ${formatMB(themeBytes(t))} Mo / ${formatMB(MAX_THEME_BYTES)} Mo`}
+                    ? tr('sub.tooBig', { size: formatMB(themeBytes(t)), max: formatMB(MAX_THEME_BYTES) })
+                    : tr('sub.size', { size: formatMB(themeBytes(t)), max: formatMB(MAX_THEME_BYTES) })}
                 </p>
               )}
 
               {t.sendStatus === 'failed' && (
                 <p className="text-sm font-bold mt-3" style={{ color: '#f87171' }}>
-                  ✗ Non envoyé — {t.sendError}
+                  {tr('sub.notSent', { error: t.sendError })}
                 </p>
               )}
             </div>
@@ -723,7 +719,7 @@ export default function ThemeSubmissionPage() {
           className="w-full font-bold rounded-xl py-3 text-sm mb-6 transition-colors hover:opacity-90"
           style={{ border: `2px dashed ${COLORS.border}`, color: COLORS.text }}
         >
-          + Ajouter un autre thème
+          {tr('sub.add')}
         </button>
 
         {status === 'error' && (
@@ -734,7 +730,7 @@ export default function ThemeSubmissionPage() {
 
         {status === 'sending' && (
           <p className="text-xs text-center mb-2" style={{ color: COLORS.textSecondary }}>
-            Ça peut prendre jusqu'à 45 secondes par thème, merci de ne pas fermer cette page.
+            {tr('sub.wait')}
           </p>
         )}
 
@@ -754,11 +750,11 @@ export default function ThemeSubmissionPage() {
           {status === 'sending'
             ? sendingMessage
             : receivedCount > 0
-              ? `Renvoyer ${pendingThemes.length > 1 ? `les ${pendingThemes.length} thèmes restants` : 'le thème restant'}`
-              : `Envoyer ${themes.length > 1 ? `mes ${themes.length} thèmes` : 'mon thème'}`}
+              ? (pendingThemes.length > 1 ? tr('sub.resendMany', { n: pendingThemes.length }) : tr('sub.resendOne'))
+              : (themes.length > 1 ? tr('sub.sendMany', { n: themes.length }) : tr('sub.sendOne'))}
         </button>
         <p className="text-xs text-center mt-3" style={{ color: COLORS.textSecondary }}>
-          Vérifié{themes.length > 1 ? 's' : ''} avant d'apparaître sur le site
+          {themes.length > 1 ? tr('sub.checkedMany') : tr('sub.checkedOne')}
         </p>
       </div>
     </div>

@@ -1,4 +1,5 @@
 // Fichier: src/components/ContentModal/ContentModal.tsx
+import { useLang } from '../../i18n';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { X, Search, Play, Download, ExternalLink } from 'lucide-react';
 
@@ -77,6 +78,7 @@ const YoutubeThumbnail: React.FC<{ youtubeId: string; name: string }> = ({ youtu
 
 // ── Carte outil/thème ─────────────────────────────────────────────────────────
 const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlighted?: boolean }> = ({ item, isDarkMode, isHighlighted }) => {
+  const { t: tr } = useLang();
   const [imgError, setImgError] = useState(false);
   const convertedImageUrl = item.imageUrl ? convertGoogleDriveUrl(item.imageUrl, true) : '';
   const hasImage = !!convertedImageUrl && !imgError;
@@ -177,7 +179,7 @@ const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlight
             {item.name}
           </p>
           <p className="mt-1 mb-0 text-xs text-[#FF8C00]">
-            par {item.creator}
+            {tr('by.creditLower', { name: item.creator })}
           </p>
         </div>
         {item.description && (
@@ -190,7 +192,7 @@ const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlight
           className="mt-auto w-full py-2 px-3 bg-gradient-to-br from-[#FF8C00] to-[#FFA500] text-[#1a1a1a] border-none rounded-lg text-[13px] font-bold cursor-pointer flex items-center justify-center gap-1.5 transition-[filter] duration-200 hover:brightness-110"
         >
           <Download className="w-3.5 h-3.5" />
-          Télécharger
+          {tr('cm.download')}
         </button>
       </div>
     </div>
@@ -199,6 +201,7 @@ const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlight
 
 // ── Carte YouTube ─────────────────────────────────────────────────────────────
 const YoutubeCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlighted?: boolean }> = ({ item, isDarkMode, isHighlighted }) => {
+  const { t: tr } = useLang();
   const handleWatch = () => {
     if (item.youtubeUrl) {
       window.open(item.youtubeUrl, '_blank', 'noopener,noreferrer');
@@ -220,7 +223,7 @@ const YoutubeCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlighte
             {item.name}
           </p>
           <p className="mt-1 mb-0 text-xs text-[#FF8C00]">
-            par {item.creator}
+            {tr('by.creditLower', { name: item.creator })}
           </p>
         </div>
         {item.description && (
@@ -230,7 +233,7 @@ const YoutubeCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlighte
         )}
         <div className="mt-auto w-full py-[7px] px-3 bg-[#FF0000] text-white rounded-lg text-[13px] font-bold flex items-center justify-center gap-1.5">
           <Play className="w-[13px] h-[13px] ml-0.5" />
-          Regarder
+          {tr('cm.watch')}
         </div>
       </div>
     </div>
@@ -239,6 +242,7 @@ const YoutubeCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlighte
 
 // ── Modal principal ───────────────────────────────────────────────────────────
 const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, isDarkMode, highlightItemId, instanceId = 'content-modal' }) => {
+  const { t: tr } = useLang();
   const [search, setSearch] = useState('');
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -333,7 +337,7 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
               {config.title}
             </span>
             <span className="text-xs py-[3px] px-2.5 bg-[#FF8C00]/15 text-[#FF8C00] rounded-full border border-[#FF8C00]/30">
-              {config.items.length} {config.items.length > 1 ? 'entrées' : 'entrée'}
+              {config.items.length} {config.items.length > 1 ? tr('cm.entryMany') : tr('cm.entryOne')}
             </span>
           </div>
           <button
@@ -342,7 +346,7 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
             className={`w-[34px] h-[34px] rounded-full border border-[#FF8C00]/30 bg-transparent cursor-pointer flex items-center justify-center transition-colors duration-200 hover:bg-[#FF8C00]/15 hover:text-[#FF8C00] ${
               isDarkMode ? 'text-[#aaa]' : 'text-[#666]'
             }`}
-            title="Fermer (Échap)"
+            title={tr('cm.close')}
           >
             <X className="w-4 h-4" />
           </button>
@@ -357,7 +361,7 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
                 type="text"
                 id={`${instanceId}-search`}
                 name={`${instanceId}-search`}
-                placeholder="Rechercher..."
+                placeholder={tr('cm.search')}
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 autoComplete="off"
@@ -384,12 +388,12 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
           {isEmpty ? (
             <div className={`text-center py-16 px-5 ${isDarkMode ? 'text-[#555]' : 'text-[#aaa]'}`}>
               <ExternalLink className="w-10 h-10 mb-3 opacity-40 mx-auto" />
-              <p className="text-[15px] m-0">Aucun contenu pour le moment</p>
-              <p className="text-[13px] mt-2 mb-0 opacity-70">Revenez bientôt !</p>
+              <p className="text-[15px] m-0">{tr('cm.empty')}</p>
+              <p className="text-[13px] mt-2 mb-0 opacity-70">{tr('cm.soon')}</p>
             </div>
           ) : filtered.length === 0 ? (
             <div className={`text-center py-10 px-5 ${isDarkMode ? 'text-[#555]' : 'text-[#aaa]'}`}>
-              <p className="text-sm m-0">Aucun résultat pour "<span className="text-[#FF8C00]">{search}</span>"</p>
+              <p className="text-sm m-0">{tr('cm.noResult')} "<span className="text-[#FF8C00]">{search}</span>"</p>
             </div>
           ) : (
             <div className="grid gap-3 grid-cols-[repeat(auto-fill,minmax(210px,1fr))]">
@@ -410,7 +414,7 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
           isDarkMode ? 'border-[#222]' : 'border-[#eee]'
         }`}>
           <span className={`text-[11px] ${isDarkMode ? 'text-[#444]' : 'text-[#bbb]'}`}>
-            {config.type === 'youtube' ? 'Les vidéos s\'ouvrent sur YouTube' : 'Les liens de téléchargement sont sécurisés'}
+            {config.type === 'youtube' ? tr('cm.footYoutube') : tr('cm.footDl')}
           </span>
         </div>
       </div>

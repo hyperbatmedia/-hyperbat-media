@@ -6,6 +6,7 @@
 //   (garde le texte) ; touche OK = fermer (garde le texte).
 // Maj / Sym / Vider comme l'AHK. NORD n'efface plus tout le champ.
 
+import { useLang } from '../../i18n';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 type LayoutId = 'letters' | 'sym';
@@ -88,10 +89,12 @@ const FaceBtnHint = ({ dir, color, action }: {
 const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
   open,
   initialValue,
-  title = 'Saisie',
+  title: titleProp,
   onChange,
   onConfirm,
 }) => {
+  const { t: tr } = useLang();
+  const title = titleProp ?? tr('kb.title');
   const [layout, setLayout] = useState<LayoutId>('letters');
   const [shift, setShift] = useState(false);
   const [draft, setDraft] = useState(initialValue);
@@ -319,6 +322,9 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
     if (key.type === 'char' && shift && key.value.length === 1) {
       return key.value.toUpperCase();
     }
+    if (key.type === 'shift') return tr('kb.shift');
+    if (key.type === 'space') return tr('kb.space');
+    if (key.type === 'clear') return tr('kb.clear');
     return key.label;
   };
 

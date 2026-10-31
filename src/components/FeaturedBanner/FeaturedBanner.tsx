@@ -3,6 +3,7 @@
 // choisi depuis l'onglet admin "Mise en avant" (voir LinksTab.tsx). Reprend
 // les vraies couleurs du site (flamme #FF8C00 → #FFD700, cf.
 // ThemeSubmissionPage.tsx) plutôt que des couleurs inventées.
+import { useLang } from '../../i18n';
 import React from 'react';
 import { Sparkles, Star, Flame } from 'lucide-react';
 import type { ModalItem } from '../../hooks/useLinksLoader';
@@ -25,9 +26,9 @@ const convertGoogleDriveUrl = (url: string, isImage: boolean = false): string =>
 };
 
 const BADGE_CONFIG: Record<NonNullable<ModalItem['vedette']>, { label: string; Icon: React.FC<{ className?: string }>; bg: string; text: string }> = {
-  'nouveau':          { label: '🆕 Nouveau',          Icon: Sparkles, bg: '#FFD700', text: '#1a1a1a' },
-  'a-la-une':         { label: '⭐ À la une',          Icon: Star,     bg: '#FF8C00', text: '#1a1a1a' },
-  'a-ne-pas-manquer': { label: '🔥 À ne pas manquer',  Icon: Flame,    bg: '#dc2626', text: '#ffffff' },
+  'nouveau':          { label: 'feat.new',          Icon: Sparkles, bg: '#FFD700', text: '#1a1a1a' },
+  'a-la-une':         { label: 'feat.top',          Icon: Star,     bg: '#FF8C00', text: '#1a1a1a' },
+  'a-ne-pas-manquer': { label: 'feat.dontMiss',  Icon: Flame,    bg: '#dc2626', text: '#ffffff' },
 };
 
 interface FeaturedBannerProps {
@@ -36,6 +37,7 @@ interface FeaturedBannerProps {
 }
 
 const FeaturedBanner: React.FC<FeaturedBannerProps> = ({ item, onClick }) => {
+  const { t: tr } = useLang();
   const badge = item.vedette ? BADGE_CONFIG[item.vedette] : null;
 
   return (
@@ -62,7 +64,7 @@ const FeaturedBanner: React.FC<FeaturedBannerProps> = ({ item, onClick }) => {
               className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full mb-1"
               style={{ backgroundColor: badge.bg, color: badge.text }}
             >
-              <badge.Icon className="w-3 h-3" /> {badge.label}
+              <badge.Icon className="w-3 h-3" /> {tr(badge.label)}
             </span>
           )}
           <p className="text-sm font-bold text-white truncate">{item.name}</p>

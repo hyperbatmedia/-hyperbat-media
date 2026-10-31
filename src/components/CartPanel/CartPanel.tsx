@@ -1,4 +1,5 @@
 // Fichier: src/components/CartPanel/CartPanel.tsx
+import { useLang } from '../../i18n';
 import { useState, useCallback, FC } from 'react';
 import { X, Trash2, Download, CheckSquare, Square } from 'lucide-react';
 import { ThemeItem, SystemRow } from '../../types';
@@ -18,6 +19,7 @@ interface CartPanelProps {
 const CartPanel: FC<CartPanelProps> = ({
   cart, onRemove, onClear, onClose, systems
 }) => {
+  const { t: tr } = useLang();
   const [checked, setChecked] = useState<Set<string>>(
     () => new Set(cart.map(t => getThemeKey(t)))
   );
@@ -31,10 +33,10 @@ const CartPanel: FC<CartPanelProps> = ({
 
   const getCategoryName = (categoryId: string) => {
     const map: Record<string, string> = {
-      'game-themes': 'Jeu', 'default-themes': 'Défaut',
-      'system-themes': 'Système', 'artwork': 'Artwork',
-      'collection': 'Collection', 'main-themes': 'Principal',
-      'tools': 'Outil', 'tutorials': 'Tutoriel'
+      'game-themes': tr('cart.catGame'), 'default-themes': tr('cart.catDefault'),
+      'system-themes': tr('cart.catSystem'), 'artwork': tr('cart.catArtwork'),
+      'collection': tr('cart.catCollection'), 'main-themes': tr('cart.catMain'),
+      'tools': tr('cart.catTool'), 'tutorials': tr('cart.catTutorial')
     };
     return map[categoryId] || categoryId;
   };
@@ -116,9 +118,9 @@ const CartPanel: FC<CartPanelProps> = ({
         <div className="flex items-center justify-between px-5 py-4 border-b flex-shrink-0"
           style={{ borderColor: '#1f2937', backgroundColor: '#0f172a', borderRadius: '12px 12px 0 0' }}>
           <h2 className="font-black text-lg" style={{ color: '#FF8C00' }}>
-            Ma Sélection
+            {tr('cart.title')}
             <span className="ml-2 text-sm font-normal" style={{ color: '#6b7280' }}>
-              {cart.length}/{CART_MAX} thèmes
+              {tr('cart.count', { n: cart.length, max: CART_MAX })}
             </span>
           </h2>
           <button onClick={onClose}
@@ -135,7 +137,7 @@ const CartPanel: FC<CartPanelProps> = ({
             className="flex items-center gap-2 text-sm font-semibold transition hover:brightness-125"
             style={{ color: '#FFA500' }}>
             {allChecked ? <CheckSquare className="w-4 h-4" /> : <Square className="w-4 h-4" />}
-            {allChecked ? 'Tout décocher' : 'Tout cocher'}
+            {allChecked ? tr('cart.uncheckAll') : tr('cart.checkAll')}
           </button>
           <div className="flex-1" />
           <button
@@ -143,7 +145,7 @@ const CartPanel: FC<CartPanelProps> = ({
             className="flex items-center gap-1.5 text-sm transition hover:text-red-400"
             style={{ color: '#4b5563' }}>
             <Trash2 className="w-4 h-4" />
-            Vider le panier
+            {tr('cart.clear')}
           </button>
         </div>
 
@@ -211,7 +213,7 @@ const CartPanel: FC<CartPanelProps> = ({
                         {getCategoryName(theme.category)}
                       </span>
                     </div>
-                    <p className="text-xs" style={{ color: '#4b5563' }}>Par {theme.creator}</p>
+                    <p className="text-xs" style={{ color: '#4b5563' }}>{tr('by.credit', { name: theme.creator })}</p>
                   </div>
 
                   {/* Taille + Retirer */}
@@ -243,7 +245,7 @@ const CartPanel: FC<CartPanelProps> = ({
           {downloading && progress && (
             <div className="px-5 pt-3">
               <div className="flex justify-between text-xs mb-1.5" style={{ color: '#6b7280' }}>
-                <span>Téléchargement {progress.current}/{progress.total}...</span>
+                <span>{tr('cart.progress', { cur: progress.current, total: progress.total })}</span>
                 <span style={{ color: '#FFA500' }}>
                   {Math.round((progress.current / progress.total) * 100)}%
                 </span>
@@ -272,9 +274,9 @@ const CartPanel: FC<CartPanelProps> = ({
                     !
                   </div>
                   <p className="text-xs leading-relaxed" style={{ color: '#d4a853' }}>
-                    Si un seul DL se lance —{' '}
-                    <span style={{ color: '#B22222', fontWeight: 700 }}>autorisez les téléchargements multiples</span>
-                    {' '}dans la barre d'adresse de votre navigateur.
+                    {tr('cart.tip1')}{' '}
+                    <span style={{ color: '#B22222', fontWeight: 700 }}>{tr('cart.tip2')}</span>
+                    {' '}{tr('cart.tip3')}
                   </p>
                 </div>
 
@@ -285,7 +287,7 @@ const CartPanel: FC<CartPanelProps> = ({
                   className="flex items-center gap-2 px-4 py-2.5 rounded-lg font-bold text-sm border-2 transition hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
                   style={{ backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white' }}>
                   <Download className="w-4 h-4" />
-                  {downloading ? 'En cours...' : 'Télécharger'}
+                  {downloading ? tr('cart.running') : tr('cart.download')}
                 </button>
               </div>
             )}
@@ -293,12 +295,12 @@ const CartPanel: FC<CartPanelProps> = ({
             {/* Ligne 2 : nombre sélectionnés + poids */}
             {cart.length > 0 && (
               <p className="text-xs" style={{ color: '#6b7280' }}>
-                {checked.size} sélectionné{checked.size > 1 ? 's' : ''}
+                {tr(checked.size > 1 ? 'cart.selectedMany' : 'cart.selectedOne', { n: checked.size })}
                 {totalMo > 0 && (
-                  <span style={{ color: '#FFA500' }}> • ~{Math.round(totalMo)} Mo</span>
+                  <span style={{ color: '#FFA500' }}> {tr('cart.mo', { n: Math.round(totalMo) })}</span>
                 )}
                 {downloading && (
-                  <span style={{ color: '#FFA500' }}> • 1 fichier toutes les 2 secondes...</span>
+                  <span style={{ color: '#FFA500' }}> {tr('cart.rate')}</span>
                 )}
               </p>
             )}

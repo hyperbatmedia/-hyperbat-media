@@ -31,6 +31,11 @@ import {
   agentRoms, agentCheckConflict, agentStartInstall, agentStatus, agentReloadEs,
 } from './hyperbatAgent';
 import GamepadVirtualKeyboard from '../components/ThemeList/GamepadVirtualKeyboard';
+import { useLang } from '../i18n';
+import { detectLang, translate } from '../i18n/core';
+
+// Pour les messages gardés en mémoire (erreurs) : langue du moment, sans dépendre du rendu.
+const tt = (key: string, params?: Record<string, string | number>) => translate(detectLang(), key, params);
 
 /** Sous-ensemble de ThemeItem réellement nécessaire ici (compatible
  *  structurellement : pas d'import de ../../types pour garder ce module
@@ -86,23 +91,24 @@ function scrollFocusableIntoView(el: HTMLElement) {
 const errorText = (st: AgentJobStatus): string => {
   switch (st.error) {
     case 'conflict':
-      return 'Un thème existe déjà à cet emplacement.';
+      return tt('ag.errConflict');
     case 'download_failed':
-      return 'Téléchargement impossible.\nVérifiez votre connexion internet et réessayez.';
+      return tt('ag.errDownload');
     case 'invalid_link':
-      return "Le lien pointe vers une page web et non un fichier.\nLe fichier a peut-être été supprimé ou le quota de téléchargement est dépassé.";
+      return tt('ag.errLink');
     case 'extract_tool_missing':
-      return "Cette archive (.7z ou .rar) nécessite un outil d'extraction.\nSous Windows : installez 7-Zip (https://www.7-zip.org/).";
+      return tt('ag.errTool');
     case 'extract_failed':
-      return "Impossible d'extraire l'archive.\nLe fichier est peut-être corrompu.";
+      return tt('ag.errExtract');
     case 'busy':
-      return "Une installation est déjà en cours.\nAttendez qu'elle se termine puis réessayez.";
+      return tt('ag.errBusy');
     default:
-      return `Erreur inattendue${st.detail ? ` : ${st.detail}` : '.'}`;
+      return st.detail ? tt('ag.errUnexpectedDetail', { detail: st.detail }) : tt('ag.errUnexpected');
   }
 };
 
 const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, onClose }) => {
+  const { t: tr } = useLang();
   const [step, setStep] = useState<Step>('init');
   const [roms, setRoms] = useState<string[]>([]);
   const [romsFound, setRomsFound] = useState(true);
@@ -254,9 +260,9 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       if (code === 'busy') {
         setErrorMsg(errorText({ id: '', state: 'error', error: 'busy' }));
       } else if (code === 'multiple_retrobat_installs') {
-        setErrorMsg('Plusieurs installations RetroBat ont été détectées.\nRelancez install-agent.bat pour choisir laquelle utiliser.');
+        setErrorMsg(tt('ag.errMulti'));
       } else {
-        setErrorMsg("Impossible de contacter l'agent HyperBat Media.\nVérifiez qu'il est bien démarré, puis réessayez.");
+        setErrorMsg(tt('ag.errNoAgent'));
       }
       setStep('error');
       return;
@@ -273,7 +279,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       } catch {
         failures += 1;
         if (failures >= 10) {
-          setErrorMsg("La connexion avec l'agent a été perdue pendant l'installation.");
+          setErrorMsg(tt('ag.errLost'));
           setStep('error');
           return;
         }
@@ -309,7 +315,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       }
     } catch {
       if (!mountedRef.current) return;
-      setErrorMsg("Impossible de contacter l'agent HyperBat Media.\nVérifiez qu'il est bien démarré, puis réessayez.");
+      setErrorMsg(tt('ag.errNoAgent'));
       setStep('error');
     }
   }, [theme, launchInstall]);
@@ -319,12 +325,12 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     const run = async () => {
       if (agentInfo.error === 'multiple_retrobat_installs') {
         const list = (agentInfo.retrobatInstalls || []).map((p) => `• ${p}`).join('\n');
-        setErrorMsg(`Plusieurs installations RetroBat ont été détectées :\n${list}\n\nRelancez install-agent.bat (il demande laquelle utiliser) ou renseignez RetroBatPath dans hyperbatmedia-agent.ini, puis redémarrez l'agent.`);
+        setErrorMsg(tt('ag.errMultiList', { list }));
         setStep('error');
         return;
       }
       if (!agentInfo.themesReady) {
-        setErrorMsg("L'agent n'a pas trouvé le dossier des thèmes (RetroBat/Batocera introuvable).\nVérifiez sa configuration (hyperbatmedia-agent.ini).");
+        setErrorMsg(tt('ag.errNoThemes'));
         setStep('error');
         return;
       }
@@ -345,7 +351,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
           setStep('rom-pick');
         } catch {
           if (!mountedRef.current) return;
-          setErrorMsg("Impossible de contacter l'agent HyperBat Media.\nVérifiez qu'il est bien démarré, puis réessayez.");
+          setErrorMsg(tt('ag.errNoAgent'));
           setStep('error');
         }
         return;
@@ -653,7 +659,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         <circle cx="0" cy="0" r="4" fill="#3a3a3a" stroke="#555" strokeWidth="1" />
       </svg>
       <span style={{ fontSize: '9px', fontWeight: 700, color: '#fff', lineHeight: 1 }}>D-PAD</span>
-      <span style={{ fontSize: '9px', color: '#aaa', lineHeight: 1 }}>Naviguer</span>
+      <span style={{ fontSize: '9px', color: '#aaa', lineHeight: 1 }}>{tr('ag.ctrlNav')}</span>
     </div>
   );
 
@@ -680,10 +686,10 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   );
 
   const stateLabel = (): string => {
-    if (!jobStatus || jobStatus.state === 'starting') return 'Préparation…';
-    if (jobStatus.state === 'downloading') return `Téléchargement… ${jobStatus.progress ?? 0}%`;
-    if (jobStatus.state === 'extracting') return "Extraction de l'archive…";
-    return 'Installation du thème…';
+    if (!jobStatus || jobStatus.state === 'starting') return tr('ag.preparing');
+    if (jobStatus.state === 'downloading') return tr('ag.downloading', { pct: jobStatus.progress ?? 0 });
+    if (jobStatus.state === 'extracting') return tr('ag.extracting');
+    return tr('ag.installingTheme');
   };
 
   return (
@@ -727,18 +733,18 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       }}>
         {/* ── Titre ── */}
         <h2 style={{ color: '#F8D470', fontWeight: 800, fontSize: '16px', marginBottom: '4px' }}>
-          {step === 'done' ? 'Installation réussie !' : step === 'error' ? 'Installation impossible' : 'Installer dans ' + (agentInfo.platform === 'batocera' ? 'Batocera' : 'RetroBat')}
+          {step === 'done' ? tr('ag.titleDone') : step === 'error' ? tr('ag.titleError') : tr('ag.titleInstall', { platform: agentInfo.platform === 'batocera' ? 'Batocera' : 'RetroBat' })}
         </h2>
         {/* Rappel du thème choisi dans la vitrine, affiché pendant toute
             la procédure (utile si l'utilisateur enchaîne plusieurs
             installations et peut oublier quel thème est en cours). */}
         <p style={{ color: '#aaa', fontSize: '12px', marginBottom: '14px' }}>
-          <span style={{ color: '#777' }}>Nom sur la vitrine : </span>{theme.name}
+          <span style={{ color: '#777' }}>{tr('ag.nameOnSite')}</span>{theme.name}
         </p>
 
         {/* ── Étape : attente ── */}
         {step === 'init' && (
-          <p style={{ color: 'white', fontSize: '13px' }}>Veuillez patienter…</p>
+          <p style={{ color: 'white', fontSize: '13px' }}>{tr('ag.wait')}</p>
         )}
 
         {/* ── Étape : choix de la ROM (game-themes) ── */}
@@ -754,14 +760,14 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
           <>
             <p style={{ color: 'white', fontSize: '13px', marginBottom: '10px' }}>
               {romsFound
-                ? <>Choisissez ou saisissez la ROM{suggested ? ' (⭐ = suggestion)' : ''} :</>
-                : <>Dossier ROMs introuvable — saisissez le nom manuellement :</>}
+                ? <>{tr('ag.pickRom')}{suggested ? tr('ag.pickRomSuggest') : ''} :</>
+                : <>{tr('ag.noRomFolder')}</>}
             </p>
             <div style={{ position: 'relative', marginBottom: '8px' }}>
               <input
                 type="text"
                 value={filter}
-                placeholder="Rechercher ou saisir le nom…"
+                placeholder={tr('ag.search')}
                 onChange={(e) => { setFilter(e.target.value); setSearchQuery(e.target.value); }}
                 onKeyDown={(e) => { if (e.key === 'Enter' && validateTarget) guard(() => chooseRom(validateTarget)); }}
                 className="hbagent-focusable"
@@ -769,7 +775,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                 style={{ ...inputStyle, marginBottom: 0, paddingRight: '34px' }}
               />
               <span
-                title="SUD ou NORD = clavier virtuel"
+                title={tr('ag.osk')}
                 style={{
                   position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)',
                   fontSize: '14px', color: '#888', pointerEvents: 'none',
@@ -833,7 +839,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
             {filteredRoms.length === 0 && (
               <>
                 {romsFound && filter.trim() && (
-                  <p style={{ color: '#888', fontSize: '12px', marginBottom: '8px' }}>Aucune ROM ne correspond.</p>
+                  <p style={{ color: '#888', fontSize: '12px', marginBottom: '8px' }}>{tr('ag.noRomMatch')}</p>
                 )}
                 {filter.trim() && (
                   <button
@@ -846,7 +852,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                       color: '#FFD700', marginBottom: '10px',
                       border: '1px dashed #FF8C00', borderRadius: '8px',
                     }}>
-                    + Utiliser « {filter.trim()} » tel quel
+                    {tr('ag.useAsIs', { name: filter.trim() })}
                   </button>
                 )}
               </>
@@ -861,11 +867,11 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                 }}
                 disabled={!validateTarget}
                 onClick={() => validateTarget && guard(() => chooseRom(validateTarget))}>
-                Valider
+                {tr('ag.ok')}
               </button>
               <button className="hbagent-focusable" style={{ ...btnAltStyle, flex: 1 }}
                 onClick={() => guard(onClose)}>
-                Annuler
+                {tr('ag.cancel')}
               </button>
             </div>
           </>
@@ -876,7 +882,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         {step === 'collection-name' && (
           <>
             <p style={{ color: 'white', fontSize: '13px', marginBottom: '10px' }}>
-              Nom de la collection (SUD ou NORD = clavier) :
+              {tr('ag.collName')}
             </p>
             <input
               type="text" value={collectionName}
@@ -889,11 +895,11 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
             <div style={{ display: 'flex', gap: '10px' }}>
               <button className="hbagent-focusable" style={btnStyle}
                 onClick={() => guard(validateCollection)}>
-                Valider
+                {tr('ag.ok')}
               </button>
               <button className="hbagent-focusable" style={btnAltStyle}
                 onClick={() => guard(onClose)}>
-                Annuler
+                {tr('ag.cancel')}
               </button>
             </div>
           </>
@@ -903,27 +909,27 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         {step === 'conflict' && (
           <>
             <p style={{ color: 'white', fontSize: '13px', marginBottom: '4px' }}>
-              Un thème existe déjà pour « {pendingRef.current.romName || pendingRef.current.finalName} ».
+              {tr('ag.exists', { name: pendingRef.current.romName || pendingRef.current.finalName })}
             </p>
             <p style={{ color: '#aaa', fontSize: '12px', marginBottom: '14px' }}>
-              Que voulez-vous faire ?
+              {tr('ag.whatToDo')}
             </p>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               <button className="hbagent-focusable" style={btnStyle}
                 onClick={() => guard(() => resolveConflict('replace'))}>
-                Remplacer
+                {tr('ag.replace')}
               </button>
               <button className="hbagent-focusable" style={btnStyle}
                 onClick={() => guard(() => resolveConflict('rename'))}>
-                Renommer l'ancien
+                {tr('ag.renameOld')}
               </button>
               <button className="hbagent-focusable" style={btnAltStyle}
                 onClick={() => guard(onClose)}>
-                Annuler
+                {tr('ag.cancel')}
               </button>
             </div>
             <p style={{ color: '#666', fontSize: '11px', marginTop: '10px' }}>
-              « Renommer l'ancien » conserve le thème actuel en « _original ».
+              {tr('ag.renameNote')}
             </p>
           </>
         )}
@@ -942,7 +948,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                 transition: 'width 0.4s ease',
               }} />
             </div>
-            <p style={{ color: '#666', fontSize: '11px', marginTop: '10px' }}>Veuillez patienter, ne fermez pas la vitrine…</p>
+            <p style={{ color: '#666', fontSize: '11px', marginTop: '10px' }}>{tr('ag.keepOpen')}</p>
           </>
         )}
 
@@ -950,19 +956,19 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         {step === 'done' && (
           <>
             <p style={{ color: '#2ecc71', fontSize: '14px', fontWeight: 700, marginBottom: '6px' }}>
-              ✓ « {pendingRef.current.romName || pendingRef.current.finalName} » installé avec succès !
+              {tr('ag.installed', { name: pendingRef.current.romName || pendingRef.current.finalName })}
             </p>
             <p style={{ color: '#aaa', fontSize: '12px', marginBottom: '14px' }}>
               {reloadingEs
-                ? 'Rafraîchissement d’EmulationStation…'
+                ? tr('ag.reloadingEs')
                 : esReloaded
-                  ? 'Les listes EmulationStation ont été rechargées automatiquement.'
-                  : 'Validez pour rafraîchir EmulationStation (comme F5) et fermer.'}
+                  ? tr('ag.esReloaded')
+                  : tr('ag.esValidate')}
             </p>
             <button className="hbagent-focusable" style={btnStyle}
               onClick={finishWithReload}
               disabled={reloadingEs}>
-              {reloadingEs ? 'Rafraîchissement…' : 'OK'}
+              {reloadingEs ? tr('ag.reloading') : 'OK'}
             </button>
           </>
         )}
@@ -975,7 +981,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
             </p>
             <button className="hbagent-focusable" style={btnStyle}
               onClick={() => guard(onClose)}>
-              Fermer
+              {tr('ag.close')}
             </button>
           </>
         )}
@@ -989,17 +995,17 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
           }}>
             <DPadIcon />
             <Sep />
-            <FaceBtn dir="sud" color="#2ecc71" label="SUD" action="Valider / Clavier" />
+            <FaceBtn dir="sud" color="#2ecc71" label={tr('ag.ctrlSouth')} action={tr('ag.ctrlValidKb')} />
             <Sep />
-            <FaceBtn dir="est" color="#e74c3c" label="EST" action="Annuler" />
+            <FaceBtn dir="est" color="#e74c3c" label={tr('ag.ctrlEast')} action={tr('ag.cancel')} />
             <Sep />
-            <FaceBtn dir="nord" color="#f1c40f" label="NORD" action="Clavier" />
+            <FaceBtn dir="nord" color="#f1c40f" label={tr('ag.ctrlNorth')} action={tr('ag.ctrlKb')} />
             <Sep />
-            <KeyControl label="↑↓←→" action="Naviguer" />
+            <KeyControl label="↑↓←→" action={tr('ag.ctrlNav')} />
             <Sep />
-            <KeyControl label="Entrée" action="Valider" />
+            <KeyControl label={tr('ag.keyEnter')} action={tr('ag.ok')} />
             <Sep />
-            <KeyControl label="Échap" action="Annuler" />
+            <KeyControl label={tr('ag.keyEsc')} action={tr('ag.cancel')} />
           </div>
         )}
       </div>
@@ -1007,7 +1013,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
       <GamepadVirtualKeyboard
         open={oskOpen}
         initialValue={oskInitial}
-        title={oskField === 'filter' ? 'ROM (rechercher ou saisir)' : 'Nom de la collection'}
+        title={oskField === 'filter' ? tr('ag.oskRom') : tr('ag.oskColl')}
         onChange={(value: string) => {
           if (oskField === 'filter') setFilter(value);
           else setCollectionName(value);

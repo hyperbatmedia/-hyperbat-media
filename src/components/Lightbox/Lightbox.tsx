@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
+import { useLang } from '../../i18n';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { ThemeItem } from '../../types';
 
@@ -15,6 +16,7 @@ export default function Lightbox({
   allThemes = [],
   onNavigate
 }: LightboxProps) {
+  const { t: tr } = useLang();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const lightboxRef    = useRef<HTMLDivElement>(null);
   const previousFocus  = useRef<HTMLElement | null>(null);
@@ -125,8 +127,8 @@ export default function Lightbox({
           style={{ transform: 'translateY(-50%)', background: 'rgba(255,140,0,0.85)', boxShadow: '0 0 20px rgba(255,140,0,0.4)' }}
           onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.boxShadow = '0 0 30px rgba(255,140,0,0.7)'; }}
           onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)';   e.currentTarget.style.boxShadow = '0 0 20px rgba(255,140,0,0.4)'; }}
-          aria-label="Thème précédent"
-          title="Précédent (←)"
+          aria-label={tr('lb.prevAria')}
+          title={tr('lb.prev')}
         >
           <ChevronLeft className="w-6 h-6 text-white" strokeWidth={2} />
         </button>
@@ -194,8 +196,8 @@ export default function Lightbox({
           style={{ transform: 'translateY(-50%)', background: 'rgba(255,140,0,0.85)', boxShadow: '0 0 20px rgba(255,140,0,0.4)' }}
           onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.boxShadow = '0 0 30px rgba(255,140,0,0.7)'; }}
           onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)';   e.currentTarget.style.boxShadow = '0 0 20px rgba(255,140,0,0.4)'; }}
-          aria-label="Thème suivant"
-          title="Suivant (→)"
+          aria-label={tr('lb.nextAria')}
+          title={tr('lb.next')}
         >
           <ChevronRight className="w-6 h-6 text-white" strokeWidth={2} />
         </button>
@@ -209,8 +211,8 @@ export default function Lightbox({
         style={{ background: 'linear-gradient(135deg, rgba(255,140,0,0.9), rgba(255,100,0,0.9))', boxShadow: '0 0 25px rgba(255,140,0,0.5)' }}
         onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1) rotate(90deg)'; e.currentTarget.style.boxShadow = '0 0 35px rgba(255,140,0,0.7)'; }}
         onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1) rotate(0deg)';    e.currentTarget.style.boxShadow = '0 0 25px rgba(255,140,0,0.5)'; }}
-        aria-label="Fermer la lightbox"
-        title="Fermer (Échap)"
+        aria-label={tr('lb.closeAria')}
+        title={tr('lb.close')}
       >
         <X className="w-6 h-6 text-white" strokeWidth={2} />
       </button>

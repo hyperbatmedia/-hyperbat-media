@@ -4,6 +4,8 @@
 // pour permettre a des outils externes (le launcher AHK RetroBat, le
 // script hyperbat_theme_finder.py) d'ouvrir la vitrine deja pre-filtree.
 
+import { useLang } from './i18n';
+import { localizeLinks } from './i18n/links';
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import type { ComponentType, CSSProperties } from 'react';
 import { Search, Gamepad2, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download, AlertTriangle, Gift, Upload } from 'lucide-react';
@@ -299,6 +301,7 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
 };
 
 export default function HyperBatMediaSite(): JSX.Element {
+  const { t: tr, label: trLabel, lang } = useLang();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [searchGamepadFocused, setSearchGamepadFocused] = useState(false);
@@ -348,7 +351,7 @@ export default function HyperBatMediaSite(): JSX.Element {
   const [featuredHighlightId, setFeaturedHighlightId] = useState<string | undefined>(undefined);
   const featuredItems = useMemo(() => {
     const found: { item: LinkModalItem; onOpen: () => void }[] = [];
-    for (const link of linksData) {
+    for (const link of localizeLinks(linksData, lang)) {
       if (link.modal) {
         for (const item of link.modal.items) {
           if (item.vedette) found.push({
@@ -373,7 +376,7 @@ export default function HyperBatMediaSite(): JSX.Element {
       }
     }
     return found.slice(0, 2);
-  }, [linksData]);
+  }, [linksData, lang]);
   const systemsLogic = useSystemsLogic();
   const colors = useMemo(() => getThemeColors(isDarkMode), [isDarkMode]);
 
@@ -642,7 +645,7 @@ export default function HyperBatMediaSite(): JSX.Element {
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.bg, color: colors.text }}>
         <div className="text-center">
           <Gamepad2 className="w-16 h-16 mx-auto mb-4 animate-pulse" style={{ color: '#FF8C00' }} />
-          <p className="text-xl font-bold" style={{ color: '#FF8C00' }}>Chargement...</p>
+          <p className="text-xl font-bold" style={{ color: '#FF8C00' }}>{tr('site.loading')}</p>
         </div>
       </div>
     );
@@ -682,7 +685,7 @@ export default function HyperBatMediaSite(): JSX.Element {
           }
           systemsLogic.handleSystemSelect('all'); systemsLogic.setSelectedCategory(id);
         }}
-        title={isExport ? "Export JSON name/system/gameId (respecte les filtres actuels) — pour l'outil de renommage local" : undefined}
+        title={isExport ? tr('pill.exportTitle') : undefined}
         className="px-5 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
         style={{
           minWidth: '108px',
@@ -707,7 +710,7 @@ export default function HyperBatMediaSite(): JSX.Element {
             </>
           ) : isExport ? (
             <>
-              <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>Export</p>
+              <p className="text-xs font-semibold" style={{ color: '#e0e0e0' }}>{tr('pill.export')}</p>
               <p className="text-xs font-black" style={{ color: '#e0e0e0' }}>json</p>
             </>
           ) : (
@@ -738,9 +741,9 @@ export default function HyperBatMediaSite(): JSX.Element {
                   <p className="text-red-500 font-bold text-sm mt-1">
                     A RetroBat & Batocera theme inspired by <span className="text-yellow-400">HyperSpin</span>
                   </p>
-                  <p className="text-xs mt-1" style={{ color: colors.textSecondary }}>à la sauce Bob Morane</p>
+                  <p className="text-xs mt-1" style={{ color: colors.textSecondary }}>{tr('site.subtitle')}</p>
                   <p className="text-xs font-bold mt-2" style={{ color: '#FFA500' }}>
-                    Ce site est et restera 100% gratuit, sans pub ni paiement.
+                    {tr('site.free')}
                   </p>
                 </div>
                 <Gamepad2 className="w-12 h-12" style={{ color: '#FF8C00' }} />
@@ -770,28 +773,28 @@ export default function HyperBatMediaSite(): JSX.Element {
             <>
               <div className="flex flex-wrap items-start gap-3 mb-4">
                 <div className="flex flex-col gap-3">
-                  {renderPill({ id: 'artwork', label: 'Artwork', count: themeStats.artworkThemes, Icon: Image })}
-                  {renderPill({ id: 'multi', label: 'Multi-région', count: themeStats.multiThemes, icon: '🌍' })}
+                  {renderPill({ id: 'artwork', label: tr('pill.artwork'), count: themeStats.artworkThemes, Icon: Image })}
+                  {renderPill({ id: 'multi', label: tr('pill.multi'), count: themeStats.multiThemes, icon: '🌍' })}
                 </div>
                 <div className="flex flex-col gap-3">
-                  {renderPill({ id: 'magazines', label: 'Magazines', count: themeStats.magazineThemes, icon: '📰' })}
+                  {renderPill({ id: 'magazines', label: tr('pill.magazines'), count: themeStats.magazineThemes, icon: '📰' })}
                   {renderPill({ id: 'screenscraper', label: 'ScreenScraper', count: themeStats.screenScraperThemes, total: themeStats.gameThemesTotal, special: true })}
                 </div>
                 <div className="flex flex-col gap-3">
-                  {renderPill({ id: 'collection', label: 'Collection', count: themeStats.collectionThemes, Icon: Package })}
+                  {renderPill({ id: 'collection', label: tr('pill.collection'), count: themeStats.collectionThemes, Icon: Package })}
                   <button onClick={() => setShowRecapPanel(true)}
                     tabIndex={isRetrobat ? -1 : undefined}
                     className="px-5 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
                     style={{ minWidth: '108px', background: 'linear-gradient(to right, #b91c1c, #dc2626)', borderColor: '#f87171' }}>
                     <AlertTriangle className="w-2.5 h-2.5" style={{ color: '#fecaca' }} />
                     <div>
-                      <p className="text-xs font-semibold" style={{ color: '#fecaca' }}>{missingSystemsCount} sans thème</p>
-                      <p className="text-xs font-black" style={{ color: 'white' }}>Voir le récap</p>
+                      <p className="text-xs font-semibold" style={{ color: '#fecaca' }}>{tr('site.noTheme', { n: missingSystemsCount })}</p>
+                      <p className="text-xs font-black" style={{ color: 'white' }}>{tr('site.seeRecap')}</p>
                     </div>
                   </button>
                 </div>
                 <div className="flex flex-col gap-3">
-                  {renderPill({ id: 'system-themes', label: 'Thèmes système', count: themeStats.systemThemes, Icon: Monitor })}
+                  {renderPill({ id: 'system-themes', label: tr('pill.systemThemes'), count: themeStats.systemThemes, Icon: Monitor })}
                   {packsData.packs.length > 0 && (
                     <button onClick={() => setShowPacksPanel(true)}
                       tabIndex={isRetrobat ? -1 : undefined}
@@ -799,19 +802,19 @@ export default function HyperBatMediaSite(): JSX.Element {
                       style={{ minWidth: '108px', background: 'linear-gradient(to right, #0369a1, #0891b2)', borderColor: '#38bdf8' }}>
                       <span className="absolute -top-3 -right-2 font-black text-white px-1.5 py-0.5 rounded-md border"
                         style={{ backgroundColor: '#dc2626', borderColor: '#fca5a5', fontSize: '9px', letterSpacing: '0.02em' }}>
-                        NOUVEAU
+                        {tr('site.new')}
                       </span>
                       <Gift className="w-2.5 h-2.5" style={{ color: '#e0f2fe' }} />
                       <div>
-                        <p className="text-xs font-semibold" style={{ color: '#e0f2fe' }}>Pack du mois</p>
-                        <p className="text-xs font-black" style={{ color: 'white' }}>Télécharger</p>
+                        <p className="text-xs font-semibold" style={{ color: '#e0f2fe' }}>{tr('site.packOfMonth')}</p>
+                        <p className="text-xs font-black" style={{ color: 'white' }}>{tr('site.download')}</p>
                       </div>
                     </button>
                   )}
                 </div>
-                {renderPill({ id: 'default-themes', label: 'Thèmes default', count: themeStats.defaultThemes, Icon: Star })}
-                {renderPill({ id: 'game-themes', label: 'Thèmes de jeux', count: themeStats.gameThemes, Icon: Trophy })}
-                {renderPill({ id: 'all', label: 'Total global', count: themeStats.total, Icon: BarChart3 })}
+                {renderPill({ id: 'default-themes', label: tr('pill.defaultThemes'), count: themeStats.defaultThemes, Icon: Star })}
+                {renderPill({ id: 'game-themes', label: tr('pill.gameThemes'), count: themeStats.gameThemes, Icon: Trophy })}
+                {renderPill({ id: 'all', label: tr('pill.total'), count: themeStats.total, Icon: BarChart3 })}
                 {renderPill({ id: 'export-json', label: 'Export json', isExport: true })}
               </div>
 
@@ -822,7 +825,7 @@ export default function HyperBatMediaSite(): JSX.Element {
             <div className="flex justify-end mb-6">
               <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-3 rounded-lg transition border-2"
                 style={{ backgroundColor: colors.cardBg, borderColor: '#4b5563', color: '#FFA500' }}
-                title={isDarkMode ? 'Mode clair' : 'Mode sombre'}>
+                title={isDarkMode ? tr('site.lightMode') : tr('site.darkMode')}>
                 {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
             </div>
@@ -843,7 +846,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                       color: '#e0e0e0',
                       ...kioskFocusStyle(!!kioskToolbarSortFocused),
                     }}
-                    title={sortBy === 'name' ? 'Trier par date' : 'Trier par nom'}>
+                    title={sortBy === 'name' ? tr('site.sortByDate') : tr('site.sortByName')}>
                     {sortBy === 'name' ? <SortAsc className="w-5 h-5" /> : <Calendar className="w-5 h-5" />}
                     <span className="text-xs font-bold">{sortBy === 'name' ? 'A-Z' : 'DATE'}</span>
                   </button>
@@ -856,7 +859,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                       color: '#e0e0e0',
                       ...kioskFocusStyle(!!kioskToolbarDarkFocused),
                     }}
-                    title={isDarkMode ? 'Mode clair' : 'Mode sombre'}>
+                    title={isDarkMode ? tr('site.lightMode') : tr('site.darkMode')}>
                     {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                   </button>
                   <button onClick={() => setCartOpen(true)}
@@ -869,7 +872,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                       boxShadow: cart.length > 0 ? '0 0 10px rgba(255,215,0,0.4)' : 'none',
                       color: '#e0e0e0'
                     }}
-                    title="Mes téléchargements">
+                    title={tr('site.myDownloads')}>
                     <Download className="w-5 h-5" />
                     {cart.length > 0 && (
                       <>
@@ -886,9 +889,9 @@ export default function HyperBatMediaSite(): JSX.Element {
                       borderColor: '#FFD700',
                       color: '#1a1a1a'
                     }}
-                    title="Proposer un thème">
+                    title={tr('site.submit')}>
                     <Upload className="w-5 h-5" />
-                    <span className="text-xs font-bold hidden sm:inline">Proposer un thème</span>
+                    <span className="text-xs font-bold hidden sm:inline">{tr('site.submit')}</span>
                   </button>
                 </div>
                 <Sidebar
@@ -902,7 +905,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                   allThemes={themes} isDarkMode={isDarkMode}
                   onCollapsedChange={setSidebarCollapsed}
                   searchInputRef={sidebarSearchInputRef}
-                  searchPlaceholder="Rechercher un système... (Ctrl+K)"
+                  searchPlaceholder={tr('site.sidebarSearch')}
                   isRetrobat={isRetrobat}
                 />
               </div>
@@ -917,12 +920,12 @@ export default function HyperBatMediaSite(): JSX.Element {
                     name="main-theme-search"
                     type="text"
                     placeholder={isRetrobat
-                      ? 'Rechercher un thème… (SUD ou NORD = clavier)'
-                      : 'Rechercher un thème, un jeu, un créateur, un système...'}
+                      ? tr('site.searchKiosk')
+                      : tr('site.search')}
                     value={searchTerm}
                     onChange={(e) => handleSearchChange(e.target.value)}
                     className="w-full rounded-lg pl-12 pr-12 py-3 border-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    aria-label="Rechercher un thème, un jeu, un créateur ou un système"
+                    aria-label={tr('site.searchAria')}
                     autoComplete="off"
                     style={{
                       backgroundColor: colors.inputBg,
@@ -933,7 +936,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                   />
                   {searchTerm && (
                     <button onClick={() => setSearchTerm('')} className="absolute right-4 top-1/2 -translate-y-1/2 transition hover:brightness-110"
-                      style={{ color: colors.textSecondary }} title="Effacer la recherche">
+                      style={{ color: colors.textSecondary }} title={tr('site.clearSearch')}>
                       <X className="w-5 h-5" />
                     </button>
                   )}
@@ -943,29 +946,29 @@ export default function HyperBatMediaSite(): JSX.Element {
                 <div className="mb-6 flex items-center gap-4 text-sm flex-wrap">
                   <div className="flex items-center gap-2">
                     <Gamepad2 className="w-4 h-4" style={{ color: '#FFA500' }} />
-                    <span style={{ color: colors.textSecondary }}>Système:</span>
+                    <span style={{ color: colors.textSecondary }}>{tr('site.system')}</span>
                     <span className="font-bold" style={{ color: '#FFA500' }}>
-                      {systemsLogic.selectedSystem === 'all' ? 'Tout réinitialiser' : systemsLogic.systems.find(s => s.id === systemsLogic.selectedSystem)?.name || systemsLogic.selectedSystem}
+                      {systemsLogic.selectedSystem === 'all' ? tr('site.resetAll') : systemsLogic.systems.find(s => s.id === systemsLogic.selectedSystem)?.name || systemsLogic.selectedSystem}
                     </span>
                   </div>
                   <span style={{ color: colors.textSecondary }}>•</span>
                   <div className="flex items-center gap-2">
-                    <span style={{ color: colors.textSecondary }}>Catégorie:</span>
+                    <span style={{ color: colors.textSecondary }}>{tr('site.category')}</span>
                     <span className="font-bold" style={{ color: '#FFA500' }}>
-                      {systemsLogic.selectedCategory === 'all'    ? 'Toutes les catégories' :
-                       systemsLogic.selectedCategory === 'multi'  ? '🌍 Multi-région' :
-                       categories.find(c => c.id === systemsLogic.selectedCategory)?.name || systemsLogic.selectedCategory}
+                      {systemsLogic.selectedCategory === 'all'    ? tr('site.allCategories') :
+                       systemsLogic.selectedCategory === 'multi'  ? '🌍 ' + tr('pill.multi') :
+                       trLabel(categories.find(c => c.id === systemsLogic.selectedCategory)?.name || systemsLogic.selectedCategory, 'cat.')}
                     </span>
                   </div>
                   <span style={{ color: colors.textSecondary }}>•</span>
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-lg" style={{ color: '#FFD700' }}>{filteredThemes.length}</span>
-                    <span style={{ color: colors.textSecondary }}>{filteredThemes.length > 1 ? 'thèmes' : 'thème'}</span>
+                    <span style={{ color: colors.textSecondary }}>{filteredThemes.length > 1 ? tr('site.themeMany') : tr('site.themeOne')}</span>
                   </div>
                   <span style={{ color: colors.textSecondary }}>•</span>
                   <div className="flex items-center gap-2">
-                    <span style={{ color: colors.textSecondary }}>Tri:</span>
-                    <span className="font-bold" style={{ color: '#FFA500' }}>{sortBy === 'name' ? 'Nom' : 'Date'}</span>
+                    <span style={{ color: colors.textSecondary }}>{tr('site.sort')}</span>
+                    <span className="font-bold" style={{ color: '#FFA500' }}>{sortBy === 'name' ? tr('site.sortName') : tr('site.sortDate')}</span>
                   </div>
                 </div>
               )}
@@ -1023,12 +1026,12 @@ export default function HyperBatMediaSite(): JSX.Element {
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(2px 2px 0px #000)'
             }}>HYPERBAT MEDIA</p>
             <p className="mt-1">
-              Thème HYPERBAT créé par <span className="font-bold" style={{ background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Bob Morane</span> |
-              Vitrine crée par <span className="font-bold" style={{ background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Christophe</span> |
-              Mise à jour par <span className="font-bold" style={{ background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Alain et Christophe</span>
+              {tr('site.footer1')} <span className="font-bold" style={{ background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Bob Morane</span> |
+              {' '}{tr('site.footer2')} <span className="font-bold" style={{ background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Christophe</span> |
+              {' '}{tr('site.footer3')} <span className="font-bold" style={{ background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Alain et Christophe</span>
             </p>
             <p className="mt-2 text-sm">
-              Merci à tous les créateurs de thèmes : <span className="font-bold" style={{ background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Bob,Dav,Roni,Alain,Huhe8554,Finch,KevoBatoYT,Akeshi,Arcanjohack,CrazyYann,Kairos182,Krakerman,Mrfomt,pento5185,qbertaddict,Sk0ney,Virtual Postman,yanni9867 et tous les autres</span>
+              {tr('site.footer4')} <span className="font-bold" style={{ background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Bob,Dav,Roni,Alain,Huhe8554,Finch,KevoBatoYT,Akeshi,Arcanjohack,CrazyYann,Kairos182,Krakerman,Mrfomt,pento5185,qbertaddict,Sk0ney,Virtual Postman,yanni9867 {tr('site.andOthers')}</span>
             </p>
           </div>
         </footer>

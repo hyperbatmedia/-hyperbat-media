@@ -1,4 +1,6 @@
 import React, { useMemo, useRef, useEffect, useState, useCallback } from 'react';
+import { useLang } from '../../i18n';
+import { localizeLinks } from '../../i18n/links';
 import { Search, ChevronDown, X, Star, BookOpen } from 'lucide-react';
 import { SystemRow } from '../../types';
 import { getSystemColors } from './sidebar.colors';
@@ -103,10 +105,15 @@ const Sidebar: React.FC<SidebarProps> = ({
   expandedSubsections, toggleSubsection, expandedSystems, toggleSystemCategories,
   allThemes = [], isDarkMode, onCollapsedChange,
   searchInputRef: searchInputRefProp,
-  searchPlaceholder = 'Rechercher un système... (Ctrl+K)',
+  searchPlaceholder: searchPlaceholderProp,
   isRetrobat = false,
 }) => {
-  const { links, isLoading: isLoadingLinks } = useLinksLoader();
+  const { t: tr, label: trLabel, lang } = useLang();
+  const searchPlaceholder = searchPlaceholderProp ?? tr('site.sidebarSearch');
+  // Nom affiché : seuls les libellés français connus sont traduits (les noms de systèmes restent tels quels).
+  const dn = (name: string) => trLabel(name, 'sys.');
+  const { links: rawLinks, isLoading: isLoadingLinks } = useLinksLoader();
+  const links = useMemo(() => localizeLinks(rawLinks, lang), [rawLinks, lang]);
 
   // ── Modal ──────────────────────────────────────────────────────────────────
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -269,7 +276,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     const sectionKey   = system.section || '';
     const isExpanded   = expandedSections[sectionKey];
     const sectionCount = themeCountBySection.sectionCounts[sectionKey] || 0;
-    const label        = stripEmoji(system.name);
+    const label        = stripEmoji(dn(system.name));
 
     if (collapsed) {
       return (
@@ -326,7 +333,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         aria-expanded={isExpanded}
       >
         <h5 className="font-bold text-sm tracking-normal flex items-center gap-1 min-w-0" style={{ color: SIDEBAR_COLORS.primary }}>
-          <span className="truncate">{system.name}</span>
+          <span className="truncate">{dn(system.name)}</span>
           {subsectionCount > 0 && (
             <span className="text-xs opacity-80 font-normal flex-shrink-0" style={{ color: 'rgba(255,140,0,0.85)' }}>
               ({subsectionCount})
@@ -410,9 +417,9 @@ const Sidebar: React.FC<SidebarProps> = ({
                 className={`flex-1 text-left text-sm min-w-0 pr-2 focus:outline-none rounded
                   ${isSelected || isTopButton ? 'text-white' : `${defaultTextColor} ${defaultHoverText}`}`}
                 style={textStyle}
-                aria-label={system.name}
+                aria-label={dn(system.name)}
               >
-                <span className="truncate block">{system.name}</span>
+                <span className="truncate block">{dn(system.name)}</span>
               </button>
             ) : (
               // ── Lien externe classique (Thèmes HyperBat → GitHub) ──
@@ -420,8 +427,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                 tabIndex={isRetrobat ? -1 : undefined}
                 className={`flex-1 text-left text-sm min-w-0 pr-2 focus:outline-none rounded
                   ${isSelected || isTopButton ? 'text-white' : `${defaultTextColor} ${defaultHoverText}`}`}
-                style={textStyle} aria-label={system.name}>
-                <span className="truncate block">{system.name}</span>
+                style={textStyle} aria-label={dn(system.name)}>
+                <span className="truncate block">{dn(system.name)}</span>
               </a>
             )
           ) : (
@@ -432,11 +439,11 @@ const Sidebar: React.FC<SidebarProps> = ({
               className={`flex-1 text-left text-sm min-w-0 pr-2 focus:outline-none rounded
                 ${isSelected || isTopButton ? 'text-white' : `${defaultTextColor} ${defaultHoverText}`}`}
               style={textStyle}
-              aria-label={`${system.name}${themeCount > 0 ? `, ${themeCount} thèmes` : ''}`}
+              aria-label={`${dn(system.name)}${themeCount > 0 ? `, ${tr('nav.themesCount', { n: themeCount })}` : ''}`}
               aria-current={isSelected ? 'page' : undefined}
             >
               <span className="truncate block">
-                {system.name}
+                {dn(system.name)}
                 {themeCount > 0 && (
                   <span className="ml-2 text-xs opacity-80 font-normal"
                     style={{ color: (isSelected || isTopButton) ? (colors.selectedText || 'rgba(255,255,255,0.85)') : 'rgba(255,140,0,0.9)' }}>
@@ -452,7 +459,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => toggleSystemCategories(system.id)}
               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSystemCategories(system.id); } }}
               className="flex-shrink-0 p-1 mr-0.5 rounded hover:bg-black/20 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-500"
-              title={expandedSystems[system.id] ? 'Masquer les catégories' : 'Afficher les catégories'}
+              title={expandedSystems[system.id] ? tr('nav.collapseCats') : tr('nav.expandCats')}
               aria-expanded={expandedSystems[system.id]}
             >
               <ChevronDown
@@ -475,7 +482,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               style={selectedCategory === 'all' ? { backgroundColor: `${colors.bg}80` } : {}}
             >
               <span className="flex items-center gap-1">
-                Toutes les catégories
+                {tr('nav.allCats')}
                 {themeCount > 0 && (
                   <span className="text-xs opacity-80 font-normal"
                     style={{ color: selectedCategory === 'all' ? 'rgba(255,255,255,0.85)' : 'rgba(255,140,0,0.9)' }}>
@@ -497,7 +504,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     style={selectedCategory === cat.id ? { backgroundColor: `${colors.bg}80` } : {}}
                   >
                     <span className="flex items-center gap-1">
-                      {cat.name}
+                      {trLabel(cat.name, 'cat.')}
                       {categoryCount > 0 && (
                         <span className="text-xs opacity-80 font-normal"
                           style={{ color: selectedCategory === cat.id ? 'rgba(255,255,255,0.85)' : 'rgba(255,140,0,0.9)' }}>
@@ -522,8 +529,8 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* Onglet flèche toggle */}
       <button
         onClick={toggleCollapsed}
-        title={collapsed ? 'Étendre la sidebar' : 'Réduire la sidebar'}
-        aria-label={collapsed ? 'Étendre la sidebar' : 'Réduire la sidebar'}
+        title={collapsed ? tr('nav.expandBar') : tr('nav.collapseBar')}
+        aria-label={collapsed ? tr('nav.expandBar') : tr('nav.collapseBar')}
         style={{
           position: 'absolute', right: -14, top: '50%', transform: 'translateY(-50%)',
           width: 14, height: 48, background: SIDEBAR_COLORS.primary, border: 'none',
@@ -546,7 +553,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         {/* Header titre + Discord/ARRM — mode étendu */}
         {!collapsed && (
           <div className="flex items-center justify-between p-4 pb-2 flex-shrink-0">
-            <h3 className="text-xl font-black" style={{ color: SIDEBAR_COLORS.primary }}>SYSTÈMES</h3>
+            <h3 className="text-xl font-black" style={{ color: SIDEBAR_COLORS.primary }}>{tr('nav.systems')}</h3>
             <div className="flex gap-2">
               {isLoadingLinks ? (
                 <div className="text-gray-400 text-xs">Chargement...</div>
@@ -572,7 +579,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   <a href={EXTERNAL_LINKS.discord} target="_blank" rel="noopener noreferrer"
                     tabIndex={isRetrobat ? -1 : undefined}
                     className="p-2 rounded-lg bg-[#5865F2] hover:bg-[#4752C4] transition-all duration-200 border-2 border-[#5865F2] hover:border-[#4752C4] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    title="Rejoindre notre Discord">
+                    title={tr('nav.joinDiscord')}>
                     <DiscordIcon size={20} />
                   </a>
                   <a href={EXTERNAL_LINKS.arrm} target="_blank" rel="noopener noreferrer"
@@ -612,7 +619,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               <>
                 <a href={EXTERNAL_LINKS.discord} target="_blank" rel="noopener noreferrer"
                   tabIndex={isRetrobat ? -1 : undefined}
-                  title="Rejoindre notre Discord"
+                  title={tr('nav.joinDiscord')}
                   className="flex items-center justify-center rounded-lg bg-[#5865F2] hover:bg-[#4752C4] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   style={{ width: 36, height: 36 }}>
                   <DiscordIcon size={20} />
@@ -636,12 +643,12 @@ const Sidebar: React.FC<SidebarProps> = ({
           {visibleSystems.length === 0 && isSearchActive ? (
             <div className="text-center py-8 px-4">
               <p className="text-gray-300 text-sm mb-3">
-                Aucun système trouvé pour{' '}
+                {tr('nav.noSystem')}{' '}
                 <span className="text-orange-400 font-semibold">"{sidebarSearch}"</span>
               </p>
               <button onClick={clearSearch}
                 className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-orange-400">
-                Effacer la recherche
+                {tr('nav.clear')}
               </button>
             </div>
           ) : (
@@ -673,13 +680,13 @@ const Sidebar: React.FC<SidebarProps> = ({
                             onChange={e => setSidebarSearch(e.target.value)}
                             className={`w-full rounded-lg pl-10 pr-10 py-2 text-sm border-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-500
                               ${isDarkMode ? 'bg-gray-800 text-white border-gray-700' : 'bg-white text-gray-900 border-gray-300'}`}
-                            aria-label="Rechercher un système"
+                            aria-label={tr('nav.searchAria')}
                             autoComplete="off"
                           />
                           {isSearchActive && (
                             <button onClick={clearSearch}
                               className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-700 rounded transition focus:outline-none focus:ring-2 focus:ring-orange-500"
-                              title="Effacer la recherche">
+                              title={tr('nav.clear')}>
                               <X className="w-4 h-4 text-gray-400 hover:text-white" />
                             </button>
                           )}

@@ -18,6 +18,8 @@
 
 import { Component } from 'react';
 import type { ErrorInfo, ReactNode } from 'react';
+import { detectLang, translate } from '../../i18n/core';
+import '../../i18n/dict/errors';
 
 const RELOAD_FLAG = 'hyperbat_chunk_reload';
 
@@ -75,9 +77,7 @@ export default class ErrorBoundary extends Component<Props, State> {
   };
 
   private handleResetLocal = () => {
-    const ok = window.confirm(
-      "Supprimer les modifications de l'admin enregistrées sur cet ordinateur mais pas encore poussées sur GitHub ?\n\nCe qui est déjà publié sur le site n'est pas touché."
-    );
+    const ok = window.confirm(translate(detectLang(), 'err.resetConfirm'));
     if (!ok) return;
     try {
       ADMIN_LOCAL_KEYS.forEach((k) => localStorage.removeItem(k));
@@ -91,6 +91,7 @@ export default class ErrorBoundary extends Component<Props, State> {
     const { error } = this.state;
     if (!error) return this.props.children;
 
+    const tr = (key: string) => translate(detectLang(), key);
     const isChunkError = CHUNK_ERROR_PATTERN.test(error.message ?? '');
 
     let isAdmin = false;
@@ -125,13 +126,13 @@ export default class ErrorBoundary extends Component<Props, State> {
           }}
         >
           <h1 style={{ fontSize: 22, fontWeight: 800, margin: '0 0 12px', color: '#FFA500' }}>
-            La page a rencontré une erreur
+            {tr('err.title')}
           </h1>
 
           <p style={{ margin: '0 0 12px', lineHeight: 1.5, color: '#d1d5db' }}>
             {isChunkError
-              ? "Le site a été mis à jour pendant que cette page était ouverte. Recharge la page pour récupérer la dernière version."
-              : "Un élément de la page n'a pas pu s'afficher. Recharge la page. Si le problème revient, le détail ci-dessous permet de trouver la cause."}
+              ? tr('err.chunk')
+              : tr('err.generic')}
           </p>
 
           {/* Cette consigne ne concerne que les admins : un visiteur (ex. un
@@ -139,8 +140,7 @@ export default class ErrorBoundary extends Component<Props, State> {
               à tort. On reconnaît un admin au nom enregistré à sa connexion. */}
           {isAdmin && (
             <p style={{ margin: '0 0 16px', lineHeight: 1.5, color: '#9ca3af', fontSize: 14 }}>
-              Si tu étais dans l'admin, le verrou reste posé sur GitHub jusqu'à 8 h. À la prochaine
-              connexion, utilise « Forcer l'accès ».
+              {tr('err.adminLock')}
             </p>
           )}
 
@@ -177,7 +177,7 @@ export default class ErrorBoundary extends Component<Props, State> {
                 cursor: 'pointer',
               }}
             >
-              Recharger la page
+              {tr('err.reload')}
             </button>
             <button
               type="button"
@@ -192,7 +192,7 @@ export default class ErrorBoundary extends Component<Props, State> {
                 cursor: 'pointer',
               }}
             >
-              Effacer les données locales de l'admin
+              {tr('err.resetLocal')}
             </button>
           </div>
         </div>

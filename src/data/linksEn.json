@@ -1,0 +1,101 @@
+{
+  "tutoriels": {
+    "name": "Tutorials",
+    "title": "TUTORIALS",
+    "items": {
+      "tuto-001": {
+        "name": "Adding a shader animation to HyperBat Theme Creator"
+      },
+      "tuto-002": {
+        "name": "Adding a rotation"
+      },
+      "tuto-003": {
+        "name": "Adding an infinite bump to an animation"
+      },
+      "tuto-004": {
+        "name": "Animation creation mode"
+      },
+      "tuto-005": {
+        "name": "Creating a system theme"
+      },
+      "tuto-006": {
+        "name": "Creating a default theme"
+      },
+      "tuto-007": {
+        "name": "Creating the Art Of Fighting game theme"
+      },
+      "tuto-008": {
+        "name": "Creating the NaughtyBoy game theme"
+      },
+      "tuto-009": {
+        "name": "HyperBat Media showcase presentation"
+      },
+      "item-1790158746964-733559": {
+        "name": "HyperSpin theme conversion + animations and their possibilities",
+        "description": "A first look at converting HyperSpin v1 themes to 1920x1080, plus a demonstration of what animations and settings can do, and part 1 of creating complete animations by adding steps and saving them.\nNext step: the \"Drawing and feathers\" mode"
+      },
+      "item-1790158974727-862145": {
+        "name": "Future interface + Shaders + animations",
+        "description": "https://hyperbat.phenix-dev.com/\nTheme creator for RetroBat\nA quick look at the new features and animations ;)"
+      },
+      "item-1790159099117-248633": {
+        "name": "Image editing",
+        "description": "This 2nd part covers the image editing options. Just like Photoshop!!\nhttps://hyperbat.phenix-dev.com/index.html"
+      },
+      "item-1790159195530-200544": {
+        "name": "HyperBat presentation, installation and interface",
+        "description": "Presentation video of the HyperBat application, installation, and interface\nhttps://hyperbat.phenix-dev.com/"
+      },
+      "item-1790235097768-999289": {
+        "name": "Turbo theme conversion",
+        "description": "Conversion of the HyperSpin Turbo theme and modifications."
+      },
+      "item-1790235237989-840163": {
+        "name": "Toki theme conversion"
+      }
+    }
+  },
+  "outils": {
+    "name": "Tools",
+    "title": "TOOLS",
+    "items": {
+      "tool-001": {
+        "description": "The official tool to create and edit your HyperBat themes. Animations, shaders, rotations — everything is configured here."
+      },
+      "tool-002": {
+        "description": "HyperBat is a visual theme editor for RetroBat, designed for Bob Morane's HyperBat theme (HyperSpin style). Compose, animate and export your themes in a few clicks."
+      },
+      "tool-003": {
+        "name": "Hyperbat gametheme automatcher",
+        "description": "Bulk renaming tool, with ScreenScraper gameId comparison added. You will need a json file available on the showcase."
+      },
+      "tool-arrm": {
+        "description": "Another Recalbox Roms Manager — scraper and media manager for RetroBat, Batocera, Recalbox and Retropie."
+      },
+      "item-1790413714606-697774": {
+        "description": "HyperBat Media is an add-on for Batocera that easily installs system, default or game themes from Bob Morane's HyperBat theme.\nOpen the showcase from a dedicated entry in the Ports system, or faster with F9, R1 or R3, depending on the choice you made when installing the add-on."
+      },
+      "item-1790414022335-634335": {
+        "description": "HyperBat Media is an add-on for RetroBat that easily installs system, default or game themes from Bob Morane's HyperBat theme.\nOpen the showcase from a dedicated entry in the Windows system, or faster with F9, R1 or R3, depending on the choice you made when installing the add-on."
+      }
+    }
+  },
+  "themes-hyperbat": {
+    "name": "HYPERBAT THEMES"
+  },
+  "autres-themes-bob": {
+    "name": "BOB'S OTHER THEMES",
+    "title": "BOB'S OTHER THEMES",
+    "items": {
+      "bob-theme-001": {
+        "description": "RetroBat / Batocera theme created by Bob Morane."
+      },
+      "bob-theme-002": {
+        "description": "RetroBat / Batocera theme created by Bob Morane."
+      },
+      "bob-theme-003": {
+        "description": "RetroBat / Batocera theme created by Bob Morane."
+      }
+    }
+  }
+}
