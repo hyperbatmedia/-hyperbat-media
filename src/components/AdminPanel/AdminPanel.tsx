@@ -7,6 +7,7 @@ import {
   Package,
   Inbox,
   Star,
+  AppWindow,
   LucideIcon
 } from 'lucide-react';
 import { ThemeItem, SystemRow, Category, ThemePacksData } from '../../types';
@@ -17,10 +18,12 @@ import ScreenScraperSyncTab from './ScreenScraperSyncTab';
 import ThemePacksTab from './ThemePacksTab';
 import SubmissionsTab from './SubmissionsTab';
 import LinksTab from './LinksTab';
+import ApplicationsTab from './ApplicationsTab';
+import { useUnpushedThemes } from '../../hooks/useUnpushedThemes';
 import type { Link } from '../../hooks/useLinksLoader';
 import { extractDriveFileId, isUnknownCreator } from './DriveTab/DriveHelpers';
 
-export type AdminTab = 'manage' | 'drive-import' | 'sync' | 'screenscraper-sync' | 'theme-packs' | 'submissions' | 'links';
+export type AdminTab = 'manage' | 'drive-import' | 'sync' | 'screenscraper-sync' | 'theme-packs' | 'submissions' | 'links' | 'applications';
 
 interface AdminPanelProps {
   themes: ThemeItem[];
@@ -91,6 +94,7 @@ const AdminPanel: FC<AdminPanelProps> = ({
   // et non dans ManageTab : elle survit quand on change d'onglet, et s'efface
   // toute seule quand on ferme l'admin (ce composant disparaît alors).
   const [deletedThemes, setDeletedThemes] = useState<ThemeItem[]>([]);
+  const unpushed = useUnpushedThemes();
 
   const handleImportThemes = async (newThemes: ThemeItem[]): Promise<void> => {
     let maxId = 0;
@@ -175,6 +179,23 @@ const AdminPanel: FC<AdminPanelProps> = ({
           Panneau d&apos;Administration
         </h1>
 
+        {unpushed > 0 && (
+          <div className="sticky top-0 z-30 mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border-2 border-red-500 bg-red-950/90 px-4 py-3 text-red-100 shadow-lg backdrop-blur">
+            <span className="font-bold">
+              ⚠️ {unpushed} thème{unpushed > 1 ? 's' : ''} ajouté{unpushed > 1 ? 's' : ''} depuis « Applications » pas encore en ligne. Ne ferme pas l&apos;admin avant de faire « Push GitHub » (onglet Gérer).
+            </span>
+            {adminTab !== 'manage' && (
+              <button
+                type="button"
+                onClick={() => setAdminTab('manage')}
+                className="rounded-full bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-500"
+              >
+                Aller dans Gérer
+              </button>
+            )}
+          </div>
+        )}
+
         <div className="flex flex-wrap gap-2 mb-8 border-b border-gray-700 pb-4">
           <TabButton tab="manage" currentTab={adminTab} setAdminTab={setAdminTab} icon={Edit2} label="Gérer" />
           <TabButton tab="drive-import" currentTab={adminTab} setAdminTab={setAdminTab} icon={FolderOpen} label="Import Drive" />
@@ -183,7 +204,16 @@ const AdminPanel: FC<AdminPanelProps> = ({
           <TabButton tab="theme-packs" currentTab={adminTab} setAdminTab={setAdminTab} icon={Package} label="Packs mensuels" />
           <TabButton tab="submissions" currentTab={adminTab} setAdminTab={setAdminTab} icon={Inbox} label="Soumissions" />
           <TabButton tab="links" currentTab={adminTab} setAdminTab={setAdminTab} icon={Star} label="Mise en avant" />
+          <TabButton tab="applications" currentTab={adminTab} setAdminTab={setAdminTab} icon={AppWindow} label="Applications" />
         </div>
+
+        {adminTab === 'applications' && (
+          <ApplicationsTab
+            themes={themes}
+            categories={categories}
+            onImportThemes={handleImportThemes}
+          />
+        )}
 
         {adminTab === 'links' && (
           <LinksTab

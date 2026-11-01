@@ -43,6 +43,7 @@ registerDict({
     'sys.💻 ORDINOSAURE': '💻 VINTAGE COMPUTERS',
     'sys.🎯 FLIPPER': '🎯 PINBALL',
     'sys.🧩 APPLICATIONS': '🧩 APPLICATIONS',
+    'sys.Émulateurs RetroBat': 'RetroBat Emulators',
     'sys.AUTRES CONSTRUCTEURS': 'OTHER MANUFACTURERS',
     'sys.CONSTRUCTEURS DIVERS': 'MISCELLANEOUS MANUFACTURERS',
     'sys.AUTRES PORTS': 'OTHER PORTS',

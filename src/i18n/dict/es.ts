@@ -206,6 +206,7 @@ registerDict({
     "sys.💻 ORDINOSAURE": "💻 ORDENADORES CLÁSICOS",
     "sys.🎯 FLIPPER": "🎯 PINBALL",
     "sys.🧩 APPLICATIONS": "🧩 APLICACIONES",
+    "sys.Émulateurs RetroBat": "Emuladores de RetroBat",
     "sys.AUTRES CONSTRUCTEURS": "OTROS FABRICANTES",
     "sys.CONSTRUCTEURS DIVERS": "FABRICANTES DIVERSOS",
     "sys.AUTRES PORTS": "OTROS PORTS",

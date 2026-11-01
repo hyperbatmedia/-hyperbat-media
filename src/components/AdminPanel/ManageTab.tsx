@@ -1,6 +1,7 @@
 // ManageTab.tsx 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Search, Download, Edit2, Trash2, Eye, X, AlertCircle, ImageOff, User, CheckSquare, Square, Upload, ArrowUpDown, Zap, Users, Database, Globe, HelpCircle } from 'lucide-react';
+import { clearUnpushedThemes } from '../../hooks/useUnpushedThemes';
 import { ensureDisplayableUrl, reverseConvertUrl, isUnknownCreator, formatDateFR, extractDriveFileId } from './DriveTab/DriveHelpers';
 import { AutocompleteSelect } from '../shared/AutocompleteSelect';
 import { useAdminCooldown, COOLDOWN_SECONDS } from '../../hooks/useAdminCooldown';
@@ -641,7 +642,7 @@ export default function ManageTab({ themes, setThemes, saveThemes, systems, cate
             branch: GITHUB_BRANCH
           })
         });
-        if (pushRes.ok) { themesPushed = true; break; }
+        if (pushRes.ok) { themesPushed = true; clearUnpushedThemes(); break; }
         if (pushRes.status === 409 && attempt < MAX_ATTEMPTS) {
           await new Promise(r => setTimeout(r, 400 * attempt));
           continue;

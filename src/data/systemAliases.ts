@@ -209,6 +209,7 @@ export const THEME_TO_BOB: Record<string, string | null> = {
   'collectionspersonnalises': null,
   'magazines':                null,
   'kodi':                     null,
+  'mulateursretrobat':        null,
   'xboxlivearcade':           'xbox360',
 
   // ── ARCADE sans équivalent domestique (exclusion volontaire, audit récap) ─

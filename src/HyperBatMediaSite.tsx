@@ -19,6 +19,7 @@ import { useSystemsLogic } from './hooks/useSystemsLogic';
 import { getThemeKey } from './utils/themeUtils';
 import Sidebar from './components/Sidebar/Sidebar';
 import AdminPanel from './components/AdminPanel/AdminPanel';
+import { useUnpushedThemes } from './hooks/useUnpushedThemes';
 import type { AdminTab } from './components/AdminPanel/AdminPanel';
 import ThemeList from './components/ThemeList/ThemeList';
 import CartPanel from './components/CartPanel/CartPanel';
@@ -321,6 +322,11 @@ export default function HyperBatMediaSite(): JSX.Element {
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
   const [adminToken, setAdminToken] = useState<string>('');
   const [showCloseModal, setShowCloseModal] = useState<boolean>(false);
+  const unpushedThemes = useUnpushedThemes();
+  // Quitter sans pusher alors que des thèmes viennent d'être ajoutés (onglet Applications) : on redemande.
+  const confirmLeaveUnpushed = (): boolean =>
+    unpushedThemes === 0 ||
+    window.confirm(`⚠️ ${unpushedThemes} thème(s) ajouté(s) ne sont PAS encore en ligne.\nSi tu quittes sans pusher, ils seront perdus.\n\nQuitter quand même ?`);
   const [showPushFromClose, setShowPushFromClose] = useState<boolean>(false);
   const [cart, setCart] = useState<ThemeItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
@@ -1044,12 +1050,18 @@ export default function HyperBatMediaSite(): JSX.Element {
               <LogOut className="w-6 h-6" /> Fermer l'administration
             </h2>
             <p className="text-gray-300 text-sm mb-6">Tu as fini tes modifications ?</p>
+            {unpushedThemes > 0 && (
+              <p className="mb-4 rounded-lg border border-red-500 bg-red-950/70 p-3 text-sm font-bold text-red-200">
+                ⚠️ {unpushedThemes} thème{unpushedThemes > 1 ? 's' : ''} ajouté{unpushedThemes > 1 ? 's' : ''} depuis « Applications » ne {unpushedThemes > 1 ? 'sont' : 'est'} pas encore en ligne. Clique sur « Pusher maintenant ».
+              </p>
+            )}
             <div className="flex flex-col gap-3">
               <button onClick={() => { setShowCloseModal(false); setShowPushFromClose(true); }}
                 className="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg font-bold flex items-center justify-center gap-2 transition-all">
                 🚀 Pusher maintenant puis quitter
               </button>
               <button onClick={async () => {
+                  if (!confirmLeaveUnpushed()) return;
                   setShowCloseModal(false);
                   const ok = await releaseLock(adminToken);
                   if (ok) { clearCooldown(); setAdminToken(''); setShowAdminPanel(false); }
@@ -1072,6 +1084,7 @@ export default function HyperBatMediaSite(): JSX.Element {
             <p className="text-gray-400 text-sm mb-4">Le token entré à l'ouverture sera utilisé. Un cooldown de 3 min démarrera ensuite.</p>
             <div className="flex gap-3">
               <button onClick={async () => {
+                  if (!confirmLeaveUnpushed()) return;
                   setShowPushFromClose(false);
                   const ok = await releaseLock(adminToken);
                   if (ok) { clearCooldown(); setAdminToken(''); setShowAdminPanel(false); }
@@ -1081,9 +1094,19 @@ export default function HyperBatMediaSite(): JSX.Element {
               </button>
               <button onClick={() => {
                   setShowPushFromClose(false);
-                  setShowAdminPanel(false);
-                  window.dispatchEvent(new CustomEvent('hyperbat-push-request', { detail: { token: adminToken } }));
-                  setAdminToken('');
+                  const token = adminToken;
+                  const fire = () => {
+                    setShowAdminPanel(false);
+                    window.dispatchEvent(new CustomEvent('hyperbat-push-request', { detail: { token } }));
+                    setAdminToken('');
+                  };
+                  // Le push des thèmes est géré par l'onglet « Gérer » : on s'y place d'abord si besoin.
+                  if (unpushedThemes > 0 && adminTab !== 'manage') {
+                    setAdminTab('manage');
+                    setTimeout(fire, 500);
+                  } else {
+                    fire();
+                  }
                 }}
                 className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg font-bold transition-all">
                 🚀 Pusher

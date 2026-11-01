@@ -238,7 +238,8 @@ export const systemsData: SystemsDataStructure = {
         simulateurs: { label: 'SIMULATEURS', systems: ['Visual Pinball', 'Future Pinball', 'Pinball FX', 'Pinball FX2', 'Pinball FX3', 'Zaccaria Pinball', 'Pinball M'] }
     },
     applications: {
-        kodi: { label: 'KODI', systems: ['Kodi'] }
+        kodi: { label: 'KODI', systems: ['Kodi'] },
+        retrobat: { label: 'RETROBAT', systems: ['Émulateurs RetroBat'] }
     },
     magazines: {
         magazines: { 
