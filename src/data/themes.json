@@ -23508,19 +23508,6 @@
     "isMulti": false
   },
   {
-    "id": 13379,
-    "name": "psikyo",
-    "creator": "Roni",
-    "system": "psikyo",
-    "category": "system-themes",
-    "imageUrl": "https://drive.google.com/file/d/1tyA4Upfnv7ygcq3ky1ZxQNy9v_ZlcjwS/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1kuNCiPo-iWqd8nTHgQ_w0Hua-p6wO0h3/view?usp=sharing",
-    "size": "1.6 MB",
-    "date": "2026-01-17",
-    "onScreenScraper": false,
-    "isMulti": false
-  },
-  {
     "id": 8799,
     "name": "psp",
     "creator": "Dav",
@@ -51583,5 +51570,16 @@
     "size": "946.9 KB",
     "date": "2026-10-30",
     "onScreenScraper": true
+  },
+  {
+    "id": 125094,
+    "name": "Crash Bandicoot (USA)",
+    "creator": "Huhe-8554",
+    "system": "playstation",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1b2IrPnhAs7j_EPqxJlh0OWSzCxuFgt9N/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1LBZVr98NHaq10diu4k4kKw-Kjxpbge9J/view?usp=sharing",
+    "size": "3.8 Mo",
+    "date": "2026-11-01"
   }
 ]
