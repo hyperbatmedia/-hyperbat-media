@@ -11,6 +11,7 @@ const DEFAULT_SECTIONS = {
   ordinosaure: false,
   ports: false,
   flipper: false,
+  applications: false,
   magazines: false
 };
 

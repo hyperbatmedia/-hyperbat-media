@@ -208,6 +208,7 @@ export const THEME_TO_BOB: Record<string, string | null> = {
   // ── CUSTOM HyperBat (pas dans bob-systems) ───────────────────────────────
   'collectionspersonnalises': null,
   'magazines':                null,
+  'kodi':                     null,
   'xboxlivearcade':           'xbox360',
 
   // ── ARCADE sans équivalent domestique (exclusion volontaire, audit récap) ─

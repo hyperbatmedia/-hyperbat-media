@@ -67,6 +67,7 @@ const SECTION_ICONS: Record<string, SectionIconDef> = {
   fantasy:     { type: 'img',   src: fantasyImg },
   ordinosaure: { type: 'img',   src: ordinosaureImg },
   flipper:     { type: 'img',   src: flipperImg },
+  applications: { type: 'emoji', char: '🧩' },
   magazines:   { type: 'svg',   component: <BookOpen className="w-6 h-6" style={{ stroke: '#00A3FF', fill: 'none' }} /> },
 };
 

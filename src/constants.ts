@@ -237,6 +237,9 @@ export const systemsData: SystemsDataStructure = {
     flipper: {
         simulateurs: { label: 'SIMULATEURS', systems: ['Visual Pinball', 'Future Pinball', 'Pinball FX', 'Pinball FX2', 'Pinball FX3', 'Zaccaria Pinball', 'Pinball M'] }
     },
+    applications: {
+        kodi: { label: 'KODI', systems: ['Kodi'] }
+    },
     magazines: {
         magazines: { 
             label: '', 
@@ -254,5 +257,6 @@ export const sectionIcons: SectionIconsStructure = {
     fantasy: '👾 FANTASY CONSOLES',
     ordinosaure: '💻 ORDINOSAURE',
     flipper: '🎯 FLIPPER',
+    applications: '🧩 APPLICATIONS',
     magazines: '📰 MAGAZINES'
 };
