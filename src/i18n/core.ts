@@ -101,3 +101,24 @@ export function translatePackText(lang: Lang, text: string): string {
   s = s.replace(/(\d+\+?) themes\b/, w.themes);
   return s;
 }
+
+// Messages d'erreur du robot Google (toujours écrits en français côté Code.gs).
+// On reconnaît les messages connus et on les traduit ici, sans toucher au
+// robot. Tout message inconnu est renvoyé tel quel.
+export function translateRobotError(lang: Lang, msg: string): string {
+  const exact: Record<string, string> = {
+    'Le pseudo est manquant.': 'rb.noPseudo',
+    'Aucun thème reçu.': 'rb.noTheme',
+    'Un thème est envoyé sans nom.': 'rb.noName',
+  };
+  if (exact[msg]) return translate(lang, exact[msg]);
+  let m = msg.match(/^Famille inconnue pour "(.*)" : (.*)$/);
+  if (m) return translate(lang, 'rb.badFamily', { nom: m[1], val: m[2] });
+  m = msg.match(/^Catégorie inconnue pour "(.*)" : (.*)$/);
+  if (m) return translate(lang, 'rb.badCat', { nom: m[1], val: m[2] });
+  m = msg.match(/^Fichier \.zip manquant pour "(.*)"\.$/);
+  if (m) return translate(lang, 'rb.noZip', { nom: m[1] });
+  m = msg.match(/^Image manquante pour "(.*)" \(elle est obligatoire\)\.$/);
+  if (m) return translate(lang, 'rb.noImg', { nom: m[1] });
+  return msg;
+}

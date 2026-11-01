@@ -21,6 +21,7 @@ import { robotFetch, generateClientId, RobotFetchError } from '../../utils/robot
 import linksJson from '../../data/links.json';
 import themesJson from '../../data/themes.json';
 import { useLang } from '../../i18n';
+import { translateRobotError } from '../../i18n/core';
 
 const EXCLUDED_IDS = ['all', 'tools', 'tutorials', 'main-themes', 'other-themes'];
 
@@ -153,7 +154,7 @@ function fileToBase64(file: File): Promise<string> {
 }
 
 export default function ThemeSubmissionPage() {
-  const { t: tr, label: trLabel } = useLang();
+  const { t: tr, label: trLabel, lang } = useLang();
   const allSystems = useMemo<SystemRow[]>(
     () => generateSystems(categories, systemsData, sectionIcons),
     []
@@ -306,7 +307,7 @@ export default function ThemeSubmissionPage() {
         { method: 'POST', body: JSON.stringify(payload) },
         onRetry
       );
-      if (!data.ok) return { ok: false, error: data.error || tr('sub.errUnknownRobot') };
+      if (!data.ok) return { ok: false, error: data.error ? translateRobotError(lang, data.error) : tr('sub.errUnknownRobot') };
       return { ok: true };
     } catch (err) {
       if (err instanceof RobotFetchError) {
