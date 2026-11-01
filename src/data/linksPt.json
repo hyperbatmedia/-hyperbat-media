@@ -1,0 +1,101 @@
+{
+  "tutoriels": {
+    "name": "Tutoriais",
+    "title": "TUTORIAIS",
+    "items": {
+      "tuto-001": {
+        "name": "Adicionando uma animação shader ao HyperBat Theme Creator"
+      },
+      "tuto-002": {
+        "name": "Adicionando uma rotação"
+      },
+      "tuto-003": {
+        "name": "Adicionando um bump infinito a uma animação"
+      },
+      "tuto-004": {
+        "name": "Modo de criação de animações"
+      },
+      "tuto-005": {
+        "name": "Criando um tema de sistema"
+      },
+      "tuto-006": {
+        "name": "Criando um tema padrão"
+      },
+      "tuto-007": {
+        "name": "Criação do tema de jogo Art Of Fighting"
+      },
+      "tuto-008": {
+        "name": "Criação do tema de jogo NaughtyBoy"
+      },
+      "tuto-009": {
+        "name": "Apresentação da vitrine HyperBat Media"
+      },
+      "item-1790158746964-733559": {
+        "name": "Conversão de temas HyperSpin + animações e suas possibilidades",
+        "description": "Apresento em primeira mão a conversão dos temas HyperSpin v1 para 1920x1080. Além disso, uma demonstração das possibilidades das animações e dos parâmetros, e a 1ª parte da criação de animações completas adicionando etapas e salvando-as.\nPróxima etapa: o modo \"Desenho e penas\""
+      },
+      "item-1790158974727-862145": {
+        "name": "Futura interface + Shaders + animações",
+        "description": "https://hyperbat.phenix-dev.com/\nCriador de temas para RetroBat\nFalamos rapidamente das novidades e das animações ;)"
+      },
+      "item-1790159099117-248633": {
+        "name": "Edição de imagem",
+        "description": "Esta 2ª parte apresenta as opções de modificação de imagens. Como o Photoshop!!\nhttps://hyperbat.phenix-dev.com/index.html"
+      },
+      "item-1790159195530-200544": {
+        "name": "Apresentação do HyperBat, instalação e interface",
+        "description": "Vídeo de apresentação do aplicativo HyperBat, instalação e interface\nhttps://hyperbat.phenix-dev.com/"
+      },
+      "item-1790235097768-999289": {
+        "name": "Conversão do tema Turbo",
+        "description": "Conversão do tema HyperSpin Turbo e modificações."
+      },
+      "item-1790235237989-840163": {
+        "name": "Conversão do tema Toki"
+      }
+    }
+  },
+  "outils": {
+    "name": "Ferramentas",
+    "title": "FERRAMENTAS",
+    "items": {
+      "tool-001": {
+        "description": "A ferramenta oficial para criar e editar seus temas HyperBat. Animações, shaders, rotações — tudo é configurado aqui."
+      },
+      "tool-002": {
+        "description": "O HyperBat é um editor visual de temas para o RetroBat, pensado para o tema HyperBat do Bob Morane (estilo HyperSpin). Componha, anime e exporte seus temas com poucos cliques."
+      },
+      "tool-003": {
+        "name": "Hyperbat gametheme automatcher",
+        "description": "Ferramenta de renomeação em massa, com comparação de gameId do ScreenScraper adicionada. Você vai precisar de um json disponível na vitrine."
+      },
+      "tool-arrm": {
+        "description": "Another Recalbox Roms Manager — scraper e gerenciador de mídias para RetroBat, Batocera, Recalbox e Retropie."
+      },
+      "item-1790413714606-697774": {
+        "description": "O HyperBat Media é um add-on para o Batocera que instala facilmente temas de sistema, padrão ou de jogo a partir do tema HyperBat do Bob Morane.\nAcesse a vitrine por uma entrada dedicada no sistema Ports, ou mais rápido com F9, R1 ou R3, conforme a escolha feita na instalação do add-on."
+      },
+      "item-1790414022335-634335": {
+        "description": "O HyperBat Media é um add-on para o RetroBat que instala facilmente temas de sistema, padrão ou de jogo a partir do tema HyperBat do Bob Morane.\nAcesse a vitrine por uma entrada dedicada no sistema Windows, ou mais rápido com F9, R1 ou R3, conforme a escolha feita na instalação do add-on."
+      }
+    }
+  },
+  "themes-hyperbat": {
+    "name": "TEMAS HYPERBAT"
+  },
+  "autres-themes-bob": {
+    "name": "OUTROS TEMAS DO BOB",
+    "title": "OUTROS TEMAS DO BOB",
+    "items": {
+      "bob-theme-001": {
+        "description": "Tema do RetroBat / Batocera criado por Bob Morane."
+      },
+      "bob-theme-002": {
+        "description": "Tema do RetroBat / Batocera criado por Bob Morane."
+      },
+      "bob-theme-003": {
+        "description": "Tema do RetroBat / Batocera criado por Bob Morane."
+      }
+    }
+  }
+}

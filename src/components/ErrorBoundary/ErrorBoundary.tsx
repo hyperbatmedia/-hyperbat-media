@@ -20,6 +20,8 @@ import { Component } from 'react';
 import type { ErrorInfo, ReactNode } from 'react';
 import { detectLang, translate } from '../../i18n/core';
 import '../../i18n/dict/errors';
+import '../../i18n/dict/es';
+import '../../i18n/dict/pt';
 
 const RELOAD_FLAG = 'hyperbat_chunk_reload';
 
