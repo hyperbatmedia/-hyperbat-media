@@ -1,5 +1,6 @@
 // Fichier: src/components/AdminPanel/ThemePacksTab.tsx
-// 12 lignes fixes (une par mois), tout est éditable directement en ligne.
+// 24 lignes fixes (slot-1 à slot-12 = 1re série, slot-13 à slot-24 = 2e série),
+// tout est éditable directement en ligne.
 // Une ligne vide (sans date ni lien) n'apparaît pas sur la vitrine.
 import React, { useState } from 'react';
 import { Star, Package, HelpCircle, Loader2, X, Save, Globe } from 'lucide-react';
@@ -10,7 +11,7 @@ const GITHUB_REPO = '-hyperbat-media';
 const GITHUB_BRANCH = 'main';
 const PACKS_PATH = 'src/data/themePacks.json';
 
-const SLOT_COUNT = 12;
+const SLOT_COUNT = 24;
 
 interface ThemePacksTabProps {
   packsData: ThemePacksData;
@@ -23,16 +24,17 @@ const MONTH_NAMES = [
   'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
 ];
 
-// Construit toujours exactement 12 lignes (slot-1 à slot-12), en réutilisant
+// Construit toujours exactement 24 lignes (slot-1 à slot-24), en réutilisant
 // les packs déjà enregistrés qui correspondent à ces slots. Une ligne encore
 // vide est pré-remplie avec le nom du mois correspondant (slot-1 = Janvier,
-// slot-2 = Février...) — il ne reste plus qu'à ajouter l'année.
+// slot-2 = Février... slot-13 = Janvier, slot-14 = Février...) — il ne reste plus
+// qu'à ajouter l'année. Les packs déjà enregistrés ne sont JAMAIS modifiés.
 const buildSlots = (packs: ThemePack[]): ThemePack[] => {
   const byMonth = new Map(packs.map(p => [p.month, p]));
   const slots: ThemePack[] = [];
   for (let i = 1; i <= SLOT_COUNT; i++) {
     const id = `slot-${i}`;
-    slots.push(byMonth.get(id) ?? { month: id, label: MONTH_NAMES[i - 1], driveUrl: '', note: '' });
+    slots.push(byMonth.get(id) ?? { month: id, label: MONTH_NAMES[(i - 1) % 12], driveUrl: '', note: '' });
   }
   return slots;
 };
@@ -136,7 +138,7 @@ const ThemePacksTab: React.FC<ThemePacksTabProps> = ({ packsData, setPacksData, 
         </button>
       </div>
 
-      {/* 12 LIGNES */}
+      {/* 24 LIGNES */}
       <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
         <div className="grid gap-3 p-3 bg-gray-950 border-b border-gray-800 text-xs text-gray-300 font-bold uppercase tracking-wide"
              style={{ gridTemplateColumns: '40px 1fr 1.4fr 1.2fr' }}>
@@ -238,7 +240,7 @@ const ThemePacksTab: React.FC<ThemePacksTabProps> = ({ packsData, setPacksData, 
               </section>
               <section>
                 <h4 className="text-cyan-400 font-bold mb-1">Remplir une ligne</h4>
-                <p>12 lignes fixes, une par mois. Tape la date (ex "Juillet 2026"), colle le lien Drive du .zip, ajoute une note si tu veux. Une ligne vide n'apparaît pas sur le site.</p>
+                <p>24 lignes fixes (2 séries de 12 mois). Tape la date (ex "Juillet 2026"), colle le lien Drive du .zip, ajoute une note si tu veux. Une ligne vide n'apparaît pas sur le site.</p>
               </section>
               <section>
                 <h4 className="text-cyan-400 font-bold mb-1">Mettre en avant</h4>

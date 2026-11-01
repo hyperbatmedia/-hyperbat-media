@@ -30,7 +30,11 @@ const slugOf = (systemName: string) => systemName.toLowerCase().replace(/[^a-z0-
 const FIXED_CATEGORY_SYSTEMS = ['Émulateurs RetroBat'];
 const FIXED_CATEGORY = 'system-themes';
 
-const APP_SYSTEMS: string[] = Object.values(systemsData.applications ?? {}).flatMap((g) => g.systems);
+// Kodi n'apparaît pas ici : cet onglet sert aux thèmes d'émulateurs (fichiers sur le Drive de Bob).
+const HIDDEN_SYSTEMS = ['Kodi'];
+const APP_SYSTEMS: string[] = Object.values(systemsData.applications ?? {})
+  .flatMap((g) => g.systems)
+  .filter((s) => !HIDDEN_SYSTEMS.includes(s));
 
 interface Draft {
   key: number;
@@ -41,6 +45,7 @@ interface Draft {
   imageUrl: string;
   downloadUrl: string;
   size: string;
+  date: string;
 }
 
 const inputCls = 'w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-orange-500';
@@ -64,6 +69,7 @@ const ApplicationsTab: FC<ApplicationsTabProps> = ({ themes, categories, onImpor
     imageUrl: '',
     downloadUrl: '',
     size: '',
+    date: '',
   });
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [formError, setFormError] = useState('');
@@ -112,7 +118,7 @@ const ApplicationsTab: FC<ApplicationsTabProps> = ({ themes, categories, onImpor
     setDrafts((d) => [...d, { key: nextKey, ...form, category, name: form.name.trim(), creator: canonicalCreator(form.creator, knownCreators) }]);
     setNextKey((n) => n + 1);
     // On garde système / catégorie / créateur : Bob enchaîne les thèmes.
-    setForm((f) => ({ ...f, name: '', imageUrl: '', downloadUrl: '', size: '' }));
+    setForm((f) => ({ ...f, name: '', imageUrl: '', downloadUrl: '', size: '', date: '' }));
   };
 
   const duplicateInfo = (d: Draft): string => {
@@ -132,7 +138,9 @@ const ApplicationsTab: FC<ApplicationsTabProps> = ({ themes, categories, onImpor
     setBusy(true);
     setStatus(null);
     try {
-      const today = new Date().toISOString().slice(0, 10);
+      // Date du jour à l'heure locale (toISOString donnerait la veille entre minuit et 1h/2h en France).
+      const now = new Date();
+      const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
       const newThemes: ThemeItem[] = drafts.map((d) => ({
         id: 0,
         name: d.name,
@@ -142,7 +150,7 @@ const ApplicationsTab: FC<ApplicationsTabProps> = ({ themes, categories, onImpor
         imageUrl: ensureDisplayableUrl(d.imageUrl.trim(), true),
         downloadUrl: ensureDisplayableUrl(d.downloadUrl.trim(), false),
         size: d.size.trim(),
-        date: today,
+        date: d.date || today,
         onScreenScraper: false,
         isMulti: false,
       }));
@@ -204,6 +212,10 @@ const ApplicationsTab: FC<ApplicationsTabProps> = ({ themes, categories, onImpor
             <input className={inputCls} value={form.downloadUrl} onChange={(e) => set('downloadUrl', e.target.value)} placeholder="https://drive.google.com/file/d/…" />
           </div>
           <div>
+            <label className={labelCls}>Date (facultatif, sinon : aujourd&apos;hui)</label>
+            <input type="date" className={inputCls} value={form.date} onChange={(e) => set('date', e.target.value)} />
+          </div>
+          <div>
             <label className={labelCls}>Taille (facultatif)</label>
             <input className={inputCls} value={form.size} onChange={(e) => set('size', e.target.value)} placeholder="ex : 2.6 MB" />
           </div>
@@ -228,7 +240,7 @@ const ApplicationsTab: FC<ApplicationsTabProps> = ({ themes, categories, onImpor
                 <li key={d.key} className="flex items-start justify-between gap-3 bg-gray-900 rounded-lg px-3 py-2">
                   <div className="min-w-0 text-sm">
                     <div className="font-bold text-white truncate">{d.name}</div>
-                    <div className="text-gray-400 truncate">{d.systemName} · {d.creator}{d.size ? ` · ${d.size}` : ''}</div>
+                    <div className="text-gray-400 truncate">{d.systemName} · {d.creator}{d.size ? ` · ${d.size}` : ''}{d.date ? ` · ${d.date}` : ''}</div>
                     {info && <div className="text-yellow-400 text-xs mt-1">{info}</div>}
                   </div>
                   <button
