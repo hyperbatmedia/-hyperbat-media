@@ -52890,5 +52890,50 @@
     "downloadUrl": "https://drive.google.com/file/d/12NgOqbgh7oE8N1xNPBp7yrBcMrmq5Wjq/view?usp=sharing",
     "size": "576.3 MB",
     "date": "2026-11-08"
+  },
+  {
+    "id": 125214,
+    "name": "hotbody",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/17X8nW5JDJ1IRJnluzAqRs9zc6HtOLJIS/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1me-HbDtzpY8xiLjrCKQWOf_BKaueGGzu/view?usp=sharing",
+    "size": "1.4 MB",
+    "date": "2026-11-09"
+  },
+  {
+    "id": 125215,
+    "name": "wiggie",
+    "creator": "Roni",
+    "system": "mame",
+    "category": "game-themes",
+    "imageUrl": "https://drive.google.com/file/d/1qsQ0GQYLF1p6KPtaK94XtiPvKQlM0rD4/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1AXiLJMGgPevnmNZXqfl2x55llgP8PAT7/view?usp=sharing",
+    "size": "2.9 MB",
+    "date": "2026-11-09",
+    "mature": true
+  },
+  {
+    "id": 125216,
+    "name": "Atlas_box(usa)",
+    "creator": "Dav",
+    "system": "gamecube",
+    "category": "artwork",
+    "imageUrl": "https://drive.google.com/file/d/1qJO1gYj4JU3cDn4PtNNNLm9temPBtW7s/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1W1weRFvZO3CVGN6Y02O2jguGxqZn8FVm/view?usp=sharing",
+    "size": "62.6 MB",
+    "date": "2026-11-15"
+  },
+  {
+    "id": 125217,
+    "name": "Atlas_box(eu)",
+    "creator": "Dav",
+    "system": "gamecube",
+    "category": "artwork",
+    "imageUrl": "https://drive.google.com/file/d/1hnmod6Lexwt_V50aFRnSKhsfuyiZI09h/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1VwRSeXELNQSKLRh2TqGvgbUhHdDqGCZw/view?usp=sharing",
+    "size": "142.1 MB",
+    "date": "2026-11-15"
   }
 ]
