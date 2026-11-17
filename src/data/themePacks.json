@@ -1,5 +1,5 @@
 {
-  "featuredMonth": "slot-8",
+  "featuredMonth": "slot-9",
   "packs": [
     {
       "month": "slot-1",
@@ -45,9 +45,15 @@
     },
     {
       "month": "slot-8",
-      "label": "Août",
+      "label": "Août 2026",
       "driveUrl": "https://drive.google.com/file/d/1SMdBrmgkiy9fnt10iO6j_lgpWWl0vz23/view?usp=sharing",
       "note": "399 thèmes de jeux, default et système"
+    },
+    {
+      "month": "slot-9",
+      "label": "Septembre 2026",
+      "driveUrl": "https://drive.google.com/file/d/19XXyL0P_RHEo2LG6LwYnyrzOGMKB8orG/view?usp=sharing",
+      "note": "226 thèmes de jeux, default et système"
     },
     {
       "month": "slot-10",
