@@ -3,7 +3,7 @@
 // Filet de sécurité autour de toute l'application.
 //
 // Sans lui, la moindre erreur non gérée dans un composant fait démonter tout
-// React : il ne reste que le fond du body (#0f0519), donc une "page noire"
+// React : il ne reste que le fond du body (#0b1424), donc une "page noire"
 // sans aucune explication. Ici, on affiche à la place un écran clair avec le
 // message d'erreur réel (utile pour diagnostiquer) et deux actions.
 //
@@ -108,7 +108,7 @@ export default class ErrorBoundary extends Component<Props, State> {
         role="alert"
         style={{
           minHeight: '100vh',
-          background: '#0f0519',
+          background: '#0b1424',
           color: '#ffffff',
           display: 'flex',
           alignItems: 'center',
@@ -121,13 +121,13 @@ export default class ErrorBoundary extends Component<Props, State> {
           style={{
             maxWidth: 560,
             width: '100%',
-            background: '#1a1a1a',
-            border: '2px solid #FF8C00',
+            background: '#14233b',
+            border: '2px solid #3d7be0',
             borderRadius: 16,
             padding: 28,
           }}
         >
-          <h1 style={{ fontSize: 22, fontWeight: 800, margin: '0 0 12px', color: '#FFA500' }}>
+          <h1 style={{ fontSize: 22, fontWeight: 800, margin: '0 0 12px', color: '#5590ee' }}>
             {tr('err.title')}
           </h1>
 
@@ -150,7 +150,7 @@ export default class ErrorBoundary extends Component<Props, State> {
             style={{
               margin: '0 0 20px',
               padding: 12,
-              background: '#0f0519',
+              background: '#0b1424',
               border: '1px solid #374151',
               borderRadius: 8,
               color: '#fca5a5',
@@ -170,7 +170,7 @@ export default class ErrorBoundary extends Component<Props, State> {
               type="button"
               onClick={this.handleReload}
               style={{
-                background: 'linear-gradient(90deg, #FF8C00, #FFD700)',
+                background: 'linear-gradient(90deg, #3d7be0, #62b4ff)',
                 color: '#000',
                 fontWeight: 800,
                 border: 'none',

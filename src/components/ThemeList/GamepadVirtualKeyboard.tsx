@@ -73,11 +73,11 @@ const FaceBtnHint = ({ dir, color, action }: {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
       <svg width="34" height="34" viewBox="-17 -17 34 34" aria-hidden="true">
-        <circle cx="0" cy="0" r="15" fill="#1a1a1a" stroke="#555" strokeWidth="1.5" />
-        <circle cx="0" cy="-9" r="2.8" fill={dir === 'nord' ? color : '#444'} />
-        <circle cx="0" cy="9" r="2.8" fill={dir === 'sud' ? color : '#444'} />
+        <circle cx="0" cy="0" r="15" fill="#14233b" stroke="#555" strokeWidth="1.5" />
+        <circle cx="0" cy="-9" r="2.8" fill={dir === 'nord' ? color : '#243a5c'} />
+        <circle cx="0" cy="9" r="2.8" fill={dir === 'sud' ? color : '#243a5c'} />
         <circle cx="-9" cy="0" r="2.8" fill="#444" />
-        <circle cx="9" cy="0" r="2.8" fill={dir === 'est' ? color : '#444'} />
+        <circle cx="9" cy="0" r="2.8" fill={dir === 'est' ? color : '#243a5c'} />
         <circle cx="0" cy="0" r="2" fill="#333" />
         <circle cx={dx[dir]} cy={dy[dir]} r="4" fill={color} opacity="0.95" />
       </svg>
@@ -342,7 +342,7 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
       <div style={{
         width: 'min(920px, 100%)',
         backgroundColor: '#141414',
-        border: '2px solid #FF8C00',
+        border: '2px solid #3d7be0',
         borderRadius: '14px',
         padding: '14px 14px 10px',
       }}>
@@ -350,7 +350,7 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           marginBottom: '8px', gap: '10px',
         }}>
-          <div style={{ color: '#FFA500', fontWeight: 800, fontSize: '14px' }}>{title}</div>
+          <div style={{ color: '#5590ee', fontWeight: 800, fontSize: '14px' }}>{title}</div>
           <div style={{ color: '#888', fontSize: '11px' }}>
             {layout === 'letters' ? (shift ? 'MAJ' : 'AZERTY') : 'Symboles'}
           </div>
@@ -369,7 +369,7 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
           wordBreak: 'break-word',
         }}>
           {draft || <span style={{ color: '#555' }}>…</span>}
-          <span style={{ color: '#FFA500' }}>|</span>
+          <span style={{ color: '#5590ee' }}>|</span>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -396,10 +396,10 @@ const GamepadVirtualKeyboard: React.FC<GamepadVirtualKeyboardProps> = ({
                       borderRadius: '8px',
                       border: focused ? '2px solid #fff' : '2px solid #444',
                       backgroundColor: isOk
-                        ? '#c45f00'
+                        ? '#3d7be0'
                         : focused || isShiftOn
-                          ? '#E39B00'
-                          : '#1a1a1a',
+                          ? '#3d7be0'
+                          : '#14233b',
                       color: focused || isShiftOn ? '#111' : '#fff',
                       fontWeight: 700,
                       fontSize: key.type === 'char' && key.value.length === 1 ? '15px' : '12px',

@@ -612,8 +612,8 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
 
   const btnStyle: React.CSSProperties = {
     padding: '11px 16px', borderRadius: '8px', border: 'none',
-    background: 'linear-gradient(90deg, #FF8C00, #FFD700)',
-    color: '#1a1a1a', fontWeight: 700, fontSize: '13px',
+    background: 'linear-gradient(90deg, #3d7be0, #62b4ff)',
+    color: '#ffffff', fontWeight: 700, fontSize: '13px',
     cursor: 'pointer',
   };
   // Annuler reprend désormais le même dégradé que Valider : sur cette
@@ -636,11 +636,11 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
         <svg width="34" height="34" viewBox="-17 -17 34 34" aria-hidden="true">
-          <circle cx="0" cy="0" r="15" fill="#1a1a1a" stroke="#555" strokeWidth="1.5" />
-          <circle cx="0" cy="-9" r="2.8" fill={dir === 'nord' ? color : '#444'} />
-          <circle cx="0" cy="9" r="2.8" fill={dir === 'sud' ? color : '#444'} />
+          <circle cx="0" cy="0" r="15" fill="#14233b" stroke="#555" strokeWidth="1.5" />
+          <circle cx="0" cy="-9" r="2.8" fill={dir === 'nord' ? color : '#243a5c'} />
+          <circle cx="0" cy="9" r="2.8" fill={dir === 'sud' ? color : '#243a5c'} />
           <circle cx="-9" cy="0" r="2.8" fill="#444" />
-          <circle cx="9" cy="0" r="2.8" fill={dir === 'est' ? color : '#444'} />
+          <circle cx="9" cy="0" r="2.8" fill={dir === 'est' ? color : '#243a5c'} />
           <circle cx="0" cy="0" r="2" fill="#333" />
           <circle cx={dx[dir]} cy={dy[dir]} r="4" fill={color} opacity="0.95" />
         </svg>
@@ -653,7 +653,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   const DPadIcon = () => (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
       <svg width="34" height="34" viewBox="-17 -17 34 34" aria-hidden="true">
-        <circle cx="0" cy="0" r="15" fill="#1a1a1a" stroke="#555" strokeWidth="1.5" />
+        <circle cx="0" cy="0" r="15" fill="#14233b" stroke="#555" strokeWidth="1.5" />
         <rect x="-2.5" y="-11" width="5" height="22" rx="1.5" fill="#666" />
         <rect x="-11" y="-2.5" width="22" height="5" rx="1.5" fill="#666" />
         <circle cx="0" cy="0" r="4" fill="#3a3a3a" stroke="#555" strokeWidth="1" />
@@ -667,7 +667,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     <div style={{
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
       minWidth: '34px', height: '22px', padding: '0 6px', borderRadius: '5px',
-      backgroundColor: '#2a2a2a', border: '1.5px solid #666',
+      backgroundColor: '#14233b', border: '1.5px solid #666',
       fontSize: '9px', fontWeight: 700, color: '#fff',
     }}>{label}</div>
   );
@@ -682,7 +682,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
   );
 
   const Sep = () => (
-    <div style={{ width: '1px', height: '52px', backgroundColor: '#2a2a2a', margin: '0 6px' }} />
+    <div style={{ width: '1px', height: '52px', backgroundColor: '#14233b', margin: '0 6px' }} />
   );
 
   const stateLabel = (): string => {
@@ -700,7 +700,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
     }}>
       <style>{`
         .hbagent-focusable:focus {
-          outline: 3px solid #FFD700 !important;
+          outline: 3px solid #62b4ff !important;
           outline-offset: 2px;
         }
         .hbagent-rom-item:focus {
@@ -708,27 +708,27 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
         }
         [data-hbagent-romlist] {
           scrollbar-width: thin;
-          scrollbar-color: #FF8C00 #1a1a1a;
+          scrollbar-color: #3d7be0 #14233b;
         }
         [data-hbagent-romlist]::-webkit-scrollbar {
           width: 8px;
         }
         [data-hbagent-romlist]::-webkit-scrollbar-track {
-          background: #1a1a1a;
+          background: #14233b;
         }
         [data-hbagent-romlist]::-webkit-scrollbar-thumb {
-          background-color: #FF8C00;
+          background-color: #3d7be0;
           border-radius: 4px;
         }
         [data-hbagent-romlist]::-webkit-scrollbar-thumb:hover {
-          background-color: #FFA733;
+          background-color: #5590ee;
         }
       `}</style>
       <div style={{
         width: 'min(600px, 94vw)', maxHeight: '82vh', overflow: 'hidden',
         display: 'flex', flexDirection: 'column',
-        backgroundColor: '#1a1a1a', borderRadius: '16px',
-        border: '2px solid #FF8C00', padding: '20px',
+        backgroundColor: '#14233b', borderRadius: '16px',
+        border: '2px solid #3d7be0', padding: '20px',
         boxShadow: '0 25px 60px rgba(0,0,0,0.8)',
       }}>
         {/* ── Titre ── */}
@@ -823,11 +823,11 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                       display: 'block', width: '100%', textAlign: 'left',
                       padding: '8px 12px', fontSize: '12px', cursor: 'pointer',
                       backgroundColor: isSel
-                        ? 'rgba(255,140,0,0.42)'
+                        ? 'rgba(61,123,224,0.42)'
                         : isFav
-                          ? 'rgba(255,140,0,0.18)'
+                          ? 'rgba(61,123,224,0.18)'
                           : 'transparent',
-                      color: isFav || isSel ? '#FFD700' : '#ddd',
+                      color: isFav || isSel ? '#62b4ff' : '#ddd',
                       border: 'none', borderBottom: '1px solid #3f3f3f',
                     }}>
                     {isFav ? '⭐ ' : ''}{rom}
@@ -848,16 +848,16 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                     style={{
                       display: 'block', width: '100%', textAlign: 'left',
                       padding: '8px 12px', fontSize: '12px', cursor: 'pointer',
-                      backgroundColor: 'rgba(255,140,0,0.12)',
-                      color: '#FFD700', marginBottom: '10px',
-                      border: '1px dashed #FF8C00', borderRadius: '8px',
+                      backgroundColor: 'rgba(61,123,224,0.12)',
+                      color: '#62b4ff', marginBottom: '10px',
+                      border: '1px dashed #3d7be0', borderRadius: '8px',
                     }}>
                     {tr('ag.useAsIs', { name: filter.trim() })}
                   </button>
                 )}
               </>
             )}
-            <div style={{ display: 'flex', gap: '10px', borderTop: '1px solid #FF8C00', paddingTop: '12px' }}>
+            <div style={{ display: 'flex', gap: '10px', borderTop: '1px solid #3d7be0', paddingTop: '12px' }}>
               <button
                 className="hbagent-focusable"
                 style={{
@@ -944,7 +944,7 @@ const AgentInstallFlow: React.FC<AgentInstallFlowProps> = ({ theme, agentInfo, o
                 width: jobStatus?.state === 'downloading' ? `${jobStatus.progress ?? 0}%`
                   : jobStatus?.state === 'extracting' ? '80%'
                   : jobStatus?.state === 'installing' ? '95%' : '10%',
-                background: 'linear-gradient(90deg, #FF8C00, #FFD700)',
+                background: 'linear-gradient(90deg, #3d7be0, #62b4ff)',
                 transition: 'width 0.4s ease',
               }} />
             </div>

@@ -109,7 +109,7 @@ export default function Lightbox({
       className="fixed inset-0 z-50 flex items-center justify-center"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       style={{
-        background: 'radial-gradient(ellipse at center, #1a0f00 0%, #000000 100%)',
+        background: 'radial-gradient(ellipse at center, #0b1424 0%, #000000 100%)',
         animation: 'fadeIn 0.3s ease-out'
       }}
     >
@@ -124,9 +124,9 @@ export default function Lightbox({
         <button
           onClick={navigatePrev}
           className="absolute left-4 top-1/2 z-20 p-3 rounded-full transition-all duration-300"
-          style={{ transform: 'translateY(-50%)', background: 'rgba(255,140,0,0.85)', boxShadow: '0 0 20px rgba(255,140,0,0.4)' }}
-          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.boxShadow = '0 0 30px rgba(255,140,0,0.7)'; }}
-          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)';   e.currentTarget.style.boxShadow = '0 0 20px rgba(255,140,0,0.4)'; }}
+          style={{ transform: 'translateY(-50%)', background: 'rgba(61,123,224,0.85)', boxShadow: '0 0 20px rgba(61,123,224,0.4)' }}
+          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.boxShadow = '0 0 30px rgba(61,123,224,0.7)'; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)';   e.currentTarget.style.boxShadow = '0 0 20px rgba(61,123,224,0.4)'; }}
           aria-label={tr('lb.prevAria')}
           title={tr('lb.prev')}
         >
@@ -147,8 +147,8 @@ export default function Lightbox({
                 style={{ background: 'rgba(0,0,0,0.5)', borderRadius: '8px' }}>
                 <div style={{
                   width: '48px', height: '48px',
-                  border: '4px solid rgba(255,140,0,0.3)',
-                  borderTop: '4px solid #FF8C00',
+                  border: '4px solid rgba(61,123,224,0.3)',
+                  borderTop: '4px solid #3d7be0',
                   borderRadius: '50%',
                   animation: 'spin 1s linear infinite'
                 }} />
@@ -161,7 +161,7 @@ export default function Lightbox({
               className="max-w-full max-h-[80vh] object-contain rounded-lg"
               style={{
                 width: 'auto', height: 'auto',
-                boxShadow: '0 20px 60px rgba(255,140,0,0.3), 0 0 100px rgba(255,215,0,0.1)',
+                boxShadow: '0 20px 60px rgba(61,123,224,0.3), 0 0 100px rgba(98,180,255,0.1)',
                 opacity: imageLoaded ? 1 : 0,
                 transition: 'opacity 0.3s ease-out'
               }}
@@ -174,15 +174,15 @@ export default function Lightbox({
           <div className="flex items-center justify-center rounded-lg"
             style={{
               width: '80%', height: '80%',
-              background: 'linear-gradient(135deg, rgba(255,140,0,0.1) 0%, rgba(255,215,0,0.05) 100%)',
-              border: '2px solid rgba(255,140,0,0.3)'
+              background: 'linear-gradient(135deg, rgba(61,123,224,0.1) 0%, rgba(98,180,255,0.05) 100%)',
+              border: '2px solid rgba(61,123,224,0.3)'
             }}
             role="img"
             aria-label="Pas d'image disponible"
           >
             <svg width="200" height="200" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.3 }}>
-              <path d="M7 6V18M11 6V18M15 10V14M19 10V14" stroke="#FF8C00" strokeWidth="2" strokeLinecap="round" />
-              <rect x="3" y="4" width="18" height="16" rx="2" stroke="#FF8C00" strokeWidth="2" />
+              <path d="M7 6V18M11 6V18M15 10V14M19 10V14" stroke="#3d7be0" strokeWidth="2" strokeLinecap="round" />
+              <rect x="3" y="4" width="18" height="16" rx="2" stroke="#3d7be0" strokeWidth="2" />
             </svg>
           </div>
         )}
@@ -193,9 +193,9 @@ export default function Lightbox({
         <button
           onClick={navigateNext}
           className="absolute right-4 top-1/2 z-20 p-3 rounded-full transition-all duration-300"
-          style={{ transform: 'translateY(-50%)', background: 'rgba(255,140,0,0.85)', boxShadow: '0 0 20px rgba(255,140,0,0.4)' }}
-          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.boxShadow = '0 0 30px rgba(255,140,0,0.7)'; }}
-          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)';   e.currentTarget.style.boxShadow = '0 0 20px rgba(255,140,0,0.4)'; }}
+          style={{ transform: 'translateY(-50%)', background: 'rgba(61,123,224,0.85)', boxShadow: '0 0 20px rgba(61,123,224,0.4)' }}
+          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'; e.currentTarget.style.boxShadow = '0 0 30px rgba(61,123,224,0.7)'; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(-50%) scale(1)';   e.currentTarget.style.boxShadow = '0 0 20px rgba(61,123,224,0.4)'; }}
           aria-label={tr('lb.nextAria')}
           title={tr('lb.next')}
         >
@@ -208,9 +208,9 @@ export default function Lightbox({
         ref={closeButtonRef}
         onClick={onClose}
         className="absolute top-6 right-6 z-20 p-3 rounded-full transition-all duration-300"
-        style={{ background: 'linear-gradient(135deg, rgba(255,140,0,0.9), rgba(255,100,0,0.9))', boxShadow: '0 0 25px rgba(255,140,0,0.5)' }}
-        onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1) rotate(90deg)'; e.currentTarget.style.boxShadow = '0 0 35px rgba(255,140,0,0.7)'; }}
-        onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1) rotate(0deg)';    e.currentTarget.style.boxShadow = '0 0 25px rgba(255,140,0,0.5)'; }}
+        style={{ background: 'linear-gradient(135deg, rgba(61,123,224,0.9), rgba(47,102,194,0.9))', boxShadow: '0 0 25px rgba(61,123,224,0.5)' }}
+        onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1) rotate(90deg)'; e.currentTarget.style.boxShadow = '0 0 35px rgba(61,123,224,0.7)'; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1) rotate(0deg)';    e.currentTarget.style.boxShadow = '0 0 25px rgba(61,123,224,0.5)'; }}
         aria-label={tr('lb.closeAria')}
         title={tr('lb.close')}
       >

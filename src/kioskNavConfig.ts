@@ -53,10 +53,10 @@ function listNavigablePills(): Array<{ x: number; y: number; id: string }> {
 export function kioskFocusStyle(active: boolean): Record<string, string | number> {
   if (!active) return {};
   return {
-    outline: '3px solid #FF8C00',
+    outline: '3px solid #3d7be0',
     outlineOffset: '2px',
-    boxShadow: '0 0 22px rgba(255,140,0,0.85), 0 0 40px rgba(255,215,0,0.35)',
-    borderColor: '#FFD700',
+    boxShadow: '0 0 22px rgba(61,123,224,0.85), 0 0 40px rgba(98,180,255,0.35)',
+    borderColor: '#62b4ff',
     borderWidth: '3px',
   };
 }

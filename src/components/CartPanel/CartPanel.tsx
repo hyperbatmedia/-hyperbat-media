@@ -108,7 +108,7 @@ const CartPanel: FC<CartPanelProps> = ({
         className="rounded-xl border-2 flex flex-col"
         style={{
           backgroundColor: '#111827',
-          borderColor: '#FF8C00',
+          borderColor: '#3d7be0',
           width: '540px',
           maxWidth: '95vw',
           maxHeight: '90vh',
@@ -117,7 +117,7 @@ const CartPanel: FC<CartPanelProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b flex-shrink-0"
           style={{ borderColor: '#1f2937', backgroundColor: '#0f172a', borderRadius: '12px 12px 0 0' }}>
-          <h2 className="font-black text-lg" style={{ color: '#FF8C00' }}>
+          <h2 className="font-black text-lg" style={{ color: '#3d7be0' }}>
             {tr('cart.title')}
             <span className="ml-2 text-sm font-normal" style={{ color: '#6b7280' }}>
               {tr('cart.count', { n: cart.length, max: CART_MAX })}
@@ -135,7 +135,7 @@ const CartPanel: FC<CartPanelProps> = ({
           style={{ borderColor: '#1f2937' }}>
           <button onClick={toggleAll}
             className="flex items-center gap-2 text-sm font-semibold transition hover:brightness-125"
-            style={{ color: '#FFA500' }}>
+            style={{ color: '#5590ee' }}>
             {allChecked ? <CheckSquare className="w-4 h-4" /> : <Square className="w-4 h-4" />}
             {allChecked ? tr('cart.uncheckAll') : tr('cart.checkAll')}
           </button>
@@ -151,7 +151,7 @@ const CartPanel: FC<CartPanelProps> = ({
 
         {/* ── Liste scrollable ── */}
         <div className="flex-1 overflow-y-auto"
-          style={{ scrollbarWidth: 'thin', scrollbarColor: '#FF8C00 #1a1a1a' }}>
+          style={{ scrollbarWidth: 'thin', scrollbarColor: '#3d7be0 #14233b' }}>
           {cart.length === 0 ? (
             <div className="text-center py-12" style={{ color: '#4b5563' }}>
               <p>Le panier est vide</p>
@@ -170,13 +170,13 @@ const CartPanel: FC<CartPanelProps> = ({
                     borderColor: '#1f2937',
                     backgroundColor: isDone
                       ? 'rgba(34,197,94,0.05)'
-                      : isChecked ? 'rgba(255,140,0,0.04)' : 'transparent'
+                      : isChecked ? 'rgba(61,123,224,0.04)' : 'transparent'
                   }}>
 
                   {/* Checkbox */}
                   <button onClick={() => toggleOne(key)}
                     className="flex-shrink-0 transition hover:scale-110"
-                    style={{ color: isChecked ? '#FF8C00' : '#374151' }}>
+                    style={{ color: isChecked ? '#3d7be0' : '#374151' }}>
                     {isChecked ? <CheckSquare className="w-5 h-5" /> : <Square className="w-5 h-5" />}
                   </button>
 
@@ -205,7 +205,7 @@ const CartPanel: FC<CartPanelProps> = ({
                     </p>
                     <div className="flex gap-1.5 flex-wrap mb-1">
                       <span className="px-1.5 py-0.5 rounded-full font-semibold border"
-                        style={{ backgroundColor: 'rgba(255,140,0,0.2)', color: '#FFA500', borderColor: 'rgba(255,140,0,0.4)', fontSize: '10px' }}>
+                        style={{ backgroundColor: 'rgba(61,123,224,0.2)', color: '#5590ee', borderColor: 'rgba(61,123,224,0.4)', fontSize: '10px' }}>
                         {getSystemName(theme.system)}
                       </span>
                       <span className="px-1.5 py-0.5 rounded-full font-semibold border"
@@ -227,7 +227,7 @@ const CartPanel: FC<CartPanelProps> = ({
                       style={{ color: '#374151' }}>
                       <X className="w-4 h-4" />
                     </button>
-                    <span className="text-xs font-semibold" style={{ color: '#FFA500' }}>
+                    <span className="text-xs font-semibold" style={{ color: '#5590ee' }}>
                       {theme.size || '—'}
                     </span>
                   </div>
@@ -246,7 +246,7 @@ const CartPanel: FC<CartPanelProps> = ({
             <div className="px-5 pt-3">
               <div className="flex justify-between text-xs mb-1.5" style={{ color: '#6b7280' }}>
                 <span>{tr('cart.progress', { cur: progress.current, total: progress.total })}</span>
-                <span style={{ color: '#FFA500' }}>
+                <span style={{ color: '#5590ee' }}>
                   {Math.round((progress.current / progress.total) * 100)}%
                 </span>
               </div>
@@ -254,7 +254,7 @@ const CartPanel: FC<CartPanelProps> = ({
                 <div
                   className="h-2.5 rounded-full transition-all duration-500"
                   style={{
-                    backgroundColor: '#FF8C00',
+                    backgroundColor: '#3d7be0',
                     width: `${(progress.current / progress.total) * 100}%`
                   }}
                 />
@@ -270,10 +270,10 @@ const CartPanel: FC<CartPanelProps> = ({
                 {/* Message d'info */}
                 <div className="flex items-center gap-2 flex-1 min-w-0">
                   <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center font-black"
-                    style={{ backgroundColor: '#FF8C00', color: '#1a1a1a', fontSize: '11px', minWidth: '20px' }}>
+                    style={{ backgroundColor: '#3d7be0', color: '#ffffff', fontSize: '11px', minWidth: '20px' }}>
                     !
                   </div>
-                  <p className="text-xs leading-relaxed" style={{ color: '#d4a853' }}>
+                  <p className="text-xs leading-relaxed" style={{ color: '#5590ee' }}>
                     {tr('cart.tip1')}{' '}
                     <span style={{ color: '#B22222', fontWeight: 700 }}>{tr('cart.tip2')}</span>
                     {' '}{tr('cart.tip3')}
@@ -285,7 +285,7 @@ const CartPanel: FC<CartPanelProps> = ({
                   onClick={downloadAll}
                   disabled={!checked.size || downloading}
                   className="flex items-center gap-2 px-4 py-2.5 rounded-lg font-bold text-sm border-2 transition hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
-                  style={{ backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white' }}>
+                  style={{ backgroundColor: '#3d7be0', borderColor: '#62b4ff', color: 'white' }}>
                   <Download className="w-4 h-4" />
                   {downloading ? tr('cart.running') : tr('cart.download')}
                 </button>
@@ -297,10 +297,10 @@ const CartPanel: FC<CartPanelProps> = ({
               <p className="text-xs" style={{ color: '#6b7280' }}>
                 {tr(checked.size > 1 ? 'cart.selectedMany' : 'cart.selectedOne', { n: checked.size })}
                 {totalMo > 0 && (
-                  <span style={{ color: '#FFA500' }}> {tr('cart.mo', { n: Math.round(totalMo) })}</span>
+                  <span style={{ color: '#5590ee' }}> {tr('cart.mo', { n: Math.round(totalMo) })}</span>
                 )}
                 {downloading && (
-                  <span style={{ color: '#FFA500' }}> {tr('cart.rate')}</span>
+                  <span style={{ color: '#5590ee' }}> {tr('cart.rate')}</span>
                 )}
               </p>
             )}

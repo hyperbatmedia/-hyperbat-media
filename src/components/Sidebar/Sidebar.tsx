@@ -20,6 +20,12 @@ import fantasyImg from '../../assets/icons/phantasy_console.png';
 import ordinosaureImg from '../../assets/icons/Ordinosaure.png';
 import flipperImg from '../../assets/icons/flipper.png';
 
+
+// Discord et ARRM sont déjà dans l'en-tête / la page Outils du site : on ne les répète pas ici.
+const SHOW_SIDEBAR_SOCIAL = false;
+
+const HIDDEN_SIDEBAR_IDS: string[] = ['tools', 'tutorials', 'main-themes', 'other-themes'];
+
 interface SidebarProps {
   systems: SystemRow[];
   sidebarSearch: string;
@@ -242,9 +248,12 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   // ── Systèmes visibles ─────────────────────────────────────────────────────
   const visibleSystems = useMemo(() => {
-    const topButtons = systems.filter(s => TOP_BUTTON_IDS.includes(s.id as any));
-    if (!isSearchActive) return systems;
-    const filtered = systems.filter(system => {
+    // Outils, tutoriels, thèmes HYPERBAT et thèmes de Bob sont déjà sur le site principal
+    // et inaccessibles depuis l'add-on : on ne les répète pas dans la vitrine.
+    const baseSystems = systems.filter(s => !HIDDEN_SIDEBAR_IDS.includes(s.id as string));
+    const topButtons = baseSystems.filter(s => TOP_BUTTON_IDS.includes(s.id as any));
+    if (!isSearchActive) return baseSystems;
+    const filtered = baseSystems.filter(system => {
       if (TOP_BUTTON_IDS.includes(system.id as any) || system.isHeader || system.isSubHeader) return false;
       const nameLower       = system.name?.toLowerCase()       || '';
       const labelLower      = system.label?.toLowerCase()      || '';
@@ -287,7 +296,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           className={`w-full flex items-center justify-center py-1 px-0 rounded transition ${
             isExpanded ? 'bg-orange-500/20' : isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-200'
           }`}
-          style={{ borderLeft: isExpanded ? '2px solid #FF8C00' : '2px solid transparent' }}
+          style={{ borderLeft: isExpanded ? '2px solid #3d7be0' : '2px solid transparent' }}
         >
           <SectionIcon section={sectionKey} size={34} imgSize={46} isDarkMode={isDarkMode} />
         </button>
@@ -302,12 +311,12 @@ const Sidebar: React.FC<SidebarProps> = ({
         }`}
         aria-expanded={isExpanded}
       >
-        <h4 className="font-bold text-sm tracking-wider flex items-center gap-2 min-w-0" style={{ color: SIDEBAR_COLORS.primaryGold }}>
-          <SectionIcon section={sectionKey} size={32} isDarkMode={isDarkMode} />
+        <h4 className="font-semibold text-xs uppercase tracking-[0.12em] flex items-center gap-2 min-w-0 flex-1" style={{ color: '#9db0d0' }}>
+          <SectionIcon section={sectionKey} size={22} isDarkMode={isDarkMode} />
           <span className="truncate">{label}</span>
           {sectionCount > 0 && (
-            <span className="text-xs opacity-80 font-normal flex-shrink-0" style={{ color: 'rgba(255,215,0,0.85)' }}>
-              ({sectionCount})
+            <span className="text-xs opacity-80 font-normal flex-shrink-0 ml-auto mr-2" style={{ color: '#9db0d0' }}>
+              {sectionCount}
             </span>
           )}
         </h4>
@@ -333,11 +342,11 @@ const Sidebar: React.FC<SidebarProps> = ({
         }`}
         aria-expanded={isExpanded}
       >
-        <h5 className="font-bold text-sm tracking-normal flex items-center gap-1 min-w-0" style={{ color: SIDEBAR_COLORS.primary }}>
+        <h5 className="font-semibold text-sm tracking-normal flex items-center gap-2 min-w-0 flex-1" style={{ color: '#e8eefc' }}>
           <span className="truncate">{dn(system.name)}</span>
           {subsectionCount > 0 && (
-            <span className="text-xs opacity-80 font-normal flex-shrink-0" style={{ color: 'rgba(255,140,0,0.85)' }}>
-              ({subsectionCount})
+            <span className="text-xs opacity-80 font-normal flex-shrink-0 ml-auto mr-2" style={{ color: '#9db0d0' }}>
+              {subsectionCount}
             </span>
           )}
         </h5>
@@ -377,11 +386,11 @@ const Sidebar: React.FC<SidebarProps> = ({
     const defaultHoverText   = isDarkMode ? 'hover:text-white'  : 'hover:text-gray-900';
 
     const buttonStyle = isTopButton
-      ? { background: `linear-gradient(135deg, ${SIDEBAR_COLORS.primaryLight} 0%, #FF9E33 100%)`, borderColor: SIDEBAR_COLORS.primaryGold, borderWidth: '2px', boxShadow: '0 2px 4px rgba(0,0,0,0.3)' }
+      ? { backgroundColor: '#1a2f52', borderColor: '#243a5c', borderWidth: '1px', boxShadow: 'none' }
       : isSelected ? { backgroundColor: colors.bg, borderColor: colors.border } : {};
 
     const textStyle = isTopButton
-      ? { color: '#1F1F1F', fontWeight: '700' }
+      ? { color: '#e8eefc', fontWeight: '600' }
       : isSelected
         ? { color: colors.selectedText || '#FFFFFF' }
         : colors.unselectedText ? { color: colors.unselectedText } : {};
@@ -391,7 +400,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     return (
       <div className="px-2 py-1">
         <div
-          className={`w-full px-4 py-2 rounded-lg transition-all duration-200 font-semibold border-2 flex items-center justify-between
+          data-sel={isSelected ? 'true' : 'false'}
+          className={`${isTopButton ? '' : 'hb-row'} w-full px-4 py-2 rounded-lg transition-all duration-200 font-semibold border-2 flex items-center justify-between
             ${indented ? 'ml-4' : ''}
             ${isSelected || isTopButton ? 'text-white' : `${defaultBg} ${defaultBorder} ${defaultHoverBg} ${defaultHoverBorder} hover:shadow-lg`}
             ${isTopButton ? 'hover:shadow-lg hover:brightness-125' : ''}`}
@@ -447,8 +457,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                 {dn(system.name)}
                 {themeCount > 0 && (
                   <span className="ml-2 text-xs opacity-80 font-normal"
-                    style={{ color: (isSelected || isTopButton) ? (colors.selectedText || 'rgba(255,255,255,0.85)') : 'rgba(255,140,0,0.9)' }}>
-                    ({themeCount})
+                    style={{ color: (isSelected || isTopButton) ? (colors.selectedText || 'rgba(255,255,255,0.85)') : '#9db0d0' }}>
+                    {themeCount}
                   </span>
                 )}
               </span>
@@ -486,8 +496,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                 {tr('nav.allCats')}
                 {themeCount > 0 && (
                   <span className="text-xs opacity-80 font-normal"
-                    style={{ color: selectedCategory === 'all' ? 'rgba(255,255,255,0.85)' : 'rgba(255,140,0,0.9)' }}>
-                    ({themeCount})
+                    style={{ color: selectedCategory === 'all' ? 'rgba(255,255,255,0.85)' : '#9db0d0' }}>
+                    {themeCount}
                   </span>
                 )}
               </span>
@@ -508,8 +518,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                       {trLabel(cat.name, 'cat.')}
                       {categoryCount > 0 && (
                         <span className="text-xs opacity-80 font-normal"
-                          style={{ color: selectedCategory === cat.id ? 'rgba(255,255,255,0.85)' : 'rgba(255,140,0,0.9)' }}>
-                          ({categoryCount})
+                          style={{ color: selectedCategory === cat.id ? 'rgba(255,255,255,0.85)' : '#9db0d0' }}>
+                          {categoryCount}
                         </span>
                       )}
                     </span>
@@ -548,14 +558,15 @@ const Sidebar: React.FC<SidebarProps> = ({
       </button>
 
       {/* Container sidebar */}
-      <div className={`rounded-lg border-4 sticky top-4 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}
-        style={{ borderColor: SIDEBAR_COLORS.primary, height: 'calc(100vh - 2rem)', display: 'flex', flexDirection: 'column' }}>
+      <div className={`rounded-xl border sticky top-4 ${isDarkMode ? 'bg-gray-900 hb-glass' : 'bg-white'}`}
+        style={{ borderColor: '#243a5c', height: 'calc(100vh - 2rem)', display: 'flex', flexDirection: 'column' }}>
 
         {/* Header titre + Discord/ARRM — mode étendu */}
         {!collapsed && (
           <div className="flex items-center justify-between p-4 pb-2 flex-shrink-0">
-            <h3 className="text-xl font-black" style={{ color: SIDEBAR_COLORS.primary }}>{tr('nav.systems')}</h3>
-            <div className="flex gap-2">
+            <h3 className="text-xs font-semibold uppercase tracking-[0.14em]" style={{ color: '#9db0d0' }}>{tr('nav.systems')}</h3>
+            {SHOW_SIDEBAR_SOCIAL && (
+<div className="flex gap-2">
               {isLoadingLinks ? (
                 <div className="text-gray-400 text-xs">Chargement...</div>
               ) : headerLinks.length > 0 ? (
@@ -592,11 +603,12 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </>
               )}
             </div>
+            )}
           </div>
         )}
 
         {/* Discord + ARRM — mode réduit */}
-        {collapsed && (
+        {collapsed && SHOW_SIDEBAR_SOCIAL && (
           <div className="flex flex-col items-center gap-2 pt-3 pb-2 flex-shrink-0">
             {isLoadingLinks ? null : headerLinks.length > 0 ? (
               headerLinks.map(link => {
@@ -654,8 +666,8 @@ const Sidebar: React.FC<SidebarProps> = ({
             </div>
           ) : (
             <>
-              {visibleSystems.map((system, index) => {
-                const showSearchAfter = !collapsed && index === 4 && system.id === 'other-themes';
+              {visibleSystems.map((system) => {
+                const showSearchAfter = !collapsed && system.id === 'all';
                 const isTopBtn  = TOP_BUTTON_IDS.includes(system.id as any);
                 const hasLink   = isTopBtn && system.id !== 'all' && linksBySystemId[system.id];
                 const uniqueKey = hasLink ? `${system.id}-link-${linksBySystemId[system.id]?.id}` : system.id;
@@ -679,7 +691,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                             placeholder={searchPlaceholder}
                             value={sidebarSearch}
                             onChange={e => setSidebarSearch(e.target.value)}
-                            className={`w-full rounded-lg pl-10 pr-10 py-2 text-sm border-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-500
+                            className={`w-full rounded-lg pl-10 pr-10 py-2 text-sm border focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-500
                               ${isDarkMode ? 'bg-gray-800 text-white border-gray-700' : 'bg-white text-gray-900 border-gray-300'}`}
                             aria-label={tr('nav.searchAria')}
                             autoComplete="off"

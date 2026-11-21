@@ -18,7 +18,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ErrorBoundary>
       <LanguageProvider>
-        <LanguageSwitch />
+        {isSubmissionPage && <LanguageSwitch />}
         {isSubmissionPage ? <ThemeSubmissionPage /> : <HyperBatMediaSite />}
       </LanguageProvider>
     </ErrorBoundary>

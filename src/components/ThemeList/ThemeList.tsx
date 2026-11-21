@@ -18,6 +18,10 @@ import {
 
 import { CART_MAX } from '../../constants';
 
+
+// Avatars des créateurs présents sur le site principal (public/avatars/<nom>.jpg)
+const AVATAR_KEYS = new Set(['akeshi', 'alain', 'bob', 'christophe', 'dav', 'huhe8554', 'nexusone13', 'phenix', 'roni', 'sebwillow']);
+
 interface ThemeListProps {
   viewMode: 'grid' | 'list';
   themes: ThemeItem[];
@@ -687,7 +691,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .theme-card { animation: fadeIn 0.3s ease-out; }
         .skeleton {
-          background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+          background: linear-gradient(90deg, #14233b 25%, #14233b 50%, #14233b 75%);
           background-size: 200% 100%;
           animation: shimmer 1.5s infinite;
         }
@@ -711,7 +715,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
         <>
       {cartFullMsg && (
         <div className="cart-full-msg fixed top-6 left-1/2 z-50 px-5 py-3 rounded-lg border-2 font-bold text-sm shadow-lg"
-          style={{ transform: 'translateX(-50%)', backgroundColor: '#1a1a1a', borderColor: '#FF8C00', color: '#FF8C00' }}>
+          style={{ transform: 'translateX(-50%)', backgroundColor: '#14233b', borderColor: '#3d7be0', color: '#3d7be0' }}>
           {tr('tl.cartFull', { max: CART_MAX })}
         </div>
       )}
@@ -732,30 +736,30 @@ const ThemeList: React.FC<ThemeListProps> = ({
             <div
               key={`${key}-${index}`}
               ref={(el) => { cardRefs.current[index] = el; }}
-              className="theme-card rounded-lg border-2 overflow-hidden group relative"
+              className="theme-card rounded-xl border overflow-hidden group relative"
               style={{
-                backgroundColor: '#111827',
-                borderColor: isGamepadFocused ? '#FF8C00' : inCart ? '#FF8C00' : '#444',
-                boxShadow: isGamepadFocused ? '0 25px 50px rgba(255,140,0,0.8), 0 0 30px rgba(255,165,0,0.6)' : undefined,
-                transform: isGamepadFocused ? 'translateY(-8px) scale(1.05)' : undefined,
+                backgroundColor: '#14233b',
+                borderColor: isGamepadFocused ? '#3d7be0' : inCart ? '#3d7be0' : '#243a5c',
+                boxShadow: isGamepadFocused ? '0 0 0 2px #3d7be0, 0 10px 24px rgba(0,0,0,0.45)' : undefined,
+                transform: isGamepadFocused ? 'translateY(-4px)' : undefined,
                 transition: 'all 0.3s ease'
               }}
               onMouseEnter={(e) => {
                 const card = e.currentTarget;
-                card.style.borderColor = '#FF8C00';
-                card.style.boxShadow = '0 25px 50px rgba(255,140,0,0.8), 0 0 30px rgba(255,165,0,0.6)';
-                card.style.transform = 'translateY(-8px) scale(1.05)';
+                card.style.borderColor = '#3d7be0';
+                card.style.boxShadow = '0 0 0 2px #3d7be0, 0 10px 24px rgba(0,0,0,0.45)';
+                card.style.transform = 'translateY(-4px)';
               }}
               onMouseLeave={(e) => {
                 const card = e.currentTarget;
-                card.style.borderColor = isGamepadFocused ? '#FF8C00' : inCart ? '#FF8C00' : '#444';
-                card.style.boxShadow = isGamepadFocused ? '0 25px 50px rgba(255,140,0,0.8), 0 0 30px rgba(255,165,0,0.6)' : 'none';
-                card.style.transform = isGamepadFocused ? 'translateY(-8px) scale(1.05)' : 'translateY(0) scale(1)';
+                card.style.borderColor = isGamepadFocused ? '#3d7be0' : inCart ? '#3d7be0' : '#243a5c';
+                card.style.boxShadow = isGamepadFocused ? '0 0 0 2px #3d7be0, 0 10px 24px rgba(0,0,0,0.45)' : 'none';
+                card.style.transform = isGamepadFocused ? 'translateY(-4px)' : 'translateY(0) scale(1)';
               }}
             >
               <div
                 className="bg-gradient-to-br from-gray-800 to-black flex items-center justify-center border-b-2 border-gray-700 cursor-pointer relative overflow-hidden"
-                style={{ height: '180px' }}
+                style={{ aspectRatio: '16 / 9' }}
                 onClick={() => {
                   if (theme.mature && !revealedMature.has(key)) {
                     setRevealedMature(prev => new Set(prev).add(key));
@@ -815,10 +819,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                 </h3>
 
                 <div className="flex gap-2 text-xs mb-1 flex-wrap items-center">
-                  <span className="px-2 py-1 rounded-full text-xs font-semibold border"
-                    style={{ backgroundColor: 'rgba(255,140,0,0.3)', color: '#FFA500', borderColor: 'rgba(255,140,0,0.5)' }}>
-                    {getSystemName(theme.system)}
-                  </span>
+                  <span className="text-xs truncate hb-sys" style={{ color: '#7db4ff' }}>{getSystemName(theme.system)}</span>
                   <span className="px-2 py-1 rounded-full text-xs font-semibold border"
                     style={{ backgroundColor: 'rgba(59,130,246,0.3)', color: '#60A5FA', borderColor: 'rgba(59,130,246,0.5)' }}>
                     {getCategoryName(theme.category)}
@@ -832,27 +833,15 @@ const ThemeList: React.FC<ThemeListProps> = ({
                   )}
                 </div>
 
-                <div className="flex gap-2 text-xs mb-2 flex-wrap items-center">
-                  {theme.date && (
-                    <>
-                      <span className="px-2 py-0.5 rounded-full text-xs font-semibold border"
-                        style={{ backgroundColor: 'rgba(255,140,0,0.7)', color: '#FFF', borderColor: 'rgba(255,140,0,0.8)' }}>
-                        {formatDate(theme.date)}
-                      </span>
-                      <span className="text-gray-600">•</span>
-                    </>
-                  )}
-                  <span className="text-gray-400 text-xs">{theme.size}</span>
-                </div>
-
-                <div className="flex justify-center mb-2">
-                  <p className="text-sm font-semibold px-4 py-1.5 rounded inline-block"
-                    style={{
-                      background: 'linear-gradient(135deg, rgba(251,191,36,0.15) 0%, rgba(245,158,11,0.15) 100%)',
-                      color: '#FCD34D', borderLeft: '2px solid #F59E0B', borderRight: '2px solid #F59E0B', fontSize: '0.8rem'
-                    }}>
-                    {tr('tl.by', { name: theme.creator })}
-                  </p>
+                <div className="flex items-center gap-2 mb-2" title={tr('tl.by', { name: theme.creator })}>
+                  {(() => {
+                    const k = (theme.creator || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+                    return AVATAR_KEYS.has(k)
+                      ? <img className="hb-av" src={`${import.meta.env.BASE_URL}avatars/${k}.jpg`} alt="" loading="lazy" />
+                      : <span className="hb-av hb-av-i" aria-hidden="true">{(theme.creator || '?').charAt(0).toUpperCase()}</span>;
+                  })()}
+                  <span className="text-sm font-semibold truncate min-w-0" style={{ color: '#62b4ff' }}>{theme.creator}</span>
+                  <span className="ml-auto text-xs whitespace-nowrap shrink-0" style={{ color: '#9db0d0' }} title={formatDate(theme.date) ?? undefined}>{theme.date && theme.date.includes('-') ? theme.date.split('-').slice(1).reverse().join('/') : (theme.date ?? '')}{theme.size ? ` · ${theme.size}` : ''}</span>
                 </div>
 
                 {theme.onScreenScraper && <div className="mb-2"><ScreenScraperBadge /></div>}
@@ -875,7 +864,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                         guardedPageAction(() => setAgentInstallTheme(theme));
                       } : undefined}
                       className="flex-1 py-2 rounded flex items-center justify-center gap-2 font-bold text-xs border transition hover:brightness-110 active:scale-95"
-                      style={{ backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white' }}>
+                      style={{ backgroundColor: '#3d7be0', borderColor: '#62b4ff', color: 'white' }}>
                       {tr('tl.install', { platform: agentInfo?.platform === 'batocera' ? 'Batocera' : 'RetroBat' })}
                     </a>
                   ) : (
@@ -884,7 +873,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                       ref={(el) => { actionRefs.current[index] = el; }}
                       href={theme.downloadUrl} target="_blank" rel="noopener noreferrer"
                       className="flex-1 py-2 rounded flex items-center justify-center gap-2 font-bold text-xs border transition hover:brightness-110 active:scale-95"
-                      style={{ backgroundColor: '#CC7000', borderColor: '#E89B3C', color: 'white' }}>
+                      style={{ backgroundColor: '#3d7be0', borderColor: '#5590ee', color: 'white' }}>
                       <Download className="w-4 h-4" />
                       {tr('tl.download')}
                     </a>
@@ -895,14 +884,14 @@ const ThemeList: React.FC<ThemeListProps> = ({
                     title={inCart ? tr('tl.cartRemove') : cart.length >= CART_MAX ? tr('tl.cartFullTitle') : tr('tl.cartAdd')}
                     className="px-3 py-2 rounded border-2 transition hover:brightness-110 active:scale-95 flex items-center justify-center gap-1 text-xs font-bold"
                     style={{
-                      backgroundColor: inCart ? 'rgba(34,197,94,0.15)' : cart.length >= CART_MAX && !inCart ? 'rgba(255,140,0,0.05)' : '#1a1a1a',
+                      backgroundColor: inCart ? 'rgba(34,197,94,0.15)' : cart.length >= CART_MAX && !inCart ? 'rgba(61,123,224,0.05)' : '#14233b',
                       borderColor: inCart ? '#22c55e' : cart.length >= CART_MAX && !inCart ? '#555' : '#555',
                       color: inCart ? '#22c55e' : '#888',
                       cursor: cart.length >= CART_MAX && !inCart ? 'not-allowed' : 'pointer'
                     }}>
                     {inCart
                       ? <><span>✓</span><span>{tr('tl.added')}</span></>
-                      : <><Plus className="w-4 h-4" style={{ color: '#FFD700' }} /><span>{tr('tl.add')}</span></>
+                      : <><Plus className="w-4 h-4" style={{ color: '#62b4ff' }} /><span>{tr('tl.add')}</span></>
                     }
                   </button>
                 </div>
@@ -917,7 +906,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
           <button ref={prevPageBtnRef} onClick={() => guardedPageAction(handlePrevPage)} disabled={currentPage === 1}
             className="px-4 py-2 rounded-lg font-bold border-2 transition disabled:opacity-50 disabled:cursor-not-allowed"
             style={{
-              backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white',
+              backgroundColor: '#3d7be0', borderColor: '#62b4ff', color: 'white',
               ...(paginationFocus === 'prev' ? { outline: '3px solid #fff', outlineOffset: '2px' } : {}),
             }}>
             {tr('tl.prev')}
@@ -927,7 +916,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
               <>
                 <button onClick={() => setCurrentPage(1)}
                   className="px-3 py-2 rounded-lg font-bold border-2 transition hover:brightness-110"
-                  style={{ backgroundColor: '#1a1a1a', borderColor: '#444', color: '#FFA500' }}>1</button>
+                  style={{ backgroundColor: '#14233b', borderColor: '#243a5c', color: '#5590ee' }}>1</button>
                 {currentPage > 4 && <span className="px-2 py-2 text-gray-500">...</span>}
               </>
             )}
@@ -938,8 +927,8 @@ const ThemeList: React.FC<ThemeListProps> = ({
                 <button key={page} onClick={() => setCurrentPage(page)}
                   className="px-3 py-2 rounded-lg font-bold border-2 transition hover:brightness-110"
                   style={currentPage === page
-                    ? { backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white' }
-                    : { backgroundColor: '#1a1a1a', borderColor: '#444', color: '#FFA500' }}>
+                    ? { backgroundColor: '#3d7be0', borderColor: '#62b4ff', color: 'white' }
+                    : { backgroundColor: '#14233b', borderColor: '#243a5c', color: '#5590ee' }}>
                   {page}
                 </button>
               );
@@ -949,7 +938,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                 {currentPage < totalPages - 3 && <span className="px-2 py-2 text-gray-500">...</span>}
                 <button onClick={() => setCurrentPage(totalPages)}
                   className="px-3 py-2 rounded-lg font-bold border-2 transition hover:brightness-110"
-                  style={{ backgroundColor: '#1a1a1a', borderColor: '#444', color: '#FFA500' }}>
+                  style={{ backgroundColor: '#14233b', borderColor: '#243a5c', color: '#5590ee' }}>
                   {totalPages}
                 </button>
               </>
@@ -958,7 +947,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
           <button ref={nextPageBtnRef} onClick={() => guardedPageAction(handleNextPage)} disabled={currentPage === totalPages}
             className="px-4 py-2 rounded-lg font-bold border-2 transition disabled:opacity-50 disabled:cursor-not-allowed"
             style={{
-              backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white',
+              backgroundColor: '#3d7be0', borderColor: '#62b4ff', color: 'white',
               ...(paginationFocus === 'next' ? { outline: '3px solid #fff', outlineOffset: '2px' } : {}),
             }}>
             {tr('tl.next')}
@@ -1020,15 +1009,15 @@ const ThemeList: React.FC<ThemeListProps> = ({
           return (
             <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:'2px', opacity: active ? 1 : 0.35 }}>
               <svg width="34" height="34" viewBox="-17 -17 34 34">
-                <circle cx="0" cy="0" r="15" fill="#1a1a1a" stroke={active ? '#555' : '#333'} strokeWidth="1.5"/>
-                <circle cx="0"  cy="-9" r="2.8" fill={dir==='nord' ? c : '#444'}/>
-                <circle cx="0"  cy="9"  r="2.8" fill={dir==='sud'  ? c : '#444'}/>
+                <circle cx="0" cy="0" r="15" fill="#14233b" stroke={active ? '#555' : '#333'} strokeWidth="1.5"/>
+                <circle cx="0"  cy="-9" r="2.8" fill={dir==='nord' ? c : '#243a5c'}/>
+                <circle cx="0"  cy="9"  r="2.8" fill={dir==='sud'  ? c : '#243a5c'}/>
                 <circle cx="-9" cy="0"  r="2.8" fill="#444"/>
-                <circle cx="9"  cy="0"  r="2.8" fill={dir==='est'  ? c : '#444'}/>
+                <circle cx="9"  cy="0"  r="2.8" fill={dir==='est'  ? c : '#243a5c'}/>
                 <circle cx="0"  cy="0"  r="2"   fill="#333"/>
                 <circle cx={dx[dir]} cy={dy[dir]} r="4" fill={c} opacity={active ? '0.95' : '0.3'}/>
               </svg>
-              <span style={{ fontSize:'9px', fontWeight:700, color: active ? '#fff' : '#444', lineHeight:1 }}>{label}</span>
+              <span style={{ fontSize:'9px', fontWeight:700, color: active ? '#fff' : '#243a5c', lineHeight:1 }}>{label}</span>
               <span style={{ fontSize:'9px', color: active ? '#aaa' : '#333', lineHeight:1 }}>{action}</span>
             </div>
           );
@@ -1038,7 +1027,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
         const DPad = () => (
           <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:'2px' }}>
             <svg width="34" height="34" viewBox="-17 -17 34 34">
-              <circle cx="0" cy="0" r="15" fill="#1a1a1a" stroke="#555" strokeWidth="1.5"/>
+              <circle cx="0" cy="0" r="15" fill="#14233b" stroke="#555" strokeWidth="1.5"/>
               <rect x="-2.5" y="-11" width="5" height="22" rx="1.5" fill="#666"/>
               <rect x="-11" y="-2.5" width="22" height="5" rx="1.5" fill="#666"/>
               <circle cx="0" cy="0" r="4" fill="#3a3a3a" stroke="#555" strokeWidth="1"/>
@@ -1054,21 +1043,21 @@ const ThemeList: React.FC<ThemeListProps> = ({
             <div style={{
               display:'inline-flex', alignItems:'center', justifyContent:'center',
               minWidth:'34px', height:'22px', padding:'0 6px', borderRadius:'5px',
-              backgroundColor: active ? '#2a2a2a' : '#111',
-              border:`1.5px solid ${active ? '#666' : '#2a2a2a'}`,
+              backgroundColor: active ? '#14233b' : '#111',
+              border:`1.5px solid ${active ? '#666' : '#14233b'}`,
               fontSize:'9px', fontWeight:700, color: active ? '#fff' : '#333',
             }}>{label}</div>
             <span style={{ fontSize:'9px', color: active ? '#aaa' : '#333', lineHeight:1 }}>{action}</span>
           </div>
         );
 
-        const Sep = () => <div style={{ width:'1px', height:'56px', backgroundColor:'#2a2a2a', margin:'0 4px' }}/>;
+        const Sep = () => <div style={{ width:'1px', height:'56px', backgroundColor:'#14233b', margin:'0 4px' }}/>;
 
         return (
           <div style={{
             position:'fixed', bottom:0, left:0, right:0,
             backgroundColor:'rgba(10,10,10,0.97)',
-            borderTop:'2px solid #FF8C00',
+            borderTop:'2px solid #3d7be0',
             padding:'6px 16px',
             zIndex:9999,
             display:'flex', flexDirection:'column', alignItems:'center',
@@ -1085,7 +1074,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
               <div style={{
                 display:'inline-flex', alignItems:'center', justifyContent:'center',
                 minWidth:'34px', height:'22px', padding:'0 6px', borderRadius:'5px',
-                backgroundColor:'#2a2a2a', border:'1.5px solid #666',
+                backgroundColor:'#14233b', border:'1.5px solid #666',
                 fontSize:'9px', fontWeight:700, color:'#fff',
               }}>R1</div>
               <span style={{ fontSize:'9px', color:'#aaa', lineHeight:1 }}>{tr('tl.close')}</span>
@@ -1117,7 +1106,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
             {totalPages > 1 && (
               <>
                 <Sep/>
-                <span style={{ fontSize:'12px', fontWeight:700, color:'#FFD700', whiteSpace:'nowrap' }}>
+                <span style={{ fontSize:'12px', fontWeight:700, color:'#62b4ff', whiteSpace:'nowrap' }}>
                   {tr('tl.pageN', { cur: currentPage, total: totalPages })}
                 </span>
               </>

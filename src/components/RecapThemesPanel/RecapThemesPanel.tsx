@@ -174,11 +174,11 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
   const SortIcon = ({ col }: { col: typeof sortBy }) => {
     if (sortBy !== col) return <ChevronDown className="w-3 h-3 opacity-30" />;
     return sortAsc
-      ? <ChevronUp className="w-3 h-3" style={{ color: '#FF8C00' }} />
-      : <ChevronDown className="w-3 h-3" style={{ color: '#FF8C00' }} />;
+      ? <ChevronUp className="w-3 h-3" style={{ color: '#3d7be0' }} />
+      : <ChevronDown className="w-3 h-3" style={{ color: '#3d7be0' }} />;
   };
 
-  const bg = isDarkMode ? '#0f0519' : '#f3f4f6';
+  const bg = isDarkMode ? '#0b1424' : '#f3f4f6';
   const cardBg = isDarkMode ? '#111827' : '#ffffff';
   const text = isDarkMode ? '#ffffff' : '#1f2937';
   const textSecondary = isDarkMode ? '#9ca3af' : '#6b7280';
@@ -188,12 +188,12 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
     <div className="fixed inset-0 z-40 flex flex-col" style={{ backgroundColor: bg, color: text }}>
 
       {/* ── Header ── */}
-      <div className="border-b-4 flex-shrink-0" style={{ borderColor: '#FF8C00', backgroundColor: isDarkMode ? '#0a0314' : '#f9fafb' }}>
+      <div className="border-b-4 flex-shrink-0" style={{ borderColor: '#3d7be0', backgroundColor: isDarkMode ? '#0a0314' : '#f9fafb' }}>
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div>
               <h1 className="text-2xl font-black tracking-wide" style={{
-                background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)',
+                background: 'linear-gradient(180deg, #3d7be0 0%, #5590ee 30%, #62b4ff 50%, #5590ee 70%, #3d7be0 100%)',
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
                 filter: 'drop-shadow(1px 1px 0px #000)'
               }}>
@@ -216,7 +216,7 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
             <button
               onClick={() => exportCSV(filtered, tr('rc.csvHead'), tr('rc.yes'), tr('rc.no'))}
               className="flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm border-2 transition hover:brightness-110"
-              style={{ backgroundColor: '#FF8C00', borderColor: '#FFD700', color: 'white' }}>
+              style={{ backgroundColor: '#3d7be0', borderColor: '#62b4ff', color: 'white' }}>
               <Download className="w-4 h-4" />
               {tr('rc.csv', { n: filtered.length })}
             </button>
@@ -235,7 +235,7 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
         <div className="container mx-auto px-4 py-3">
           <div className="flex flex-wrap gap-3">
             {[
-              { label: tr('rc.statTotal'), value: stats.total, color: '#FFA500' },
+              { label: tr('rc.statTotal'), value: stats.total, color: '#5590ee' },
               { label: tr('rc.statSystem'), value: stats.withSystem, color: '#22c55e' },
               { label: tr('rc.statDefault'), value: stats.withDefault, color: '#60A5FA' },
               { label: tr('rc.statGame'), value: stats.withGame, color: '#f472b6' },
@@ -259,7 +259,7 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
 
           {/* Recherche */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#FFA500' }} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#5590ee' }} />
             <input
               type="text"
               placeholder={tr('rc.search')}
@@ -283,8 +283,8 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
                 onClick={() => setFilterPlatform(id as typeof filterPlatform)}
                 className="px-3 py-1.5 rounded-lg text-xs font-bold border transition hover:brightness-110"
                 style={{
-                  backgroundColor: filterPlatform === id ? '#FF8C00' : (isDarkMode ? '#1f2937' : '#f9fafb'),
-                  borderColor: filterPlatform === id ? '#FFD700' : borderColor,
+                  backgroundColor: filterPlatform === id ? '#3d7be0' : (isDarkMode ? '#1f2937' : '#f9fafb'),
+                  borderColor: filterPlatform === id ? '#62b4ff' : borderColor,
                   color: filterPlatform === id ? 'white' : textSecondary,
                 }}>
                 {label}
@@ -327,7 +327,7 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
               <thead>
                 <tr style={{ backgroundColor: isDarkMode ? '#1a1a2e' : '#f9fafb' }}>
                   <th className="px-4 py-3 text-left font-bold border-b cursor-pointer select-none"
-                    style={{ borderColor, color: '#FFA500' }}
+                    style={{ borderColor, color: '#5590ee' }}
                     onClick={() => handleSort('name')}>
                     <div className="flex items-center gap-1">
                       {tr('rc.colSystem')} <SortIcon col="name" />
@@ -358,7 +358,7 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
                     </div>
                   </th>
                   <th className="px-4 py-3 text-center font-bold border-b cursor-pointer select-none"
-                    style={{ borderColor, color: '#FFD700' }}
+                    style={{ borderColor, color: '#62b4ff' }}
                     onClick={() => handleSort('total')}>
                     <div className="flex items-center justify-center gap-1">
                       {tr('rc.colTotal')} <SortIcon col="total" />
@@ -434,7 +434,7 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
                     <td className="px-4 py-2.5 border-b text-center font-black text-base" style={{ borderColor }}>
                       {row.total === 0
                         ? <span style={{ color: '#ef4444' }}>0</span>
-                        : <span style={{ color: '#FFD700' }}>{row.total}</span>
+                        : <span style={{ color: '#62b4ff' }}>{row.total}</span>
                       }
                     </td>
                   </tr>
@@ -463,7 +463,7 @@ export default function RecapThemesPanel({ themes, onClose, isDarkMode }: RecapT
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center justify-between pb-3 border-b" style={{ borderColor }}>
-              <h3 className="text-lg font-black" style={{ color: '#FF8C00' }}>{tr('rc.gTitle')}</h3>
+              <h3 className="text-lg font-black" style={{ color: '#3d7be0' }}>{tr('rc.gTitle')}</h3>
               <button onClick={() => setShowGuide(false)} style={{ color: textSecondary }}>
                 <X className="w-5 h-5" />
               </button>

@@ -59,7 +59,7 @@ const YoutubeThumbnail: React.FC<{ youtubeId: string; name: string }> = ({ youtu
   const thumbUrl = `https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`;
 
   return (
-    <div className="relative w-full aspect-video bg-[#1a1a1a] overflow-hidden">
+    <div className="relative w-full aspect-video bg-[#14233b] overflow-hidden">
       {!imgError ? (
         <img
           src={thumbUrl}
@@ -69,7 +69,7 @@ const YoutubeThumbnail: React.FC<{ youtubeId: string; name: string }> = ({ youtu
         />
       ) : (
         <div className="w-full h-full flex items-center justify-center bg-[#1a1a2e]">
-          <Play className="text-[#FF8C00] w-8 h-8" />
+          <Play className="text-[#3d7be0] w-8 h-8" />
         </div>
       )}
     </div>
@@ -92,8 +92,8 @@ const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlight
   return (
     <div
       className={`rounded-xl overflow-hidden flex flex-col transition-colors duration-200 border-2 ${
-        isDarkMode ? 'bg-[#1a1a1a]' : 'bg-[#f9f9f9]'
-      } ${isHighlighted ? 'border-[#FF8C00] shadow-[0_0_0_3px_rgba(255,140,0,0.25)]' : isDarkMode ? 'border-[#2a2a2a]' : 'border-[#e5e5e5]'}`}
+        isDarkMode ? 'bg-[#14233b]' : 'bg-[#f9f9f9]'
+      } ${isHighlighted ? 'border-[#3d7be0] shadow-[0_0_0_3px_rgba(61,123,224,0.25)]' : isDarkMode ? 'border-[#14233b]' : 'border-[#e5e5e5]'}`}
     >
       {/* Image ou visuel titre */}
       <div className="relative w-full aspect-video bg-[#0f0f1a] overflow-hidden shrink-0">
@@ -160,14 +160,14 @@ const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlight
         ) : (
           /* Visuel titre générique (HyperBat Theme Creator etc.) */
           <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-[#020d1a] via-[#041e3a] to-[#020d1a]">
-            <div className="text-[11px] tracking-widest text-[#FF8C00] mb-2 uppercase opacity-70">
+            <div className="text-[11px] tracking-widest text-[#3d7be0] mb-2 uppercase opacity-70">
               HyperBat
             </div>
-            <div className="text-[15px] font-bold text-[#FF8C00] text-center leading-tight tracking-wide"
-              style={{ textShadow: '0 0 20px rgba(255,140,0,0.5)' }}>
+            <div className="text-[15px] font-bold text-[#3d7be0] text-center leading-tight tracking-wide"
+              style={{ textShadow: '0 0 20px rgba(61,123,224,0.5)' }}>
               {item.name}
             </div>
-            <div className="mt-3 w-10 h-0.5 bg-gradient-to-r from-transparent via-[#FF8C00] to-transparent" />
+            <div className="mt-3 w-10 h-0.5 bg-gradient-to-r from-transparent via-[#3d7be0] to-transparent" />
           </div>
         )}
       </div>
@@ -175,10 +175,10 @@ const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlight
       {/* Contenu */}
       <div className="p-3 flex flex-col gap-2 flex-1">
         <div>
-          <p className={`m-0 text-sm font-semibold leading-tight ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'}`}>
+          <p className={`m-0 text-sm font-semibold leading-tight ${isDarkMode ? 'text-white' : 'text-[#14233b]'}`}>
             {item.name}
           </p>
-          <p className="mt-1 mb-0 text-xs text-[#FF8C00]">
+          <p className="mt-1 mb-0 text-xs text-[#3d7be0]">
             {tr('by.creditLower', { name: item.creator })}
           </p>
         </div>
@@ -189,7 +189,7 @@ const DownloadCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlight
         )}
         <button
           onClick={handleDownload}
-          className="mt-auto w-full py-2 px-3 bg-gradient-to-br from-[#FF8C00] to-[#FFA500] text-[#1a1a1a] border-none rounded-lg text-[13px] font-bold cursor-pointer flex items-center justify-center gap-1.5 transition-[filter] duration-200 hover:brightness-110"
+          className="mt-auto w-full py-2 px-3 bg-gradient-to-br from-[#3d7be0] to-[#5590ee] text-[#14233b] border-none rounded-lg text-[13px] font-bold cursor-pointer flex items-center justify-center gap-1.5 transition-[filter] duration-200 hover:brightness-110"
         >
           <Download className="w-3.5 h-3.5" />
           {tr('cm.download')}
@@ -210,19 +210,19 @@ const YoutubeCard: React.FC<{ item: ModalItem; isDarkMode: boolean; isHighlighte
 
   return (
     <div
-      className={`rounded-xl overflow-hidden flex flex-col cursor-pointer transition-all duration-200 border-2 hover:-translate-y-0.5 hover:border-[#FF8C00] ${
-        isDarkMode ? 'bg-[#1a1a1a]' : 'bg-[#f9f9f9]'
-      } ${isHighlighted ? 'border-[#FF8C00] shadow-[0_0_0_3px_rgba(255,140,0,0.25)]' : isDarkMode ? 'border-[#2a2a2a]' : 'border-[#e5e5e5]'}`}
+      className={`rounded-xl overflow-hidden flex flex-col cursor-pointer transition-all duration-200 border-2 hover:-translate-y-0.5 hover:border-[#3d7be0] ${
+        isDarkMode ? 'bg-[#14233b]' : 'bg-[#f9f9f9]'
+      } ${isHighlighted ? 'border-[#3d7be0] shadow-[0_0_0_3px_rgba(61,123,224,0.25)]' : isDarkMode ? 'border-[#14233b]' : 'border-[#e5e5e5]'}`}
       onClick={handleWatch}
     >
       {item.youtubeId && <YoutubeThumbnail youtubeId={item.youtubeId} name={item.name} />}
 
       <div className="p-3 flex flex-col gap-2 flex-1">
         <div>
-          <p className={`m-0 text-[13px] font-semibold leading-snug ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'}`}>
+          <p className={`m-0 text-[13px] font-semibold leading-snug ${isDarkMode ? 'text-white' : 'text-[#14233b]'}`}>
             {item.name}
           </p>
-          <p className="mt-1 mb-0 text-xs text-[#FF8C00]">
+          <p className="mt-1 mb-0 text-xs text-[#3d7be0]">
             {tr('by.creditLower', { name: item.creator })}
           </p>
         </div>
@@ -322,28 +322,28 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
     >
       <div
         ref={modalRef}
-        className={`rounded-2xl border-2 border-[#FF8C00] w-full max-w-[1100px] max-h-[97vh] flex flex-col overflow-hidden shadow-[0_0_60px_rgba(255,140,0,0.2)] ${
+        className={`rounded-2xl border-2 border-[#3d7be0] w-full max-w-[1100px] max-h-[97vh] flex flex-col overflow-hidden shadow-[0_0_60px_rgba(61,123,224,0.2)] ${
           isDarkMode ? 'bg-[#111111]' : 'bg-white'
         }`}
       >
 
         {/* ── Header ── */}
-        <div className={`flex items-center justify-between px-5 py-2.5 border-b-2 border-[#FF8C00] shrink-0 ${
+        <div className={`flex items-center justify-between px-5 py-2.5 border-b-2 border-[#3d7be0] shrink-0 ${
           isDarkMode ? 'bg-[#0f0f0f]' : 'bg-[#fafafa]'
         }`}>
           <div className="flex items-center gap-3">
-            <div className="w-1 h-7 bg-[#FF8C00] rounded-sm" />
-            <span id="content-modal-title" className="text-lg font-extrabold text-[#FF8C00] tracking-widest">
+            <div className="w-1 h-7 bg-[#3d7be0] rounded-sm" />
+            <span id="content-modal-title" className="text-lg font-extrabold text-[#3d7be0] tracking-widest">
               {config.title}
             </span>
-            <span className="text-xs py-[3px] px-2.5 bg-[#FF8C00]/15 text-[#FF8C00] rounded-full border border-[#FF8C00]/30">
+            <span className="text-xs py-[3px] px-2.5 bg-[#3d7be0]/15 text-[#3d7be0] rounded-full border border-[#3d7be0]/30">
               {config.items.length} {config.items.length > 1 ? tr('cm.entryMany') : tr('cm.entryOne')}
             </span>
           </div>
           <button
             ref={closeButtonRef}
             onClick={onClose}
-            className={`w-[34px] h-[34px] rounded-full border border-[#FF8C00]/30 bg-transparent cursor-pointer flex items-center justify-center transition-colors duration-200 hover:bg-[#FF8C00]/15 hover:text-[#FF8C00] ${
+            className={`w-[34px] h-[34px] rounded-full border border-[#3d7be0]/30 bg-transparent cursor-pointer flex items-center justify-center transition-colors duration-200 hover:bg-[#3d7be0]/15 hover:text-[#3d7be0] ${
               isDarkMode ? 'text-[#aaa]' : 'text-[#666]'
             }`}
             title={tr('cm.close')}
@@ -356,7 +356,7 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
         {config.items.length > 4 && (
           <div className={`py-3 px-5 border-b shrink-0 ${isDarkMode ? 'border-[#222]' : 'border-[#eee]'}`}>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#FF8C00]" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#3d7be0]" />
               <input
                 type="text"
                 id={`${instanceId}-search`}
@@ -365,8 +365,8 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 autoComplete="off"
-                className={`w-full py-2 pl-[38px] pr-3 rounded-lg text-sm outline-none box-border border focus:border-[#FF8C00] ${
-                  isDarkMode ? 'bg-[#1a1a1a] border-[#333] text-white' : 'bg-[#f5f5f5] border-[#ddd] text-[#1a1a1a]'
+                className={`w-full py-2 pl-[38px] pr-3 rounded-lg text-sm outline-none box-border border focus:border-[#3d7be0] ${
+                  isDarkMode ? 'bg-[#14233b] border-[#333] text-white' : 'bg-[#f5f5f5] border-[#ddd] text-[#14233b]'
                 }`}
               />
               {search && (
@@ -393,7 +393,7 @@ const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, config, is
             </div>
           ) : filtered.length === 0 ? (
             <div className={`text-center py-10 px-5 ${isDarkMode ? 'text-[#555]' : 'text-[#aaa]'}`}>
-              <p className="text-sm m-0">{tr('cm.noResult')} "<span className="text-[#FF8C00]">{search}</span>"</p>
+              <p className="text-sm m-0">{tr('cm.noResult')} "<span className="text-[#3d7be0]">{search}</span>"</p>
             </div>
           ) : (
             <div className="grid gap-3 grid-cols-[repeat(auto-fill,minmax(210px,1fr))]">

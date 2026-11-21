@@ -1,7 +1,7 @@
 // Fichier: src/components/FeaturedBanner/FeaturedBanner.tsx
 // Jusqu'à 2 encarts "vedette" en haut de la page d'accueil, pour un item
 // choisi depuis l'onglet admin "Mise en avant" (voir LinksTab.tsx). Reprend
-// les vraies couleurs du site (flamme #FF8C00 → #FFD700, cf.
+// les vraies couleurs du site (flamme #3d7be0 → #62b4ff, cf.
 // ThemeSubmissionPage.tsx) plutôt que des couleurs inventées.
 import { useLang } from '../../i18n';
 import React from 'react';
@@ -26,8 +26,8 @@ const convertGoogleDriveUrl = (url: string, isImage: boolean = false): string =>
 };
 
 const BADGE_CONFIG: Record<NonNullable<ModalItem['vedette']>, { label: string; Icon: React.FC<{ className?: string }>; bg: string; text: string }> = {
-  'nouveau':          { label: 'feat.new',          Icon: Sparkles, bg: '#FFD700', text: '#1a1a1a' },
-  'a-la-une':         { label: 'feat.top',          Icon: Star,     bg: '#FF8C00', text: '#1a1a1a' },
+  'nouveau':          { label: 'feat.new',          Icon: Sparkles, bg: '#62b4ff', text: '#14233b' },
+  'a-la-une':         { label: 'feat.top',          Icon: Star,     bg: '#3d7be0', text: '#14233b' },
   'a-ne-pas-manquer': { label: 'feat.dontMiss',  Icon: Flame,    bg: '#dc2626', text: '#ffffff' },
 };
 
@@ -43,14 +43,14 @@ const FeaturedBanner: React.FC<FeaturedBannerProps> = ({ item, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="text-left rounded-xl p-[2px] flex-1 min-w-[220px]"
+      className="text-left rounded-xl p-px flex-1 min-w-[220px]"
       style={{
-        background: 'linear-gradient(90deg, #FFD700, #FF8C00, #FF4500, #FF8C00, #FFD700)',
+        background: 'rgba(255,255,255,0.14)',
         backgroundSize: '300% 100%',
         animation: 'hyperbat-featured-move 3s linear infinite',
       }}
     >
-      <div className="rounded-[10px] p-3 flex items-center gap-3 bg-gray-900 hover:bg-gray-800 transition-colors">
+      <div className="rounded-[10px] p-3 flex items-center gap-3 hb-feat hover:brightness-125 transition">
         <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-gray-800 overflow-hidden flex items-center justify-center">
           {item.imageUrl ? (
             <img src={convertGoogleDriveUrl(item.imageUrl, true)} alt={item.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />

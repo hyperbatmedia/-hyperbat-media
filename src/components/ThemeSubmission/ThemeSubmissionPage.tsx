@@ -7,8 +7,8 @@
 // publié directement — l'admin valide ensuite depuis l'onglet Soumissions.
 //
 // Palette reprise telle quelle de getThemeColors() dans HyperBatMediaSite.tsx
-// (la page publique, pas l'AdminPanel) : fond #0f0519, cartes #1a1a1a,
-// accent flamme #FF8C00 / #FFA500 / #FFD700 — les mêmes couleurs que les
+// (la page publique, pas l'AdminPanel) : fond #0b1424, cartes #14233b,
+// accent flamme #3d7be0 / #5590ee / #62b4ff — les mêmes couleurs que les
 // boutons de ThemeList, CartPanel, RecapThemesPanel, Tutoriels/Outils, etc.
 
 import { useEffect, useMemo, useState } from 'react';
@@ -50,15 +50,15 @@ const existingNamesBySystem: Map<string, Set<string>> = (() => {
 // Reprise exacte de getThemeColors() (HyperBatMediaSite.tsx), mode sombre
 // uniquement : cette page n'a pas besoin du bouton clair/sombre du site.
 const COLORS = {
-  bg: '#0f0519',
-  cardBg: '#1a1a1a',
+  bg: '#0b1424',
+  cardBg: '#14233b',
   text: 'white',
   textSecondary: '#d1d5db',
-  border: '#FF8C00',
+  border: '#3d7be0',
   inputBg: '#1f2937',
 };
 
-const flameGradient = 'linear-gradient(180deg, #FF8C00 0%, #FFD700 100%)';
+const flameGradient = 'linear-gradient(180deg, #3d7be0 0%, #62b4ff 100%)';
 
 // Retour à l'accueil : ce site n'a pas de vraies routes (GitHub Pages ne sert
 // qu'un seul index.html), la page de soumission est affichée via le
@@ -384,7 +384,7 @@ export default function ThemeSubmissionPage() {
 
   const primaryButtonStyle = {
     backgroundColor: COLORS.border,
-    borderColor: '#FFD700',
+    borderColor: '#62b4ff',
     borderWidth: 2,
     color: 'white',
   };
@@ -407,7 +407,7 @@ export default function ThemeSubmissionPage() {
         <div className="max-w-md text-center">
           <p
             className="text-xs font-black tracking-widest mb-2 hyperbat-highscore-blink"
-            style={{ color: '#FFD700' }}
+            style={{ color: '#62b4ff' }}
           >
             ★ HIGH SCORE ★
           </p>
@@ -515,7 +515,7 @@ export default function ThemeSubmissionPage() {
                   {tr('sub.themeN', { n: index + 1 })}
                 </p>
                 {t.sendStatus === 'sending' && (
-                  <span className="text-xs font-bold flex items-center gap-2" style={{ color: '#FFA500' }}>
+                  <span className="text-xs font-bold flex items-center gap-2" style={{ color: '#5590ee' }}>
                     <span
                       className="inline-block w-3 h-3 rounded-full border-2 border-white/30 border-t-white animate-spin shrink-0"
                       aria-hidden="true"
@@ -577,7 +577,7 @@ export default function ThemeSubmissionPage() {
                         href={DISCORD_URL}
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: '#FFA500', textDecoration: 'underline' }}
+                        style={{ color: '#5590ee', textDecoration: 'underline' }}
                       >
                         {tr('sub.missingLink')}
                       </a>
@@ -663,7 +663,7 @@ export default function ThemeSubmissionPage() {
 
               <div
                 className="flex items-center gap-2 rounded-xl px-3 py-4 transition-colors"
-                style={{ border: `2px dashed ${COLORS.border}`, color: '#FFA500' }}
+                style={{ border: `2px dashed ${COLORS.border}`, color: '#5590ee' }}
               >
                 {t.imageFile && <ImagePreviewThumbnail file={t.imageFile} />}
                 <label className="flex-1 flex items-center justify-center gap-2 text-center text-sm font-semibold cursor-pointer min-w-0">

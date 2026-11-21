@@ -9,9 +9,9 @@ export const TOP_BUTTON_IDS = ['all', 'tools', 'tutorials', 'main-themes', 'othe
  * Palette de couleurs de la sidebar
  */
 export const SIDEBAR_COLORS = {
-  primary: '#FF8C00',           // Orange principal
-  primaryLight: '#FFA500',      // Orange clair
-  primaryGold: '#FFD700',       // Or (aussi utilisé pour les headers et sections)
+  primary: '#3d7be0',           // Orange principal
+  primaryLight: '#5590ee',      // Orange clair
+  primaryGold: '#62b4ff',       // Or (aussi utilisé pour les headers et sections)
   discord: '#5865F2',           // Bleu Discord
   discordHover: '#4752C4',      // Bleu Discord hover
   arrm: '#0091bd',              // Bleu ARRM
@@ -48,7 +48,7 @@ export const SCROLLBAR_STYLES = `
     width: ${SCROLL_CONFIG.scrollbarWidth};
   }
   .custom-scrollbar::-webkit-scrollbar-track {
-    background: #1a1a1a;
+    background: #14233b;
     border-radius: 4px;
   }
   .custom-scrollbar::-webkit-scrollbar-thumb {
@@ -63,7 +63,7 @@ export const SCROLLBAR_STYLES = `
   /* scrollbar-color: couleur-du-pouce couleur-du-rail */
   .custom-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: ${SIDEBAR_COLORS.primary} #1a1a1a;
+    scrollbar-color: ${SIDEBAR_COLORS.primary} #14233b;
     /* Réserve toujours la place de la scrollbar (même quand elle n'est pas
        nécessaire) pour que les chevrons/lignes ne se retrouvent jamais
        chevauchés par la barre au moment où elle apparaît. */

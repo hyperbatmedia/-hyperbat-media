@@ -24,7 +24,7 @@ const ThemePacksPanel: React.FC<ThemePacksPanelProps> = ({ packsData, onClose, i
   const { t: tr, lang } = useLang();
   const tp = (text: string) => translatePackText(lang, text);
   const { featuredMonth, packs } = packsData;
-  const bg = isDarkMode ? '#0f0519' : '#f3f4f6';
+  const bg = isDarkMode ? '#0b1424' : '#f3f4f6';
   const headBg = isDarkMode ? '#0a0314' : '#f9fafb';
   const cardBg = isDarkMode ? '#151221' : '#ffffff';
   const cardBorder = isDarkMode ? '#262133' : '#e5e7eb';
@@ -56,12 +56,12 @@ const ThemePacksPanel: React.FC<ThemePacksPanelProps> = ({ packsData, onClose, i
         {/* HEADER */}
         <div
           className="flex-shrink-0 flex items-center justify-between px-6 py-4"
-          style={{ backgroundColor: headBg, borderBottom: '4px solid #FF8C00' }}
+          style={{ backgroundColor: headBg, borderBottom: '4px solid #3d7be0' }}
         >
           <div className="flex items-center gap-3">
-            <Package className="w-6 h-6" style={{ color: '#fb923c' }} />
+            <Package className="w-6 h-6" style={{ color: '#5590ee' }} />
             <div>
-              <h3 className="text-lg font-black" style={{ color: '#fb923c' }}>{tr('packs.title')}</h3>
+              <h3 className="text-lg font-black" style={{ color: '#5590ee' }}>{tr('packs.title')}</h3>
               <p className="text-xs" style={{ color: textSecondary }}>{tr('packs.subtitle')}</p>
             </div>
           </div>
@@ -77,13 +77,13 @@ const ThemePacksPanel: React.FC<ThemePacksPanelProps> = ({ packsData, onClose, i
             <div
               className="rounded-2xl p-5 flex items-center justify-between gap-4 mb-6 relative overflow-hidden"
               style={{
-                background: 'linear-gradient(135deg, rgba(249,115,22,0.18), rgba(234,179,8,0.10))',
-                border: '1.5px solid rgba(249,115,22,0.5)',
-                boxShadow: '0 0 30px rgba(249,115,22,0.12)'
+                background: 'linear-gradient(135deg, rgba(61,123,224,0.18), rgba(98,180,255,0.10))',
+                border: '1.5px solid rgba(61,123,224,0.5)',
+                boxShadow: '0 0 30px rgba(61,123,224,0.12)'
               }}
             >
               <div className="flex items-center gap-4 min-w-0">
-                <Gift className="w-9 h-9 flex-shrink-0" style={{ color: '#FFA500' }} />
+                <Gift className="w-9 h-9 flex-shrink-0" style={{ color: '#5590ee' }} />
                 <div className="min-w-0">
                   <span
                     className="inline-block text-white font-black rounded-md px-2 py-0.5 mb-1"
@@ -102,7 +102,7 @@ const ThemePacksPanel: React.FC<ThemePacksPanelProps> = ({ packsData, onClose, i
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-shrink-0 font-black text-sm px-5 py-3 rounded-xl flex items-center gap-2 whitespace-nowrap"
-                style={{ background: 'linear-gradient(135deg,#f97316,#eab308)', color: '#1a1206', boxShadow: '0 4px 14px rgba(249,115,22,0.4)' }}
+                style={{ background: 'linear-gradient(135deg,#5590ee,#62b4ff)', color: '#1a1206', boxShadow: '0 4px 14px rgba(61,123,224,0.4)' }}
               >
                 <Download className="w-4 h-4" /> {tr('packs.download')}
               </a>
@@ -132,7 +132,7 @@ const ThemePacksPanel: React.FC<ThemePacksPanelProps> = ({ packsData, onClose, i
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-shrink-0 text-xs font-bold flex items-center gap-1.5"
-                      style={{ color: '#FFA500' }}
+                      style={{ color: '#5590ee' }}
                     >
                       <Download className="w-3.5 h-3.5" /> {tr('packs.download')}
                     </a>

@@ -5,6 +5,7 @@
 // Les drapeaux sont dessinés en SVG (et non en emoji) : Windows n'affiche pas
 // les drapeaux emoji, il montrerait juste les lettres « FR » et « GB ».
 // Styles en ligne pour qu'il s'affiche partout sans dépendre d'une page.
+import { useEffect, useRef, useState } from 'react';
 import { useLang } from '../../i18n';
 import type { Lang } from '../../i18n';
 
@@ -49,8 +50,39 @@ const LANGS: { id: Lang; name: string; Flag: () => JSX.Element }[] = [
   { id: 'pt', name: 'Português', Flag: FlagBR },
 ];
 
-const LanguageSwitch = () => {
+const LanguageSwitch = ({ inline = false }: { inline?: boolean }) => {
   const { lang, setLang, t } = useLang();
+  const [open, setOpen] = useState(false);
+  const boxRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!inline) return;
+    const close = (e: MouseEvent) => { if (!boxRef.current?.contains(e.target as Node)) setOpen(false); };
+    document.addEventListener('click', close);
+    return () => document.removeEventListener('click', close);
+  }, [inline]);
+
+  // Variante « en-tête » : menu déroulant identique à celui du site principal.
+  if (inline) {
+    const current = LANGS.find(l => l.id === lang) ?? LANGS[1];
+    return (
+      <div className={'langs' + (open ? ' open' : '')} ref={boxRef} role="group" aria-label={t('lang.switch')} translate="no">
+        <button type="button" className="cur" aria-haspopup="listbox" aria-expanded={open} onClick={() => setOpen(o => !o)}>
+          <current.Flag /><span>{current.id.toUpperCase()}</span>
+          <svg className="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" /></svg>
+        </button>
+        {open && (
+          <div className="menu" role="listbox">
+            {LANGS.map(({ id, name, Flag }) => (
+              <button key={id} type="button" role="option" aria-selected={lang === id} onClick={() => { setLang(id); setOpen(false); }}>
+                <Flag /><span>{name}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div
       role="group"
@@ -66,9 +98,9 @@ const LanguageSwitch = () => {
         padding: 3,
         alignItems: 'center',
         borderRadius: 9999,
-        background: 'rgba(15,5,25,0.95)',
-        border: '2px solid #FF8C00',
-        boxShadow: '0 4px 16px rgba(0,0,0,0.6), 0 0 0 2px rgba(255,140,0,0.25)',
+        background: 'rgba(15,28,50,0.95)',
+        border: '2px solid #3d7be0',
+        boxShadow: '0 4px 16px rgba(0,0,0,0.6), 0 0 0 2px rgba(61,123,224,0.25)',
       }}
     >
       {LANGS.map(({ id, name, Flag }) => {
@@ -89,7 +121,7 @@ const LanguageSwitch = () => {
               borderRadius: 9999,
               border: 'none',
               cursor: 'pointer',
-              background: active ? '#FF8C00' : 'transparent',
+              background: active ? '#3d7be0' : 'transparent',
               opacity: active ? 1 : 0.65,
             }}
           >

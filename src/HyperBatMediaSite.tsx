@@ -8,7 +8,7 @@ import { useLang } from './i18n';
 import { localizeLinks } from './i18n/links';
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import type { ComponentType, CSSProperties } from 'react';
-import { Search, Gamepad2, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download, AlertTriangle, Gift, Upload } from 'lucide-react';
+import { Search, Gamepad2, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download, AlertTriangle, Upload } from 'lucide-react';
 
 import { ThemeItem } from './types';
 import { categories, CART_MAX } from './constants';
@@ -33,6 +33,12 @@ import bobSystemsData from './data/bob-systems.json';
 import { resolveBobSlug } from './data/systemAliases';
 import { detectAgent } from './agent/hyperbatAgent';
 import type { AgentInfo } from './agent/hyperbatAgent';
+import logoNav from './assets/logo-nav.webp';
+import LanguageSwitch from './components/LanguageSwitch/LanguageSwitch';
+
+// Les installeurs RetroBat/Batocera sont déjà dans la page Outils du site principal.
+// Remettre à true pour réafficher les bannières « mises en avant ».
+const SHOW_FEATURED_BANNERS = false;
 import {
   isKioskNavigablePill,
   kioskFocusStyle,
@@ -67,14 +73,65 @@ const matchSystemId = (themeSystem: string, selectedSystemId: string): boolean =
 };
 
 const getThemeColors = (isDarkMode: boolean) => ({
-  bg: isDarkMode ? '#0f0519' : '#f3f4f6',
-  cardBg: isDarkMode ? '#1a1a1a' : '#ffffff',
-  text: isDarkMode ? 'white' : '#1f2937',
-  textSecondary: isDarkMode ? '#d1d5db' : '#6b7280',
-  border: '#FF8C00',
+  bg: isDarkMode ? 'transparent' : '#f3f4f6',
+  cardBg: isDarkMode ? '#14233b' : '#ffffff',
+  text: isDarkMode ? '#e8eefc' : '#1f2937',
+  textSecondary: isDarkMode ? '#9db0d0' : '#6b7280',
+  border: '#3d7be0',
   headerBg: isDarkMode ? 'from-gray-900' : 'from-gray-200',
-  inputBg: isDarkMode ? '#1f2937' : '#ffffff'
+  inputBg: isDarkMode ? '#0f1c32' : '#ffffff'
 });
+
+const NAV_LABELS: Record<string, Record<string, string>> = {
+  "fr": {
+    "home": "Accueil",
+    "vitrine": "Vitrine HyperBat Media",
+    "resources": "Ressources",
+    "tutos": "Tutos",
+    "tools": "Outils",
+    "bob": "Thèmes de Bob",
+    "community": "Communauté",
+    "creators": "Créateurs",
+    "thanks": "Remerciements",
+    "forum": "Forum"
+  },
+  "en": {
+    "home": "Home",
+    "vitrine": "HyperBat Media Showcase",
+    "resources": "Resources",
+    "tutos": "Tutorials",
+    "tools": "Tools",
+    "bob": "Bob’s Themes",
+    "community": "Community",
+    "creators": "Creators",
+    "thanks": "Thanks",
+    "forum": "Forum"
+  },
+  "es": {
+    "home": "Inicio",
+    "vitrine": "Escaparate HyperBat Media",
+    "resources": "Recursos",
+    "tutos": "Tutoriales",
+    "tools": "Herramientas",
+    "bob": "Temas de Bob",
+    "community": "Comunidad",
+    "creators": "Creadores",
+    "thanks": "Agradecimientos",
+    "forum": "Foro"
+  },
+  "pt": {
+    "home": "Início",
+    "vitrine": "Vitrine HyperBat Media",
+    "resources": "Recursos",
+    "tutos": "Tutoriais",
+    "tools": "Ferramentas",
+    "bob": "Temas do Bob",
+    "community": "Comunidade",
+    "creators": "Criadores",
+    "thanks": "Agradecimentos",
+    "forum": "Fórum"
+  }
+};
 
 const GITHUB_OWNER = 'hyperbatmedia';
 const GITHUB_REPO = '-hyperbat-media';
@@ -303,6 +360,14 @@ const AdminLoginModal = ({ onConfirm, onCancel }: {
 
 export default function HyperBatMediaSite(): JSX.Element {
   const { t: tr, label: trLabel, lang } = useLang();
+  const [navOpen, setNavOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  useEffect(() => {
+    const close = () => setOpenMenu(null);
+    document.addEventListener('click', close);
+    return () => document.removeEventListener('click', close);
+  }, []);
+  const NL = NAV_LABELS[lang] ?? NAV_LABELS.fr;
   const [searchTerm, setSearchTerm] = useState<string>('');
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [searchGamepadFocused, setSearchGamepadFocused] = useState(false);
@@ -650,8 +715,8 @@ export default function HyperBatMediaSite(): JSX.Element {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.bg, color: colors.text }}>
         <div className="text-center">
-          <Gamepad2 className="w-16 h-16 mx-auto mb-4 animate-pulse" style={{ color: '#FF8C00' }} />
-          <p className="text-xl font-bold" style={{ color: '#FF8C00' }}>{tr('site.loading')}</p>
+          <Gamepad2 className="w-16 h-16 mx-auto mb-4 animate-pulse" style={{ color: '#3d7be0' }} />
+          <p className="text-xl font-bold" style={{ color: '#3d7be0' }}>{tr('site.loading')}</p>
         </div>
       </div>
     );
@@ -692,15 +757,16 @@ export default function HyperBatMediaSite(): JSX.Element {
           systemsLogic.handleSystemSelect('all'); systemsLogic.setSelectedCategory(id);
         }}
         title={isExport ? tr('pill.exportTitle') : undefined}
-        className="px-5 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
+        className={`hb-chip${special || id === 'multi' ? ' hb-keep' : ''} flex items-center gap-1 transition hover:brightness-110 cursor-pointer`}
+        data-active={!isExport && systemsLogic.selectedCategory === id ? 'true' : 'false'}
         style={{
           minWidth: '108px',
           background: special ? '#2a2a2a' : id === 'multi'
             ? systemsLogic.selectedCategory === 'multi' ? 'linear-gradient(to right, #7e22ce, #be185d)' : 'linear-gradient(to right, #6b21a8, #9d174d)'
-            : '#D97706',
-          borderColor: !isExport && systemsLogic.selectedCategory === id ? '#FFFF00' : id === 'multi' ? '#c084fc' : '#FFD700',
+            : '#3d7be0',
+          borderColor: !isExport && systemsLogic.selectedCategory === id ? '#FFFF00' : id === 'multi' ? '#c084fc' : special ? '#FFD700' : '#62b4ff',
           borderWidth: !isExport && systemsLogic.selectedCategory === id ? '3px' : '2px',
-          boxShadow: !isExport && systemsLogic.selectedCategory === id ? '0 0 10px rgba(255,215,0,0.3)' : 'none',
+          boxShadow: !isExport && systemsLogic.selectedCategory === id && (special || id === 'multi') ? '0 0 10px rgba(255,215,0,0.3)' : 'none',
           ...kioskFocusStyle(pillFocused),
         }}>
         {icon && <span style={{ fontSize: '10px' }}>{icon}</span>}
@@ -734,27 +800,41 @@ export default function HyperBatMediaSite(): JSX.Element {
     <div className="min-h-screen relative overflow-hidden transition-colors duration-300" style={{ backgroundColor: colors.bg, color: colors.text }}>
       <div className="relative" style={{ zIndex: 1 }}>
 
-        <header className={`bg-gradient-to-b ${colors.headerBg} to-transparent border-b-4`} style={{ borderColor: '#FF8C00' }}>
-          <div className="container mx-auto px-4 py-6">
-            <div className="flex flex-col items-center justify-center mb-4">
-              <div className="flex items-center gap-4">
-                <Gamepad2 className="w-12 h-12" style={{ color: '#FF8C00' }} />
-                <div className="text-center">
-                  <h1 className="text-5xl font-black tracking-wider" style={{
-                    background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)',
-                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(2px 2px 0px #000)'
-                  }}>HYPERBAT MEDIA</h1>
-                  <p className="text-red-500 font-bold text-sm mt-1">
-                    A RetroBat & Batocera theme inspired by <span className="text-yellow-400">HyperSpin</span>
-                  </p>
-                  <p className="text-xs mt-1" style={{ color: colors.textSecondary }}>{tr('site.subtitle')}</p>
-                  <p className="text-xs font-bold mt-2" style={{ color: '#FFA500' }}>
-                    {tr('site.free')}
-                  </p>
+        <header className="hb-top">
+          <div className="bar">
+            <a className="logo" href="https://hyperbatmedia.github.io/" aria-label="RetroGamingHyperbat"><img src={logoNav} alt="RetroGamingHyperbat" /></a>
+            <button type="button" className="burger" aria-label="Menu" aria-expanded={navOpen} onClick={(e) => { e.stopPropagation(); setNavOpen(o => !o); }}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg></button>
+            <nav aria-label="Menu" className={navOpen ? 'open' : ''}>
+              <a href="https://hyperbatmedia.github.io/">{NL.home}</a>
+              <a href="#" className="active" aria-current="page">{NL.vitrine}</a>
+              <div className={'ddn' + (openMenu === 'res' ? ' open' : '')}>
+                <button type="button" className="ddn-btn" aria-expanded={openMenu === 'res'} onClick={(e) => { e.stopPropagation(); setOpenMenu(openMenu === 'res' ? null : 'res'); }}><span>{NL.resources}</span><svg className="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" /></svg></button>
+                <div className="ddn-menu">
+                  <a href="https://hyperbatmedia.github.io/#tutos">{NL.tutos}</a>
+                  <a href="https://hyperbatmedia.github.io/#outils">{NL.tools}</a>
+                  <a href="https://hyperbatmedia.github.io/#bob">{NL.bob}</a>
                 </div>
-                <Gamepad2 className="w-12 h-12" style={{ color: '#FF8C00' }} />
               </div>
+              <div className={'ddn' + (openMenu === 'com' ? ' open' : '')}>
+                <button type="button" className="ddn-btn" aria-expanded={openMenu === 'com'} onClick={(e) => { e.stopPropagation(); setOpenMenu(openMenu === 'com' ? null : 'com'); }}><span>{NL.community}</span><svg className="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" /></svg></button>
+                <div className="ddn-menu">
+                  <a href="https://hyperbatmedia.github.io/#createurs">{NL.creators}</a>
+                  <a href="https://hyperbatmedia.github.io/#remerciements">{NL.thanks}</a>
+                </div>
+              </div>
+              <a href="https://retrogaminghyperbat.forumotion.com/" target="_blank" rel="noopener noreferrer">{NL.forum}</a>
+            </nav>
+            <div className="right">
+              <a className="discord ytl" href="https://www.youtube.com/@BobMoraneRetro" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 00.5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z" /></svg><span>YouTube</span></a>
+              <a className="discord" href="https://discord.com/invite/msnaz7Kev7" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z" /></svg><span>Discord</span></a>
+              <LanguageSwitch inline />
             </div>
+          </div>
+          <div className="hb-hero">
+            <h1>HYPERBAT MEDIA</h1>
+            <p className="hb-tag">A RetroBat &amp; Batocera theme inspired by <span>HyperSpin</span></p>
+            <p className="hb-sub">{tr('site.subtitle')}</p>
+            <p className="hb-free">{tr('site.free')}</p>
           </div>
         </header>
 
@@ -777,20 +857,20 @@ export default function HyperBatMediaSite(): JSX.Element {
         <div className="container mx-auto px-4 py-4">
           {!showAdminPanel && (
             <>
-              <div className="flex flex-wrap items-start gap-3 mb-4">
-                <div className="flex flex-col gap-3">
+              <div className="hb-chips flex flex-wrap items-center gap-2 mb-4">
+                <div className="contents">
                   {renderPill({ id: 'artwork', label: tr('pill.artwork'), count: themeStats.artworkThemes, Icon: Image })}
                   {renderPill({ id: 'multi', label: tr('pill.multi'), count: themeStats.multiThemes, icon: '🌍' })}
                 </div>
-                <div className="flex flex-col gap-3">
+                <div className="contents">
                   {renderPill({ id: 'magazines', label: tr('pill.magazines'), count: themeStats.magazineThemes, icon: '📰' })}
                   {renderPill({ id: 'screenscraper', label: 'ScreenScraper', count: themeStats.screenScraperThemes, total: themeStats.gameThemesTotal, special: true })}
                 </div>
-                <div className="flex flex-col gap-3">
+                <div className="contents">
                   {renderPill({ id: 'collection', label: tr('pill.collection'), count: themeStats.collectionThemes, Icon: Package })}
                   <button onClick={() => setShowRecapPanel(true)}
                     tabIndex={isRetrobat ? -1 : undefined}
-                    className="px-5 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
+                    className="hb-chip2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
                     style={{ minWidth: '108px', background: 'linear-gradient(to right, #b91c1c, #dc2626)', borderColor: '#f87171' }}>
                     <AlertTriangle className="w-2.5 h-2.5" style={{ color: '#fecaca' }} />
                     <div>
@@ -799,24 +879,9 @@ export default function HyperBatMediaSite(): JSX.Element {
                     </div>
                   </button>
                 </div>
-                <div className="flex flex-col gap-3">
+                <div className="contents">
                   {renderPill({ id: 'system-themes', label: tr('pill.systemThemes'), count: themeStats.systemThemes, Icon: Monitor })}
-                  {packsData.packs.length > 0 && (
-                    <button onClick={() => setShowPacksPanel(true)}
-                      tabIndex={isRetrobat ? -1 : undefined}
-                      className="px-5 py-0.5 rounded-lg border-2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer relative"
-                      style={{ minWidth: '108px', background: 'linear-gradient(to right, #0369a1, #0891b2)', borderColor: '#38bdf8' }}>
-                      <span className="absolute -top-3 -right-2 font-black text-white px-1.5 py-0.5 rounded-md border"
-                        style={{ backgroundColor: '#dc2626', borderColor: '#fca5a5', fontSize: '9px', letterSpacing: '0.02em' }}>
-                        {tr('site.new')}
-                      </span>
-                      <Gift className="w-2.5 h-2.5" style={{ color: '#e0f2fe' }} />
-                      <div>
-                        <p className="text-xs font-semibold" style={{ color: '#e0f2fe' }}>{tr('site.packOfMonth')}</p>
-                        <p className="text-xs font-black" style={{ color: 'white' }}>{tr('site.download')}</p>
-                      </div>
-                    </button>
-                  )}
+                  
                 </div>
                 {renderPill({ id: 'default-themes', label: tr('pill.defaultThemes'), count: themeStats.defaultThemes, Icon: Star })}
                 {renderPill({ id: 'game-themes', label: tr('pill.gameThemes'), count: themeStats.gameThemes, Icon: Trophy })}
@@ -830,7 +895,7 @@ export default function HyperBatMediaSite(): JSX.Element {
           {showAdminPanel && (
             <div className="flex justify-end mb-6">
               <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-3 rounded-lg transition border-2"
-                style={{ backgroundColor: colors.cardBg, borderColor: '#4b5563', color: '#FFA500' }}
+                style={{ backgroundColor: colors.cardBg, borderColor: '#4b5563', color: '#5590ee' }}
                 title={isDarkMode ? tr('site.lightMode') : tr('site.darkMode')}>
                 {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
@@ -845,10 +910,10 @@ export default function HyperBatMediaSite(): JSX.Element {
                     onClick={() => setSortBy(sortBy === 'name' ? 'date' : 'name')}
                     className="p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
                     style={{
-                      backgroundColor: '#D97706',
-                      borderColor: sortBy === 'date' ? '#FFFF00' : '#FFD700',
-                      borderWidth: sortBy === 'date' ? '3px' : '2px',
-                      boxShadow: sortBy === 'date' ? '0 0 10px rgba(255,215,0,0.4)' : 'none',
+                      backgroundColor: '#3d7be0',
+                      borderColor: sortBy === 'date' ? '#62b4ff' : '#62b4ff',
+                      borderWidth: '1px',
+                      boxShadow: sortBy === 'date' ? '0 0 10px rgba(98,180,255,0.4)' : 'none',
                       color: '#e0e0e0',
                       ...kioskFocusStyle(!!kioskToolbarSortFocused),
                     }}
@@ -860,8 +925,8 @@ export default function HyperBatMediaSite(): JSX.Element {
                     onClick={() => setIsDarkMode(!isDarkMode)}
                     className="p-3 rounded-lg transition border-2 hover:brightness-110"
                     style={{
-                      backgroundColor: '#D97706',
-                      borderColor: '#FFD700',
+                      backgroundColor: '#3d7be0',
+                      borderColor: '#62b4ff',
                       color: '#e0e0e0',
                       ...kioskFocusStyle(!!kioskToolbarDarkFocused),
                     }}
@@ -872,10 +937,10 @@ export default function HyperBatMediaSite(): JSX.Element {
                     tabIndex={isRetrobat ? -1 : undefined}
                     className="relative p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
                     style={{
-                      backgroundColor: '#D97706',
-                      borderColor: cart.length > 0 ? '#FFFF00' : '#FFD700',
-                      borderWidth: cart.length > 0 ? '3px' : '2px',
-                      boxShadow: cart.length > 0 ? '0 0 10px rgba(255,215,0,0.4)' : 'none',
+                      backgroundColor: '#3d7be0',
+                      borderColor: cart.length > 0 ? '#62b4ff' : '#62b4ff',
+                      borderWidth: '1px',
+                      boxShadow: cart.length > 0 ? '0 0 10px rgba(98,180,255,0.4)' : 'none',
                       color: '#e0e0e0'
                     }}
                     title={tr('site.myDownloads')}>
@@ -884,16 +949,16 @@ export default function HyperBatMediaSite(): JSX.Element {
                       <>
                         <span className="text-xs font-bold">{cart.length}/{CART_MAX}</span>
                         <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full text-xs font-black flex items-center justify-center"
-                          style={{ backgroundColor: '#FFD700', color: '#1a1a1a' }}>{cart.length}</span>
+                          style={{ backgroundColor: '#62b4ff', color: '#ffffff' }}>{cart.length}</span>
                       </>
                     )}
                   </button>
                   <button onClick={() => { window.location.href = window.location.pathname + '?soumettre'; }}
                     className="relative p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
                     style={{
-                      background: 'linear-gradient(135deg, #FF8C00 0%, #FFD700 100%)',
-                      borderColor: '#FFD700',
-                      color: '#1a1a1a'
+                      background: 'linear-gradient(135deg, #3d7be0 0%, #62b4ff 100%)',
+                      borderColor: '#62b4ff',
+                      color: '#ffffff'
                     }}
                     title={tr('site.submit')}>
                     <Upload className="w-5 h-5" />
@@ -919,7 +984,7 @@ export default function HyperBatMediaSite(): JSX.Element {
             <main className="flex-1 min-w-0">
               {!showAdminPanel && (
                 <div className="relative w-full mb-6">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: '#FFA500' }} />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: '#5590ee' }} />
                   <input
                     ref={searchInputRef}
                     id="main-theme-search"
@@ -951,16 +1016,16 @@ export default function HyperBatMediaSite(): JSX.Element {
               {!showAdminPanel && (
                 <div className="mb-6 flex items-center gap-4 text-sm flex-wrap">
                   <div className="flex items-center gap-2">
-                    <Gamepad2 className="w-4 h-4" style={{ color: '#FFA500' }} />
+                    <Gamepad2 className="w-4 h-4" style={{ color: '#5590ee' }} />
                     <span style={{ color: colors.textSecondary }}>{tr('site.system')}</span>
-                    <span className="font-bold" style={{ color: '#FFA500' }}>
+                    <span className="font-bold" style={{ color: '#5590ee' }}>
                       {systemsLogic.selectedSystem === 'all' ? tr('site.resetAll') : systemsLogic.systems.find(s => s.id === systemsLogic.selectedSystem)?.name || systemsLogic.selectedSystem}
                     </span>
                   </div>
                   <span style={{ color: colors.textSecondary }}>•</span>
                   <div className="flex items-center gap-2">
                     <span style={{ color: colors.textSecondary }}>{tr('site.category')}</span>
-                    <span className="font-bold" style={{ color: '#FFA500' }}>
+                    <span className="font-bold" style={{ color: '#5590ee' }}>
                       {systemsLogic.selectedCategory === 'all'    ? tr('site.allCategories') :
                        systemsLogic.selectedCategory === 'multi'  ? '🌍 ' + tr('pill.multi') :
                        trLabel(categories.find(c => c.id === systemsLogic.selectedCategory)?.name || systemsLogic.selectedCategory, 'cat.')}
@@ -968,24 +1033,26 @@ export default function HyperBatMediaSite(): JSX.Element {
                   </div>
                   <span style={{ color: colors.textSecondary }}>•</span>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-lg" style={{ color: '#FFD700' }}>{filteredThemes.length}</span>
+                    <span className="font-bold text-lg" style={{ color: '#62b4ff' }}>{filteredThemes.length}</span>
                     <span style={{ color: colors.textSecondary }}>{filteredThemes.length > 1 ? tr('site.themeMany') : tr('site.themeOne')}</span>
                   </div>
                   <span style={{ color: colors.textSecondary }}>•</span>
                   <div className="flex items-center gap-2">
                     <span style={{ color: colors.textSecondary }}>{tr('site.sort')}</span>
-                    <span className="font-bold" style={{ color: '#FFA500' }}>{sortBy === 'name' ? tr('site.sortName') : tr('site.sortDate')}</span>
+                    <span className="font-bold" style={{ color: '#5590ee' }}>{sortBy === 'name' ? tr('site.sortName') : tr('site.sortDate')}</span>
                   </div>
                 </div>
               )}
               {showAdminPanel && (
+                <div className="hb-admin">
                 <AdminPanel themes={rawThemes} setThemes={setThemes} saveThemes={saveThemes}
                     systems={systemsLogic.systems} categories={categories}
                     adminTab={adminTab} setAdminTab={setAdminTab}
                     packsData={packsData} setPacksData={setPacksData} savePacksData={savePacksData}
                     linksData={linksData} setLinksData={setLinksData} saveLinks={saveLinks} />
+                </div>
               )}
-              {!showAdminPanel && featuredItems.length > 0 && (
+              {!showAdminPanel && SHOW_FEATURED_BANNERS && featuredItems.length > 0 && (
                 <div className="flex flex-wrap gap-3 mb-4">
                   {featuredItems.map(({ item, onOpen }) => (
                     <FeaturedBanner
@@ -1025,19 +1092,19 @@ export default function HyperBatMediaSite(): JSX.Element {
           </div>
         </div>
 
-        <footer className={`bg-gradient-to-t ${colors.headerBg} to-transparent border-t-4 mt-20 py-4`} style={{ borderColor: '#FF8C00' }}>
+        <footer className={`bg-gradient-to-t ${colors.headerBg} to-transparent border-t-4 mt-20 py-4`} style={{ borderColor: '#3d7be0' }}>
           <div className="container mx-auto px-4 text-center text-sm" style={{ color: colors.textSecondary }}>
             <p className="font-black text-lg mb-1" style={{
-              background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)',
+              background: 'linear-gradient(180deg, #3d7be0 0%, #5590ee 30%, #62b4ff 50%, #5590ee 70%, #3d7be0 100%)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(2px 2px 0px #000)'
             }}>HYPERBAT MEDIA</p>
             <p className="mt-1">
-              {tr('site.footer1')} <span className="font-bold" style={{ background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Bob Morane</span> |
-              {' '}{tr('site.footer2')} <span className="font-bold" style={{ background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Christophe</span> |
-              {' '}{tr('site.footer3')} <span className="font-bold" style={{ background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Alain et Christophe</span>
+              {tr('site.footer1')} <span className="font-bold" style={{ background: 'linear-gradient(180deg, #3d7be0 0%, #5590ee 30%, #62b4ff 50%, #5590ee 70%, #3d7be0 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Bob Morane</span> |
+              {' '}{tr('site.footer2')} <span className="font-bold" style={{ background: 'linear-gradient(180deg, #3d7be0 0%, #5590ee 30%, #62b4ff 50%, #5590ee 70%, #3d7be0 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Christophe</span> |
+              {' '}{tr('site.footer3')} <span className="font-bold" style={{ background: 'linear-gradient(180deg, #3d7be0 0%, #5590ee 30%, #62b4ff 50%, #5590ee 70%, #3d7be0 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Alain et Christophe</span>
             </p>
             <p className="mt-2 text-sm">
-              {tr('site.footer4')} <span className="font-bold" style={{ background: 'linear-gradient(180deg, #FF8C00 0%, #FFA500 30%, #FFFF00 50%, #FFA500 70%, #FF8C00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Bob,Dav,Roni,Alain,Huhe8554,Finch,KevoBatoYT,Akeshi,Arcanjohack,CrazyYann,Kairos182,Krakerman,Mrfomt,pento5185,qbertaddict,Sk0ney,Virtual Postman,yanni9867 {tr('site.andOthers')}</span>
+              {tr('site.footer4')} <span className="font-bold" style={{ background: 'linear-gradient(180deg, #3d7be0 0%, #5590ee 30%, #62b4ff 50%, #5590ee 70%, #3d7be0 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Bob,Dav,Roni,Alain,Huhe8554,Finch,KevoBatoYT,Akeshi,Arcanjohack,CrazyYann,Kairos182,Krakerman,Mrfomt,pento5185,qbertaddict,Sk0ney,Virtual Postman,yanni9867 {tr('site.andOthers')}</span>
             </p>
           </div>
         </footer>
@@ -1116,7 +1183,11 @@ export default function HyperBatMediaSite(): JSX.Element {
         </div>
       )}
 
-      {showLoginModal && <AdminLoginModal onConfirm={handleLoginConfirm} onCancel={handleLoginCancel} />}
+      {showLoginModal && (
+        <div className="hb-admin">
+          <AdminLoginModal onConfirm={handleLoginConfirm} onCancel={handleLoginCancel} />
+        </div>
+      )}
 
       {cartOpen && (
         <CartPanel cart={cart} onRemove={handleCartRemove} onClear={handleCartClear}
