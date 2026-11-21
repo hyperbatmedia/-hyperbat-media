@@ -84,7 +84,7 @@ body::before {
 .hb-sub { margin: 4px 0 0; font-size: 13px; color: #9db0d0; }
 .hb-free { margin: 8px 0 0; font-size: 13px; font-weight: 700; color: #62b4ff; }
 
-.hb-av { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #3d7be0; object-fit: cover; flex: none; background: #1a2f52; }
+.hb-av { width: 30px; height: 30px; border-radius: 50%; border: 2px solid rgba(255,255,255,.28); object-fit: cover; flex: none; background: #1a2f52; }
 .hb-av-i { display: inline-flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 13px; }
 
 
@@ -103,7 +103,7 @@ body::before {
 .hb-chips { margin-top: 4px; }
 
 /* Bordures plus fines, comme le site */
-input[type="text"], input[type="search"] { border-width: 1px !important; }
+input[type="text"]:not(.hb-admin input), input[type="search"]:not(.hb-admin input) { border-width: 1px !important; }
 .theme-card { border-color: #243a5c; }
 
 
@@ -238,3 +238,11 @@ input[type="text"], input[type="search"] { border-width: 1px !important; }
   --hb-amber-600: 217 119 6;
   --hb-amber-700: 180 83 9;
 }
+
+/* ── Moins de bleu : le bleu reste réservé aux actions et à l'élément actif, comme sur le site ── */
+.hb-tools button { background: rgba(11,22,42,.64) !important; border-color: rgba(255,255,255,.14) !important; box-shadow: none !important; color: #e8eefc !important; }
+.hb-tools button:hover { border-color: #3a5a8c !important; }
+.hb-tools button:last-child { background: #3d7be0 !important; border-color: #3d7be0 !important; color: #fff !important; }
+.theme-card span.rounded-full.border { background: rgba(255,255,255,.08) !important; border-color: rgba(255,255,255,.14) !important; color: #d6e2fa !important; }
+input[type="text"]:not(:focus):not(.hb-admin input), input[type="search"]:not(:focus):not(.hb-admin input) { border-color: rgba(255,255,255,.18) !important; }
+.hb-glass button > svg { color: #9db0d0 !important; }

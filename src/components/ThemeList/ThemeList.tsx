@@ -840,7 +840,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
                       ? <img className="hb-av" src={`${import.meta.env.BASE_URL}avatars/${k}.jpg`} alt="" loading="lazy" />
                       : <span className="hb-av hb-av-i" aria-hidden="true">{(theme.creator || '?').charAt(0).toUpperCase()}</span>;
                   })()}
-                  <span className="text-sm font-semibold truncate min-w-0" style={{ color: '#62b4ff' }}>{theme.creator}</span>
+                  <span className="text-sm font-semibold truncate min-w-0" style={{ color: '#e8eefc' }}>{theme.creator}</span>
                   <span className="ml-auto text-xs whitespace-nowrap shrink-0" style={{ color: '#9db0d0' }} title={formatDate(theme.date) ?? undefined}>{theme.date && theme.date.includes('-') ? theme.date.split('-').slice(1).reverse().join('/') : (theme.date ?? '')}{theme.size ? ` · ${theme.size}` : ''}</span>
                 </div>
 

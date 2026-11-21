@@ -905,7 +905,7 @@ export default function HyperBatMediaSite(): JSX.Element {
           <div className="flex gap-6" style={{ marginTop: '3rem' }}>
             {!showAdminPanel && (
               <div>
-                <div className="flex gap-2 justify-center mb-6">
+                <div className="flex gap-2 justify-center mb-6 hb-tools">
                   <button ref={kioskSortButtonRef}
                     onClick={() => setSortBy(sortBy === 'name' ? 'date' : 'name')}
                     className="p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
@@ -1016,16 +1016,16 @@ export default function HyperBatMediaSite(): JSX.Element {
               {!showAdminPanel && (
                 <div className="mb-6 flex items-center gap-4 text-sm flex-wrap">
                   <div className="flex items-center gap-2">
-                    <Gamepad2 className="w-4 h-4" style={{ color: '#5590ee' }} />
+                    <Gamepad2 className="w-4 h-4" style={{ color: '#9db0d0' }} />
                     <span style={{ color: colors.textSecondary }}>{tr('site.system')}</span>
-                    <span className="font-bold" style={{ color: '#5590ee' }}>
+                    <span className="font-bold" style={{ color: '#e8eefc' }}>
                       {systemsLogic.selectedSystem === 'all' ? tr('site.resetAll') : systemsLogic.systems.find(s => s.id === systemsLogic.selectedSystem)?.name || systemsLogic.selectedSystem}
                     </span>
                   </div>
                   <span style={{ color: colors.textSecondary }}>•</span>
                   <div className="flex items-center gap-2">
                     <span style={{ color: colors.textSecondary }}>{tr('site.category')}</span>
-                    <span className="font-bold" style={{ color: '#5590ee' }}>
+                    <span className="font-bold" style={{ color: '#e8eefc' }}>
                       {systemsLogic.selectedCategory === 'all'    ? tr('site.allCategories') :
                        systemsLogic.selectedCategory === 'multi'  ? '🌍 ' + tr('pill.multi') :
                        trLabel(categories.find(c => c.id === systemsLogic.selectedCategory)?.name || systemsLogic.selectedCategory, 'cat.')}
@@ -1033,13 +1033,13 @@ export default function HyperBatMediaSite(): JSX.Element {
                   </div>
                   <span style={{ color: colors.textSecondary }}>•</span>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-lg" style={{ color: '#62b4ff' }}>{filteredThemes.length}</span>
+                    <span className="font-bold text-lg" style={{ color: '#e8eefc' }}>{filteredThemes.length}</span>
                     <span style={{ color: colors.textSecondary }}>{filteredThemes.length > 1 ? tr('site.themeMany') : tr('site.themeOne')}</span>
                   </div>
                   <span style={{ color: colors.textSecondary }}>•</span>
                   <div className="flex items-center gap-2">
                     <span style={{ color: colors.textSecondary }}>{tr('site.sort')}</span>
-                    <span className="font-bold" style={{ color: '#5590ee' }}>{sortBy === 'name' ? tr('site.sortName') : tr('site.sortDate')}</span>
+                    <span className="font-bold" style={{ color: '#e8eefc' }}>{sortBy === 'name' ? tr('site.sortName') : tr('site.sortDate')}</span>
                   </div>
                 </div>
               )}
