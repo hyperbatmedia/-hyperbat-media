@@ -22,6 +22,7 @@ import linksJson from '../../data/links.json';
 import themesJson from '../../data/themes.json';
 import { useLang } from '../../i18n';
 import { translateRobotError } from '../../i18n/core';
+import SiteHeader from '../SiteHeader/SiteHeader';
 
 const EXCLUDED_IDS = ['all', 'tools', 'tutorials', 'main-themes', 'other-themes'];
 
@@ -391,9 +392,11 @@ export default function ThemeSubmissionPage() {
 
   if (status === 'done') {
     return (
+      <>
+      <SiteHeader minimal />
       <div
-        className="relative min-h-screen flex flex-col items-center justify-center px-4"
-        style={{ backgroundColor: COLORS.bg, color: COLORS.text }}
+        className="relative min-h-[calc(100vh-54px)] flex flex-col items-center justify-center px-4"
+        style={{ backgroundColor: 'transparent', color: COLORS.text }}
       >
         <button
           type="button"
@@ -404,7 +407,7 @@ export default function ThemeSubmissionPage() {
           {tr('sub.home')}
         </button>
 
-        <div className="max-w-md text-center">
+        <div className="max-w-md text-center hb-glass rounded-2xl p-6">
           <p
             className="text-xs font-black tracking-widest mb-2 hyperbat-highscore-blink"
             style={{ color: '#62b4ff' }}
@@ -445,12 +448,15 @@ export default function ThemeSubmissionPage() {
           </div>
         </div>
       </div>
+      </>
     );
   }
 
   return (
-    <div className="min-h-screen px-4 py-10" style={{ backgroundColor: COLORS.bg, color: COLORS.text }}>
-      <div className="max-w-xl mx-auto">
+    <>
+    <SiteHeader minimal />
+    <div className="min-h-screen px-4 py-10" style={{ backgroundColor: 'transparent', color: COLORS.text }}>
+      <div className="max-w-xl mx-auto hb-glass rounded-2xl p-6">
         <button
           type="button"
           onClick={goHome}
@@ -759,5 +765,6 @@ export default function ThemeSubmissionPage() {
         </p>
       </div>
     </div>
+    </>
   );
 }

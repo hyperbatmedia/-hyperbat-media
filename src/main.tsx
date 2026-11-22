@@ -6,7 +6,6 @@ import HyperBatMediaSite from './HyperBatMediaSite'; // Importation de votre com
 import ThemeSubmissionPage from './components/ThemeSubmission/ThemeSubmissionPage';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import { LanguageProvider } from './i18n';
-import LanguageSwitch from './components/LanguageSwitch/LanguageSwitch';
 import './index.css'; // Importation du CSS (y compris Tailwind)
 
 // Pas de librairie de routes sur ce site, et GitHub Pages ne sert qu'un seul
@@ -18,7 +17,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ErrorBoundary>
       <LanguageProvider>
-        {isSubmissionPage && <LanguageSwitch />}
         {isSubmissionPage ? <ThemeSubmissionPage /> : <HyperBatMediaSite />}
       </LanguageProvider>
     </ErrorBoundary>

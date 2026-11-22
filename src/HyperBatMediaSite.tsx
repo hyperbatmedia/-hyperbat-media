@@ -36,6 +36,7 @@ import type { AgentInfo } from './agent/hyperbatAgent';
 import logoNav from './assets/logo-nav.webp';
 import LanguageSwitch from './components/LanguageSwitch/LanguageSwitch';
 
+import { NAV_LABELS } from './components/SiteHeader/SiteHeader';
 // Les installeurs RetroBat/Batocera sont déjà dans la page Outils du site principal.
 // Remettre à true pour réafficher les bannières « mises en avant ».
 const SHOW_FEATURED_BANNERS = false;
@@ -82,56 +83,6 @@ const getThemeColors = (isDarkMode: boolean) => ({
   inputBg: isDarkMode ? '#0f1c32' : '#ffffff'
 });
 
-const NAV_LABELS: Record<string, Record<string, string>> = {
-  "fr": {
-    "home": "Accueil",
-    "vitrine": "Vitrine HyperBat Media",
-    "resources": "Ressources",
-    "tutos": "Tutos",
-    "tools": "Outils",
-    "bob": "Thèmes de Bob",
-    "community": "Communauté",
-    "creators": "Créateurs",
-    "thanks": "Remerciements",
-    "forum": "Forum"
-  },
-  "en": {
-    "home": "Home",
-    "vitrine": "HyperBat Media Showcase",
-    "resources": "Resources",
-    "tutos": "Tutorials",
-    "tools": "Tools",
-    "bob": "Bob’s Themes",
-    "community": "Community",
-    "creators": "Creators",
-    "thanks": "Thanks",
-    "forum": "Forum"
-  },
-  "es": {
-    "home": "Inicio",
-    "vitrine": "Escaparate HyperBat Media",
-    "resources": "Recursos",
-    "tutos": "Tutoriales",
-    "tools": "Herramientas",
-    "bob": "Temas de Bob",
-    "community": "Comunidad",
-    "creators": "Creadores",
-    "thanks": "Agradecimientos",
-    "forum": "Foro"
-  },
-  "pt": {
-    "home": "Início",
-    "vitrine": "Vitrine HyperBat Media",
-    "resources": "Recursos",
-    "tutos": "Tutoriais",
-    "tools": "Ferramentas",
-    "bob": "Temas do Bob",
-    "community": "Comunidade",
-    "creators": "Criadores",
-    "thanks": "Agradecimentos",
-    "forum": "Fórum"
-  }
-};
 
 const GITHUB_OWNER = 'hyperbatmedia';
 const GITHUB_REPO = '-hyperbat-media';
@@ -1092,7 +1043,7 @@ export default function HyperBatMediaSite(): JSX.Element {
           </div>
         </div>
 
-        <footer className={`bg-gradient-to-t ${colors.headerBg} to-transparent border-t-4 mt-20 py-4`} style={{ borderColor: '#3d7be0' }}>
+        <footer className={`hb-footer bg-gradient-to-t ${colors.headerBg} to-transparent border-t-4 mt-20 py-4`} style={{ borderColor: '#3d7be0' }}>
           <div className="container mx-auto px-4 text-center text-sm" style={{ color: colors.textSecondary }}>
             <p className="font-black text-lg mb-1" style={{
               background: 'linear-gradient(180deg, #3d7be0 0%, #5590ee 30%, #62b4ff 50%, #5590ee 70%, #3d7be0 100%)',
@@ -1106,6 +1057,7 @@ export default function HyperBatMediaSite(): JSX.Element {
             <p className="mt-2 text-sm">
               {tr('site.footer4')} <span className="font-bold" style={{ background: 'linear-gradient(180deg, #3d7be0 0%, #5590ee 30%, #62b4ff 50%, #5590ee 70%, #3d7be0 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Bob,Dav,Roni,Alain,Huhe8554,Finch,KevoBatoYT,Akeshi,Arcanjohack,CrazyYann,Kairos182,Krakerman,Mrfomt,pento5185,qbertaddict,Sk0ney,Virtual Postman,yanni9867 {tr('site.andOthers')}</span>
             </p>
+            <p className="hb-legal mt-3 text-xs">{NL.legal}</p>
           </div>
         </footer>
       </div>

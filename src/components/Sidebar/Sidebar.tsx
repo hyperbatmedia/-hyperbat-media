@@ -563,7 +563,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Header titre + Discord/ARRM — mode étendu */}
         {!collapsed && (
-          <div className="flex items-center justify-between p-4 pb-2 flex-shrink-0">
+          <div className="hb-panel-head flex items-center justify-between p-4 pb-2 flex-shrink-0">
             <h3 className="text-xs font-semibold uppercase tracking-[0.14em]" style={{ color: '#9db0d0' }}>{tr('nav.systems')}</h3>
             {SHOW_SIDEBAR_SOCIAL && (
 <div className="flex gap-2">
