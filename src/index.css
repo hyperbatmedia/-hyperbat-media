@@ -261,3 +261,9 @@ input[type="text"]:not(:focus):not(.hb-admin input), input[type="search"]:not(:f
 /* ── Titre de panneau : bandeau bleu foncé avec liseré violet, comme « Latest themes added » ── */
 .hb-panel-head { padding: 7px 12px !important; background: #182a47; border-bottom: 2px solid #3a2a9c; border-radius: 12px 12px 0 0; }
 .hb-panel-head h3 { text-transform: none !important; letter-spacing: 0 !important; font-size: 15px !important; font-weight: 700 !important; color: #e8eefc !important; }
+
+/* ── Logo de la vitrine : bandeau et pied de page ── */
+.hb-hero h1 { line-height: 0; }
+.hb-hero h1 img { display: block; height: clamp(64px, 9.5vw, 138px); width: auto; max-width: 92vw; filter: drop-shadow(0 4px 16px rgba(0,0,0,.6)); }
+.hb-footer p.font-black img { display: block; height: 38px; width: auto; margin: 0 auto 6px; }
+@media (max-width: 640px) { .hb-hero { min-height: 200px; } .hb-hero h1 img { height: clamp(44px, 13vw, 64px); } .hb-tag { margin-top: 12px; } }

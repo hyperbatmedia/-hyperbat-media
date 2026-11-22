@@ -37,6 +37,7 @@ import logoNav from './assets/logo-nav.webp';
 import LanguageSwitch from './components/LanguageSwitch/LanguageSwitch';
 
 import { NAV_LABELS } from './components/SiteHeader/SiteHeader';
+import logoVitrine from './assets/logo-vitrine.webp';
 // Les installeurs RetroBat/Batocera sont déjà dans la page Outils du site principal.
 // Remettre à true pour réafficher les bannières « mises en avant ».
 const SHOW_FEATURED_BANNERS = false;
@@ -782,7 +783,7 @@ export default function HyperBatMediaSite(): JSX.Element {
             </div>
           </div>
           <div className="hb-hero">
-            <h1>HYPERBAT MEDIA</h1>
+            <h1><img src={logoVitrine} alt="HYPERBAT MEDIA" /></h1>
             <p className="hb-tag">A RetroBat &amp; Batocera theme inspired by <span>HyperSpin</span></p>
             <p className="hb-sub">{tr('site.subtitle')}</p>
             <p className="hb-free">{tr('site.free')}</p>
@@ -1045,10 +1046,7 @@ export default function HyperBatMediaSite(): JSX.Element {
 
         <footer className={`hb-footer bg-gradient-to-t ${colors.headerBg} to-transparent border-t-4 mt-20 py-4`} style={{ borderColor: '#3d7be0' }}>
           <div className="container mx-auto px-4 text-center text-sm" style={{ color: colors.textSecondary }}>
-            <p className="font-black text-lg mb-1" style={{
-              background: 'linear-gradient(180deg, #3d7be0 0%, #5590ee 30%, #62b4ff 50%, #5590ee 70%, #3d7be0 100%)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(2px 2px 0px #000)'
-            }}>HYPERBAT MEDIA</p>
+            <p className="font-black text-lg mb-1"><img src={logoVitrine} alt="HYPERBAT MEDIA" /></p>
             <p className="mt-1">
               {tr('site.footer1')} <span className="font-bold" style={{ background: 'linear-gradient(180deg, #3d7be0 0%, #5590ee 30%, #62b4ff 50%, #5590ee 70%, #3d7be0 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Bob Morane</span> |
               {' '}{tr('site.footer2')} <span className="font-bold" style={{ background: 'linear-gradient(180deg, #3d7be0 0%, #5590ee 30%, #62b4ff 50%, #5590ee 70%, #3d7be0 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(1px 1px 0px #000)' }}>Christophe</span> |
