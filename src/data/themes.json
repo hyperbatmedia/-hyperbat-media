@@ -51781,17 +51781,6 @@
     "date": "2026-11-02"
   },
   {
-    "id": 125113,
-    "name": "Pokemon",
-    "creator": "Christophe",
-    "system": "collectionspersonnalises",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1h-QB2h3L8ogupKnb1fdEq8NDOt4WGfvy/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1dwHWsoXBPAJBqmxTJNq3cymn8LMyFEul/view?usp=sharing",
-    "size": "3.1 MB",
-    "date": "2026-11-02"
-  },
-  {
     "id": 125114,
     "name": "Art of Fight",
     "creator": "Christophe",
@@ -51800,17 +51789,6 @@
     "imageUrl": "https://drive.google.com/file/d/1IT6RDSKodE3BMS_Gy6HOuMDMivK06Ai4/view?usp=sharing",
     "downloadUrl": "https://drive.google.com/file/d/1Ty16uuIDCaYZTwWnbEKjuTE-zHttS8vS/view?usp=sharing",
     "size": "7.4 MB",
-    "date": "2026-11-01"
-  },
-  {
-    "id": 125115,
-    "name": "Ace Attorney",
-    "creator": "Christophe",
-    "system": "collectionspersonnalises",
-    "category": "game-themes",
-    "imageUrl": "https://drive.google.com/file/d/1EjnDm3wiaes5pYN_hT_3niwssnLsVUFE/view?usp=sharing",
-    "downloadUrl": "https://drive.google.com/file/d/1-p4ASQnGbtQV56U2LO6PvQ_uvfGhac34/view?usp=sharing",
-    "size": "3.0 MB",
     "date": "2026-11-01"
   },
   {
@@ -52935,5 +52913,38 @@
     "downloadUrl": "https://drive.google.com/file/d/1VwRSeXELNQSKLRh2TqGvgbUhHdDqGCZw/view?usp=sharing",
     "size": "142.1 MB",
     "date": "2026-11-15"
+  },
+  {
+    "id": 125218,
+    "name": "pc",
+    "creator": "Huhe-8554",
+    "system": "msdos",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/1iLLzSfP7IfOQBL-nFOys3vXdQpx5F7lR/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/16iio0y2a9rg-Mo62wWKl2MzoqOLwoA3W/view?usp=sharing",
+    "size": "2.0 Mo",
+    "date": "2026-11-23"
+  },
+  {
+    "id": 125219,
+    "name": "genesis_alt",
+    "creator": "Huhe-8554",
+    "system": "megadrivegenesis",
+    "category": "system-themes",
+    "imageUrl": "https://drive.google.com/file/d/11GgZ9v-kyqKbB7ZaReUcBmfKjGgFiKLo/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1sqdSlFTrSQEegqKlgF4yw9qmqp4tXR2P/view?usp=sharing",
+    "size": "925 Ko",
+    "date": "2026-11-23"
+  },
+  {
+    "id": 125220,
+    "name": "saturn",
+    "creator": "Huhe-8554",
+    "system": "saturn",
+    "category": "default-themes",
+    "imageUrl": "https://drive.google.com/file/d/1nCPYaRXfAT-3y2AljSwSuoFy_JsDUDMv/view?usp=sharing",
+    "downloadUrl": "https://drive.google.com/file/d/1QcF-vKAEgeK3f-1oz75NZbEI64Gmmpjh/view?usp=sharing",
+    "size": "8.1 Mo",
+    "date": "2026-11-23"
   }
 ]
