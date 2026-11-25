@@ -267,3 +267,20 @@ input[type="text"]:not(:focus):not(.hb-admin input), input[type="search"]:not(:f
 .hb-hero h1 img { display: block; height: clamp(64px, 9.5vw, 138px); width: auto; max-width: 92vw; filter: drop-shadow(0 4px 16px rgba(0,0,0,.6)); }
 .hb-footer p.font-black img { display: block; height: 38px; width: auto; margin: 0 auto 6px; }
 @media (max-width: 640px) { .hb-hero { min-height: 200px; } .hb-hero h1 img { height: clamp(44px, 13vw, 64px); } .hb-tag { margin-top: 12px; } }
+
+/* ── Accueil : recherche + barre d'outils sur une ligne, étiquettes de filtres, actions à droite ── */
+.hb-searchrow { display: flex; gap: 10px; align-items: stretch; margin-bottom: 14px; }
+.hb-searchrow input { border-radius: 12px !important; }
+.hb-searchrow .hb-tools button { border-radius: 12px !important; height: 100%; white-space: nowrap; }
+.hb-chips-spacer { flex: 1 1 24px; }
+.hb-chip, .hb-chip2 { height: 38px; padding-top: 0 !important; padding-bottom: 0 !important; }
+.hb-chips .hb-chip.hb-act, .hb-chips .hb-chip2.hb-act { background: transparent !important; border: 1px dashed rgba(255,255,255,.38) !important; box-shadow: none !important; color: #e8eefc !important; }
+.hb-chips .hb-act p { color: #e8eefc !important; }
+.hb-chips .hb-act-warn { border-color: rgba(248,113,113,.75) !important; }
+.hb-chips .hb-act-warn p { color: #fecaca !important; }
+.hb-ftag { display: inline-flex; align-items: center; gap: 4px; padding: 3px 4px 3px 12px; border-radius: 999px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); color: #e8eefc; font-size: 13px; }
+.hb-ftag button { background: none; border: 0; color: #9db0d0; cursor: pointer; padding: 2px 7px; font-size: 12px; line-height: 1; }
+.hb-ftag button:hover { color: #fff; }
+.hb-fclear { background: none; border: 0; color: #7db4ff; font-size: 13px; cursor: pointer; padding: 2px 6px; }
+.hb-fclear:hover { text-decoration: underline; }
+@media (max-width: 640px) { .hb-searchrow { flex-wrap: wrap; } .hb-searchrow .hb-tools { width: 100%; } .hb-searchrow .hb-tools button { flex: 1; } }

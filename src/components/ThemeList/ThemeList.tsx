@@ -271,7 +271,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
     // ── Tri / mode clair-sombre (colonne gauche) ──
     if (isRetrobat && toolbarFocus) {
       if (direction === 'left' || direction === 'right') {
-        setToolbarFocus((t) => (t === 'sort' ? 'dark' : 'sort'));
+        setToolbarFocus('sort'); // plus de bouton mode clair/sombre : une seule cible dans la barre d'outils
       } else if (direction === 'down') {
         setToolbarFocus(null);
         if (mainInput) setChromeFocus('main');
@@ -723,7 +723,7 @@ const ThemeList: React.FC<ThemeListProps> = ({
       <div className={viewMode === 'grid'
         ? sidebarCollapsed
           ? 'grid grid-cols-2 md:grid-cols-5 gap-4'
-          : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'
+          : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 min-[1700px]:grid-cols-5 gap-4'
         : 'space-y-4'}>
         {themes.map((theme, index) => {
           const key = getThemeKey(theme);

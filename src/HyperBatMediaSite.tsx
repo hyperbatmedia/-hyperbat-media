@@ -403,6 +403,9 @@ export default function HyperBatMediaSite(): JSX.Element {
   const systemsLogic = useSystemsLogic();
   const colors = useMemo(() => getThemeColors(isDarkMode), [isDarkMode]);
 
+  // Le mode clair n'est plus proposé sur le site ; seul l'écran admin garde son propre bouton.
+  useEffect(() => { if (!showAdminPanel) setIsDarkMode(true); }, [showAdminPanel]);
+
   // Empêche la fermeture accidentelle de l'onglet/navigateur pendant que
   // l'admin est ouvert (le verrou GitHub resterait posé jusqu'à expiration
   // si on ferme sans passer par "Quitter l'admin").
@@ -676,7 +679,6 @@ export default function HyperBatMediaSite(): JSX.Element {
 
   const kioskPillFocusId = isRetrobat ? kioskVisual?.pillFocusId ?? null : null;
   const kioskToolbarSortFocused = isRetrobat && kioskVisual?.toolbarFocus === 'sort';
-  const kioskToolbarDarkFocused = isRetrobat && kioskVisual?.toolbarFocus === 'dark';
 
   // Rendu d'une pastille de stat (Artwork, Magazines, Collection...), factorisé
   // pour être réutilisé identique qu'elle soit seule ou empilée avec une autre.
@@ -709,7 +711,7 @@ export default function HyperBatMediaSite(): JSX.Element {
           systemsLogic.handleSystemSelect('all'); systemsLogic.setSelectedCategory(id);
         }}
         title={isExport ? tr('pill.exportTitle') : undefined}
-        className={`hb-chip${special || id === 'multi' ? ' hb-keep' : ''} flex items-center gap-1 transition hover:brightness-110 cursor-pointer`}
+        className={`hb-chip${special || id === 'multi' ? ' hb-keep' : ''}${isExport ? ' hb-act' : ''} flex items-center gap-1 transition hover:brightness-110 cursor-pointer`}
         data-active={!isExport && systemsLogic.selectedCategory === id ? 'true' : 'false'}
         style={{
           minWidth: '108px',
@@ -747,6 +749,59 @@ export default function HyperBatMediaSite(): JSX.Element {
       </button>
     );
   };
+
+  // Barre d'outils : dans la colonne de gauche pour l'add-on (navigation manette inchangée),
+  // sur la ligne de la recherche pour le site web.
+  const renderToolbar = (inRow: boolean) => (
+    <div className={`flex gap-2 hb-tools ${inRow ? '' : 'justify-center mb-6'}`}>
+                  <button ref={kioskSortButtonRef}
+                    onClick={() => setSortBy(sortBy === 'name' ? 'date' : 'name')}
+                    className="p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
+                    style={{
+                      backgroundColor: '#3d7be0',
+                      borderColor: sortBy === 'date' ? '#62b4ff' : '#62b4ff',
+                      borderWidth: '1px',
+                      boxShadow: sortBy === 'date' ? '0 0 10px rgba(98,180,255,0.4)' : 'none',
+                      color: '#e0e0e0',
+                      ...kioskFocusStyle(!!kioskToolbarSortFocused),
+                    }}
+                    title={sortBy === 'name' ? tr('site.sortByDate') : tr('site.sortByName')}>
+                    {sortBy === 'name' ? <SortAsc className="w-5 h-5" /> : <Calendar className="w-5 h-5" />}
+                    <span className="text-xs font-bold whitespace-nowrap">{isRetrobat ? (sortBy === 'name' ? 'A-Z' : 'DATE') : `${tr('site.sort')} ${sortBy === 'name' ? tr('site.sortName') : tr('site.sortDate')}`}</span>
+                  </button>
+                  <button onClick={() => setCartOpen(true)}
+                    tabIndex={isRetrobat ? -1 : undefined}
+                    className="relative p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
+                    style={{
+                      backgroundColor: '#3d7be0',
+                      borderColor: cart.length > 0 ? '#62b4ff' : '#62b4ff',
+                      borderWidth: '1px',
+                      boxShadow: cart.length > 0 ? '0 0 10px rgba(98,180,255,0.4)' : 'none',
+                      color: '#e0e0e0'
+                    }}
+                    title={tr('site.myDownloads')}>
+                    <Download className="w-5 h-5" />
+                    {cart.length > 0 && (
+                      <>
+                        <span className="text-xs font-bold">{cart.length}/{CART_MAX}</span>
+                        <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full text-xs font-black flex items-center justify-center"
+                          style={{ backgroundColor: '#62b4ff', color: '#ffffff' }}>{cart.length}</span>
+                      </>
+                    )}
+                  </button>
+                  <button onClick={() => { window.location.href = window.location.pathname + '?soumettre'; }}
+                    className="relative p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
+                    style={{
+                      background: 'linear-gradient(135deg, #3d7be0 0%, #62b4ff 100%)',
+                      borderColor: '#62b4ff',
+                      color: '#ffffff'
+                    }}
+                    title={tr('site.submit')}>
+                    <Upload className="w-5 h-5" />
+                    <span className="text-xs font-bold hidden sm:inline">{tr('site.submit')}</span>
+                  </button>
+                </div>
+  );
 
   return (
     <div className="min-h-screen relative overflow-hidden transition-colors duration-300" style={{ backgroundColor: colors.bg, color: colors.text }}>
@@ -810,19 +865,19 @@ export default function HyperBatMediaSite(): JSX.Element {
           {!showAdminPanel && (
             <>
               <div className="hb-chips flex flex-wrap items-center gap-2 mb-4">
-                <div className="contents">
-                  {renderPill({ id: 'artwork', label: tr('pill.artwork'), count: themeStats.artworkThemes, Icon: Image })}
-                  {renderPill({ id: 'multi', label: tr('pill.multi'), count: themeStats.multiThemes, icon: '🌍' })}
-                </div>
-                <div className="contents">
-                  {renderPill({ id: 'magazines', label: tr('pill.magazines'), count: themeStats.magazineThemes, icon: '📰' })}
-                  {renderPill({ id: 'screenscraper', label: 'ScreenScraper', count: themeStats.screenScraperThemes, total: themeStats.gameThemesTotal, special: true })}
-                </div>
-                <div className="contents">
-                  {renderPill({ id: 'collection', label: tr('pill.collection'), count: themeStats.collectionThemes, Icon: Package })}
-                  <button onClick={() => setShowRecapPanel(true)}
+                {renderPill({ id: 'all', label: tr('pill.total'), count: themeStats.total, Icon: BarChart3 })}
+                {renderPill({ id: 'game-themes', label: tr('pill.gameThemes'), count: themeStats.gameThemes, Icon: Trophy })}
+                {renderPill({ id: 'system-themes', label: tr('pill.systemThemes'), count: themeStats.systemThemes, Icon: Monitor })}
+                {renderPill({ id: 'default-themes', label: tr('pill.defaultThemes'), count: themeStats.defaultThemes, Icon: Star })}
+                {renderPill({ id: 'artwork', label: tr('pill.artwork'), count: themeStats.artworkThemes, Icon: Image })}
+                {renderPill({ id: 'magazines', label: tr('pill.magazines'), count: themeStats.magazineThemes, icon: '📰' })}
+                {renderPill({ id: 'collection', label: tr('pill.collection'), count: themeStats.collectionThemes, Icon: Package })}
+                {renderPill({ id: 'multi', label: tr('pill.multi'), count: themeStats.multiThemes, icon: '🌍' })}
+                {renderPill({ id: 'screenscraper', label: 'ScreenScraper', count: themeStats.screenScraperThemes, total: themeStats.gameThemesTotal, special: true })}
+                <span className="hb-chips-spacer" />
+                <button onClick={() => setShowRecapPanel(true)}
                     tabIndex={isRetrobat ? -1 : undefined}
-                    className="hb-chip2 flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
+                    className="hb-chip2 hb-act hb-act-warn flex items-center gap-1 transition hover:brightness-110 cursor-pointer"
                     style={{ minWidth: '108px', background: 'linear-gradient(to right, #b91c1c, #dc2626)', borderColor: '#f87171' }}>
                     <AlertTriangle className="w-2.5 h-2.5" style={{ color: '#fecaca' }} />
                     <div>
@@ -830,14 +885,6 @@ export default function HyperBatMediaSite(): JSX.Element {
                       <p className="text-xs font-black" style={{ color: 'white' }}>{tr('site.seeRecap')}</p>
                     </div>
                   </button>
-                </div>
-                <div className="contents">
-                  {renderPill({ id: 'system-themes', label: tr('pill.systemThemes'), count: themeStats.systemThemes, Icon: Monitor })}
-                  
-                </div>
-                {renderPill({ id: 'default-themes', label: tr('pill.defaultThemes'), count: themeStats.defaultThemes, Icon: Star })}
-                {renderPill({ id: 'game-themes', label: tr('pill.gameThemes'), count: themeStats.gameThemes, Icon: Trophy })}
-                {renderPill({ id: 'all', label: tr('pill.total'), count: themeStats.total, Icon: BarChart3 })}
                 {renderPill({ id: 'export-json', label: 'Export json', isExport: true })}
               </div>
 
@@ -857,66 +904,7 @@ export default function HyperBatMediaSite(): JSX.Element {
           <div className="flex gap-6" style={{ marginTop: '3rem' }}>
             {!showAdminPanel && (
               <div>
-                <div className="flex gap-2 justify-center mb-6 hb-tools">
-                  <button ref={kioskSortButtonRef}
-                    onClick={() => setSortBy(sortBy === 'name' ? 'date' : 'name')}
-                    className="p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
-                    style={{
-                      backgroundColor: '#3d7be0',
-                      borderColor: sortBy === 'date' ? '#62b4ff' : '#62b4ff',
-                      borderWidth: '1px',
-                      boxShadow: sortBy === 'date' ? '0 0 10px rgba(98,180,255,0.4)' : 'none',
-                      color: '#e0e0e0',
-                      ...kioskFocusStyle(!!kioskToolbarSortFocused),
-                    }}
-                    title={sortBy === 'name' ? tr('site.sortByDate') : tr('site.sortByName')}>
-                    {sortBy === 'name' ? <SortAsc className="w-5 h-5" /> : <Calendar className="w-5 h-5" />}
-                    <span className="text-xs font-bold">{sortBy === 'name' ? 'A-Z' : 'DATE'}</span>
-                  </button>
-                  <button ref={kioskDarkButtonRef}
-                    onClick={() => setIsDarkMode(!isDarkMode)}
-                    className="p-3 rounded-lg transition border-2 hover:brightness-110"
-                    style={{
-                      backgroundColor: '#3d7be0',
-                      borderColor: '#62b4ff',
-                      color: '#e0e0e0',
-                      ...kioskFocusStyle(!!kioskToolbarDarkFocused),
-                    }}
-                    title={isDarkMode ? tr('site.lightMode') : tr('site.darkMode')}>
-                    {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                  </button>
-                  <button onClick={() => setCartOpen(true)}
-                    tabIndex={isRetrobat ? -1 : undefined}
-                    className="relative p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
-                    style={{
-                      backgroundColor: '#3d7be0',
-                      borderColor: cart.length > 0 ? '#62b4ff' : '#62b4ff',
-                      borderWidth: '1px',
-                      boxShadow: cart.length > 0 ? '0 0 10px rgba(98,180,255,0.4)' : 'none',
-                      color: '#e0e0e0'
-                    }}
-                    title={tr('site.myDownloads')}>
-                    <Download className="w-5 h-5" />
-                    {cart.length > 0 && (
-                      <>
-                        <span className="text-xs font-bold">{cart.length}/{CART_MAX}</span>
-                        <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full text-xs font-black flex items-center justify-center"
-                          style={{ backgroundColor: '#62b4ff', color: '#ffffff' }}>{cart.length}</span>
-                      </>
-                    )}
-                  </button>
-                  <button onClick={() => { window.location.href = window.location.pathname + '?soumettre'; }}
-                    className="relative p-3 rounded-lg transition border-2 flex items-center gap-2 hover:brightness-110"
-                    style={{
-                      background: 'linear-gradient(135deg, #3d7be0 0%, #62b4ff 100%)',
-                      borderColor: '#62b4ff',
-                      color: '#ffffff'
-                    }}
-                    title={tr('site.submit')}>
-                    <Upload className="w-5 h-5" />
-                    <span className="text-xs font-bold hidden sm:inline">{tr('site.submit')}</span>
-                  </button>
-                </div>
+                {isRetrobat && renderToolbar(false)}
                 <Sidebar
                   systems={systemsLogic.systems}
                   sidebarSearch={sidebarSearch} setSidebarSearch={setSidebarSearch}
@@ -935,7 +923,8 @@ export default function HyperBatMediaSite(): JSX.Element {
             )}
             <main className="flex-1 min-w-0">
               {!showAdminPanel && (
-                <div className="relative w-full mb-6">
+                <div className="hb-searchrow">
+                <div className="relative flex-1 min-w-0">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: '#5590ee' }} />
                   <input
                     ref={searchInputRef}
@@ -964,35 +953,29 @@ export default function HyperBatMediaSite(): JSX.Element {
                     </button>
                   )}
                 </div>
+                {!isRetrobat && renderToolbar(true)}
+                </div>
               )}
               {!showAdminPanel && (
-                <div className="mb-6 flex items-center gap-4 text-sm flex-wrap">
-                  <div className="flex items-center gap-2">
-                    <Gamepad2 className="w-4 h-4" style={{ color: '#9db0d0' }} />
-                    <span style={{ color: colors.textSecondary }}>{tr('site.system')}</span>
-                    <span className="font-bold" style={{ color: '#e8eefc' }}>
-                      {systemsLogic.selectedSystem === 'all' ? tr('site.resetAll') : systemsLogic.systems.find(s => s.id === systemsLogic.selectedSystem)?.name || systemsLogic.selectedSystem}
+                <div className="mb-4 flex items-center gap-2 text-sm flex-wrap">
+                  <span className="font-bold text-xl" style={{ color: '#e8eefc' }}>{filteredThemes.length.toLocaleString(lang)}</span>
+                  <span style={{ color: colors.textSecondary }}>{filteredThemes.length > 1 ? tr('site.themeMany') : tr('site.themeOne')}</span>
+                  {systemsLogic.selectedSystem !== 'all' && (
+                    <span className="hb-ftag">
+                      {systemsLogic.systems.find(s => s.id === systemsLogic.selectedSystem)?.name || systemsLogic.selectedSystem}
+                      <button type="button" tabIndex={isRetrobat ? -1 : undefined} aria-label={tr('site.resetAll')} onClick={() => systemsLogic.handleSystemSelect('all')}>✕</button>
                     </span>
-                  </div>
-                  <span style={{ color: colors.textSecondary }}>•</span>
-                  <div className="flex items-center gap-2">
-                    <span style={{ color: colors.textSecondary }}>{tr('site.category')}</span>
-                    <span className="font-bold" style={{ color: '#e8eefc' }}>
-                      {systemsLogic.selectedCategory === 'all'    ? tr('site.allCategories') :
-                       systemsLogic.selectedCategory === 'multi'  ? '🌍 ' + tr('pill.multi') :
-                       trLabel(categories.find(c => c.id === systemsLogic.selectedCategory)?.name || systemsLogic.selectedCategory, 'cat.')}
+                  )}
+                  {systemsLogic.selectedCategory !== 'all' && (
+                    <span className="hb-ftag">
+                      {systemsLogic.selectedCategory === 'multi' ? '🌍 ' + tr('pill.multi') : trLabel(categories.find(c => c.id === systemsLogic.selectedCategory)?.name || systemsLogic.selectedCategory, 'cat.')}
+                      <button type="button" tabIndex={isRetrobat ? -1 : undefined} aria-label={tr('site.allCategories')} onClick={() => systemsLogic.setSelectedCategory('all')}>✕</button>
                     </span>
-                  </div>
-                  <span style={{ color: colors.textSecondary }}>•</span>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-lg" style={{ color: '#e8eefc' }}>{filteredThemes.length}</span>
-                    <span style={{ color: colors.textSecondary }}>{filteredThemes.length > 1 ? tr('site.themeMany') : tr('site.themeOne')}</span>
-                  </div>
-                  <span style={{ color: colors.textSecondary }}>•</span>
-                  <div className="flex items-center gap-2">
-                    <span style={{ color: colors.textSecondary }}>{tr('site.sort')}</span>
-                    <span className="font-bold" style={{ color: '#e8eefc' }}>{sortBy === 'name' ? tr('site.sortName') : tr('site.sortDate')}</span>
-                  </div>
+                  )}
+                  {(systemsLogic.selectedSystem !== 'all' || systemsLogic.selectedCategory !== 'all') && (
+                    <button type="button" tabIndex={isRetrobat ? -1 : undefined} className="hb-fclear"
+                      onClick={() => { systemsLogic.handleSystemSelect('all'); systemsLogic.setSelectedCategory('all'); }}>{tr('site.resetAll')}</button>
+                  )}
                 </div>
               )}
               {showAdminPanel && (
