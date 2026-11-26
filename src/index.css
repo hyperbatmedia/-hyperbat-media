@@ -52,13 +52,6 @@ h1, h2, h3, h4 {
     animation: hyperbat-blink 0.9s steps(1) infinite;
 }
 
-/* Bandeau vedette page d'accueil (FeaturedBanner.tsx) : dégradé qui défile
-   en boucle sur le contour, pour attirer l'œil sans devenir agressif. */
-@keyframes hyperbat-featured-move {
-    0%   { background-position: 0% 0; }
-    100% { background-position: 300% 0; }
-}
-
 /* ── Identité visuelle alignée sur le site principal ───────────────────── */
 @font-face {
   font-family: "Bungee";
@@ -169,7 +162,6 @@ input[type="text"]:not(.hb-admin input), input[type="search"]:not(.hb-admin inpu
 .theme-card:not(:hover) { border-color: rgba(255,255,255,.14) !important; }
 .theme-card:hover { border-color: #3d7be0 !important; }
 .theme-card [style*="aspect-ratio"] { background: #08101e !important; }
-.hb-feat { background: rgba(11,22,42,.82) !important; }
 .hb-chip:not(.hb-keep) { background: rgba(11,22,42,.64) !important; border-color: rgba(255,255,255,.14) !important; }
 .hb-sys { text-transform: uppercase; letter-spacing: .02em; }
 .theme-card [style*="aspect-ratio"] { border-bottom-width: 1px !important; border-color: rgba(255,255,255,.10) !important; }
@@ -242,7 +234,7 @@ input[type="text"]:not(:focus):not(.hb-admin input), input[type="search"]:not(:f
 .hb-glass button > svg { color: #9db0d0 !important; }
 
 /* ── Bandeau : même rendu que le site (image en pleine lumière, fondu en bas, titre centré) ── */
-.hb-hero { position: relative; width: 100%; aspect-ratio: 2000 / 547; max-height: 547px; min-height: 230px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; text-align: center; padding: 0 16px 28px; background: #0a1220 url("./assets/hero.webp") center / cover no-repeat; }
+.hb-hero { position: relative; width: 100%; aspect-ratio: 2000 / 547; max-height: 300px; min-height: 250px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; text-align: center; padding: 0 16px 28px; background: #0a1220 url("./assets/hero.webp") center / cover no-repeat; }
 .hb-hero::after { content: ""; position: absolute; inset: auto 0 0 0; height: 62%; background: linear-gradient(to bottom, rgba(11,20,36,0), rgba(11,20,36,.94)); pointer-events: none; }
 .hb-hero > * { position: relative; z-index: 3; }
 .hb-hero h1 { margin: 0; font-family: Bungee, "Segoe UI", Arial, sans-serif; font-weight: 400; font-size: clamp(20px, 3.1vw, 54px); line-height: 1.1; letter-spacing: .02em; color: #fff; text-shadow: 0 3px 0 #1d4fa8, 0 0 26px rgba(61,123,224,.75), 0 5px 20px #000; }
@@ -284,3 +276,20 @@ input[type="text"]:not(:focus):not(.hb-admin input), input[type="search"]:not(:f
 .hb-fclear { background: none; border: 0; color: #7db4ff; font-size: 13px; cursor: pointer; padding: 2px 6px; }
 .hb-fclear:hover { text-decoration: underline; }
 @media (max-width: 640px) { .hb-searchrow { flex-wrap: wrap; } .hb-searchrow .hb-tools { width: 100%; } .hb-searchrow .hb-tools button { flex: 1; } }
+
+/* ── Mobile : thèmes en pleine largeur, liste des systèmes repliée derrière un bouton ── */
+.hb-side-toggle { display: none; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 11px 14px; border-radius: 12px; background: rgba(11,22,42,.64); border: 1px solid rgba(255,255,255,.14); color: #e8eefc; font-weight: 600; cursor: pointer; }
+.hb-side-toggle[aria-expanded="true"] { border-color: #3d7be0; }
+@media (max-width: 768px) {
+  .hb-layout { flex-direction: column; gap: 12px; margin-top: 1rem !important; }
+  .hb-side-toggle { display: flex; }
+  .hb-side { display: none; }
+  .hb-side.hb-side-open { display: block; }
+  .hb-side > aside { width: 100% !important; }
+  .hb-side > aside > button { display: none !important; }
+  .hb-side .hb-glass { position: static !important; width: 100% !important; height: auto !important; max-height: 62vh; overflow: hidden; }
+  .hb-chips { flex-wrap: nowrap !important; overflow-x: auto; padding-bottom: 8px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+  .hb-chips > * { flex: none; }
+  .hb-chips-spacer { display: none; }
+}
+

@@ -1,18 +1,13 @@
 import React, { useMemo, useRef, useEffect, useState, useCallback } from 'react';
 import { useLang } from '../../i18n';
-import { localizeLinks } from '../../i18n/links';
 import { Search, ChevronDown, X, Star, BookOpen } from 'lucide-react';
 import { SystemRow } from '../../types';
 import { getSystemColors } from './sidebar.colors';
 import {
   TOP_BUTTON_IDS,
-  EXTERNAL_LINKS,
   SIDEBAR_INLINE_STYLES,
   SIDEBAR_COLORS,
 } from './sidebar.constants';
-import { useLinksLoader } from '../../hooks/useLinksLoader';
-import type { ModalConfig } from '../../hooks/useLinksLoader';
-import ContentModal from '../ContentModal/ContentModal';
 
 import arcadeImg from '../../assets/icons/arcade.png';
 import portableImg from '../../assets/icons/console_portable.png';
@@ -20,9 +15,6 @@ import fantasyImg from '../../assets/icons/phantasy_console.png';
 import ordinosaureImg from '../../assets/icons/Ordinosaure.png';
 import flipperImg from '../../assets/icons/flipper.png';
 
-
-// Discord et ARRM sont déjà dans l'en-tête / la page Outils du site : on ne les répète pas ici.
-const SHOW_SIDEBAR_SOCIAL = false;
 
 const HIDDEN_SIDEBAR_IDS: string[] = ['tools', 'tutorials', 'main-themes', 'other-themes'];
 
@@ -48,15 +40,9 @@ interface SidebarProps {
   /** Placeholder du champ recherche systèmes. */
   searchPlaceholder?: string;
   /** Mode kiosque (?retrobat=1) — tabIndex=-1 sur liens exclus. */
-  isRetrobat?: boolean;
 }
 
 // ── Icône Discord réutilisable ────────────────────────────────────────────────
-const DiscordIcon: React.FC<{ size?: number }> = ({ size = 20 }) => (
-  <svg width={size} height={size} fill="#FFFFFF" viewBox="0 0 24 24">
-    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
-  </svg>
-);
 
 // ── Icônes de section ─────────────────────────────────────────────────────────
 type SectionIconDef =
@@ -113,24 +99,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   allThemes = [], isDarkMode, onCollapsedChange,
   searchInputRef: searchInputRefProp,
   searchPlaceholder: searchPlaceholderProp,
-  isRetrobat = false,
 }) => {
-  const { t: tr, label: trLabel, lang } = useLang();
+  const { t: tr, label: trLabel } = useLang();
   const searchPlaceholder = searchPlaceholderProp ?? tr('site.sidebarSearch');
   // Nom affiché : seuls les libellés français connus sont traduits (les noms de systèmes restent tels quels).
   const dn = (name: string) => trLabel(name, 'sys.');
-  const { links: rawLinks, isLoading: isLoadingLinks } = useLinksLoader();
-  const links = useMemo(() => localizeLinks(rawLinks, lang), [rawLinks, lang]);
-
-  // ── Modal ──────────────────────────────────────────────────────────────────
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [modalConfig, setModalConfig] = useState<ModalConfig | null>(null);
-
-  const openModal = (config: ModalConfig) => {
-    setModalConfig(config);
-    setModalOpen(true);
-  };
-
   // ── Rétractable ───────────────────────────────────────────────────────────
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     try { return localStorage.getItem(LS_KEY) === 'true'; } catch { return false; }
@@ -153,24 +126,6 @@ const Sidebar: React.FC<SidebarProps> = ({
     try { localStorage.setItem(LS_KEY, 'false'); } catch { return; }
     toggleSection(sectionKey);
   };
-
-  // ── Liens ─────────────────────────────────────────────────────────────────
-  const headerLinks = useMemo(() =>
-    links.filter(l => l.location === 'header').sort((a, b) => (a.position || 0) - (b.position || 0)),
-    [links]
-  );
-  const listLinks = useMemo(() =>
-    links.filter(l => l.location === 'list').sort((a, b) => (a.position || 0) - (b.position || 0)),
-    [links]
-  );
-  const linksBySystemId = useMemo(() => {
-    const map: Record<string, typeof links[0] | undefined> = {};
-    map['tools']        = listLinks.find(l => l.id === 'outils'            || l.name.toLowerCase().includes('outil'));
-    map['tutorials']    = listLinks.find(l => l.id === 'tutoriels'         || l.name.toLowerCase().includes('tutoriel'));
-    map['main-themes']  = listLinks.find(l => l.id === 'themes-hyperbat'   || l.name.toLowerCase().includes('theme'));
-    map['other-themes'] = listLinks.find(l => l.id === 'autres-themes-bob' || l.name.toLowerCase().includes('autres thèmes'));
-    return map;
-  }, [listLinks]);
 
   // ── Recherche ─────────────────────────────────────────────────────────────
   const normalizedSearch = useMemo(() => sidebarSearch.trim().toLowerCase(), [sidebarSearch]);
@@ -371,7 +326,6 @@ const Sidebar: React.FC<SidebarProps> = ({
     const isSelected    = selectedSystem === system.id;
     const hasCategories = !!(system.categories?.length);
     const isTopButton   = TOP_BUTTON_IDS.includes(system.id as any);
-    const correspondingLink = isTopButton && system.id !== 'all' ? linksBySystemId[system.id] : null;
 
     const parts              = system.id.split('-');
     const normalizedSystemId = parts[parts.length - 1].toLowerCase().replace(/[^a-z0-9]+/g, '');
@@ -419,31 +373,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             }
           }}
         >
-          {correspondingLink ? (
-            correspondingLink.modal ? (
-              // ── Bouton modal (Tutoriels, Outils, Autres thèmes Bob) ──
-              <button
-                onClick={() => openModal(correspondingLink.modal!)}
-                tabIndex={isRetrobat ? -1 : undefined}
-                className={`flex-1 text-left text-sm min-w-0 pr-2 focus:outline-none rounded
-                  ${isSelected || isTopButton ? 'text-white' : `${defaultTextColor} ${defaultHoverText}`}`}
-                style={textStyle}
-                aria-label={dn(system.name)}
-              >
-                <span className="truncate block">{dn(system.name)}</span>
-              </button>
-            ) : (
-              // ── Lien externe classique (Thèmes HyperBat → GitHub) ──
-              <a href={correspondingLink.url} target="_blank" rel="noopener noreferrer"
-                tabIndex={isRetrobat ? -1 : undefined}
-                className={`flex-1 text-left text-sm min-w-0 pr-2 focus:outline-none rounded
-                  ${isSelected || isTopButton ? 'text-white' : `${defaultTextColor} ${defaultHoverText}`}`}
-                style={textStyle} aria-label={dn(system.name)}>
-                <span className="truncate block">{dn(system.name)}</span>
-              </a>
-            )
-          ) : (
-            <button
+          <button
               ref={el => { if (el) systemButtonsRef.current.set(system.id, el); else systemButtonsRef.current.delete(system.id); }}
               onClick={e => { handleSystemSelect(system.id); e.currentTarget.blur(); }}
               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSystemSelect(system.id); e.currentTarget.blur(); } }}
@@ -463,7 +393,6 @@ const Sidebar: React.FC<SidebarProps> = ({
                 )}
               </span>
             </button>
-          )}
 
           {hasCategories && (
             <button
@@ -561,93 +490,10 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className={`rounded-xl border sticky top-4 ${isDarkMode ? 'bg-gray-900 hb-glass' : 'bg-white'}`}
         style={{ borderColor: '#243a5c', height: 'calc(100vh - 2rem)', display: 'flex', flexDirection: 'column' }}>
 
-        {/* Header titre + Discord/ARRM — mode étendu */}
+        {/* Header titre — mode étendu */}
         {!collapsed && (
           <div className="hb-panel-head flex items-center justify-between p-4 pb-2 flex-shrink-0">
             <h3 className="text-xs font-semibold uppercase tracking-[0.14em]" style={{ color: '#9db0d0' }}>{tr('nav.systems')}</h3>
-            {SHOW_SIDEBAR_SOCIAL && (
-<div className="flex gap-2">
-              {isLoadingLinks ? (
-                <div className="text-gray-400 text-xs">Chargement...</div>
-              ) : headerLinks.length > 0 ? (
-                headerLinks.map(link => {
-                  const isARRM = link.name.toLowerCase().includes('arrm');
-                  return (
-                    <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer"
-                      tabIndex={isRetrobat ? -1 : undefined}
-                      className={`rounded-lg transition-all duration-200 border-2 hover:shadow-lg hover:brightness-125 focus:outline-none focus:ring-2
-                        ${isARRM ? 'px-2.5 py-2 bg-yellow-500 hover:bg-yellow-600 border-yellow-600 focus:ring-yellow-400' : 'p-2 bg-[#5865F2] hover:bg-[#4752C4] border-[#5865F2] focus:ring-blue-400'}`}
-                      title={link.name}>
-                      {isARRM ? (
-                        <span className="text-sm font-bold flex items-center justify-center" style={{ color: SIDEBAR_COLORS.arrm }}>ARRM</span>
-                      ) : (
-                        <DiscordIcon size={20} />
-                      )}
-                    </a>
-                  );
-                })
-              ) : (
-                <>
-                  <a href={EXTERNAL_LINKS.discord} target="_blank" rel="noopener noreferrer"
-                    tabIndex={isRetrobat ? -1 : undefined}
-                    className="p-2 rounded-lg bg-[#5865F2] hover:bg-[#4752C4] transition-all duration-200 border-2 border-[#5865F2] hover:border-[#4752C4] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    title={tr('nav.joinDiscord')}>
-                    <DiscordIcon size={20} />
-                  </a>
-                  <a href={EXTERNAL_LINKS.arrm} target="_blank" rel="noopener noreferrer"
-                    tabIndex={isRetrobat ? -1 : undefined}
-                    className="px-2.5 py-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 transition-all duration-200 border-2 border-yellow-600 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    title="ARRM">
-                    <span className="text-sm font-bold" style={{ color: SIDEBAR_COLORS.arrm }}>ARRM</span>
-                  </a>
-                </>
-              )}
-            </div>
-            )}
-          </div>
-        )}
-
-        {/* Discord + ARRM — mode réduit */}
-        {collapsed && SHOW_SIDEBAR_SOCIAL && (
-          <div className="flex flex-col items-center gap-2 pt-3 pb-2 flex-shrink-0">
-            {isLoadingLinks ? null : headerLinks.length > 0 ? (
-              headerLinks.map(link => {
-                const isARRM = link.name.toLowerCase().includes('arrm');
-                return (
-                  <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer"
-                    tabIndex={isRetrobat ? -1 : undefined}
-                    title={link.name}
-                    className={`flex items-center justify-center rounded-lg transition-all duration-200 hover:brightness-125 focus:outline-none focus:ring-2
-                      ${isARRM ? 'bg-yellow-500 hover:bg-yellow-600 focus:ring-yellow-400' : 'bg-[#5865F2] hover:bg-[#4752C4] focus:ring-blue-400'}`}
-                    style={{ width: 36, height: isARRM ? 28 : 36 }}>
-                    {isARRM ? (
-                      <span className="text-xs font-black" style={{ color: SIDEBAR_COLORS.arrm }}>ARRM</span>
-                    ) : (
-                      <DiscordIcon size={20} />
-                    )}
-                  </a>
-                );
-              })
-            ) : (
-              <>
-                <a href={EXTERNAL_LINKS.discord} target="_blank" rel="noopener noreferrer"
-                  tabIndex={isRetrobat ? -1 : undefined}
-                  title={tr('nav.joinDiscord')}
-                  className="flex items-center justify-center rounded-lg bg-[#5865F2] hover:bg-[#4752C4] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  style={{ width: 36, height: 36 }}>
-                  <DiscordIcon size={20} />
-                </a>
-                <a href={EXTERNAL_LINKS.arrm} target="_blank" rel="noopener noreferrer"
-                  tabIndex={isRetrobat ? -1 : undefined}
-                  title="ARRM"
-                  className="flex items-center justify-center rounded-lg bg-yellow-500 hover:bg-yellow-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                  style={{ width: 36, height: 28 }}>
-                  <span className="text-xs font-black" style={{ color: SIDEBAR_COLORS.arrm }}>ARRM</span>
-                </a>
-              </>
-            )}
-            {/* Séparateur */}
-            <div style={{ width: 36, height: 1, background: '#374151', marginTop: 2 }} />
           </div>
         )}
 
@@ -668,9 +514,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             <>
               {visibleSystems.map((system) => {
                 const showSearchAfter = !collapsed && system.id === 'all';
-                const isTopBtn  = TOP_BUTTON_IDS.includes(system.id as any);
-                const hasLink   = isTopBtn && system.id !== 'all' && linksBySystemId[system.id];
-                const uniqueKey = hasLink ? `${system.id}-link-${linksBySystemId[system.id]?.id}` : system.id;
+                const uniqueKey = system.id;
 
                 return (
                   <React.Fragment key={uniqueKey}>
@@ -713,17 +557,6 @@ const Sidebar: React.FC<SidebarProps> = ({
           )}
         </div>
       </div>
-
-      {/* ── Modal contenu ── */}
-      {modalConfig && (
-        <ContentModal
-          isOpen={modalOpen}
-          onClose={() => setModalOpen(false)}
-          config={modalConfig}
-          isDarkMode={isDarkMode}
-          instanceId="sidebar-modal"
-        />
-      )}
     </aside>
   );
 };

@@ -5,10 +5,9 @@
 // script hyperbat_theme_finder.py) d'ouvrir la vitrine deja pre-filtree.
 
 import { useLang } from './i18n';
-import { localizeLinks } from './i18n/links';
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import type { ComponentType, CSSProperties } from 'react';
-import { Search, Gamepad2, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download, AlertTriangle, Upload } from 'lucide-react';
+import { Search, Gamepad2, X, LogOut, Sun, Moon, Calendar, SortAsc, Trophy, Monitor, Star, BarChart3, Package, Image, Download, AlertTriangle, Upload, Menu } from 'lucide-react';
 
 import { ThemeItem } from './types';
 import { categories, CART_MAX } from './constants';
@@ -24,11 +23,6 @@ import type { AdminTab } from './components/AdminPanel/AdminPanel';
 import ThemeList from './components/ThemeList/ThemeList';
 import CartPanel from './components/CartPanel/CartPanel';
 import RecapThemesPanel from './components/RecapThemesPanel/RecapThemesPanel';
-import ThemePacksPanel from './components/ThemePacksPanel/ThemePacksPanel';
-import FeaturedBanner from './components/FeaturedBanner/FeaturedBanner';
-import ContentModal from './components/ContentModal/ContentModal';
-import type { ModalConfig } from './components/ContentModal/ContentModal';
-import type { ModalItem as LinkModalItem } from './hooks/useLinksLoader';
 import bobSystemsData from './data/bob-systems.json';
 import { resolveBobSlug } from './data/systemAliases';
 import { detectAgent } from './agent/hyperbatAgent';
@@ -38,9 +32,6 @@ import LanguageSwitch from './components/LanguageSwitch/LanguageSwitch';
 
 import { NAV_LABELS } from './components/SiteHeader/SiteHeader';
 import logoVitrine from './assets/logo-vitrine.webp';
-// Les installeurs RetroBat/Batocera sont déjà dans la page Outils du site principal.
-// Remettre à true pour réafficher les bannières « mises en avant ».
-const SHOW_FEATURED_BANNERS = false;
 import {
   isKioskNavigablePill,
   kioskFocusStyle,
@@ -331,7 +322,6 @@ export default function HyperBatMediaSite(): JSX.Element {
   const [sortBy, setSortBy] = useState<'name' | 'date'>('date');
   const [showAdminPanel, setShowAdminPanel] = useState<boolean>(false);
   const [showRecapPanel, setShowRecapPanel] = useState<boolean>(false);
-  const [showPacksPanel, setShowPacksPanel] = useState<boolean>(false);
   const [adminTab, setAdminTab] = useState<AdminTab>('manage');
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
     try { return localStorage.getItem('sidebar-collapsed') === 'true'; } catch { return false; }
@@ -366,45 +356,15 @@ export default function HyperBatMediaSite(): JSX.Element {
   const { packsData, setPacksData, savePacksData } = useThemePacksStorage();
   const { links: linksData, setLinks: setLinksData, saveLinks } = useLinksStorage();
 
-  // ── Bandeaux "vedette" (Nouveau / À la une / À ne pas manquer) ───────────
-  // Jusqu'à 2 items, cherchés dans les items des listes modales de
-  // links.json (voir LinksTab.tsx dans l'AdminPanel). Cliquer dessus rouvre
-  // la modale complète de la liste d'origine (Outils, Tutoriels, etc.).
-  const [featuredModalConfig, setFeaturedModalConfig] = useState<ModalConfig | null>(null);
-  const [featuredHighlightId, setFeaturedHighlightId] = useState<string | undefined>(undefined);
-  const featuredItems = useMemo(() => {
-    const found: { item: LinkModalItem; onOpen: () => void }[] = [];
-    for (const link of localizeLinks(linksData, lang)) {
-      if (link.modal) {
-        for (const item of link.modal.items) {
-          if (item.vedette) found.push({
-            item,
-            onOpen: () => { setFeaturedModalConfig(link.modal!); setFeaturedHighlightId(item.id); },
-          });
-        }
-      } else if (link.vedette) {
-        // Lien unique sans modale (ex: "Thèmes HyperBat") : on le présente
-        // comme un item de carte, et le clic ouvre son URL directement
-        // plutôt qu'une modale qui n'existe pas pour lui.
-        const asItem: LinkModalItem = {
-          id: link.id,
-          name: link.name,
-          creator: link.creator ?? '',
-          description: link.description,
-          imageUrl: link.imageUrl,
-          downloadUrl: link.url,
-          vedette: link.vedette,
-        };
-        found.push({ item: asItem, onOpen: () => window.open(link.url, '_blank', 'noopener,noreferrer') });
-      }
-    }
-    return found.slice(0, 2);
-  }, [linksData, lang]);
   const systemsLogic = useSystemsLogic();
   const colors = useMemo(() => getThemeColors(isDarkMode), [isDarkMode]);
 
   // Le mode clair n'est plus proposé sur le site ; seul l'écran admin garde son propre bouton.
   useEffect(() => { if (!showAdminPanel) setIsDarkMode(true); }, [showAdminPanel]);
+
+  // Mobile : la liste des systèmes est repliée derrière un bouton (styles dans index.css).
+  const [mobileSideOpen, setMobileSideOpen] = useState(false);
+  useEffect(() => { setMobileSideOpen(false); }, [systemsLogic.selectedSystem]);
 
   // Empêche la fermeture accidentelle de l'onglet/navigateur pendant que
   // l'admin est ouvert (le verrou GitHub resterait posé jusqu'à expiration
@@ -901,9 +861,15 @@ export default function HyperBatMediaSite(): JSX.Element {
             </div>
           )}
 
-          <div className="flex gap-6" style={{ marginTop: '3rem' }}>
+          <div className={`flex gap-6${showAdminPanel ? '' : ' hb-layout'}`} style={{ marginTop: '3rem' }}>
             {!showAdminPanel && (
-              <div>
+              <button type="button" className="hb-side-toggle" tabIndex={isRetrobat ? -1 : undefined}
+                aria-expanded={mobileSideOpen} onClick={() => setMobileSideOpen(o => !o)}>
+                <Menu className="w-5 h-5" /> {tr('nav.systems')}
+              </button>
+            )}
+            {!showAdminPanel && (
+              <div className={`hb-side${mobileSideOpen ? ' hb-side-open' : ''}`}>
                 {isRetrobat && renderToolbar(false)}
                 <Sidebar
                   systems={systemsLogic.systems}
@@ -917,7 +883,6 @@ export default function HyperBatMediaSite(): JSX.Element {
                   onCollapsedChange={setSidebarCollapsed}
                   searchInputRef={sidebarSearchInputRef}
                   searchPlaceholder={tr('site.sidebarSearch')}
-                  isRetrobat={isRetrobat}
                 />
               </div>
             )}
@@ -987,18 +952,7 @@ export default function HyperBatMediaSite(): JSX.Element {
                     linksData={linksData} setLinksData={setLinksData} saveLinks={saveLinks} />
                 </div>
               )}
-              {!showAdminPanel && SHOW_FEATURED_BANNERS && featuredItems.length > 0 && (
-                <div className="flex flex-wrap gap-3 mb-4">
-                  {featuredItems.map(({ item, onOpen }) => (
-                    <FeaturedBanner
-                      key={item.id}
-                      item={item}
-                      onClick={onOpen}
-                    />
-                  ))}
-                </div>
-              )}
-              {!showAdminPanel && (
+{!showAdminPanel && (
                 <ThemeList viewMode={viewMode} themes={paginatedThemes}
                   allFilteredThemes={filteredThemes} filteredThemesLength={filteredThemes.length}
                   totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage}
@@ -1130,19 +1084,6 @@ export default function HyperBatMediaSite(): JSX.Element {
       {showRecapPanel && (
         <RecapThemesPanel themes={themes} onClose={() => setShowRecapPanel(false)} isDarkMode={isDarkMode} />
       )}
-
-      {showPacksPanel && (
-        <ThemePacksPanel packsData={packsData} onClose={() => setShowPacksPanel(false)} isDarkMode={isDarkMode} />
-      )}
-
-      <ContentModal
-        isOpen={!!featuredModalConfig}
-        onClose={() => setFeaturedModalConfig(null)}
-        config={featuredModalConfig ?? { title: '', type: 'download', items: [] }}
-        isDarkMode={isDarkMode}
-        highlightItemId={featuredHighlightId}
-        instanceId="featured-modal"
-      />
     </div>
   );
 }

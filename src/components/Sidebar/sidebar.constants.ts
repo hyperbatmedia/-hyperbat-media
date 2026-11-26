@@ -20,14 +20,6 @@ export const SIDEBAR_COLORS = {
 } as const;
 
 /**
- * Liens externes (fallback si le JSON ne charge pas)
- */
-export const EXTERNAL_LINKS = {
-  discord: 'https://discord.gg/votre-serveur',  // ⚠️ À REMPLACER par le vrai lien
-  arrm: 'https://www.arm.com',                   // ⚠️ À REMPLACER par le vrai lien
-} as const;
-
-/**
  * Configuration du scroll
  */
 export const SCROLL_CONFIG = {
